@@ -1,36 +1,12 @@
-use serde::Deserialize;
+// FILE: execution-core/src/abi.rs
+//
+// EVERARCADE EXECUTION ABI v1 (FROZEN)
+//
 
-use crate::payload::Payload;
+pub const ABI_VERSION: &str = "everarcade-execution-abi-v1";
 
-#[derive(Debug, Deserialize)]
-pub struct ExecutionPlan {
-    pub version: u32,
-    pub nodes: Vec<ExecutionNodeAbi>,
-}
-
-#[derive(Debug, Deserialize)]
-pub struct ExecutionNodeAbi {
-    pub id: String,
-    pub deps: Vec<String>,
-    pub payload: Payload,
-}
-
-impl ExecutionPlan {
-    pub fn validate(&self) {
-        // 🔒 enforce ABI version
-        if self.version != 1 {
-            panic!("Unsupported ABI version: {}", self.version);
-        }
-
-        // 🔒 ensure unique node IDs
-        let mut seen = std::collections::HashSet::new();
-
-        for node in &self.nodes {
-            if !seen.insert(&node.id) {
-                panic!("Duplicate node id: {}", node.id);
-            }
-
-            node.payload.validate();
-        }
-    }
-}
+pub const INPUT_SCHEMA_VERSION: &str = "v1";
+pub const OUTPUT_SCHEMA_VERSION: &str = "v1";
+pub const EXECUTION_SEMANTICS_VERSION: &str = "v1";
+pub const STATE_MODEL_VERSION: &str = "v1";
+pub const RECEIPT_FORMAT_VERSION: &str = "v1";

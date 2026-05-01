@@ -1,21 +1,5 @@
-// FILE: execution-core/src/execute.rs
-//
-// MINIMAL DETERMINISTIC VM EXECUTOR
-//
-// PURPOSE:
-// - restore compilation
-// - establish stable VM pipeline
-// - deterministic state execution
-// - deterministic receipt generation
-//
-// SAFE RULES:
-// - no filesystem
-// - no clock
-// - no randomness
-// - no threading
-//
-
 use crate::{
+    abi,
     hashing,
     scheduler,
     ExecutionReceipt,
@@ -29,33 +13,15 @@ use crate::{
 use std::collections::BTreeMap;
 
 pub fn execute_vm(input: VmInput) -> VmOutput {
-    //
-    // INITIAL STATE
-    //
-
     let mut state = input.state.clone();
 
-    //
-    // COMPUTE PREVIOUS ROOT
-    //
-
-    let previous_state_root =
-        hashing::compute_state_root(&state);
-
-    //
-    // SORT DAG
-    //
+    let previous_state_root = hashing::compute_state_root(&state);
 
     let ordered_nodes =
         scheduler::topological_sort(&input.plan.nodes);
 
-    //
-    // EXECUTE
-    //
-
     let mut node_hashes = BTreeMap::new();
-
-    let mut state_changes = Vec::<StateChange>::new();
+    let mut state_changes = Vec::new();
 
     for node in ordered_nodes {
         execute_node(
@@ -66,15 +32,8 @@ pub fn execute_vm(input: VmInput) -> VmOutput {
         );
     }
 
-    //
-    // FINAL ROOTS
-    //
-
-    let new_state_root =
-        hashing::compute_state_root(&state);
-
-    let execution_root =
-        hashing::compute_execution_root(&node_hashes);
+    let new_state_root = hashing::compute_state_root(&state);
+    let execution_root = hashing::compute_execution_root(&node_hashes);
 
     let receipt_hash =
         hashing::compute_receipt_hash(
@@ -83,11 +42,8 @@ pub fn execute_vm(input: VmInput) -> VmOutput {
             &execution_root,
         );
 
-    //
-    // RECEIPT
-    //
-
     let receipt = ExecutionReceipt {
+        abi_version: abi::ABI_VERSION.to_string(),
         previous_state_root,
         new_state_root,
         execution_root,
@@ -102,12 +58,6 @@ pub fn execute_vm(input: VmInput) -> VmOutput {
     }
 }
 
-//
-// ============================================================
-// NODE EXECUTION
-// ============================================================
-//
-
 fn execute_node(
     node: &ExecutionNode,
     state: &mut State,
@@ -115,100 +65,43 @@ fn execute_node(
     node_hashes: &mut BTreeMap<String, String>,
 ) {
     match node.action.as_str() {
-        //
-        // ====================================================
-        // SET CONTRACT
-        // ====================================================
-        //
-
         "set" => {
-            let key = node.payload["key"]
-                .as_str()
-                .expect("missing key")
-                .to_string();
+            let key = node.payload["key"].as_str().unwrap().to_string();
+            let value = node.payload["value"].as_str().unwrap().to_string();
 
-            let value = node.payload["value"]
-                .as_str()
-                .expect("missing value")
-                .to_string();
-
-            let before =
-                state.get(&key)
-                    .cloned()
-                    .unwrap_or_default();
+            let before = state.get(&key).cloned().unwrap_or_default();
 
             state.insert(key.clone(), value.clone());
 
             state_changes.push(StateChange {
-                key: key.clone(),
+                key,
                 before,
                 after: value,
             });
         }
 
-        //
-        // ====================================================
-        // INCREMENT CONTRACT
-        // ====================================================
-        //
-
         "increment" => {
-            let key = node.payload["key"]
-                .as_str()
-                .expect("missing key")
-                .to_string();
+            let key = node.payload["key"].as_str().unwrap().to_string();
+            let amount = node.payload["amount"].as_i64().unwrap();
 
-            let amount = node.payload["amount"]
-                .as_i64()
-                .expect("missing amount");
+            let current = state.get(&key).cloned().unwrap_or("0".to_string());
+            let current_num: i64 = current.parse().unwrap();
+            let next = current_num + amount;
 
-            let current =
-                state.get(&key)
-                    .cloned()
-                    .unwrap_or_else(|| "0".to_string());
+            let next_str = next.to_string();
 
-            let current_num: i64 =
-                current.parse()
-                    .expect("invalid integer");
-
-            let next =
-                current_num + amount;
-
-            let next_string =
-                next.to_string();
-
-            state.insert(
-                key.clone(),
-                next_string.clone(),
-            );
+            state.insert(key.clone(), next_str.clone());
 
             state_changes.push(StateChange {
-                key: key.clone(),
+                key,
                 before: current,
-                after: next_string,
+                after: next_str,
             });
         }
 
-        //
-        // ====================================================
-        // UNKNOWN ACTION
-        // ====================================================
-        //
-
-        _ => {
-            panic!("unknown action: {}", node.action);
-        }
+        _ => panic!("unknown action"),
     }
 
-    //
-    // NODE HASH
-    //
-
-    let node_hash =
-        hashing::compute_node_hash(node);
-
-    node_hashes.insert(
-        node.id.clone(),
-        node_hash,
-    );
+    let hash = hashing::compute_node_hash(node);
+    node_hashes.insert(node.id.clone(), hash);
 }
