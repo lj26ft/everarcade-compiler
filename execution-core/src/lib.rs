@@ -15,7 +15,7 @@ pub type State = BTreeMap<String, String>;
 pub struct ExecutionNode {
     pub id: String,
     pub action: String,
-    pub payload: serde_json::Value,
+    pub payload: BTreeMap<String, String>, // 🔥 NO JSON
     pub deps: Vec<String>,
 }
 
@@ -56,7 +56,7 @@ pub struct VmOutput {
 
 //
 // ============================================================
-// SAFE GLOBAL OUTPUT BUFFER (NO UB)
+// BINARY OUTPUT BUFFER
 // ============================================================
 //
 
@@ -79,7 +79,7 @@ fn get_output_ptr() -> *const u8 {
 
 //
 // ============================================================
-// WASM EXPORTS
+// WASM EXPORTS (BINARY ABI)
 // ============================================================
 //
 
@@ -111,15 +111,16 @@ pub extern "C" fn vm_execute_with_len(ptr: *mut u8, len: usize) -> *const u8 {
         std::slice::from_raw_parts(ptr, len)
     };
 
+    // 🔥 BINARY DESERIALIZATION (NO JSON)
     let vm_input: VmInput =
-        serde_json::from_slice(input_bytes)
-            .expect("invalid VmInput");
+        bincode::deserialize(input_bytes)
+            .expect("invalid VmInput binary");
 
     let output = execute_vm(vm_input);
 
     let bytes =
-        serde_json::to_vec(&output)
-            .expect("invalid VmOutput");
+        bincode::serialize(&output)
+            .expect("invalid VmOutput binary");
 
     set_output(bytes);
 

@@ -16,3 +16,6 @@ hex = "0.4"
 contract-api = { path = "../contract-api" }
 set-contract = { path = "../contracts/set-contract" }
 increment-contract = { path = "../contracts/increment-contract" }
+
+# ✅ FIXED: stable deterministic binary encoding
+bincode = "1.3"

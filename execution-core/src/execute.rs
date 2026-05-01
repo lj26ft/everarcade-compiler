@@ -1,8 +1,6 @@
 use crate::{
-    abi,
     hashing,
     scheduler,
-    ExecutionReceipt,
     ExecutionNode,
     State,
     StateChange,
@@ -42,8 +40,8 @@ pub fn execute_vm(input: VmInput) -> VmOutput {
             &execution_root,
         );
 
-    let receipt = ExecutionReceipt {
-        abi_version: abi::ABI_VERSION.to_string(),
+    let receipt = crate::ExecutionReceipt {
+        abi_version: crate::abi::ABI_VERSION.to_string(),
         previous_state_root,
         new_state_root,
         execution_root,
@@ -65,9 +63,19 @@ fn execute_node(
     node_hashes: &mut BTreeMap<String, String>,
 ) {
     match node.action.as_str() {
+
         "set" => {
-            let key = node.payload["key"].as_str().unwrap().to_string();
-            let value = node.payload["value"].as_str().unwrap().to_string();
+            let key = node
+                .payload
+                .get("key")
+                .unwrap()
+                .clone();
+
+            let value = node
+                .payload
+                .get("value")
+                .unwrap()
+                .clone();
 
             let before = state.get(&key).cloned().unwrap_or_default();
 
@@ -81,21 +89,34 @@ fn execute_node(
         }
 
         "increment" => {
-            let key = node.payload["key"].as_str().unwrap().to_string();
-            let amount = node.payload["amount"].as_i64().unwrap();
+            let key = node
+                .payload
+                .get("key")
+                .unwrap()
+                .clone();
 
-            let current = state.get(&key).cloned().unwrap_or("0".to_string());
-            let current_num: i64 = current.parse().unwrap();
-            let next = current_num + amount;
+            let amount_str = node
+                .payload
+                .get("amount")
+                .unwrap();
 
-            let next_str = next.to_string();
+            let amount: i64 =
+                amount_str.parse().unwrap();
 
-            state.insert(key.clone(), next_str.clone());
+            let current =
+                state.get(&key).cloned().unwrap_or("0".to_string());
+
+            let current_num: i64 =
+                current.parse().unwrap();
+
+            let next = (current_num + amount).to_string();
+
+            state.insert(key.clone(), next.clone());
 
             state_changes.push(StateChange {
                 key,
                 before: current,
-                after: next_str,
+                after: next,
             });
         }
 
