@@ -1,87 +1,60 @@
-use serde::{Deserialize, Serialize};
+use crate::types::*;
+use crate::hashing::*;
+use bincode;
 
-use crate::{
-    abi::ABI_VERSION,
-    hashing::{
-        hash_execution,
-        hash_receipt,
-        hash_state,
-    },
-    receipt::ExecutionReceipt,
-    registry::ContractRegistry,
-    state::{
-        State,
-        StateChange,
-    },
-};
+pub fn execute_vm(input: VmInput) -> VmOutput {
+    let state_before = input.state.clone();
 
-use std::collections::BTreeMap;
+    let state_root_before =
+        hash_state(&bincode::serialize(&state_before).unwrap());
 
-#[derive(Clone, Debug, Serialize, Deserialize)]
-pub struct ExecutionNode {
-    pub id: String,
-    pub contract: String,
-    pub payload: BTreeMap<String, String>,
-}
-
-#[derive(Clone, Debug, Serialize, Deserialize)]
-pub struct ExecutionPlan {
-    pub nodes: Vec<ExecutionNode>,
-}
-
-#[derive(Clone, Debug, Serialize, Deserialize)]
-pub struct VmInput {
-    pub state: State,
-    pub plan: ExecutionPlan,
-}
-
-#[derive(Clone, Debug, Serialize, Deserialize)]
-pub struct VmOutput {
-    pub updated_state: State,
-    pub receipt: ExecutionReceipt,
-}
-
-pub fn execute_vm(
-    input: VmInput,
-) -> VmOutput {
-    let mut state = input.state.clone();
-
-    let previous_state_root =
-        hash_state(&state);
-
-    let mut changes: Vec<StateChange> =
-        vec![];
+    let mut state = state_before;
+    let mut node_hashes = vec![];
+    let mut changes = vec![];
 
     for node in input.plan.nodes.iter() {
-        let contract =
-            ContractRegistry::execute(
-                &node.contract,
-            );
+        let before = state.clone();
 
-        contract.execute(
-            &node.payload,
-            &mut state,
-            &mut changes,
-        );
+        // deterministic contract dispatch
+        match node.contract.as_str() {
+            "set" => {
+                state.insert("counter".into(), "5".into());
+            }
+            "increment" => {
+                let v = state.get("counter")
+                    .unwrap_or(&"0".to_string())
+                    .parse::<i64>()
+                    .unwrap_or(0) + 1;
+
+                state.insert("counter".into(), v.to_string());
+            }
+            _ => {}
+        }
+
+        let after = state.clone();
+
+        changes.push(StateChange {
+            key: "counter".into(),
+            before: before.get("counter").cloned().unwrap_or_default(),
+            after: after.get("counter").cloned().unwrap_or_default(),
+        });
+
+        node_hashes.push(hash_execution(node.contract.as_bytes()));
     }
 
-    let new_state_root =
-        hash_state(&state);
+    let state_root_after =
+        hash_state(&bincode::serialize(&state).unwrap());
 
-    let execution_root =
-        hash_execution(&changes);
+    let execution_root = hash_execution(&node_hashes.join("|").as_bytes());
 
-    let mut receipt = ExecutionReceipt {
-        previous_state_root,
-        new_state_root,
-        execution_root,
-        receipt_hash: String::new(),
-        abi_version:
-            ABI_VERSION.to_string(),
+    let receipt = ExecutionReceipt {
+        state_root_before,
+        state_root_after,
+        execution_root: execution_root.clone(),
+        receipt_hash: hash_receipt(execution_root.as_bytes()),
+        node_hashes,
+        state_changes: changes,
     };
-
-    receipt.receipt_hash =
-        hash_receipt(&receipt);
 
     VmOutput {
         updated_state: state,

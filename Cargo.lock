@@ -380,7 +380,6 @@ dependencies = [
  "hex",
  "increment-contract",
  "serde",
- "serde_json",
  "set-contract",
  "sha2",
 ]

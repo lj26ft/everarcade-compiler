@@ -1,12 +1,6 @@
 use std::collections::BTreeMap;
 
-use execution_core::{
-    execute_vm,
-    ExecutionNode,
-    ExecutionPlan,
-    State,
-    VmInput,
-};
+use execution_core::execute::*;
 
 fn main() {
     let state = State::new();

@@ -1,52 +1,19 @@
-use sha2::{
-    Digest,
-    Sha256,
-};
+use sha2::{Sha256, Digest};
 
-use crate::{
-    receipt::ExecutionReceipt,
-    state::{
-        State,
-        StateChange,
-    },
-};
-
-fn sha256(
-    input: &str,
-) -> String {
-    let mut hasher =
-        Sha256::new();
-
-    hasher.update(input.as_bytes());
-
-    hex::encode(
-        hasher.finalize(),
-    )
+pub fn hash_bytes(input: &[u8]) -> String {
+    let mut hasher = Sha256::new();
+    hasher.update(input);
+    hex::encode(hasher.finalize())
 }
 
-pub fn hash_state(
-    state: &State,
-) -> String {
-    sha256(
-        &serde_json::to_string(state)
-            .unwrap(),
-    )
+pub fn hash_state(state_bytes: &[u8]) -> String {
+    hash_bytes(state_bytes)
 }
 
-pub fn hash_execution(
-    changes: &Vec<StateChange>,
-) -> String {
-    sha256(
-        &serde_json::to_string(changes)
-            .unwrap(),
-    )
+pub fn hash_execution(input: &[u8]) -> String {
+    hash_bytes(input)
 }
 
-pub fn hash_receipt(
-    receipt: &ExecutionReceipt,
-) -> String {
-    sha256(
-        &serde_json::to_string(receipt)
-            .unwrap(),
-    )
+pub fn hash_receipt(input: &[u8]) -> String {
+    hash_bytes(input)
 }
