@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "nodes": [
+    {
+      "id": "node_a",
+      "deps": [],
+      "payload": {
+        "type": "const",
+        "value": "hello"
+      }
+    },
+    {
+      "id": "node_b",
+      "deps": [
+        "node_a"
+      ],
+      "payload": {
+        "type": "concat",
+        "with": " world"
+      }
+    }
+  ]
+}

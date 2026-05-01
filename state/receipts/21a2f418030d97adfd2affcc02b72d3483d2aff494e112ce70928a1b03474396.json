@@ -1,0 +1,22 @@
+{
+  "previous_state_root": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "new_state_root": "58ecdb7202d4d4f69bce7a13482bace8177aed78d429c0b50d88e6268a854ab0",
+  "execution_root": "5eb358382e9b50109abcb230a77ff7503595a642a71335822512e367a5a8ac5a",
+  "receipt_hash": "21a2f418030d97adfd2affcc02b72d3483d2aff494e112ce70928a1b03474396",
+  "node_hashes": {
+    "a": "b89c43f2d35b6d916fe28304eb370af30b8e665999fd6f9b156a2ec759c3a9a9",
+    "b": "daf1640fe16f13e6f13d29274165cd8d35a2488c346f2394159b83e08bd76cea"
+  },
+  "state_changes": [
+    {
+      "key": "counter",
+      "before": "",
+      "after": "5"
+    },
+    {
+      "key": "counter",
+      "before": "5",
+      "after": "6"
+    }
+  ]
+}

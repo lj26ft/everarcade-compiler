@@ -1,0 +1,10 @@
+[workspace]
+members = [
+    "execution-core",
+    "contract-api",
+    "contracts/set-contract",
+    "contracts/increment-contract",
+    "wasm-runner"
+]
+
+resolver = "2"

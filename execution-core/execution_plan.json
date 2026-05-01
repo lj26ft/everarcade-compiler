@@ -1,0 +1,22 @@
+{
+  "nodes": [
+    {
+      "id": "a",
+      "action": "set",
+      "payload": "counter=1",
+      "deps": []
+    },
+    {
+      "id": "b",
+      "action": "increment",
+      "payload": "counter",
+      "deps": ["a"]
+    },
+    {
+      "id": "c",
+      "action": "increment",
+      "payload": "counter",
+      "deps": ["b"]
+    }
+  ]
+}

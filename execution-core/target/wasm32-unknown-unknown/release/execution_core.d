@@ -1,0 +1,1 @@
+/home/lj26ft/execution-core/target/wasm32-unknown-unknown/release/execution_core.wasm: /home/lj26ft/execution-core/src/contracts/increment.rs /home/lj26ft/execution-core/src/contracts/mod.rs /home/lj26ft/execution-core/src/contracts/set.rs /home/lj26ft/execution-core/src/lib.rs /home/lj26ft/execution-core/src/registry.rs
