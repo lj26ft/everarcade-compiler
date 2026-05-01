@@ -1,107 +1,90 @@
+use serde::{Deserialize, Serialize};
+
 use crate::{
-    abi,
-    hashing,
-    scheduler,
-    ExecutionReceipt,
-    ExecutionNode,
-    State,
-    StateChange,
-    VmInput,
-    VmOutput,
+    abi::ABI_VERSION,
+    hashing::{
+        hash_execution,
+        hash_receipt,
+        hash_state,
+    },
+    receipt::ExecutionReceipt,
+    registry::ContractRegistry,
+    state::{
+        State,
+        StateChange,
+    },
 };
 
 use std::collections::BTreeMap;
 
-pub fn execute_vm(input: VmInput) -> VmOutput {
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct ExecutionNode {
+    pub id: String,
+    pub contract: String,
+    pub payload: BTreeMap<String, String>,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct ExecutionPlan {
+    pub nodes: Vec<ExecutionNode>,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct VmInput {
+    pub state: State,
+    pub plan: ExecutionPlan,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct VmOutput {
+    pub updated_state: State,
+    pub receipt: ExecutionReceipt,
+}
+
+pub fn execute_vm(
+    input: VmInput,
+) -> VmOutput {
     let mut state = input.state.clone();
 
-    let previous_state_root = hashing::compute_state_root(&state);
+    let previous_state_root =
+        hash_state(&state);
 
-    let ordered_nodes =
-        scheduler::topological_sort(&input.plan.nodes);
+    let mut changes: Vec<StateChange> =
+        vec![];
 
-    let mut node_hashes = BTreeMap::new();
-    let mut state_changes = Vec::new();
+    for node in input.plan.nodes.iter() {
+        let contract =
+            ContractRegistry::execute(
+                &node.contract,
+            );
 
-    for node in ordered_nodes {
-        execute_node(
-            &node,
+        contract.execute(
+            &node.payload,
             &mut state,
-            &mut state_changes,
-            &mut node_hashes,
+            &mut changes,
         );
     }
 
-    let new_state_root = hashing::compute_state_root(&state);
-    let execution_root = hashing::compute_execution_root(&node_hashes);
+    let new_state_root =
+        hash_state(&state);
 
-    let receipt_hash =
-        hashing::compute_receipt_hash(
-            &previous_state_root,
-            &new_state_root,
-            &execution_root,
-        );
+    let execution_root =
+        hash_execution(&changes);
 
-    let receipt = ExecutionReceipt {
-        abi_version: abi::ABI_VERSION.to_string(),
+    let mut receipt = ExecutionReceipt {
         previous_state_root,
         new_state_root,
         execution_root,
-        receipt_hash,
-        node_hashes,
-        state_changes,
+        receipt_hash: String::new(),
+        abi_version:
+            ABI_VERSION.to_string(),
     };
+
+    receipt.receipt_hash =
+        hash_receipt(&receipt);
 
     VmOutput {
         updated_state: state,
         receipt,
     }
-}
-
-fn execute_node(
-    node: &ExecutionNode,
-    state: &mut State,
-    state_changes: &mut Vec<StateChange>,
-    node_hashes: &mut BTreeMap<String, String>,
-) {
-    match node.action.as_str() {
-        "set" => {
-            let key = node.payload["key"].as_str().unwrap().to_string();
-            let value = node.payload["value"].as_str().unwrap().to_string();
-
-            let before = state.get(&key).cloned().unwrap_or_default();
-
-            state.insert(key.clone(), value.clone());
-
-            state_changes.push(StateChange {
-                key,
-                before,
-                after: value,
-            });
-        }
-
-        "increment" => {
-            let key = node.payload["key"].as_str().unwrap().to_string();
-            let amount = node.payload["amount"].as_i64().unwrap();
-
-            let current = state.get(&key).cloned().unwrap_or("0".to_string());
-            let current_num: i64 = current.parse().unwrap();
-            let next = current_num + amount;
-
-            let next_str = next.to_string();
-
-            state.insert(key.clone(), next_str.clone());
-
-            state_changes.push(StateChange {
-                key,
-                before: current,
-                after: next_str,
-            });
-        }
-
-        _ => panic!("unknown action"),
-    }
-
-    let hash = hashing::compute_node_hash(node);
-    node_hashes.insert(node.id.clone(), hash);
 }

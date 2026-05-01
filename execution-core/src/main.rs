@@ -1,17 +1,7 @@
-// FILE: execution-core/src/main.rs
-//
-// LOCAL NATIVE TEST RUNNER
-//
-// PURPOSE:
-// - native testing
-// - deterministic execution verification
-// - WASM-independent debugging
-//
-// RUN:
-// cargo run -p execution-core
-//
+use std::collections::BTreeMap;
 
 use execution_core::{
+    execute_vm,
     ExecutionNode,
     ExecutionPlan,
     State,
@@ -19,122 +9,96 @@ use execution_core::{
 };
 
 fn main() {
-    //
-    // ========================================================
-    // INITIAL STATE
-    // ========================================================
-    //
-
     let state = State::new();
 
-    //
-    // ========================================================
-    // EXECUTION PLAN
-    // ========================================================
-    //
+    let mut set_payload =
+        BTreeMap::new();
+
+    set_payload.insert(
+        "key".to_string(),
+        "counter".to_string(),
+    );
+
+    set_payload.insert(
+        "value".to_string(),
+        "5".to_string(),
+    );
+
+    let mut increment_payload =
+        BTreeMap::new();
+
+    increment_payload.insert(
+        "key".to_string(),
+        "counter".to_string(),
+    );
+
+    increment_payload.insert(
+        "amount".to_string(),
+        "1".to_string(),
+    );
 
     let plan = ExecutionPlan {
         nodes: vec![
             ExecutionNode {
                 id: "a".to_string(),
-                action: "set".to_string(),
-                payload: serde_json::json!({
-                    "key": "counter",
-                    "value": "5"
-                }),
-                deps: vec![],
+                contract: "set".to_string(),
+                payload: set_payload,
             },
             ExecutionNode {
                 id: "b".to_string(),
-                action: "increment".to_string(),
-                payload: serde_json::json!({
-                    "key": "counter",
-                    "amount": 1
-                }),
-                deps: vec!["a".to_string()],
+                contract:
+                    "increment".to_string(),
+                payload: increment_payload,
             },
         ],
     };
-
-    //
-    // ========================================================
-    // VM INPUT
-    // ========================================================
-    //
 
     let input = VmInput {
         state,
         plan,
     };
 
-    //
-    // ========================================================
-    // EXECUTE VM
-    // ========================================================
-    //
-
     let output =
-        execution_core::execute::execute_vm(input);
+        execute_vm(input);
 
-    //
-    // ========================================================
-    // DISPLAY RECEIPT
-    // ========================================================
-    //
-
-    println!();
-    println!("PREVIOUS STATE ROOT:");
     println!(
-        "{}",
-        output.receipt.previous_state_root
+        "\n=== ABI v2 EXECUTION ==="
     );
 
-    println!();
-    println!("NEW STATE ROOT:");
     println!(
-        "{}",
-        output.receipt.new_state_root
+        "\nPREVIOUS STATE ROOT:\n{}",
+        output
+            .receipt
+            .previous_state_root
     );
 
-    println!();
-    println!("EXECUTION ROOT:");
     println!(
-        "{}",
-        output.receipt.execution_root
+        "\nNEW STATE ROOT:\n{}",
+        output
+            .receipt
+            .new_state_root
     );
 
-    println!();
-    println!("RECEIPT HASH:");
     println!(
-        "{}",
-        output.receipt.receipt_hash
+        "\nEXECUTION ROOT:\n{}",
+        output
+            .receipt
+            .execution_root
     );
 
-    println!();
-    println!("NODE HASHES:");
+    println!(
+        "\nRECEIPT HASH:\n{}",
+        output
+            .receipt
+            .receipt_hash
+    );
 
-    for (id, hash) in &output.receipt.node_hashes {
-        println!("{} => {}", id, hash);
+    println!("\nFINAL STATE:");
+
+    for (k, v) in output
+        .updated_state
+        .iter()
+    {
+        println!("{k} => {v}");
     }
-
-    println!();
-    println!("STATE CHANGES:");
-
-    for change in &output.receipt.state_changes {
-        println!(
-            "{}: '{}' -> '{}'",
-            change.key,
-            change.before,
-            change.after
-        );
-    }
-
-    println!();
-    println!("FINAL STATE:");
-
-    for (key, value) in &output.updated_state {
-        println!("{} => {}", key, value);
-    }
-
-    println!();
 }

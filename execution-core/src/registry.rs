@@ -1,37 +1,21 @@
-use contract_api::{
-    Contract,
-    ContractError,
-    State,
-    StateChange,
+use crate::{
+    contract::Contract,
+    contracts::{
+        increment::IncrementContract,
+        set::SetContract,
+    },
 };
 
-use serde_json::Value;
+pub struct ContractRegistry;
 
-use increment_contract::IncrementContract;
-use set_contract::SetContract;
-
-pub fn execute_action(
-    action: &str,
-    state: &mut State,
-    payload: Value,
-) -> Result<Vec<StateChange>, ContractError> {
-    match action {
-        "set" => {
-            let p = SetContract::decode(payload)?;
-
-            SetContract::execute(state, p)
+impl ContractRegistry {
+    pub fn execute(
+        contract_id: &str,
+    ) -> Box<dyn Contract> {
+        match contract_id {
+            "set" => Box::new(SetContract),
+            "increment" => Box::new(IncrementContract),
+            _ => panic!("unknown contract"),
         }
-
-        "increment" => {
-            let p =
-                IncrementContract::decode(payload)?;
-
-            IncrementContract::execute(state, p)
-        }
-
-        _ => Err(ContractError(format!(
-            "unknown action: {}",
-            action
-        ))),
     }
 }

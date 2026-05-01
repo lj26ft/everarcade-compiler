@@ -1,92 +1,52 @@
-// FILE: execution-core/src/hashing.rs
+use sha2::{
+    Digest,
+    Sha256,
+};
 
-use crate::ExecutionNode;
+use crate::{
+    receipt::ExecutionReceipt,
+    state::{
+        State,
+        StateChange,
+    },
+};
 
-use sha2::{Digest, Sha256};
+fn sha256(
+    input: &str,
+) -> String {
+    let mut hasher =
+        Sha256::new();
 
-use std::collections::BTreeMap;
+    hasher.update(input.as_bytes());
 
-//
-// ============================================================
-// SHA256 HELPER
-// ============================================================
-//
-
-pub fn sha256(data: &[u8]) -> String {
-    let mut hasher = Sha256::new();
-
-    hasher.update(data);
-
-    let result = hasher.finalize();
-
-    hex::encode(result)
+    hex::encode(
+        hasher.finalize(),
+    )
 }
 
-//
-// ============================================================
-// STATE ROOT
-// ============================================================
-//
-
-pub fn compute_state_root(
-    state: &BTreeMap<String, String>,
+pub fn hash_state(
+    state: &State,
 ) -> String {
-    let canonical =
-        serde_json::to_vec(state)
-            .expect("state serialize failed");
-
-    sha256(&canonical)
+    sha256(
+        &serde_json::to_string(state)
+            .unwrap(),
+    )
 }
 
-//
-// ============================================================
-// NODE HASH
-// ============================================================
-//
-
-pub fn compute_node_hash(
-    node: &ExecutionNode,
+pub fn hash_execution(
+    changes: &Vec<StateChange>,
 ) -> String {
-    let canonical =
-        serde_json::to_vec(node)
-            .expect("node serialize failed");
-
-    sha256(&canonical)
+    sha256(
+        &serde_json::to_string(changes)
+            .unwrap(),
+    )
 }
 
-//
-// ============================================================
-// EXECUTION ROOT
-// ============================================================
-//
-
-pub fn compute_execution_root(
-    node_hashes: &BTreeMap<String, String>,
+pub fn hash_receipt(
+    receipt: &ExecutionReceipt,
 ) -> String {
-    let canonical =
-        serde_json::to_vec(node_hashes)
-            .expect("execution serialize failed");
-
-    sha256(&canonical)
-}
-
-//
-// ============================================================
-// RECEIPT HASH
-// ============================================================
-//
-
-pub fn compute_receipt_hash(
-    previous_state_root: &str,
-    new_state_root: &str,
-    execution_root: &str,
-) -> String {
-    let combined = format!(
-        "{}{}{}",
-        previous_state_root,
-        new_state_root,
-        execution_root
-    );
-
-    sha256(combined.as_bytes())
+    sha256(
+        &serde_json::to_string(receipt)
+            .unwrap(),
+    )
 }

@@ -375,6 +375,7 @@ dependencies = [
 name = "execution-core"
 version = "0.1.0"
 dependencies = [
+ "bincode",
  "contract-api",
  "hex",
  "increment-contract",
@@ -1129,6 +1130,7 @@ name = "wasm-runner"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "bincode",
  "execution-core",
  "serde",
  "serde_json",
