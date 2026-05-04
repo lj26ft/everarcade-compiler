@@ -2,12 +2,13 @@ use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 use std::sync::OnceLock;
 
+pub mod abi;
 pub mod execute;
 pub mod hashing;
 pub mod receipt;
 pub mod scheduler;
 pub mod state;
-pub mod abi;
+pub mod wasm;
 
 pub type State = BTreeMap<String, String>;
 
@@ -107,19 +108,13 @@ pub extern "C" fn vm_output_len() -> usize {
 pub extern "C" fn vm_execute_with_len(ptr: *mut u8, len: usize) -> *const u8 {
     use execute::execute_vm;
 
-    let input_bytes = unsafe {
-        std::slice::from_raw_parts(ptr, len)
-    };
+    let input_bytes = unsafe { std::slice::from_raw_parts(ptr, len) };
 
-    let vm_input: VmInput =
-        serde_json::from_slice(input_bytes)
-            .expect("invalid VmInput");
+    let vm_input: VmInput = serde_json::from_slice(input_bytes).expect("invalid VmInput");
 
     let output = execute_vm(vm_input);
 
-    let bytes =
-        serde_json::to_vec(&output)
-            .expect("invalid VmOutput");
+    let bytes = serde_json::to_vec(&output).expect("invalid VmOutput");
 
     set_output(bytes);
 
