@@ -8,22 +8,13 @@
 
 use crate::ExecutionNode;
 
-use std::collections::{
-    BTreeMap,
-    BTreeSet,
-};
+use std::collections::{BTreeMap, BTreeSet};
 
-pub fn topological_sort(
-    nodes: &[ExecutionNode],
-) -> Vec<ExecutionNode> {
-    let mut node_map =
-        BTreeMap::<String, ExecutionNode>::new();
+pub fn topological_sort(nodes: &[ExecutionNode]) -> Vec<ExecutionNode> {
+    let mut node_map = BTreeMap::<String, ExecutionNode>::new();
 
     for node in nodes {
-        node_map.insert(
-            node.id.clone(),
-            node.clone(),
-        );
+        node_map.insert(node.id.clone(), node.clone());
     }
 
     //
@@ -33,10 +24,7 @@ pub fn topological_sort(
     for node in nodes {
         for dep in &node.deps {
             if !node_map.contains_key(dep) {
-                panic!(
-                    "missing dependency: {}",
-                    dep
-                );
+                panic!("missing dependency: {}", dep);
             }
         }
     }
@@ -47,14 +35,11 @@ pub fn topological_sort(
 
     let mut ordered = Vec::<ExecutionNode>::new();
 
-    let mut temporary =
-        BTreeSet::<String>::new();
+    let mut temporary = BTreeSet::<String>::new();
 
-    let mut permanent =
-        BTreeSet::<String>::new();
+    let mut permanent = BTreeSet::<String>::new();
 
-    let keys: Vec<String> =
-        node_map.keys().cloned().collect();
+    let keys: Vec<String> = node_map.keys().cloned().collect();
 
     for key in keys {
         visit(
@@ -86,18 +71,10 @@ fn visit(
 
     temporary.insert(id.to_string());
 
-    let node =
-        node_map.get(id)
-            .expect("missing node");
+    let node = node_map.get(id).expect("missing node");
 
     for dep in &node.deps {
-        visit(
-            dep,
-            node_map,
-            temporary,
-            permanent,
-            ordered,
-        );
+        visit(dep, node_map, temporary, permanent, ordered);
     }
 
     temporary.remove(id);

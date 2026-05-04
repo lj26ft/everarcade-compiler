@@ -28,12 +28,8 @@ pub fn sha256(data: &[u8]) -> String {
 // ============================================================
 //
 
-pub fn compute_state_root(
-    state: &BTreeMap<String, String>,
-) -> String {
-    let canonical =
-        serde_json::to_vec(state)
-            .expect("state serialize failed");
+pub fn compute_state_root(state: &BTreeMap<String, String>) -> String {
+    let canonical = serde_json::to_vec(state).expect("state serialize failed");
 
     sha256(&canonical)
 }
@@ -44,12 +40,8 @@ pub fn compute_state_root(
 // ============================================================
 //
 
-pub fn compute_node_hash(
-    node: &ExecutionNode,
-) -> String {
-    let canonical =
-        serde_json::to_vec(node)
-            .expect("node serialize failed");
+pub fn compute_node_hash(node: &ExecutionNode) -> String {
+    let canonical = serde_json::to_vec(node).expect("node serialize failed");
 
     sha256(&canonical)
 }
@@ -60,12 +52,8 @@ pub fn compute_node_hash(
 // ============================================================
 //
 
-pub fn compute_execution_root(
-    node_hashes: &BTreeMap<String, String>,
-) -> String {
-    let canonical =
-        serde_json::to_vec(node_hashes)
-            .expect("execution serialize failed");
+pub fn compute_execution_root(node_hashes: &BTreeMap<String, String>) -> String {
+    let canonical = serde_json::to_vec(node_hashes).expect("execution serialize failed");
 
     sha256(&canonical)
 }
@@ -83,9 +71,7 @@ pub fn compute_receipt_hash(
 ) -> String {
     let combined = format!(
         "{}{}{}",
-        previous_state_root,
-        new_state_root,
-        execution_root
+        previous_state_root, new_state_root, execution_root
     );
 
     sha256(combined.as_bytes())
