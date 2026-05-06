@@ -2,12 +2,13 @@ use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 use std::sync::OnceLock;
 
+pub mod abi;
 pub mod execute;
 pub mod hashing;
 pub mod receipt;
 pub mod scheduler;
 pub mod state;
-pub mod abi;
+pub mod wasm;
 
 pub type State = BTreeMap<String, String>;
 
@@ -107,21 +108,33 @@ pub extern "C" fn vm_output_len() -> usize {
 pub extern "C" fn vm_execute_with_len(ptr: *mut u8, len: usize) -> *const u8 {
     use execute::execute_vm;
 
-    let input_bytes = unsafe {
-        std::slice::from_raw_parts(ptr, len)
-    };
+    let input_bytes = unsafe { std::slice::from_raw_parts(ptr, len) };
 
-    let vm_input: VmInput =
-        serde_json::from_slice(input_bytes)
-            .expect("invalid VmInput");
+    let vm_input: VmInput = serde_json::from_slice(input_bytes).expect("invalid VmInput");
 
     let output = execute_vm(vm_input);
 
-    let bytes =
-        serde_json::to_vec(&output)
-            .expect("invalid VmOutput");
+    let bytes = serde_json::to_vec(&output).expect("invalid VmOutput");
 
     set_output(bytes);
 
     get_output_ptr()
+}
+
+#[no_mangle]
+pub extern "C" fn vm_run(ptr: i32) -> i32 {
+    let base = ptr as *const u8;
+    let len_bytes = unsafe { std::slice::from_raw_parts(base, 4) };
+    let len = u32::from_le_bytes(len_bytes.try_into().expect("input length")) as usize;
+
+    let payload = unsafe { std::slice::from_raw_parts(base.add(4), len) };
+    let out_ptr = vm_execute_with_len(payload.as_ptr() as *mut u8, len);
+    let out_len = vm_output_len() as u32;
+
+    let mut frame = Vec::with_capacity(4 + out_len as usize);
+    frame.extend_from_slice(&out_len.to_le_bytes());
+    frame.extend_from_slice(unsafe { std::slice::from_raw_parts(out_ptr, out_len as usize) });
+
+    set_output(frame);
+    get_output_ptr() as i32
 }
