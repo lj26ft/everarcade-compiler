@@ -120,3 +120,21 @@ pub extern "C" fn vm_execute_with_len(ptr: *mut u8, len: usize) -> *const u8 {
 
     get_output_ptr()
 }
+
+#[no_mangle]
+pub extern "C" fn vm_run(ptr: i32) -> i32 {
+    let base = ptr as *const u8;
+    let len_bytes = unsafe { std::slice::from_raw_parts(base, 4) };
+    let len = u32::from_le_bytes(len_bytes.try_into().expect("input length")) as usize;
+
+    let payload = unsafe { std::slice::from_raw_parts(base.add(4), len) };
+    let out_ptr = vm_execute_with_len(payload.as_ptr() as *mut u8, len);
+    let out_len = vm_output_len() as u32;
+
+    let mut frame = Vec::with_capacity(4 + out_len as usize);
+    frame.extend_from_slice(&out_len.to_le_bytes());
+    frame.extend_from_slice(unsafe { std::slice::from_raw_parts(out_ptr, out_len as usize) });
+
+    set_output(frame);
+    get_output_ptr() as i32
+}

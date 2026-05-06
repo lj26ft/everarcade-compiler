@@ -8,4 +8,4 @@
 // - checkpoint verification
 // - replay stream validation
 
-pub const RECEIPT_VERSION: &str = "v1";
+pub const RECEIPT_VERSION: &str = "v2";

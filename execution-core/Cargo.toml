@@ -15,6 +15,9 @@ hex = "0.4"
 anyhow = "1"
 wasmtime = { version = "26", default-features = false, features = ["cranelift", "runtime"] }
 
+
+
 contract-api = { path = "../contract-api" }
 set-contract = { path = "../contracts/set-contract" }
 increment-contract = { path = "../contracts/increment-contract" }
+
