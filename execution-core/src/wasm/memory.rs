@@ -1,5 +1,9 @@
+
 use anyhow::Context;
 use wasmtime::{AsContextMut, Memory};
+
+use wasmtime::{AsContextMut, Caller, Memory};
+
 
 pub fn write_bytes(
     mut caller: impl AsContextMut<Data = ()>,

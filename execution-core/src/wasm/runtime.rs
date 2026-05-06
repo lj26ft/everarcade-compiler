@@ -55,5 +55,11 @@ impl WasmEngine {
         let output: VmOutput = serde_json::from_slice(&output_bytes)?;
 
         Ok(output)
+        let _vm_run = instance.get_typed_func::<i32, i32>(&mut store, "vm_run")?;
+
+        // Step 1 intentionally stops at deterministic engine + module instantiation.
+        // Step 2 wires ABI memory encoding/decoding for vm_run.
+        let _ = input;
+        anyhow::bail!("vm_run ABI bridge not yet connected")
     }
 }
