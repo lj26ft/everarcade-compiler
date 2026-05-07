@@ -3,7 +3,7 @@ use crate::{VmInput, VmOutput};
 use super::engine::deterministic_engine;
 use super::instance::instantiate;
 use super::limits::ExecutionLimits;
-use super::memory::{read_len_prefixed, write_len_prefixed};
+use super::memory::{deserialize_abi, read_memory, serialize_abi, write_memory};
 use anyhow::Context;
 use wasmtime::{Linker, Module, Store};
 
@@ -32,34 +32,33 @@ impl WasmEngine {
             .get_memory(&mut store, "memory")
             .context("wasm module missing exported memory")?;
 
-        let vm_alloc = instance
-            .get_typed_func::<i32, i32>(&mut store, "vm_alloc")
-            .context("wasm module missing vm_alloc export")?;
+        let alloc = instance
+            .get_typed_func::<i32, i32>(&mut store, "alloc")
+            .context("wasm module missing alloc export")?;
 
-        let vm_run = instance
-            .get_typed_func::<i32, i32>(&mut store, "vm_run")
-            .context("wasm module missing vm_run export")?;
+        let execute = instance
+            .get_typed_func::<(i32, i32), i32>(&mut store, "execute")
+            .context("wasm module missing execute export")?;
 
-        let input_bytes = serde_json::to_vec(&input)?;
-        let frame_size = i32::try_from(input_bytes.len() + 4).context("input too large")?;
-        let input_ptr = vm_alloc.call(&mut store, frame_size)?;
+        let input_bytes = serialize_abi(&input)?;
+        let input_len = i32::try_from(input_bytes.len()).context("input too large")?;
+        let input_ptr = alloc.call(&mut store, input_len)?;
 
-        write_len_prefixed(&mut store, &memory, input_ptr as usize, &input_bytes)?;
+        write_memory(&mut store, &memory, input_ptr, &input_bytes)?;
 
-        let output_ptr = vm_run.call(&mut store, input_ptr)?;
+        let output_ptr = execute.call(&mut store, (input_ptr, input_len))?;
         if output_ptr < 0 {
-            anyhow::bail!("vm_run returned negative pointer")
+            anyhow::bail!("execute returned negative pointer")
         }
 
-        let output_bytes = read_len_prefixed(&mut store, &memory, output_ptr as usize)?;
-        let output: VmOutput = serde_json::from_slice(&output_bytes)?;
+        let output_len = instance
+            .get_typed_func::<(), i32>(&mut store, "output_len")
+            .context("wasm module missing output_len export")?
+            .call(&mut store, ())?;
+
+        let output_bytes = read_memory(&mut store, &memory, output_ptr, output_len)?;
+        let output: VmOutput = deserialize_abi(&output_bytes)?;
 
         Ok(output)
-        let _vm_run = instance.get_typed_func::<i32, i32>(&mut store, "vm_run")?;
-
-        // Step 1 intentionally stops at deterministic engine + module instantiation.
-        // Step 2 wires ABI memory encoding/decoding for vm_run.
-        let _ = input;
-        anyhow::bail!("vm_run ABI bridge not yet connected")
     }
 }

@@ -1,49 +1,46 @@
-
 use anyhow::Context;
+use serde::{de::DeserializeOwned, Serialize};
 use wasmtime::{AsContextMut, Memory};
 
-use wasmtime::{AsContextMut, Caller, Memory};
-
-
-pub fn write_bytes(
+pub fn write_memory(
     mut caller: impl AsContextMut<Data = ()>,
     memory: &Memory,
-    offset: usize,
-    data: &[u8],
+    ptr: i32,
+    bytes: &[u8],
 ) -> anyhow::Result<()> {
-    memory.write(&mut caller, offset, data)?;
+    if ptr < 0 {
+        anyhow::bail!("negative memory pointer")
+    }
+
+    memory
+        .write(&mut caller, ptr as usize, bytes)
+        .context("failed writing guest memory")?;
+
     Ok(())
 }
 
-pub fn read_bytes(
+pub fn read_memory(
     mut caller: impl AsContextMut<Data = ()>,
     memory: &Memory,
-    offset: usize,
-    len: usize,
+    ptr: i32,
+    len: i32,
 ) -> anyhow::Result<Vec<u8>> {
-    let mut out = vec![0_u8; len];
-    memory.read(&mut caller, offset, &mut out)?;
+    if ptr < 0 || len < 0 {
+        anyhow::bail!("negative memory pointer or length")
+    }
+
+    let mut out = vec![0_u8; len as usize];
+    memory
+        .read(&mut caller, ptr as usize, &mut out)
+        .context("failed reading guest memory")?;
+
     Ok(out)
 }
 
-pub fn write_len_prefixed(
-    mut caller: impl AsContextMut<Data = ()>,
-    memory: &Memory,
-    offset: usize,
-    payload: &[u8],
-) -> anyhow::Result<()> {
-    let len = u32::try_from(payload.len()).context("payload too large")?;
-    write_bytes(&mut caller, memory, offset, &len.to_le_bytes())?;
-    write_bytes(&mut caller, memory, offset + 4, payload)?;
-    Ok(())
+pub fn serialize_abi<T: Serialize>(value: &T) -> anyhow::Result<Vec<u8>> {
+    bincode::serialize(value).context("failed ABI serialization")
 }
 
-pub fn read_len_prefixed(
-    mut caller: impl AsContextMut<Data = ()>,
-    memory: &Memory,
-    offset: usize,
-) -> anyhow::Result<Vec<u8>> {
-    let len_bytes = read_bytes(&mut caller, memory, offset, 4)?;
-    let len = u32::from_le_bytes(len_bytes.try_into().expect("length prefix")) as usize;
-    read_bytes(&mut caller, memory, offset + 4, len)
+pub fn deserialize_abi<T: DeserializeOwned>(bytes: &[u8]) -> anyhow::Result<T> {
+    bincode::deserialize(bytes).context("failed ABI deserialization")
 }

@@ -3,8 +3,7 @@ members = [
     "execution-core",
     "contract-api",
     "contracts/set-contract",
-    "contracts/increment-contract",
-    "wasm-runner"
+    "contracts/increment-contract"
 ]
 
 resolver = "2"
