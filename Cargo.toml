@@ -3,7 +3,12 @@ members = [
     "execution-core",
     "contract-api",
     "contracts/set-contract",
+<<<<<<< Updated upstream
     "contracts/increment-contract"
+=======
+    "contracts/increment-contract",
+    
+>>>>>>> Stashed changes
 ]
 
 resolver = "2"
