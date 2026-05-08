@@ -1,0 +1,5 @@
+Deterministic Vm Testing
+build build contract
+cargo build \
+  --target wasm32-unknown-unknown \
+  -p echo-contract
