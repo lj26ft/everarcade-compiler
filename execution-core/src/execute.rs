@@ -1,89 +1,32 @@
-use crate::{
-    abi, hashing, scheduler, ExecutionNode, ExecutionReceipt, State, StateChange, VmInput, VmOutput,
-};
-
+use crate::{hashing, ExecutionReceipt, VmInput, VmOutput, ABI_VERSION};
 use std::collections::BTreeMap;
 
 pub fn execute_vm(input: VmInput) -> VmOutput {
-    let mut state = input.state.clone();
-
+    let state = input.state.clone();
     let previous_state_root = hashing::compute_state_root(&state);
-
-    let ordered_nodes = scheduler::topological_sort(&input.plan.nodes);
-
-    let mut node_hashes = BTreeMap::new();
-    let mut state_changes = Vec::new();
-
-    for node in ordered_nodes {
-        execute_node(&node, &mut state, &mut state_changes, &mut node_hashes);
-    }
-
-    let new_state_root = hashing::compute_state_root(&state);
+    let node_hashes: BTreeMap<String, String> = input
+        .plan
+        .nodes
+        .iter()
+        .map(|n| (n.id.clone(), hashing::compute_node_hash(n)))
+        .collect();
     let execution_root = hashing::compute_execution_root(&node_hashes);
 
-    let receipt_hash =
-        hashing::compute_receipt_hash(&previous_state_root, &new_state_root, &execution_root);
-
-    let receipt = ExecutionReceipt {
-        abi_version: abi::ABI_VERSION.to_string(),
+    let mut receipt = ExecutionReceipt {
+        abi_version: ABI_VERSION.to_string(),
+        contract_hash: String::new(),
+        input_hash: hashing::hash_bytes(&bincode::serialize(&input).expect("input serialize failed")),
         previous_state_root,
-        new_state_root,
+        new_state_root: hashing::compute_state_root(&state),
         execution_root,
-        receipt_hash,
+        fuel_used: 0,
+        memory_used: 0,
         node_hashes,
-        state_changes,
+        state_changes: vec![],
+        output_hash: String::new(),
+        receipt_hash: String::new(),
     };
-
-    VmOutput {
-        updated_state: state,
-        receipt,
-    }
-}
-
-fn execute_node(
-    node: &ExecutionNode,
-    state: &mut State,
-    state_changes: &mut Vec<StateChange>,
-    node_hashes: &mut BTreeMap<String, String>,
-) {
-    match node.action.as_str() {
-        "set" => {
-            let key = node.payload["key"].as_str().unwrap().to_string();
-            let value = node.payload["value"].as_str().unwrap().to_string();
-
-            let before = state.get(&key).cloned().unwrap_or_default();
-
-            state.insert(key.clone(), value.clone());
-
-            state_changes.push(StateChange {
-                key,
-                before,
-                after: value,
-            });
-        }
-
-        "increment" => {
-            let key = node.payload["key"].as_str().unwrap().to_string();
-            let amount = node.payload["amount"].as_i64().unwrap();
-
-            let current = state.get(&key).cloned().unwrap_or("0".to_string());
-            let current_num: i64 = current.parse().unwrap();
-            let next = current_num + amount;
-
-            let next_str = next.to_string();
-
-            state.insert(key.clone(), next_str.clone());
-
-            state_changes.push(StateChange {
-                key,
-                before: current,
-                after: next_str,
-            });
-        }
-
-        _ => panic!("unknown action"),
-    }
-
-    let hash = hashing::compute_node_hash(node);
-    node_hashes.insert(node.id.clone(), hash);
+    receipt.output_hash = hashing::hash_bytes(&bincode::serialize(&state).expect("state serialize failed"));
+    receipt.receipt_hash = hashing::compute_receipt_hash(&receipt);
+    VmOutput { updated_state: state, receipt }
 }

@@ -1,5 +1,6 @@
 [workspace]
 members = [
+    "everarcade-abi",
     "execution-core",
     "contract-api",
     "contracts/set-contract",

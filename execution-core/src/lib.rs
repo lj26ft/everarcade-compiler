@@ -1,65 +1,13 @@
-use serde::{Deserialize, Serialize};
-use std::collections::BTreeMap;
-use std::sync::OnceLock;
-
-pub mod abi;
 pub mod execute;
 pub mod hashing;
-pub mod receipt;
-pub mod scheduler;
-pub mod state;
 pub mod wasm;
 
-pub type State = BTreeMap<String, String>;
+pub use everarcade_abi::{
+    ExecutionNode, ExecutionPlan, ExecutionReceipt, State, StateChange, VmInput, VmOutput,
+    ABI_VERSION,
+};
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct ExecutionNode {
-    pub id: String,
-    pub action: String,
-    pub payload: serde_json::Value,
-    pub deps: Vec<String>,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct ExecutionPlan {
-    pub nodes: Vec<ExecutionNode>,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct VmInput {
-    pub state: State,
-    pub plan: ExecutionPlan,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct StateChange {
-    pub key: String,
-    pub before: String,
-    pub after: String,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct ExecutionReceipt {
-    pub abi_version: String,
-    pub previous_state_root: String,
-    pub new_state_root: String,
-    pub execution_root: String,
-    pub receipt_hash: String,
-    pub node_hashes: BTreeMap<String, String>,
-    pub state_changes: Vec<StateChange>,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct VmOutput {
-    pub updated_state: State,
-    pub receipt: ExecutionReceipt,
-}
-
-//
-// ============================================================
-// SAFE GLOBAL OUTPUT BUFFER (NO UB)
-// ============================================================
-//
+use std::sync::OnceLock;
 
 static OUTPUT_BUFFER: OnceLock<Vec<u8>> = OnceLock::new();
 
@@ -67,74 +15,28 @@ fn set_output(bytes: Vec<u8>) {
     let _ = OUTPUT_BUFFER.set(bytes);
 }
 
-fn get_output_len() -> usize {
-    OUTPUT_BUFFER.get().map(|b| b.len()).unwrap_or(0)
-}
-
-fn get_output_ptr() -> *const u8 {
-    OUTPUT_BUFFER
-        .get()
-        .map(|b| b.as_ptr())
-        .unwrap_or(std::ptr::null())
-}
-
-//
-// ============================================================
-// WASM EXPORTS
-// ============================================================
-//
-
 #[no_mangle]
-pub extern "C" fn vm_alloc(size: usize) -> *mut u8 {
-    let mut buf = Vec::<u8>::with_capacity(size);
+pub extern "C" fn alloc(len: i32) -> i32 {
+    if len <= 0 { return -1; }
+    let mut buf = Vec::<u8>::with_capacity(len as usize);
     let ptr = buf.as_mut_ptr();
     std::mem::forget(buf);
-    ptr
+    ptr as i32
 }
 
 #[no_mangle]
-pub extern "C" fn vm_dealloc(ptr: *mut u8, size: usize) {
-    unsafe {
-        drop(Vec::from_raw_parts(ptr, size, size));
-    }
-}
-
-#[no_mangle]
-pub extern "C" fn vm_output_len() -> usize {
-    get_output_len()
-}
-
-#[no_mangle]
-pub extern "C" fn vm_execute_with_len(ptr: *mut u8, len: usize) -> *const u8 {
-    use execute::execute_vm;
-
-    let input_bytes = unsafe { std::slice::from_raw_parts(ptr, len) };
-
-    let vm_input: VmInput = serde_json::from_slice(input_bytes).expect("invalid VmInput");
-
-    let output = execute_vm(vm_input);
-
-    let bytes = serde_json::to_vec(&output).expect("invalid VmOutput");
-
+pub extern "C" fn execute(ptr: i32, len: i32) -> i32 {
+    if ptr < 0 || len < 0 { return -1; }
+    let input_bytes = unsafe { std::slice::from_raw_parts(ptr as *const u8, len as usize) };
+    let vm_input: VmInput = match everarcade_abi::deserialize(input_bytes) { Ok(v)=>v, Err(_)=> return -1 };
+    let output = execute::execute_vm(vm_input);
+    let bytes = match everarcade_abi::serialize(&output) { Ok(v)=>v, Err(_)=> return -1 };
+    let out_ptr = bytes.as_ptr() as i32;
     set_output(bytes);
-
-    get_output_ptr()
+    out_ptr
 }
 
 #[no_mangle]
-pub extern "C" fn vm_run(ptr: i32) -> i32 {
-    let base = ptr as *const u8;
-    let len_bytes = unsafe { std::slice::from_raw_parts(base, 4) };
-    let len = u32::from_le_bytes(len_bytes.try_into().expect("input length")) as usize;
-
-    let payload = unsafe { std::slice::from_raw_parts(base.add(4), len) };
-    let out_ptr = vm_execute_with_len(payload.as_ptr() as *mut u8, len);
-    let out_len = vm_output_len() as u32;
-
-    let mut frame = Vec::with_capacity(4 + out_len as usize);
-    frame.extend_from_slice(&out_len.to_le_bytes());
-    frame.extend_from_slice(unsafe { std::slice::from_raw_parts(out_ptr, out_len as usize) });
-
-    set_output(frame);
-    get_output_ptr() as i32
+pub extern "C" fn output_len() -> i32 {
+    OUTPUT_BUFFER.get().map(|b| b.len() as i32).unwrap_or(0)
 }

@@ -1,78 +1,25 @@
-// FILE: execution-core/src/hashing.rs
-
-use crate::ExecutionNode;
-
+use crate::{ExecutionNode, ExecutionReceipt};
 use sha2::{Digest, Sha256};
-
 use std::collections::BTreeMap;
 
-//
-// ============================================================
-// SHA256 HELPER
-// ============================================================
-//
-
-pub fn sha256(data: &[u8]) -> String {
-    let mut hasher = Sha256::new();
-
-    hasher.update(data);
-
-    let result = hasher.finalize();
-
-    hex::encode(result)
-}
-
-//
-// ============================================================
-// STATE ROOT
-// ============================================================
-//
+pub fn hash_bytes(bytes: &[u8]) -> String { hex::encode(Sha256::digest(bytes)) }
 
 pub fn compute_state_root(state: &BTreeMap<String, String>) -> String {
-    let canonical = serde_json::to_vec(state).expect("state serialize failed");
-
-    sha256(&canonical)
+    hash_bytes(&bincode::serialize(state).expect("state serialize failed"))
 }
-
-//
-// ============================================================
-// NODE HASH
-// ============================================================
-//
 
 pub fn compute_node_hash(node: &ExecutionNode) -> String {
-    let canonical = serde_json::to_vec(node).expect("node serialize failed");
-
-    sha256(&canonical)
+    hash_bytes(&bincode::serialize(node).expect("node serialize failed"))
 }
-
-//
-// ============================================================
-// EXECUTION ROOT
-// ============================================================
-//
 
 pub fn compute_execution_root(node_hashes: &BTreeMap<String, String>) -> String {
-    let canonical = serde_json::to_vec(node_hashes).expect("execution serialize failed");
-
-    sha256(&canonical)
+    hash_bytes(&bincode::serialize(node_hashes).expect("execution root serialize failed"))
 }
 
-//
-// ============================================================
-// RECEIPT HASH
-// ============================================================
-//
+pub fn compute_contract_hash(wasm: &[u8]) -> String { hash_bytes(wasm) }
 
-pub fn compute_receipt_hash(
-    previous_state_root: &str,
-    new_state_root: &str,
-    execution_root: &str,
-) -> String {
-    let combined = format!(
-        "{}{}{}",
-        previous_state_root, new_state_root, execution_root
-    );
-
-    sha256(combined.as_bytes())
+pub fn compute_receipt_hash(receipt: &ExecutionReceipt) -> String {
+    let mut clone = receipt.clone();
+    clone.receipt_hash.clear();
+    hash_bytes(&bincode::serialize(&clone).expect("receipt serialize failed"))
 }
