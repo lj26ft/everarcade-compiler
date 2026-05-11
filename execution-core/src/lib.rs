@@ -8,6 +8,7 @@ pub mod protocol_upgrade;
 pub mod settlement;
 pub mod package;
 pub mod network;
+pub mod finality;
 
 pub use everarcade_abi::{
     ExecutionNode, ExecutionPlan, ExecutionReceipt, State, StateChange, VmInput, VmOutput,
