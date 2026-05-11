@@ -1,6 +1,6 @@
 use super::merkle;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
 pub struct MerkleProof {
     pub key: String,
     pub value: String,
