@@ -3,6 +3,8 @@ pub mod hashing;
 pub mod wasm;
 pub mod state_engine;
 pub mod verifier;
+pub mod freeze;
+pub mod settlement;
 
 pub use everarcade_abi::{
     ExecutionNode, ExecutionPlan, ExecutionReceipt, State, StateChange, VmInput, VmOutput,
