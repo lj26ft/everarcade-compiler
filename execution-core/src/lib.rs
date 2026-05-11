@@ -7,6 +7,7 @@ pub mod freeze;
 pub mod protocol_upgrade;
 pub mod settlement;
 pub mod package;
+pub mod network;
 
 pub use everarcade_abi::{
     ExecutionNode, ExecutionPlan, ExecutionReceipt, State, StateChange, VmInput, VmOutput,
