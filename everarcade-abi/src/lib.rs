@@ -45,6 +45,8 @@ pub struct ExecutionReceipt {
     pub state_changes: Vec<StateChange>,
     pub output_hash: String,
     pub receipt_hash: String,
+    pub snapshot_hash: String,
+    pub previous_snapshot_hash: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
