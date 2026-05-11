@@ -2,6 +2,7 @@ pub mod execute;
 pub mod hashing;
 pub mod wasm;
 pub mod state_engine;
+pub mod verifier;
 
 pub use everarcade_abi::{
     ExecutionNode, ExecutionPlan, ExecutionReceipt, State, StateChange, VmInput, VmOutput,
