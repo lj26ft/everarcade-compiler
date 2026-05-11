@@ -2,7 +2,7 @@ use crate::{execute, hashing, ExecutionPlan, ExecutionReceipt, VmInput};
 
 use super::replay::{ReplayEngine, ReplayResult};
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
 pub struct ContractWasm {
     pub contract_id: String,
     pub wasm_bytes: Vec<u8>,
