@@ -63,6 +63,7 @@ fn main() {
     //
 
     let input = VmInput {
+        protocol_epoch_id: 1,
         state,
         plan,
     };

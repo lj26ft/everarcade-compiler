@@ -3,6 +3,7 @@ use std::collections::BTreeMap;
 
 fn sample_input() -> VmInput {
     VmInput {
+        protocol_epoch_id: 1,
         state: BTreeMap::from([("counter".to_string(), "7".to_string())]),
         plan: ExecutionPlan {
             nodes: vec![ExecutionNode {

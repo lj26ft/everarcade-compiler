@@ -4,6 +4,7 @@ pub mod wasm;
 pub mod state_engine;
 pub mod verifier;
 pub mod freeze;
+pub mod protocol_upgrade;
 pub mod settlement;
 
 pub use everarcade_abi::{

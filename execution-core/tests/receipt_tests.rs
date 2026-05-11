@@ -2,7 +2,7 @@ use execution_core::{hashing, ExecutionPlan, VmInput};
 use std::collections::BTreeMap;
 
 fn sample_receipt() -> execution_core::ExecutionReceipt {
-    let input = VmInput { state: BTreeMap::new(), plan: ExecutionPlan { nodes: vec![] } };
+    let input = VmInput { protocol_epoch_id: 1, state: BTreeMap::new(), plan: ExecutionPlan { nodes: vec![] } };
     execution_core::execute::execute_vm(input).receipt
 }
 

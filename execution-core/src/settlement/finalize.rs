@@ -10,6 +10,9 @@ pub fn finalize_checkpoint(
     verifier_consensus_hash: String,
 ) -> SettlementCheckpoint {
     SettlementCheckpoint {
+        epoch_id: 1,
+        epoch_hash: String::new(),
+        transition_hash: None,
         protocol_version: versions::PROTOCOL_VERSION.to_string(),
         state_root,
         snapshot_hash,
