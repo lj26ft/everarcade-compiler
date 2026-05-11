@@ -37,20 +37,14 @@ fn main() {
         nodes: vec![
             ExecutionNode {
                 id: "a".to_string(),
-                action: "set".to_string(),
-                payload: serde_json::json!({
-                    "key": "counter",
-                    "value": "5"
-                }),
+                contract_id: "set".to_string(),
+                payload: bincode::serialize(&serde_json::json!({"key":"counter","value":"5"})).unwrap(),
                 deps: vec![],
             },
             ExecutionNode {
                 id: "b".to_string(),
-                action: "increment".to_string(),
-                payload: serde_json::json!({
-                    "key": "counter",
-                    "amount": 1
-                }),
+                contract_id: "increment".to_string(),
+                payload: bincode::serialize(&serde_json::json!({"key":"counter","amount":1})).unwrap(),
                 deps: vec!["a".to_string()],
             },
         ],

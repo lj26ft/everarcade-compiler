@@ -7,8 +7,8 @@ fn sample_input() -> VmInput {
         plan: ExecutionPlan {
             nodes: vec![ExecutionNode {
                 id: "n1".to_string(),
-                action: "increment".to_string(),
-                payload: serde_json::json!({"key": "score"}),
+                contract_id: "increment".to_string(),
+                payload: bincode::serialize(&serde_json::json!({"key": "score"})).unwrap(),
                 deps: vec![],
             }],
         },

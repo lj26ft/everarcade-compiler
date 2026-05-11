@@ -15,6 +15,7 @@ pub fn execute_vm(input: VmInput) -> VmOutput {
     let mut receipt = ExecutionReceipt {
         abi_version: ABI_VERSION.to_string(),
         contract_hash: String::new(),
+        contract_hashes: BTreeMap::new(),
         input_hash: hashing::hash_bytes(&bincode::serialize(&input).expect("input serialize failed")),
         previous_state_root,
         new_state_root: hashing::compute_state_root(&state),

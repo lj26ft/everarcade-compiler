@@ -1,10 +1,11 @@
+pub mod contracts;
 pub mod execute;
 pub mod hashing;
 pub mod wasm;
 
 pub use everarcade_abi::{
-    ExecutionNode, ExecutionPlan, ExecutionReceipt, State, StateChange, VmInput, VmOutput,
-    ABI_VERSION,
+    ContractInput, ContractOutput, ExecutionNode, ExecutionPlan, ExecutionReceipt, State,
+    StateChange, VmInput, VmOutput, ABI_VERSION,
 };
 
 use std::sync::OnceLock;

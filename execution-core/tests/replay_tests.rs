@@ -7,8 +7,8 @@ fn sample_input() -> VmInput {
         plan: ExecutionPlan {
             nodes: vec![ExecutionNode {
                 id: "n1".to_string(),
-                action: "noop".to_string(),
-                payload: serde_json::json!({}),
+                contract_id: "noop".to_string(),
+                payload: vec![],
                 deps: vec![],
             }],
         },

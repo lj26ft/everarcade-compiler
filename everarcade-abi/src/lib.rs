@@ -8,8 +8,8 @@ pub type State = BTreeMap<String, String>;
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ExecutionNode {
     pub id: String,
-    pub action: String,
-    pub payload: serde_json::Value,
+    pub contract_id: String,
+    pub payload: Vec<u8>,
     pub deps: Vec<String>,
 }
 
@@ -25,6 +25,12 @@ pub struct VmInput {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ContractInput {
+    pub state: State,
+    pub node: ExecutionNode,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct StateChange {
     pub key: String,
     pub before: String,
@@ -32,9 +38,15 @@ pub struct StateChange {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ContractOutput {
+    pub state_changes: Vec<StateChange>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ExecutionReceipt {
     pub abi_version: String,
     pub contract_hash: String,
+    pub contract_hashes: BTreeMap<String, String>,
     pub input_hash: String,
     pub previous_state_root: String,
     pub new_state_root: String,
