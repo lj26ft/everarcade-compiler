@@ -3,7 +3,7 @@ use execution_core::{ExecutionPlan, VmInput};
 use std::collections::BTreeMap;
 
 fn sample_input() -> VmInput {
-    VmInput { state: BTreeMap::from([("k".into(), "v".into())]), plan: ExecutionPlan { nodes: vec![] } }
+    VmInput { protocol_epoch_id: 1, state: BTreeMap::from([("k".into(), "v".into())]), plan: ExecutionPlan { nodes: vec![] } }
 }
 
 #[test]
@@ -33,7 +33,7 @@ fn test_invalid_payload_rejected() {
 fn test_large_payloads() {
     let mut state = BTreeMap::new();
     for i in 0..5000 { state.insert(format!("k{i}"), "x".repeat(32)); }
-    let input = VmInput { state, plan: ExecutionPlan { nodes: vec![] } };
+    let input = VmInput { protocol_epoch_id: 1, state, plan: ExecutionPlan { nodes: vec![] } };
     let bytes = serialize_abi(&input).unwrap();
     let decoded: VmInput = deserialize_abi(&bytes).unwrap();
     assert_eq!(decoded.state.len(), 5000);

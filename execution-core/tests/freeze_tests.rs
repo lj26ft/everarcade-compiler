@@ -12,7 +12,7 @@ fn test_abi_frozen() {
 
 #[test]
 fn test_receipt_hash_frozen() {
-    let input = VmInput { state: Default::default(), plan: ExecutionPlan { nodes: vec![] } };
+    let input = VmInput { protocol_epoch_id: 1, state: Default::default(), plan: ExecutionPlan { nodes: vec![] } };
     let first = execution_core::execute::execute_vm(input.clone());
     let second = execution_core::execute::execute_vm(input);
 
@@ -21,7 +21,7 @@ fn test_receipt_hash_frozen() {
 
 #[test]
 fn test_snapshot_hash_frozen() {
-    let input = VmInput { state: Default::default(), plan: ExecutionPlan { nodes: vec![] } };
+    let input = VmInput { protocol_epoch_id: 1, state: Default::default(), plan: ExecutionPlan { nodes: vec![] } };
     let first = execution_core::execute::execute_vm(input.clone());
     let second = execution_core::execute::execute_vm(input);
     assert_eq!(first.receipt.snapshot_hash, second.receipt.snapshot_hash);
@@ -29,7 +29,7 @@ fn test_snapshot_hash_frozen() {
 
 #[test]
 fn test_execution_replay_frozen() {
-    let input = VmInput { state: Default::default(), plan: ExecutionPlan { nodes: vec![] } };
+    let input = VmInput { protocol_epoch_id: 1, state: Default::default(), plan: ExecutionPlan { nodes: vec![] } };
     let first = execution_core::execute::execute_vm(input.clone());
     let second = execution_core::execute::execute_vm(input);
     assert_eq!(first.receipt.execution_root, second.receipt.execution_root);

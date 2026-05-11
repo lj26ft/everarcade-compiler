@@ -17,6 +17,7 @@ pub fn execute_vm(input: VmInput) -> VmOutput {
     let state = store.into_state();
 
     let mut receipt = ExecutionReceipt {
+        protocol_epoch: input.protocol_epoch_id,
         abi_version: ABI_VERSION.to_string(),
         contract_hash: String::new(),
         input_hash: hashing::hash_bytes(&bincode::serialize(&input).expect("input serialize failed")),

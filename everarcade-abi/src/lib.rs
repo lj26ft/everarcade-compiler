@@ -20,6 +20,7 @@ pub struct ExecutionPlan {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct VmInput {
+    pub protocol_epoch_id: u64,
     pub state: State,
     pub plan: ExecutionPlan,
 }
@@ -33,6 +34,7 @@ pub struct StateChange {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ExecutionReceipt {
+    pub protocol_epoch: u64,
     pub abi_version: String,
     pub contract_hash: String,
     pub input_hash: String,

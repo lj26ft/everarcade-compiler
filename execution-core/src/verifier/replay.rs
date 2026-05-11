@@ -13,6 +13,7 @@ pub struct ReplayEngine;
 impl ReplayEngine {
     pub fn replay(bundle: &VerifierExecutionBundle) -> ReplayResult {
         let vm_input = VmInput {
+            protocol_epoch_id: 1,
             state: bundle.snapshot_state.clone(),
             plan: bundle.plan.clone(),
         };
