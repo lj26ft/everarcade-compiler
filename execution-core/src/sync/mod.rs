@@ -1,6 +1,14 @@
 pub mod checkpoint_exchange;
 pub mod convergence;
 pub mod proof_exchange;
+pub mod replay_window;
+pub mod sync_apply;
+pub mod sync_reduce;
+pub mod sync_result;
+pub mod sync_transcript;
+pub mod sync_transcript_root;
+pub mod sync_validation;
+pub mod sync_window;
 pub mod receipt_exchange;
 pub mod state_exchange;
 pub mod sync_plan;
@@ -17,3 +25,5 @@ pub use sync_range::{validate_receipt_range, ReceiptRange};
 pub use sync_request::SyncRequest;
 pub use sync_response::SyncResponse;
 pub use sync_status::SyncStatus;
+
+pub use sync_result::{SyncFailure, SyncResult};
