@@ -24,6 +24,7 @@ pub mod merkle;
 pub mod checkpoint;
 pub mod replay;
 pub mod sync;
+pub mod simulation;
 
 pub use everarcade_abi::{
     ExecutionNode, ExecutionPlan, ExecutionReceipt, State, StateChange, VmInput, VmOutput,
