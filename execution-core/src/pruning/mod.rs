@@ -4,3 +4,8 @@ pub mod pruning_policy;
 pub mod pruning_validation;
 pub mod replay_pruning;
 pub mod retention_window;
+pub mod retention_cost;
+pub mod storage_growth;
+pub mod checkpoint_cost;
+pub mod proof_retention_cost;
+pub mod pruning_budget;
