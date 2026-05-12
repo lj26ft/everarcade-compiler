@@ -25,6 +25,10 @@ pub mod checkpoint;
 pub mod replay;
 pub mod sync;
 pub mod simulation;
+pub mod pruning;
+pub mod session;
+pub mod compression;
+pub mod epoch;
 
 pub use everarcade_abi::{
     ExecutionNode, ExecutionPlan, ExecutionReceipt, State, StateChange, VmInput, VmOutput,

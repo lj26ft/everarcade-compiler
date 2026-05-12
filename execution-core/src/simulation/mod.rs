@@ -1,3 +1,7 @@
+pub mod epoch_simulation;
+pub mod long_horizon_simulation;
+pub mod replay_compaction_simulation;
+pub mod pruning_simulation;
 pub mod adversarial_simulation;
 pub mod convergence_simulation;
 pub mod network_view;
