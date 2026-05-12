@@ -1,3 +1,8 @@
+pub mod authority_propagation;
+pub mod governance_capability;
+pub mod federated_delegation;
+pub mod constitutional_scope;
+pub mod governance_validation;
 pub mod vote;
 pub mod succession;
 pub mod resolution;
