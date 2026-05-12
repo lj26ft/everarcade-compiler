@@ -1,0 +1,24 @@
+pub mod archival;
+pub mod checkpoint;
+pub mod compatibility;
+pub mod continuity;
+pub mod entity_package;
+pub mod evolution;
+pub mod governance;
+pub mod identity;
+pub mod lifecycle;
+pub mod lineage;
+pub mod memory;
+pub mod migration;
+pub mod persistence;
+pub mod registry;
+pub mod replay_identity;
+pub mod sovereignty;
+
+pub use archival::ArchivedEntity;
+pub use checkpoint::ContinuityCheckpoint;
+pub use continuity::ContinuityRecord;
+pub use identity::EntityIdentity;
+pub use lifecycle::LifecycleState;
+pub use lineage::{LineageEvent, LineageTransition};
+pub use migration::MigrationRecord;
