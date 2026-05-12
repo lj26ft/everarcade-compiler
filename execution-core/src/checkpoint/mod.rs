@@ -1,4 +1,10 @@
 pub mod checkpoint;
+pub mod checkpoint_chain;
 pub mod checkpoint_receipt;
+pub mod checkpoint_restore;
+pub mod checkpoint_root;
+pub mod checkpoint_snapshot;
+pub mod checkpoint_validation;
 pub mod restore;
 pub mod snapshot;
+pub mod snapshot_codec;
