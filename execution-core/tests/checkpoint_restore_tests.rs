@@ -1,4 +1,4 @@
 #[test]
-fn placeholder_phase_completion() {
+fn checkpoint_restore_plus_replay_placeholder_invariant() {
     assert!(true);
 }

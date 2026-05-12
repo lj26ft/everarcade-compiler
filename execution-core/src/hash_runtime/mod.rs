@@ -1,6 +1,11 @@
 pub mod canonical_hash;
+pub mod checkpoint_root;
 pub mod federation_root;
+pub mod graph_hash;
 pub mod graph_root;
 pub mod hash;
+pub mod receipt_hash;
 pub mod receipt_root;
+pub mod replay_root;
 pub mod root;
+pub mod state_hash;
