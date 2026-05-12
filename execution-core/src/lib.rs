@@ -29,6 +29,8 @@ pub mod pruning;
 pub mod session;
 pub mod compression;
 pub mod epoch;
+pub mod budget;
+pub mod economics;
 
 pub use everarcade_abi::{
     ExecutionNode, ExecutionPlan, ExecutionReceipt, State, StateChange, VmInput, VmOutput,
