@@ -23,6 +23,7 @@ pub mod hash_runtime;
 pub mod merkle;
 pub mod checkpoint;
 pub mod replay;
+pub mod sync;
 
 pub use everarcade_abi::{
     ExecutionNode, ExecutionPlan, ExecutionReceipt, State, StateChange, VmInput, VmOutput,

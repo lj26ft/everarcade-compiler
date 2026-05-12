@@ -21,3 +21,7 @@ pub mod proof_trace;
 pub mod proof_validator;
 #[path = "replay/convergence_proof.rs"]
 pub mod convergence_proof;
+
+#[path = "replay/mod_types.rs"]
+pub mod mod_types;
+pub use mod_types::replay_receipt_chain;
