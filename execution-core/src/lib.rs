@@ -12,6 +12,7 @@ pub mod finality;
 pub mod proof;
 pub mod trace;
 pub mod runtime_semantics;
+pub mod economy;
 
 pub use everarcade_abi::{
     ExecutionNode, ExecutionPlan, ExecutionReceipt, State, StateChange, VmInput, VmOutput,
