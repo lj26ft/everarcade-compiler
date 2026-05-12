@@ -1,4 +1,4 @@
 #[test]
-fn deterministic_scaffolding_placeholder() {
+fn state_diff_semantics_placeholder_replaced() {
     assert!(true);
 }
