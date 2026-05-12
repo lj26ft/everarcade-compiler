@@ -1,3 +1,9 @@
+pub mod aggregated_proof;
+pub mod proof_commitment;
+pub mod proof_chain;
+pub mod proof_aggregation;
+pub mod proof_validation;
+pub mod recursive_proof_placeholder;
 pub mod aggregation;
 pub mod commitment;
 pub mod compression;
