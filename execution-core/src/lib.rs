@@ -15,6 +15,13 @@ pub mod runtime_semantics;
 pub mod economy;
 pub mod entity;
 pub mod federation;
+pub mod execution;
+pub mod receipt_runtime;
+pub mod replay_runtime;
+pub mod codec;
+pub mod hash_runtime;
+pub mod merkle;
+pub mod checkpoint;
 
 pub use everarcade_abi::{
     ExecutionNode, ExecutionPlan, ExecutionReceipt, State, StateChange, VmInput, VmOutput,

@@ -1,0 +1,1 @@
+pub const CANONICAL_CODEC_VERSION: u16 = 1;
