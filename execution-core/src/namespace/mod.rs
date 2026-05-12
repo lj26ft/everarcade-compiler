@@ -6,3 +6,8 @@ pub mod namespace_transition;
 pub mod namespace_validation;
 
 pub use namespace::ExecutionNamespace;
+pub mod namespace_treaty;
+pub mod namespace_exchange;
+pub mod namespace_arbitration;
+pub mod federated_namespace;
+pub mod namespace_resolution;

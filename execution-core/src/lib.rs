@@ -35,6 +35,9 @@ pub mod namespace;
 pub mod tenancy;
 pub mod capability;
 pub mod domain;
+pub mod migration;
+pub mod arbitration;
+pub mod treaty;
 
 pub use everarcade_abi::{
     ExecutionNode, ExecutionPlan, ExecutionReceipt, State, StateChange, VmInput, VmOutput,
