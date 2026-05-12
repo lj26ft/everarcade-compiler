@@ -10,6 +10,7 @@ pub mod package;
 pub mod network;
 pub mod finality;
 pub mod proof;
+pub mod trace;
 
 pub use everarcade_abi::{
     ExecutionNode, ExecutionPlan, ExecutionReceipt, State, StateChange, VmInput, VmOutput,

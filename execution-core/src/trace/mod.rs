@@ -1,0 +1,21 @@
+pub mod backend;
+pub mod backend_mock;
+pub mod backend_registry;
+pub mod backend_risc0;
+pub mod backend_sp1;
+pub mod canonical;
+pub mod commitment;
+pub mod compatibility;
+pub mod merkle_trace;
+pub mod replay;
+pub mod segment;
+pub mod serialization;
+pub mod trace;
+pub mod transition;
+
+pub use backend::{ExecutionProof, ProofBackend};
+pub use backend_mock::MockProofBackend;
+pub use backend_registry::ProofBackendRegistry;
+pub use compatibility::{BackendCompatibility, CompatibilityReport, TraceSchemaCompatibility};
+pub use trace::{ExecutionTrace, TraceNode};
+pub use transition::{TraceOperation, TraceTransition};
