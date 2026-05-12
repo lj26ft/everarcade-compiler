@@ -31,6 +31,10 @@ pub mod compression;
 pub mod epoch;
 pub mod budget;
 pub mod economics;
+pub mod namespace;
+pub mod tenancy;
+pub mod capability;
+pub mod domain;
 
 pub use everarcade_abi::{
     ExecutionNode, ExecutionPlan, ExecutionReceipt, State, StateChange, VmInput, VmOutput,
