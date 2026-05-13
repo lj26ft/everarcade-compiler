@@ -87,3 +87,7 @@ pub mod fiscal;
 pub mod monetary;
 pub mod economic_asset;pub mod civilization;
 pub mod external;
+
+pub mod vm;
+pub mod abi;
+pub mod host;
