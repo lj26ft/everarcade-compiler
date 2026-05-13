@@ -1,5 +1,9 @@
 pub mod anchor_intent;
 pub mod deployment;
+pub mod deployment_manifest;
 pub mod host_manifest;
+pub mod host_state_folder;
 pub mod instance;
+pub mod instance_state;
+pub mod state_manifest;
 pub mod validation;

@@ -11,3 +11,6 @@ pub mod xrpl;
 
 pub use config::HostConfig;
 pub use runner::{run_package_once, HostRunResult};
+
+pub mod ipfs;
+pub mod state_folder;

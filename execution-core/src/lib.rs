@@ -91,3 +91,5 @@ pub mod external;
 pub mod vm;
 pub mod abi;
 pub mod host;
+pub mod identity;
+pub mod zk;
