@@ -8,3 +8,6 @@ pub mod verify;
 
 pub use bundle::{ExecutionPackage, PackageError};
 pub use manifest::ExecutionManifest;
+pub mod vm_package;
+pub mod package_manifest;
+pub mod package_validation;
