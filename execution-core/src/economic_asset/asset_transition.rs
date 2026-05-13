@@ -1,0 +1,1 @@
+use super::asset_constitution::{AssetConstitution, Hash}; pub fn transition_asset(prior:&AssetConstitution, owner_domain:Hash)->AssetConstitution{ AssetConstitution{ asset_id:prior.asset_id, constitutional_root:prior.constitutional_root, owner_domain } }

@@ -81,3 +81,8 @@ pub extern "C" fn execute(ptr: i32, len: i32) -> i32 {
 pub extern "C" fn output_len() -> i32 {
     OUTPUT_BUFFER.get().map(|b| b.len() as i32).unwrap_or(0)
 }
+
+pub mod treasury;
+pub mod fiscal;
+pub mod monetary;
+pub mod economic_asset;
