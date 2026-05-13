@@ -286,6 +286,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "everarcade-host"
+version = "0.1.0"
+dependencies = [
+ "bincode",
+ "execution-core",
+ "hex",
+ "serde",
+ "serde_json",
+ "sha2",
+]
+
+[[package]]
 name = "execution-core"
 version = "0.1.0"
 dependencies = [
