@@ -4,7 +4,8 @@ members = [
     "execution-core",
     "contract-api",
     "contracts/set-contract",
-    "contracts/increment-contract"
+    "contracts/increment-contract",
+    "everarcade-host"
 ]
 
 resolver = "2"
