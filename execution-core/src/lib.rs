@@ -38,6 +38,10 @@ pub mod domain;
 pub mod migration;
 pub mod arbitration;
 pub mod treaty;
+pub mod interpretation;
+pub mod jurisprudence;
+pub mod amendment;
+pub mod constitution;
 
 pub use everarcade_abi::{
     ExecutionNode, ExecutionPlan, ExecutionReceipt, State, StateChange, VmInput, VmOutput,
