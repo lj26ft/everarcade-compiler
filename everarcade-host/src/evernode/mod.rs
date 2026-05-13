@@ -7,3 +7,8 @@ pub mod instance;
 pub mod instance_state;
 pub mod state_manifest;
 pub mod validation;
+
+pub mod evernode_deploy;
+pub mod evernode_instance;
+pub mod evernode_live;
+pub mod evernode_status;
