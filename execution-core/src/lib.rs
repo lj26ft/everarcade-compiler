@@ -85,4 +85,5 @@ pub extern "C" fn output_len() -> i32 {
 pub mod treasury;
 pub mod fiscal;
 pub mod monetary;
-pub mod economic_asset;
+pub mod economic_asset;pub mod civilization;
+pub mod external;
