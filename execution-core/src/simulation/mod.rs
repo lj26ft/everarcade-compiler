@@ -31,3 +31,10 @@ pub mod constitutional_review;
 pub mod legal_precedence;
 pub mod doctrine_conflict;
 pub mod constitutional_continuity;
+pub mod treasury_simulation;
+pub mod fiscal_simulation;
+pub mod monetary_simulation;
+pub mod economic_convergence;
+pub mod budget_pressure;
+pub mod sovereign_economics;
+
