@@ -5,3 +5,8 @@ pub mod message_type;
 pub mod proof_message;
 pub mod protocol_validation;
 pub mod receipt_message;
+pub mod message_signature_validation;
+pub mod signed_checkpoint_message;
+pub mod signed_envelope;
+pub mod signed_manifest_message;
+pub mod signed_receipt_message;

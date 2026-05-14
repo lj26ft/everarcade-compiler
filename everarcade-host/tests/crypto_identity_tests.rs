@@ -1,0 +1,1 @@
+use everarcade_host::crypto_identity::{identity_validation::validate_identity,node_identity::derive_identity}; #[test] fn identity_fingerprint_is_deterministic(){ let id=derive_identity([1;32],[2;32],None); assert!(validate_identity(&id)); }

@@ -1,0 +1,1 @@
+use everarcade_host::federation_security::{treaty_scope_validation::treaty_scope_valid,federation_boundary::federation_boundary_preserved}; #[test] fn federation_boundary_preserved_test(){ assert!(treaty_scope_valid([1;32],[1;32])); assert!(federation_boundary_preserved([2;32],[2;32])); }
