@@ -4,3 +4,8 @@ pub mod execution_lineage;
 pub mod execution_root;
 pub mod execution_validation;
 pub mod execution_window;
+pub mod partition_assignment;
+pub mod partition_root;
+pub mod partition_scheduler;
+pub mod partition_validation;
+pub mod workload_partition;
