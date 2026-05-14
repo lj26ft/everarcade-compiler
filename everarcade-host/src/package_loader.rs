@@ -30,7 +30,9 @@ pub fn load_package(path: &Path) -> Result<CivilizationPackage, HostError> {
             checkpoint_root: legacy.proof_root,
         });
     }
-    if let Ok(pkg) = bincode::deserialize(&bytes) { return Ok(pkg); }
+    if let Ok(pkg) = bincode::deserialize(&bytes) {
+        return Ok(pkg);
+    }
     Ok(crate::fixture::civilization_fixture::generate_civilization_fixture_package())
 }
 

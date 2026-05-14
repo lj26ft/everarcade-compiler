@@ -53,4 +53,7 @@ pub mod snapshot;
 
 pub mod fixture;
 
+pub mod index;
+pub mod recovery_scan;
+pub mod runtime_recovery;
 pub mod verify;

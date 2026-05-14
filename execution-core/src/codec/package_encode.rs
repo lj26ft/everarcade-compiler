@@ -14,6 +14,9 @@ pub fn encode_package(package: &CivilizationPackage) -> Vec<u8> {
         payload_root: package.proof_root,
         replay_root: package.replay_root,
     };
-    let canonical = CanonicalPackage { envelope, package: package.clone() };
+    let canonical = CanonicalPackage {
+        envelope,
+        package: package.clone(),
+    };
     bincode::serialize(&canonical).expect("canonical package encode")
 }

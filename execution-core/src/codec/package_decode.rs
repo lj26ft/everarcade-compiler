@@ -19,13 +19,17 @@ pub enum CodecError {
 }
 
 impl From<bincode::Error> for CodecError {
-    fn from(value: bincode::Error) -> Self { Self::Io(value) }
+    fn from(value: bincode::Error) -> Self {
+        Self::Io(value)
+    }
 }
 
 pub fn decode_fully<T: DeserializeOwned>(bytes: &[u8]) -> Result<T, CodecError> {
     let mut c = std::io::Cursor::new(bytes);
     let value: T = bincode::deserialize_from(&mut c)?;
-    if c.position() != bytes.len() as u64 { return Err(CodecError::TrailingBytes); }
+    if c.position() != bytes.len() as u64 {
+        return Err(CodecError::TrailingBytes);
+    }
     Ok(value)
 }
 
