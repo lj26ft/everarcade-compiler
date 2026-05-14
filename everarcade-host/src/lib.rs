@@ -60,3 +60,8 @@ pub mod reconciliation;
 pub mod recovery_scan;
 pub mod runtime_recovery;
 pub mod verify;
+
+pub mod distributed_execution;
+pub mod distributed_receipts;
+pub mod operator_recovery;
+pub mod task_coordination;

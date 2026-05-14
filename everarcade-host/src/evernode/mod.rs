@@ -20,3 +20,8 @@ pub mod peer_manifest;
 pub mod peer_registry;
 pub mod peer_sync_manifest;
 pub mod recovery_discovery;
+
+pub mod capacity_manifest;
+pub mod execution_advertisement;
+pub mod execution_discovery;
+pub mod operator_availability;
