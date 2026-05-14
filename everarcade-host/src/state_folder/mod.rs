@@ -8,5 +8,8 @@ pub mod reader;
 pub mod validation;
 pub mod writer;
 
+pub mod manifest_rebuild;
+pub mod manifest_scan;
+pub mod manifest_validation;
 pub mod state_scan;
 pub mod storage_report;

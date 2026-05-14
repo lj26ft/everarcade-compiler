@@ -4,9 +4,11 @@ use everarcade_host::{
     config::HostConfig,
     error::HostError,
     fixture::generate_fixture_to_path,
+    index::index_rebuild::rebuild_indexes,
     persistence::HostPaths,
     run_package_once,
     state_folder::{
+        manifest_rebuild::repair_manifest,
         node_manifest::{read_node_manifest, write_node_manifest, NodeManifest},
         storage_report::storage_report,
         validation::validate,
@@ -85,6 +87,14 @@ fn run_cli() -> Result<(), HostError> {
             write_node_manifest(&state, &manifest)?;
             println!("verify=ok");
         }
+        "repair-manifest" => {
+            let report = repair_manifest(&state)?;
+            println!("repaired={} latest_receipt_root={} latest_checkpoint_root={}", report.repaired, report.latest_receipt_root.map(hex::encode).unwrap_or_else(||"none".into()), report.latest_checkpoint_root.map(hex::encode).unwrap_or_else(||"none".into()));
+        }
+        "rebuild-index" => {
+            let report = rebuild_indexes(&state)?;
+            println!("rebuilt_receipts={} rebuilt_checkpoints={} rebuilt_anchors={}", report.rebuilt_receipts, report.rebuilt_checkpoints, report.rebuilt_anchors);
+        }
         "status" => {
             let manifest = read_node_manifest(&state)?;
             let anchor_count = fs::read_dir(state.join("anchors"))?.count();
@@ -120,7 +130,7 @@ fn run_cli() -> Result<(), HostError> {
         }
         _ => {
             return Err(HostError::InvalidArgs(
-                "usage: init|generate-fixture|run|verify|status|anchor-intent".into(),
+                "usage: init|generate-fixture|run|verify|repair-manifest|rebuild-index|status|anchor-intent".into(),
             ))
         }
     }
