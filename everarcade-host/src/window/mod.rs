@@ -5,3 +5,8 @@ pub mod checkpoint_boundary;
 pub mod federation_window;
 pub mod window_validation;
 pub mod continuity;
+pub mod window_execution;
+pub mod window_replay;
+pub mod window_checkpoint;
+pub mod window_divergence;
+pub mod window_commit;

@@ -40,3 +40,5 @@ pub mod governance_runtime;
 pub mod planner;
 pub mod treaty_runtime;
 pub mod window;
+pub mod governance_security;
+pub mod governance_sync;
