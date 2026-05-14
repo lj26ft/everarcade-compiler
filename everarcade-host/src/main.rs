@@ -8,6 +8,7 @@ use everarcade_host::{
     run_package_once,
     state_folder::{
         node_manifest::{read_node_manifest, write_node_manifest, NodeManifest},
+        storage_report::storage_report,
         validation::validate,
     },
     verify::verify_state,
@@ -94,6 +95,17 @@ fn run_cli() -> Result<(), HostError> {
                 manifest.last_checkpoint_root,
                 anchor_count
             );
+
+            if args.iter().any(|arg| arg == "--storage") {
+                let report = storage_report(&state)?;
+                println!(
+                    "storage receipts={} checkpoints={} anchors={} total_bytes={}",
+                    report.receipt_count,
+                    report.checkpoint_count,
+                    report.anchor_count,
+                    report.total_bytes
+                );
+            }
         }
         "anchor-intent" => {
             let manifest = read_node_manifest(&state)?;
