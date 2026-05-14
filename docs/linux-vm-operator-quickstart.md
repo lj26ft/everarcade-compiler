@@ -25,3 +25,21 @@ EverArcade spine:
    - `cargo run -p everarcade-host -- status --state .everarcade`
 8. Print anchor intent path:
    - `cargo run -p everarcade-host -- anchor-intent --state .everarcade`
+
+## Storage and Derived Data
+
+Use `status --storage` to inspect current receipt/checkpoint/anchor counts and total bytes:
+
+```bash
+cargo run -p everarcade-host -- status --state .everarcade --storage
+```
+
+Derived data (indexes/caches/reports) can be rebuilt; canonical receipts/checkpoints/anchors remain protocol truth.
+
+## Stress Flow
+
+Run repeated deterministic execution and verification locally:
+
+```bash
+bash scripts/linux_vm_stress.sh
+```
