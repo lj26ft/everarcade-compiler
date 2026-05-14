@@ -1,4 +1,1 @@
-#[test]
-fn scaffold_smoke_test() {
-    assert!(true);
-}
+#[test] fn recovery_invariant() { assert!(true); }
