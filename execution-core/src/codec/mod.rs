@@ -1,11 +1,17 @@
 pub mod canonical;
 pub mod canonical_codec;
+pub mod canonical_package;
 pub mod canonical_schema;
 pub mod compatibility;
 pub mod decode;
 pub mod decode_state;
 pub mod encode;
 pub mod encode_state;
+pub mod package_decode;
+pub mod package_encode;
+pub mod package_roundtrip;
+pub mod package_validation;
+pub mod package_version;
 pub mod protocol_version;
 pub mod schema;
 pub mod version;
