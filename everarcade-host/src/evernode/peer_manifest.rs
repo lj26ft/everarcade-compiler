@@ -1,0 +1,10 @@
+pub type Hash = [u8; 32];
+
+#[derive(Clone, Debug, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+pub struct EvernodePeerManifest {
+    pub host_id: Hash,
+    pub package_root: Hash,
+    pub latest_checkpoint_root: Hash,
+    pub replay_root: Hash,
+    pub sync_endpoint: String,
+}

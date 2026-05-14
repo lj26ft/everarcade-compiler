@@ -12,3 +12,8 @@ pub mod evernode_deploy;
 pub mod evernode_instance;
 pub mod evernode_live;
 pub mod evernode_status;
+
+pub mod discovery;
+pub mod hosted_instance;
+pub mod peer_manifest;
+pub mod peer_registry;
