@@ -25,3 +25,10 @@ pub mod signed_manifest_message;
 pub mod signed_receipt_message;
 pub mod treaty_execution_message;
 pub mod vote_message;
+
+pub mod checkpoint_request_message;
+pub mod checkpoint_response_message;
+pub mod peer_status_message;
+pub mod receipt_range_message;
+pub mod sync_request_message;
+pub mod sync_response_message;

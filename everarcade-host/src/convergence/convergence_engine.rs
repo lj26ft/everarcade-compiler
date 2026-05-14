@@ -11,7 +11,9 @@ pub struct ConvergenceResult {
 }
 
 pub fn evaluate(local_root: Hash, remote_root: Hash) -> ConvergenceResult {
-    ConvergenceResult { converged: local_root == remote_root }
+    ConvergenceResult {
+        converged: local_root == remote_root,
+    }
 }
 
 pub fn converge_roots(

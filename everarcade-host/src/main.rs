@@ -1,5 +1,7 @@
 use std::{fs, path::PathBuf};
 
+use everarcade_host::network::{peer_dialer, tcp_client, tcp_server};
+
 use everarcade_host::{
     config::HostConfig,
     error::HostError,
@@ -117,6 +119,20 @@ fn run_cli() -> Result<(), HostError> {
                 );
             }
         }
+        "serve" => {
+            let bind = arg_value(&args, "--bind").ok_or_else(|| HostError::InvalidArgs("missing --bind".into()))?;
+            let listener = tcp_server::bind(&bind).map_err(|e| HostError::InvalidArgs(e.to_string()))?;
+            let _ = everarcade_host::network::peer_listener::serve_once(&listener, b"sync-ok")
+                .map_err(|e| HostError::InvalidArgs(e.to_string()))?;
+            println!("serve=ok bind={bind}");
+        }
+        "sync" => {
+            let peer = arg_value(&args, "--peer").ok_or_else(|| HostError::InvalidArgs("missing --peer".into()))?;
+            let stream = tcp_client::connect(&peer).map_err(|e| HostError::InvalidArgs(e.to_string()))?;
+            let response = peer_dialer::request_sync(stream, b"sync-request")
+                .map_err(|e| HostError::InvalidArgs(e.to_string()))?;
+            println!("sync=ok peer={} response={}", peer, String::from_utf8_lossy(&response));
+        }
         "anchor-intent" => {
             let manifest = read_node_manifest(&state)?;
             let rid = manifest
@@ -130,7 +146,7 @@ fn run_cli() -> Result<(), HostError> {
         }
         _ => {
             return Err(HostError::InvalidArgs(
-                "usage: init|generate-fixture|run|verify|repair-manifest|rebuild-index|status|anchor-intent".into(),
+                "usage: init|generate-fixture|run|verify|repair-manifest|rebuild-index|status|serve|sync|anchor-intent".into(),
             ))
         }
     }

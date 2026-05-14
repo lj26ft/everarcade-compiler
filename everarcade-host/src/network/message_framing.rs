@@ -28,3 +28,25 @@ pub fn deframe_payload(bytes: &[u8]) -> Option<Vec<u8>> {
     }
     Some(bytes[4..].to_vec())
 }
+
+use std::io::{Read, Write};
+use std::net::TcpStream;
+
+use crate::network::network_error::NetworkError;
+
+pub fn write_frame(stream: &mut TcpStream, payload: &[u8]) -> Result<(), NetworkError> {
+    let mut framed = Vec::with_capacity(4 + payload.len());
+    framed.extend_from_slice(&(payload.len() as u32).to_be_bytes());
+    framed.extend_from_slice(payload);
+    stream.write_all(&framed)?;
+    Ok(())
+}
+
+pub fn read_frame(stream: &mut TcpStream) -> Result<Vec<u8>, NetworkError> {
+    let mut len = [0_u8; 4];
+    stream.read_exact(&mut len)?;
+    let n = u32::from_be_bytes(len) as usize;
+    let mut payload = vec![0_u8; n];
+    stream.read_exact(&mut payload)?;
+    Ok(payload)
+}

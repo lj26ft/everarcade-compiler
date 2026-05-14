@@ -11,3 +11,9 @@ pub mod peer_validation;
 pub mod session;
 pub mod tcp_transport;
 pub mod transport;
+
+pub mod network_error;
+pub mod peer_dialer;
+pub mod peer_listener;
+pub mod tcp_client;
+pub mod tcp_server;
