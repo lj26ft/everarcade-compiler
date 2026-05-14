@@ -8,16 +8,20 @@ fn temp_path() -> std::path::PathBuf {
     std::fs::create_dir_all(&p).unwrap();
     p
 }
-use everarcade_host::{package_loader::load_package, run_package_once, HostConfig};
+fn fixture_path() -> std::path::PathBuf {
+    let path = temp_path().join("civilization_package.bin");
+    generate_fixture_to_path(&path).unwrap();
+    path
+}
+
+use everarcade_host::{
+    fixture::generate_fixture_to_path, package_loader::load_package, run_package_once, HostConfig,
+};
 use execution_core::vm::{validate_vm_receipt, VmExecutionInput};
 
 #[test]
 fn fixture_round_trip() {
-    let pkg = load_package(std::path::Path::new(&format!(
-        "{}/tests/fixtures/civilization_package.bin",
-        env!("CARGO_MANIFEST_DIR")
-    )))
-    .unwrap();
+    let pkg = load_package(fixture_path().as_path()).unwrap();
     let _input = VmExecutionInput {
         package_manifest_root: pkg.execution_root,
         civilization_root: pkg.execution_root,
@@ -27,10 +31,7 @@ fn fixture_round_trip() {
     };
     let dir = temp_path();
     let out = run_package_once(HostConfig::new(
-        &format!(
-            "{}/tests/fixtures/civilization_package.bin",
-            env!("CARGO_MANIFEST_DIR")
-        ),
+        fixture_path().to_str().unwrap(),
         dir.as_path(),
     ))
     .unwrap();
