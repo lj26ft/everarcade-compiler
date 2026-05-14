@@ -55,6 +55,8 @@ pub mod fixture;
 
 pub mod cluster;
 pub mod index;
+pub mod partition_recovery;
+pub mod reconciliation;
 pub mod recovery_scan;
 pub mod runtime_recovery;
 pub mod verify;
