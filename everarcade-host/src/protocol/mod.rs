@@ -16,3 +16,8 @@ pub mod proposal_message;
 pub mod quorum_message;
 pub mod treaty_execution_message;
 pub mod vote_message;
+pub mod governance_commit_message;
+pub mod execution_window_commit;
+pub mod civilization_runtime_message;
+pub mod economic_execution_message;
+pub mod governance_sync_message;
