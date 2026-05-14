@@ -53,6 +53,7 @@ pub mod snapshot;
 
 pub mod fixture;
 
+pub mod cluster;
 pub mod index;
 pub mod recovery_scan;
 pub mod runtime_recovery;

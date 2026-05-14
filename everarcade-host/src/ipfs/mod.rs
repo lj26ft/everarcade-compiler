@@ -7,4 +7,7 @@ pub mod validation;
 pub mod ipfs_client;
 pub mod ipfs_gateway;
 pub mod ipfs_live;
+pub mod ipfs_manifest;
+pub mod ipfs_publish;
 pub mod ipfs_upload;
+pub mod ipfs_verify;
