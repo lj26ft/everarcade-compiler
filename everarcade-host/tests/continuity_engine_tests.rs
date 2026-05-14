@@ -1,1 +1,4 @@
-#[test] fn continuity_engine_invariant() { assert!(true); }
+#[test]
+fn continuity_engine_invariant() {
+    assert!(true);
+}

@@ -1,8 +1,10 @@
-use sha2::{Digest, Sha256};
 use super::Hash;
+use sha2::{Digest, Sha256};
 
 pub fn compute_proof_root(chunks: &[Hash]) -> Hash {
     let mut h = Sha256::new();
-    for c in chunks { h.update(c); }
+    for c in chunks {
+        h.update(c);
+    }
     h.finalize().into()
 }

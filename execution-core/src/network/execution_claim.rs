@@ -10,7 +10,11 @@ pub struct ExecutionClaim {
 pub struct ExecutionClaimValidator;
 
 impl ExecutionClaimValidator {
-    pub fn validate(claim: &ExecutionClaim, expected_epoch: u64, expected_receipt_hash: &str) -> bool {
+    pub fn validate(
+        claim: &ExecutionClaim,
+        expected_epoch: u64,
+        expected_receipt_hash: &str,
+    ) -> bool {
         claim.claimed_epoch == expected_epoch && claim.receipt_hash == expected_receipt_hash
     }
 }

@@ -14,7 +14,8 @@ pub struct PriceQuote {
 impl ExecutionCostModel {
     pub fn quote(&self) -> PriceQuote {
         PriceQuote {
-            total_cost: self.fuel_units
+            total_cost: self
+                .fuel_units
                 .saturating_add(self.memory_bytes / 1024)
                 .saturating_add(self.snapshot_bytes / 1024)
                 .saturating_add(self.verifier_replay_units),

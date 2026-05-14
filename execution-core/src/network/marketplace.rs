@@ -14,12 +14,19 @@ pub struct ExecutionSupply {
 pub struct ExecutionMarket;
 
 impl ExecutionMarket {
-    pub fn match_supply(demand: &ExecutionDemand, supplies: &[ExecutionSupply]) -> Option<ExecutionSupply> {
+    pub fn match_supply(
+        demand: &ExecutionDemand,
+        supplies: &[ExecutionSupply],
+    ) -> Option<ExecutionSupply> {
         let mut valid: Vec<&ExecutionSupply> = supplies
             .iter()
             .filter(|s| s.offered_capacity >= demand.required_capacity)
             .collect();
-        valid.sort_by(|a, b| a.offered_capacity.cmp(&b.offered_capacity).then(a.node_id.cmp(&b.node_id)));
+        valid.sort_by(|a, b| {
+            a.offered_capacity
+                .cmp(&b.offered_capacity)
+                .then(a.node_id.cmp(&b.node_id))
+        });
         valid.first().cloned().cloned()
     }
 }

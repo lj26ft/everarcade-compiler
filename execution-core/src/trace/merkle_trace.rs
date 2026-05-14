@@ -1,4 +1,7 @@
-use crate::{hashing::hash_bytes, trace::{commitment::transition_commitments, trace::ExecutionTrace}};
+use crate::{
+    hashing::hash_bytes,
+    trace::{commitment::transition_commitments, trace::ExecutionTrace},
+};
 
 pub fn merkle_trace_root(trace: &ExecutionTrace) -> String {
     let mut leaves = transition_commitments(trace);

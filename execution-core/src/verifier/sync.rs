@@ -1,5 +1,5 @@
-use crate::{ExecutionPlan, ExecutionReceipt};
 use crate::state_engine::snapshot::StateSnapshot;
+use crate::{ExecutionPlan, ExecutionReceipt};
 
 #[derive(Debug, Clone)]
 pub enum SyncObject {

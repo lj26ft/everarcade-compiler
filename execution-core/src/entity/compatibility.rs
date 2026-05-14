@@ -8,6 +8,9 @@ pub struct CompatibilityMatrix {
 
 impl CompatibilityMatrix {
     pub fn is_compatible(&self) -> bool {
-        self.epoch_compatible && self.runtime_compatible && self.proof_compatible && self.lineage_compatible
+        self.epoch_compatible
+            && self.runtime_compatible
+            && self.proof_compatible
+            && self.lineage_compatible
     }
 }

@@ -12,6 +12,10 @@ impl Proposal {
         let proposer = proposer.into();
         let body_hash = hash_bytes(body);
         let proposal_id = hash_bytes(format!("proposal:{proposer}:{body_hash}").as_bytes());
-        Self { proposal_id, proposer, body_hash }
+        Self {
+            proposal_id,
+            proposer,
+            body_hash,
+        }
     }
 }

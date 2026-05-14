@@ -2,7 +2,11 @@ use execution_core::{hashing, ExecutionPlan, VmInput};
 use std::collections::BTreeMap;
 
 fn sample_receipt() -> execution_core::ExecutionReceipt {
-    let input = VmInput { protocol_epoch_id: 1, state: BTreeMap::new(), plan: ExecutionPlan { nodes: vec![] } };
+    let input = VmInput {
+        protocol_epoch_id: 1,
+        state: BTreeMap::new(),
+        plan: ExecutionPlan { nodes: vec![] },
+    };
     execution_core::execute::execute_vm(input).receipt
 }
 
@@ -30,7 +34,8 @@ fn test_receipt_reconstruction() {
         assert!(bytes.is_empty());
         return;
     }
-    let receipt: execution_core::ExecutionReceipt = everarcade_abi::deserialize(&bytes).expect("decode");
+    let receipt: execution_core::ExecutionReceipt =
+        everarcade_abi::deserialize(&bytes).expect("decode");
     let bytes2 = everarcade_abi::serialize(&receipt).expect("encode");
     assert_eq!(bytes, bytes2);
 }

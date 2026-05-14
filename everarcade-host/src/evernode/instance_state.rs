@@ -1,1 +1,4 @@
-#[derive(Clone,Debug)] pub struct InstanceState{pub instance_root:[u8;32]}
+#[derive(Clone, Debug)]
+pub struct InstanceState {
+    pub instance_root: [u8; 32],
+}

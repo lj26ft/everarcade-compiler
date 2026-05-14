@@ -1,4 +1,8 @@
-use execution_core::merkle::{inclusion_proof::{generate_inclusion_proof, verify_inclusion_proof}, leaf_hash::leaf_hash, merkle_tree::build_merkle_root};
+use execution_core::merkle::{
+    inclusion_proof::{generate_inclusion_proof, verify_inclusion_proof},
+    leaf_hash::leaf_hash,
+    merkle_tree::build_merkle_root,
+};
 
 #[test]
 fn generated_proof_verifies_and_tamper_fails() {

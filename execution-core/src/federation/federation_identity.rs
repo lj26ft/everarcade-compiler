@@ -8,6 +8,9 @@ pub struct FederationIdentity {
 
 impl From<&Federation> for FederationIdentity {
     fn from(value: &Federation) -> Self {
-        Self { federation_id: value.federation_id.clone(), continuity_root: value.continuity_root.clone() }
+        Self {
+            federation_id: value.federation_id.clone(),
+            continuity_root: value.continuity_root.clone(),
+        }
     }
 }

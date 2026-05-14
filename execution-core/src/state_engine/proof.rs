@@ -7,7 +7,10 @@ pub struct MerkleProof {
 }
 
 pub fn create_inclusion_proof(key: &str, value: &str) -> MerkleProof {
-    MerkleProof { key: key.to_string(), value: value.to_string() }
+    MerkleProof {
+        key: key.to_string(),
+        value: value.to_string(),
+    }
 }
 
 pub fn verify_inclusion_proof(proof: &MerkleProof, expected_leaf_hash_hex: &str) -> bool {

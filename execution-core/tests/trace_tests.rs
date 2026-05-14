@@ -1,5 +1,5 @@
 use execution_core::trace::{
-    backend::{ProofBackend},
+    backend::ProofBackend,
     backend_mock::MockProofBackend,
     commitment::{replay_commitment, trace_root},
     compatibility::{validate_compatibility, TraceSchemaCompatibility},
@@ -17,8 +17,23 @@ fn sample_trace() -> ExecutionTrace {
         execution_root: "exec-root".into(),
         state_root_before: "state-before".into(),
         state_root_after: "state-after".into(),
-        nodes: vec![TraceNode { node_id: "n1".into(), op_code: "call".into(), input_hash: "i".into(), output_hash: "o".into(), index: 0 }],
-        transitions: vec![TraceTransition { transition_id: "t1".into(), node_id: "n1".into(), operation: TraceOperation::NodeExecution, before: "a".into(), after: "b".into(), memory_delta: 4, fuel_delta: 2, index: 0 }],
+        nodes: vec![TraceNode {
+            node_id: "n1".into(),
+            op_code: "call".into(),
+            input_hash: "i".into(),
+            output_hash: "o".into(),
+            index: 0,
+        }],
+        transitions: vec![TraceTransition {
+            transition_id: "t1".into(),
+            node_id: "n1".into(),
+            operation: TraceOperation::NodeExecution,
+            before: "a".into(),
+            after: "b".into(),
+            memory_delta: 4,
+            fuel_delta: 2,
+            index: 0,
+        }],
         fuel_used: 2,
         memory_used: 4,
     }

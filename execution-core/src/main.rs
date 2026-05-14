@@ -11,12 +11,7 @@
 // cargo run -p execution-core
 //
 
-use execution_core::{
-    ExecutionNode,
-    ExecutionPlan,
-    State,
-    VmInput,
-};
+use execution_core::{ExecutionNode, ExecutionPlan, State, VmInput};
 
 fn main() {
     //
@@ -74,8 +69,7 @@ fn main() {
     // ========================================================
     //
 
-    let output =
-        execution_core::execute::execute_vm(input);
+    let output = execution_core::execute::execute_vm(input);
 
     //
     // ========================================================
@@ -85,31 +79,19 @@ fn main() {
 
     println!();
     println!("PREVIOUS STATE ROOT:");
-    println!(
-        "{}",
-        output.receipt.previous_state_root
-    );
+    println!("{}", output.receipt.previous_state_root);
 
     println!();
     println!("NEW STATE ROOT:");
-    println!(
-        "{}",
-        output.receipt.new_state_root
-    );
+    println!("{}", output.receipt.new_state_root);
 
     println!();
     println!("EXECUTION ROOT:");
-    println!(
-        "{}",
-        output.receipt.execution_root
-    );
+    println!("{}", output.receipt.execution_root);
 
     println!();
     println!("RECEIPT HASH:");
-    println!(
-        "{}",
-        output.receipt.receipt_hash
-    );
+    println!("{}", output.receipt.receipt_hash);
 
     println!();
     println!("NODE HASHES:");
@@ -122,12 +104,7 @@ fn main() {
     println!("STATE CHANGES:");
 
     for change in &output.receipt.state_changes {
-        println!(
-            "{}: '{}' -> '{}'",
-            change.key,
-            change.before,
-            change.after
-        );
+        println!("{}: '{}' -> '{}'", change.key, change.before, change.after);
     }
 
     println!();

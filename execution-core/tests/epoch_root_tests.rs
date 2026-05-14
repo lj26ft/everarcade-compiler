@@ -1,4 +1,6 @@
-use execution_core::epoch::{epoch_boundary::build_epoch_boundary, epoch_validation::validate_epoch};
+use execution_core::epoch::{
+    epoch_boundary::build_epoch_boundary, epoch_validation::validate_epoch,
+};
 
 #[test]
 fn epoch_root_is_deterministic() {

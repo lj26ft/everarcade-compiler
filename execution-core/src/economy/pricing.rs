@@ -29,5 +29,12 @@ pub fn price(input: PricingInput) -> PricingVector {
         .saturating_add(routing_price)
         .saturating_add(settlement_price);
 
-    PricingVector { fuel_price, proof_price, archival_price, routing_price, settlement_price, total }
+    PricingVector {
+        fuel_price,
+        proof_price,
+        archival_price,
+        routing_price,
+        settlement_price,
+        total,
+    }
 }

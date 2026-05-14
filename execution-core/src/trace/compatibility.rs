@@ -18,7 +18,11 @@ pub struct CompatibilityReport {
     pub backend: BackendCompatibility,
 }
 
-pub fn validate_compatibility(trace: &ExecutionTrace, proof: &ExecutionProof, expected_epoch: u64) -> CompatibilityReport {
+pub fn validate_compatibility(
+    trace: &ExecutionTrace,
+    proof: &ExecutionProof,
+    expected_epoch: u64,
+) -> CompatibilityReport {
     let trace_schema = if trace.epoch_id == expected_epoch {
         TraceSchemaCompatibility::Compatible
     } else {
@@ -31,5 +35,8 @@ pub fn validate_compatibility(trace: &ExecutionTrace, proof: &ExecutionProof, ex
         BackendCompatibility::Compatible
     };
 
-    CompatibilityReport { trace_schema, backend }
+    CompatibilityReport {
+        trace_schema,
+        backend,
+    }
 }

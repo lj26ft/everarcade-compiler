@@ -10,7 +10,16 @@ pub struct CryptographicNodeIdentity {
     pub federation_scope_root: Option<Hash>,
 }
 
-pub fn derive_identity(node_id: Hash, public_key_root: Hash, federation_scope_root: Option<Hash>) -> CryptographicNodeIdentity {
+pub fn derive_identity(
+    node_id: Hash,
+    public_key_root: Hash,
+    federation_scope_root: Option<Hash>,
+) -> CryptographicNodeIdentity {
     let fingerprint_root = derive_peer_fingerprint(node_id, public_key_root);
-    CryptographicNodeIdentity { node_id, public_key_root, fingerprint_root, federation_scope_root }
+    CryptographicNodeIdentity {
+        node_id,
+        public_key_root,
+        fingerprint_root,
+        federation_scope_root,
+    }
 }

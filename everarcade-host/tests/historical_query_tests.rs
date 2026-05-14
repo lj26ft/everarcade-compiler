@@ -1,1 +1,4 @@
-#[test] fn historical_query_invariant() { assert!(true); }
+#[test]
+fn historical_query_invariant() {
+    assert!(true);
+}

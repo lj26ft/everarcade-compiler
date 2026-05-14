@@ -8,7 +8,8 @@ pub struct ResourceUsage {
 }
 
 pub fn canonical_meter(usage: ResourceUsage) -> u64 {
-    usage.compute
+    usage
+        .compute
         .saturating_mul(2)
         .saturating_add(usage.proof.saturating_mul(4))
         .saturating_add(usage.storage / 1024)

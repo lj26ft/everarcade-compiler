@@ -8,8 +8,19 @@ pub struct RuntimeTransition {
 }
 
 impl RuntimeTransition {
-    pub fn apply(state_before: u64, operation: u64, memory_transition: u64, fuel_transition: u64) -> Self {
+    pub fn apply(
+        state_before: u64,
+        operation: u64,
+        memory_transition: u64,
+        fuel_transition: u64,
+    ) -> Self {
         let state_after = state_before ^ operation ^ memory_transition ^ fuel_transition;
-        Self { state_before, operation, memory_transition, fuel_transition, state_after }
+        Self {
+            state_before,
+            operation,
+            memory_transition,
+            fuel_transition,
+            state_after,
+        }
     }
 }

@@ -1,2 +1,4 @@
 #[test]
-fn host_runner_smoke() { assert!(true); }
+fn host_runner_smoke() {
+    assert!(true);
+}

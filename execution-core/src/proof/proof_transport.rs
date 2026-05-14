@@ -10,9 +10,14 @@ pub struct ProofChunk {
 pub fn chunk_proof(bytes: &[u8], chunk_size: usize) -> Vec<ProofChunk> {
     let size = chunk_size.max(1);
     let total = bytes.len().div_ceil(size);
-    bytes.chunks(size)
+    bytes
+        .chunks(size)
         .enumerate()
-        .map(|(index, c)| ProofChunk { index, total, bytes: c.to_vec() })
+        .map(|(index, c)| ProofChunk {
+            index,
+            total,
+            bytes: c.to_vec(),
+        })
         .collect()
 }
 

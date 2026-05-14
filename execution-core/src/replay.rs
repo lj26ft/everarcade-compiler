@@ -13,14 +13,14 @@ pub use replay_execution::{replay_from_genesis, ReplayResult};
 pub use replay_step::TraceStep;
 pub use replay_validator::DivergenceReason;
 
-#[path = "replay/replay_proof.rs"]
-pub mod replay_proof;
+#[path = "replay/convergence_proof.rs"]
+pub mod convergence_proof;
 #[path = "replay/proof_trace.rs"]
 pub mod proof_trace;
 #[path = "replay/proof_validator.rs"]
 pub mod proof_validator;
-#[path = "replay/convergence_proof.rs"]
-pub mod convergence_proof;
+#[path = "replay/replay_proof.rs"]
+pub mod replay_proof;
 
 #[path = "replay/mod_types.rs"]
 pub mod mod_types;

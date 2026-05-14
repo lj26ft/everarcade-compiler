@@ -44,7 +44,10 @@ fn test_execution_commitment_stability() {
     let trace = sample_trace();
     let c1 = trace_commitment(&trace);
     let c2 = trace_commitment(&trace);
-    assert_eq!(execution_commitment(&trace.execution_root, &c1), execution_commitment(&trace.execution_root, &c2));
+    assert_eq!(
+        execution_commitment(&trace.execution_root, &c1),
+        execution_commitment(&trace.execution_root, &c2)
+    );
 }
 
 #[test]
@@ -52,7 +55,10 @@ fn test_aggregate_proof_consistency() {
     let t = sample_trace();
     let p1 = deterministic_prove(&t, "r1", "placeholder");
     let p2 = deterministic_prove(&t, "r2", "placeholder");
-    assert_eq!(aggregate_proofs(&[p1.clone(), p2.clone()]), aggregate_proofs(&[p1, p2]));
+    assert_eq!(
+        aggregate_proofs(&[p1.clone(), p2.clone()]),
+        aggregate_proofs(&[p1, p2])
+    );
 }
 
 #[test]

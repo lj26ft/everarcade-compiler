@@ -1,6 +1,9 @@
 use execution_core::federation::{
-    collective_execution::CollectiveExecutionPlan, constitutional_rules::ConstitutionalRules,
-    federation::Federation, governance::{GovernanceAction, GovernanceState}, quorum::QuorumRule,
+    collective_execution::CollectiveExecutionPlan,
+    constitutional_rules::ConstitutionalRules,
+    federation::Federation,
+    governance::{GovernanceAction, GovernanceState},
+    quorum::QuorumRule,
     treaty::Treaty,
 };
 
@@ -13,8 +16,14 @@ fn test_federation_identity_stability() {
 
 #[test]
 fn test_deterministic_governance() {
-    let actions = vec![GovernanceAction { actor: "a".into(), action: "upgrade".into() }];
-    assert_eq!(GovernanceState::apply(&actions), GovernanceState::apply(&actions));
+    let actions = vec![GovernanceAction {
+        actor: "a".into(),
+        action: "upgrade".into(),
+    }];
+    assert_eq!(
+        GovernanceState::apply(&actions),
+        GovernanceState::apply(&actions)
+    );
 }
 
 #[test]
@@ -33,7 +42,10 @@ fn test_collective_execution() {
 
 #[test]
 fn test_quorum_replay_consistency() {
-    let q = QuorumRule { numerator: 2, denominator: 3 };
+    let q = QuorumRule {
+        numerator: 2,
+        denominator: 3,
+    };
     assert!(q.reached(4, 6));
     assert!(!q.reached(3, 6));
 }
@@ -47,14 +59,20 @@ fn test_institutional_migration() {
 
 #[test]
 fn test_constitutional_continuity() {
-    let c1 = ConstitutionalRules { constitution_hash: "genesis".into(), version: 1 };
+    let c1 = ConstitutionalRules {
+        constitution_hash: "genesis".into(),
+        version: 1,
+    };
     let c2 = c1.upgrade(b"patch");
     assert_eq!(c2.version, 2);
 }
 
 #[test]
 fn test_civilizational_continuity() {
-    let c1 = ConstitutionalRules { constitution_hash: "g".into(), version: 1 };
+    let c1 = ConstitutionalRules {
+        constitution_hash: "g".into(),
+        version: 1,
+    };
     let c2 = c1.upgrade(b"epoch-2");
     let c3 = c2.upgrade(b"epoch-3");
     assert_eq!(c3.version, 3);

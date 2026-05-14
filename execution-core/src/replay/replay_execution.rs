@@ -69,5 +69,10 @@ pub fn replay_from_genesis(genesis: State, receipts: &[ExecutionReceipt]) -> Rep
     }
 
     let final_state_root = state_root(&state);
-    ReplayResult { final_state: state, final_state_root, trace, divergence }
+    ReplayResult {
+        final_state: state,
+        final_state_root,
+        trace,
+        divergence,
+    }
 }

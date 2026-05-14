@@ -53,7 +53,11 @@ fn test_challenge_window_expiration() {
 
 #[test]
 fn test_cross_verifier_replay_consistency() {
-    let votes = vec![vote("v1", "r1", 1), vote("v2", "r1", 1), vote("v3", "r1", 1)];
+    let votes = vec![
+        vote("v1", "r1", 1),
+        vote("v2", "r1", 1),
+        vote("v3", "r1", 1),
+    ];
     let result = resolve_receipt_consensus(&votes).expect("consensus");
     assert_eq!(result.canonical_receipt_hash, "r1");
     assert_eq!(result.agreeing_verifiers.len(), 3);
@@ -90,7 +94,11 @@ fn test_xrpl_finality_anchor() {
 
 #[test]
 fn test_epoch_aware_consensus() {
-    let votes = vec![vote("v1", "r1", 1), vote("v2", "r1", 1), vote("v3", "r2", 2)];
+    let votes = vec![
+        vote("v1", "r1", 1),
+        vote("v2", "r1", 1),
+        vote("v3", "r2", 2),
+    ];
     let epoch_1_votes: Vec<_> = votes.into_iter().filter(|v| v.epoch_id == 1).collect();
     let result = resolve_receipt_consensus(&epoch_1_votes).expect("consensus");
     assert_eq!(result.canonical_receipt_hash, "r1");

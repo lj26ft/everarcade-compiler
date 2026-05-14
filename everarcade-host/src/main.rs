@@ -1,12 +1,15 @@
-use std::path::PathBuf;
+use std::{fs, path::PathBuf};
 
 use everarcade_host::{
     config::HostConfig,
-    integrity::{artifact_hash::hash_bytes, integrity_report::IntegrityReport},
-    node::node_state::NodeState,
-    operator::OperatorConfig,
+    error::HostError,
+    persistence::HostPaths,
     receipt_store::read_receipt,
     run_package_once,
+    state_folder::{
+        node_manifest::{read_node_manifest, write_node_manifest, NodeManifest},
+        validation::validate,
+    },
 };
 use execution_core::vm::validate_vm_receipt;
 
@@ -17,75 +20,83 @@ fn main() {
     }
 }
 
-fn run_cli() -> Result<(), everarcade_host::error::HostError> {
-    let mut args = std::env::args().skip(1);
-    match args.next().as_deref() {
-        Some("init") => {
-            std::fs::create_dir_all(".everarcade")?;
-            println!("initialized=.everarcade");
-        }
-        Some("run") => {
-            let flag = args.next().ok_or_else(|| {
-                everarcade_host::error::HostError::InvalidArgs("missing --package".into())
-            })?;
-            if flag != "--package" {
-                return Err(everarcade_host::error::HostError::InvalidArgs(
-                    "expected --package".into(),
-                ));
+fn arg_value(args: &[String], flag: &str) -> Option<String> {
+    args.windows(2).find(|w| w[0] == flag).map(|w| w[1].clone())
+}
+
+fn run_cli() -> Result<(), HostError> {
+    let args: Vec<String> = std::env::args().collect();
+    let cmd = args
+        .get(1)
+        .ok_or_else(|| HostError::InvalidArgs("missing command".into()))?;
+    let state = PathBuf::from(arg_value(&args, "--state").unwrap_or_else(|| ".everarcade".into()));
+    match cmd.as_str() {
+        "init" => {
+            HostPaths::new(state.clone()).ensure()?;
+            if !validate(&state) {
+                return Err(HostError::InvalidStateFolder);
             }
-            let path = PathBuf::from(args.next().ok_or_else(|| {
-                everarcade_host::error::HostError::InvalidArgs("missing package path".into())
-            })?);
-            let result = run_package_once(HostConfig::new(path, ".everarcade"))?;
+            write_node_manifest(&state, &NodeManifest::new("everarcade-node"))?;
+            println!("initialized={}", state.display());
+        }
+        "run" => {
+            let package =
+                PathBuf::from(arg_value(&args, "--package").ok_or(HostError::MissingPackage)?);
+            if !package.exists() {
+                return Err(HostError::MissingPackage);
+            }
+            let result = run_package_once(HostConfig::new(package, state.clone()))?;
+            let mut manifest =
+                read_node_manifest(&state).unwrap_or_else(|_| NodeManifest::new("everarcade-node"));
+            manifest.last_receipt_root = Some(hex::encode(result.receipt.receipt_id));
+            manifest.last_checkpoint_root = Some(hex::encode(result.receipt.checkpoint_root));
+            manifest.last_anchor_root = Some(hex::encode(result.receipt.anchor_root));
+            manifest.state_root = hex::encode(result.receipt.checkpoint_root);
+            write_node_manifest(&state, &manifest)?;
             println!("receipt={}", hex::encode(result.receipt.receipt_id));
         }
-        Some("verify") | Some("replay-verify") | Some("checkpoint-verify") => {
-            let _flag = args.next();
-            let path = PathBuf::from(args.next().ok_or_else(|| {
-                everarcade_host::error::HostError::InvalidArgs("missing receipt path".into())
-            })?);
-            let receipt = read_receipt(&path)?;
-            println!("valid={}", validate_vm_receipt(&receipt));
+        "verify" => {
+            let manifest = read_node_manifest(&state)?;
+            let rid = manifest
+                .last_receipt_root
+                .ok_or(HostError::InvalidReceipt)?;
+            let receipt = read_receipt(&state.join("receipts").join(format!("{rid}.bin")))?;
+            if !validate_vm_receipt(&receipt) {
+                return Err(HostError::VerificationFailed("receipt invalid".into()));
+            }
+            let cp = manifest
+                .last_checkpoint_root
+                .ok_or(HostError::InvalidCheckpoint)?;
+            if !state.join("checkpoints").join(format!("{cp}.bin")).exists() {
+                return Err(HostError::InvalidCheckpoint);
+            }
+            println!("verify=ok");
         }
-        Some("publish") => println!("publish_intent_built=true"),
-        Some("anchor") => println!("anchor_intent_built=true"),
-        Some("status") => println!("node_state={:?}", NodeState::Ready),
-        Some("anchor-intent") => {
-            let _flag = args.next();
-            let path = PathBuf::from(args.next().ok_or_else(|| {
-                everarcade_host::error::HostError::InvalidArgs("missing receipt path".into())
-            })?);
-            let receipt = read_receipt(&path)?;
-            println!("receipt_id={}", hex::encode(receipt.receipt_id));
+        "status" => {
+            let manifest = read_node_manifest(&state)?;
+            let anchor_count = fs::read_dir(state.join("anchors"))?.count();
+            println!(
+                "node_name={} last_receipt_root={:?} last_checkpoint_root={:?} anchor_queue={}",
+                manifest.node_name,
+                manifest.last_receipt_root,
+                manifest.last_checkpoint_root,
+                anchor_count
+            );
         }
-        Some("operator-config") => {
-            let cfg = OperatorConfig::default();
-            cfg.validate()
-                .map_err(everarcade_host::error::HostError::InvalidArgs)?;
-            println!("node_name={} dry_run={}", cfg.node_name, cfg.dry_run);
-        }
-        Some("peer-list") => println!("known_peers=0 federation_peers=0 checkpoint_roots=[] availability=[]"),
-        Some("peer-connect") => println!("peer_connect_attempted=true"),
-        Some("sync") => println!("replay_exchange=true checkpoint_sync=true convergence_validated=true"),
-        Some("replay-compare") => println!("local_replay_root=0000 remote_replay_root=0000 converged=true"),
-        Some("checkpoint-sync") => println!("checkpoint_sync_completed=true"),
-        Some("federation-status") => println!("topology=sovereign treaty_network=advisory constitutional_boundaries=preserved"),
-        Some("integrity") => {
-            let root = hash_bytes(b"artifact");
-            let report = IntegrityReport {
-                package_root_ok: true,
-                receipt_root_ok: true,
-                checkpoint_root_ok: true,
-                manifest_root_ok: true,
-                anchor_root_ok: true,
-                proof_root_ok: root != [0; 32],
-            };
-            println!("integrity_ok={}", report.all_passed());
+        "anchor-intent" => {
+            let manifest = read_node_manifest(&state)?;
+            let rid = manifest
+                .last_receipt_root
+                .ok_or(HostError::AnchorIntentMissing)?;
+            let p = state.join("anchors").join(format!("{rid}.json"));
+            if !p.exists() {
+                return Err(HostError::AnchorIntentMissing);
+            }
+            println!("{}", p.display());
         }
         _ => {
-            return Err(everarcade_host::error::HostError::InvalidArgs(
-                "usage: init|run|verify|publish|anchor|status|replay-verify|checkpoint-verify|peer-list|peer-connect|sync|replay-compare|checkpoint-sync|federation-status"
-                    .into(),
+            return Err(HostError::InvalidArgs(
+                "usage: init|run|verify|status|anchor-intent".into(),
             ))
         }
     }

@@ -23,13 +23,27 @@ pub fn replay_receipt_chain(receipts: &[(&str, Option<&str>, &str)]) -> ReplayRe
             divergence = Some(i);
             break;
         }
-        let prior = if i == 0 { hash_bytes(b"genesis") } else { steps[i-1].next_state_root.clone() };
+        let prior = if i == 0 {
+            hash_bytes(b"genesis")
+        } else {
+            steps[i - 1].next_state_root.clone()
+        };
         let diff_root = hash_bytes(id.as_bytes());
         let next = hash_bytes([prior.as_bytes(), diff_root.as_bytes()].concat().as_slice());
-        if next != *state_root { divergence = Some(i); }
+        if next != *state_root {
+            divergence = Some(i);
+        }
         let transition = hash_bytes([prior.as_bytes(), next.as_bytes()].concat().as_slice());
-        steps.push(TraceStep { receipt_hash: hash_bytes(id.as_bytes()), prior_state_root: prior, next_state_root: next, transition_root: transition, diff_root });
-        if divergence.is_some() { break; }
+        steps.push(TraceStep {
+            receipt_hash: hash_bytes(id.as_bytes()),
+            prior_state_root: prior,
+            next_state_root: next,
+            transition_root: transition,
+            diff_root,
+        });
+        if divergence.is_some() {
+            break;
+        }
     }
     ReplayResult { steps, divergence }
 }

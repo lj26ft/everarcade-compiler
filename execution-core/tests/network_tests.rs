@@ -2,9 +2,33 @@ use execution_core::network::*;
 
 fn sample_nodes() -> Vec<NetworkNode> {
     vec![
-        NetworkNode { node_id: "exec-a".into(), supported_epochs: vec![1,2], execution_capabilities: vec!["wasm".into()], verifier: false, archive: false, execution: true, reputation_score: 10 },
-        NetworkNode { node_id: "exec-b".into(), supported_epochs: vec![1,2], execution_capabilities: vec!["wasm".into()], verifier: false, archive: false, execution: true, reputation_score: 8 },
-        NetworkNode { node_id: "verifier-1".into(), supported_epochs: vec![1,2], execution_capabilities: vec![], verifier: true, archive: false, execution: false, reputation_score: 7 },
+        NetworkNode {
+            node_id: "exec-a".into(),
+            supported_epochs: vec![1, 2],
+            execution_capabilities: vec!["wasm".into()],
+            verifier: false,
+            archive: false,
+            execution: true,
+            reputation_score: 10,
+        },
+        NetworkNode {
+            node_id: "exec-b".into(),
+            supported_epochs: vec![1, 2],
+            execution_capabilities: vec!["wasm".into()],
+            verifier: false,
+            archive: false,
+            execution: true,
+            reputation_score: 8,
+        },
+        NetworkNode {
+            node_id: "verifier-1".into(),
+            supported_epochs: vec![1, 2],
+            execution_capabilities: vec![],
+            verifier: true,
+            archive: false,
+            execution: false,
+            reputation_score: 7,
+        },
     ]
 }
 
@@ -33,17 +57,36 @@ fn test_execution_routing_stability() {
 #[test]
 fn test_distributed_replay_consensus() {
     let votes = vec![
-        ConsensusVote { verifier_id: "v1".into(), receipt_hash: "abc".into() },
-        ConsensusVote { verifier_id: "v2".into(), receipt_hash: "abc".into() },
-        ConsensusVote { verifier_id: "v3".into(), receipt_hash: "abc".into() },
+        ConsensusVote {
+            verifier_id: "v1".into(),
+            receipt_hash: "abc".into(),
+        },
+        ConsensusVote {
+            verifier_id: "v2".into(),
+            receipt_hash: "abc".into(),
+        },
+        ConsensusVote {
+            verifier_id: "v3".into(),
+            receipt_hash: "abc".into(),
+        },
     ];
     assert!(ReplayConsensus::agrees(&votes, 2));
 }
 
 #[test]
 fn test_execution_claim_validation() {
-    let valid = ExecutionClaim { package_id: "pkg".into(), node_id: "exec-a".into(), receipt_hash: "r1".into(), claimed_epoch: 2 };
-    let invalid = ExecutionClaim { package_id: "pkg".into(), node_id: "exec-a".into(), receipt_hash: "r2".into(), claimed_epoch: 1 };
+    let valid = ExecutionClaim {
+        package_id: "pkg".into(),
+        node_id: "exec-a".into(),
+        receipt_hash: "r1".into(),
+        claimed_epoch: 2,
+    };
+    let invalid = ExecutionClaim {
+        package_id: "pkg".into(),
+        node_id: "exec-a".into(),
+        receipt_hash: "r2".into(),
+        claimed_epoch: 1,
+    };
 
     assert!(ExecutionClaimValidator::validate(&valid, 2, "r1"));
     assert!(!ExecutionClaimValidator::validate(&invalid, 2, "r1"));
@@ -68,10 +111,19 @@ fn test_epoch_aware_network_execution() {
 
 #[test]
 fn test_execution_market_determinism() {
-    let demand = ExecutionDemand { package_id: "pkg".into(), required_capacity: 50 };
+    let demand = ExecutionDemand {
+        package_id: "pkg".into(),
+        required_capacity: 50,
+    };
     let supplies = vec![
-        ExecutionSupply { node_id: "n2".into(), offered_capacity: 90 },
-        ExecutionSupply { node_id: "n1".into(), offered_capacity: 50 },
+        ExecutionSupply {
+            node_id: "n2".into(),
+            offered_capacity: 90,
+        },
+        ExecutionSupply {
+            node_id: "n1".into(),
+            offered_capacity: 50,
+        },
     ];
     let chosen = ExecutionMarket::match_supply(&demand, &supplies).unwrap();
     assert_eq!(chosen.node_id, "n1");

@@ -13,5 +13,8 @@ fn test_identical_wasm_same_hash() {
 fn test_modified_wasm_changes_hash() {
     let a = b"\0asm\x01\0\0\0";
     let b = b"\0asm\x01\0\0\x01";
-    assert_ne!(hashing::compute_contract_hash(a), hashing::compute_contract_hash(b));
+    assert_ne!(
+        hashing::compute_contract_hash(a),
+        hashing::compute_contract_hash(b)
+    );
 }

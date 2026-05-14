@@ -1,11 +1,16 @@
 use anyhow::{bail, Result};
 
-use crate::trace::{backend::{ExecutionProof, ProofBackend}, trace::ExecutionTrace};
+use crate::trace::{
+    backend::{ExecutionProof, ProofBackend},
+    trace::ExecutionTrace,
+};
 
 pub struct Risc0Backend;
 
 impl ProofBackend for Risc0Backend {
-    fn backend_id(&self) -> &'static str { "risc0" }
+    fn backend_id(&self) -> &'static str {
+        "risc0"
+    }
 
     fn generate_proof(&self, _trace: &ExecutionTrace) -> Result<ExecutionProof> {
         bail!("RISC Zero backend is scaffolding only")

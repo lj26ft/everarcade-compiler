@@ -17,7 +17,10 @@ fn encode_receipt(receipt: &ExecutionReceipt) -> Vec<u8> {
 }
 
 pub fn receipt_leaves(receipts: &[ExecutionReceipt]) -> Vec<Hash> {
-    receipts.iter().map(|r| leaf_hash(&encode_receipt(r))).collect()
+    receipts
+        .iter()
+        .map(|r| leaf_hash(&encode_receipt(r)))
+        .collect()
 }
 
 pub fn receipt_root(receipts: &[ExecutionReceipt]) -> Hash {

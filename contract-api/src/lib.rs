@@ -18,9 +18,7 @@ pub struct ContractError(pub String);
 pub trait Contract {
     type Payload;
 
-    fn decode(
-        value: Value,
-    ) -> Result<Self::Payload, ContractError>;
+    fn decode(value: Value) -> Result<Self::Payload, ContractError>;
 
     fn execute(
         state: &mut State,

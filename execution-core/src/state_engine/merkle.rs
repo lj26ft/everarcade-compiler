@@ -21,10 +21,7 @@ pub fn compute_state_root(entries: &[(String, String)]) -> [u8; 32] {
         return Sha256::digest([]).into();
     }
 
-    let mut level: Vec<[u8; 32]> = entries
-        .iter()
-        .map(|(k, v)| hash_leaf(k, v))
-        .collect();
+    let mut level: Vec<[u8; 32]> = entries.iter().map(|(k, v)| hash_leaf(k, v)).collect();
 
     while level.len() > 1 {
         let mut next = Vec::with_capacity(level.len().div_ceil(2));
