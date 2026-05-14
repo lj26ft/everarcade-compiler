@@ -8,6 +8,13 @@ fn temp_path() -> std::path::PathBuf {
     std::fs::create_dir_all(&p).unwrap();
     p
 }
+fn fixture_path() -> std::path::PathBuf {
+    let path = temp_path().join("civilization_package.bin");
+    generate_fixture_to_path(&path).unwrap();
+    path
+}
+
+use everarcade_host::fixture::generate_fixture_to_path;
 use std::process::Command;
 #[test]
 fn verify_fails_on_corrupt_receipt() {
@@ -21,10 +28,7 @@ fn verify_fails_on_corrupt_receipt() {
         .args([
             "run",
             "--package",
-            &format!(
-                "{}/tests/fixtures/civilization_package.bin",
-                env!("CARGO_MANIFEST_DIR")
-            ),
+            fixture_path().to_str().unwrap(),
             "--state",
             d.as_path().to_str().unwrap()
         ])

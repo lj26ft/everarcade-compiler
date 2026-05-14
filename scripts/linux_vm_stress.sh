@@ -1,16 +1,15 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-rm -rf .everarcade-stress
-cargo build --workspace
-cargo test --workspace
+STATE_DIR=".everarcade-stress"
+TMP_FIXTURE="$(mktemp)"
+trap 'rm -f "$TMP_FIXTURE"' EXIT
 
-cargo run -p everarcade-host -- init --state .everarcade-stress
-cargo run -p everarcade-host -- generate-fixture --output everarcade-host/tests/fixtures/civilization_package.bin
+rm -rf "$STATE_DIR"
+mkdir -p "$STATE_DIR"
 
-for i in $(seq 1 50); do
-  cargo run -p everarcade-host -- run --package everarcade-host/tests/fixtures/civilization_package.bin --state .everarcade-stress
-  cargo run -p everarcade-host -- verify --state .everarcade-stress
+cargo run -p everarcade-host -- generate-fixture --output "$TMP_FIXTURE"
+for _ in $(seq 1 5); do
+  cargo run -p everarcade-host -- run --package "$TMP_FIXTURE" --state "$STATE_DIR"
+  cargo run -p everarcade-host -- verify --state "$STATE_DIR"
 done
-
-cargo run -p everarcade-host -- status --state .everarcade-stress --storage

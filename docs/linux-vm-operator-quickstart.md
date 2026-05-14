@@ -16,9 +16,11 @@ EverArcade spine:
 3. Initialize state:
    - `cargo run -p everarcade-host -- init --state .everarcade`
 4. Regenerate deterministic fixture:
-   - `cargo run -p everarcade-host -- generate-fixture --output everarcade-host/tests/fixtures/civilization_package.bin`
+   - `TMP_FIXTURE="$(mktemp)"
+   - trap 'rm -f "$TMP_FIXTURE"' EXIT
+   - cargo run -p everarcade-host -- generate-fixture --output "$TMP_FIXTURE"`
 5. Execute package:
-   - `cargo run -p everarcade-host -- run --package everarcade-host/tests/fixtures/civilization_package.bin --state .everarcade`
+   - `cargo run -p everarcade-host -- run --package "$TMP_FIXTURE" --state .everarcade`
 6. Verify replay/receipt/checkpoint/anchor continuity:
    - `cargo run -p everarcade-host -- verify --state .everarcade`
 7. Inspect operator state:

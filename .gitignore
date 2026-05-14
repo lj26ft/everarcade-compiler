@@ -1,1 +1,6 @@
 /target
+everarcade-host/tests/fixtures/*.bin
+.everarcade-smoke/
+.everarcade-stress/
+.everarcade-recovery/
+tmp/

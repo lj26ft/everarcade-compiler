@@ -8,15 +8,18 @@ fn temp_path() -> std::path::PathBuf {
     std::fs::create_dir_all(&p).unwrap();
     p
 }
-use everarcade_host::{run_package_once, HostConfig};
+fn fixture_path() -> std::path::PathBuf {
+    let path = temp_path().join("civilization_package.bin");
+    generate_fixture_to_path(&path).unwrap();
+    path
+}
+
+use everarcade_host::{fixture::generate_fixture_to_path, run_package_once, HostConfig};
 #[test]
 fn receipt_checkpoint_written() {
     let d = temp_path();
     let _ = run_package_once(HostConfig::new(
-        &format!(
-            "{}/tests/fixtures/civilization_package.bin",
-            env!("CARGO_MANIFEST_DIR")
-        ),
+        fixture_path().to_str().unwrap(),
         d.as_path(),
     ))
     .unwrap();
