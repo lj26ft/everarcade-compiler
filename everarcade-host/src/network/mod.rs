@@ -23,6 +23,9 @@ pub mod tcp_client;
 pub mod tcp_server;
 
 pub mod assignment_message;
+pub mod distributed_receipt_message;
 pub mod execution_message;
+pub mod execution_resume_message;
 pub mod execution_transfer;
+pub mod partition_message;
 pub mod window_message;

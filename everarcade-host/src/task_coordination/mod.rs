@@ -1,5 +1,9 @@
 pub mod assignment_lineage;
 pub mod assignment_transfer;
 pub mod assignment_validation;
+pub mod partition_continuity;
+pub mod partition_execution;
+pub mod partition_recovery;
+pub mod partition_transfer;
 pub mod task_assignment;
 pub mod task_scheduler;

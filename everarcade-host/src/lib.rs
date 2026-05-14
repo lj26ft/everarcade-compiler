@@ -65,3 +65,5 @@ pub mod distributed_execution;
 pub mod distributed_receipts;
 pub mod operator_recovery;
 pub mod task_coordination;
+
+pub mod distributed_sync;
