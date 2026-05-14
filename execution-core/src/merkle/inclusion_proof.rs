@@ -27,7 +27,11 @@ pub fn generate_inclusion_proof(leaves: &[Hash], target_index: usize) -> Inclusi
         level = next;
     }
 
-    InclusionProof { leaf_index: target_index, leaf_count: leaves.len(), siblings }
+    InclusionProof {
+        leaf_index: target_index,
+        leaf_count: leaves.len(),
+        siblings,
+    }
 }
 
 pub fn verify_inclusion_proof(root: Hash, leaf: Hash, proof: &InclusionProof) -> bool {
@@ -37,7 +41,11 @@ pub fn verify_inclusion_proof(root: Hash, leaf: Hash, proof: &InclusionProof) ->
     let mut index = proof.leaf_index;
     let mut cur = leaf;
     for sibling in &proof.siblings {
-        cur = if index % 2 == 0 { inner_hash(cur, *sibling) } else { inner_hash(*sibling, cur) };
+        cur = if index % 2 == 0 {
+            inner_hash(cur, *sibling)
+        } else {
+            inner_hash(*sibling, cur)
+        };
         index /= 2;
     }
     cur == root
@@ -46,5 +54,9 @@ pub fn verify_inclusion_proof(root: Hash, leaf: Hash, proof: &InclusionProof) ->
 pub fn proof_root(leaves: &[Hash], idx: usize) -> Hash {
     let proof = generate_inclusion_proof(leaves, idx);
     let leaf = leaves[idx];
-    if verify_inclusion_proof(build_merkle_root(leaves), leaf, &proof) { build_merkle_root(leaves) } else { [0u8;32] }
+    if verify_inclusion_proof(build_merkle_root(leaves), leaf, &proof) {
+        build_merkle_root(leaves)
+    } else {
+        [0u8; 32]
+    }
 }

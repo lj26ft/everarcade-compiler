@@ -1,1 +1,12 @@
-use super::asset_constitution::{AssetConstitution, Hash}; pub fn govern_asset(asset_id:Hash, constitutional_root:Hash, owner_domain:Hash)->AssetConstitution{ AssetConstitution{asset_id,constitutional_root,owner_domain} }
+use super::asset_constitution::{AssetConstitution, Hash};
+pub fn govern_asset(
+    asset_id: Hash,
+    constitutional_root: Hash,
+    owner_domain: Hash,
+) -> AssetConstitution {
+    AssetConstitution {
+        asset_id,
+        constitutional_root,
+        owner_domain,
+    }
+}

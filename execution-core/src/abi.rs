@@ -11,7 +11,6 @@ pub const EXECUTION_SEMANTICS_VERSION: &str = "v2";
 pub const STATE_MODEL_VERSION: &str = "v2";
 pub const RECEIPT_FORMAT_VERSION: &str = "v2";
 
-
 pub mod abi_validation;
 pub mod abi_version;
 pub mod host_error;

@@ -1,2 +1,4 @@
 #[test]
-fn persistence_smoke() { assert!(true); }
+fn persistence_smoke() {
+    assert!(true);
+}

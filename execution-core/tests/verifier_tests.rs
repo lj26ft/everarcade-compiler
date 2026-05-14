@@ -2,7 +2,7 @@ use std::collections::BTreeMap;
 
 use execution_core::state_engine::snapshot::StateSnapshot;
 use execution_core::verifier::{
-    ContractWasm, ReplayEngine, VerifierExecutionBundle, VerifierNode, VerifierSync, SyncObject,
+    ContractWasm, ReplayEngine, SyncObject, VerifierExecutionBundle, VerifierNode, VerifierSync,
 };
 use execution_core::{ExecutionNode, ExecutionPlan};
 
@@ -50,7 +50,10 @@ fn test_snapshot_sync() {
     sync_a.ingest(SyncObject::Snapshot(snapshot.clone()));
     sync_b.ingest(SyncObject::Snapshot(snapshot));
 
-    assert_eq!(sync_a.snapshots[0].state_root, sync_b.snapshots[0].state_root);
+    assert_eq!(
+        sync_a.snapshots[0].state_root,
+        sync_b.snapshots[0].state_root
+    );
 }
 
 #[test]

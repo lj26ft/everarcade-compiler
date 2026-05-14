@@ -1,4 +1,7 @@
-use crate::{checkpoint::checkpoint_snapshot::CheckpointSnapshot, replay::replay_proof::ReplayProof, receipt_runtime::execution_receipt::ExecutionReceipt};
+use crate::{
+    checkpoint::checkpoint_snapshot::CheckpointSnapshot,
+    receipt_runtime::execution_receipt::ExecutionReceipt, replay::replay_proof::ReplayProof,
+};
 
 use super::proof_exchange::{ReceiptProof, StateProof};
 

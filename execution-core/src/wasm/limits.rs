@@ -7,6 +7,10 @@ pub struct ExecutionLimits {
 
 impl Default for ExecutionLimits {
     fn default() -> Self {
-        Self { fuel: 10_000_000, max_memory: 1024 * 1024, max_stack: 1024 * 1024 }
+        Self {
+            fuel: 10_000_000,
+            max_memory: 1024 * 1024,
+            max_stack: 1024 * 1024,
+        }
     }
 }

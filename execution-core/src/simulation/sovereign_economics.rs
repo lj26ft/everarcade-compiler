@@ -1,1 +1,12 @@
-use crate::treasury::treasury::Hash; pub fn sovereign_economic_root(treasury_root:Hash,fiscal_root:Hash,monetary_root:Hash)->Hash{ let mut o=[0;32]; for i in 0..32{o[i]=treasury_root[i]^fiscal_root[i]^monetary_root[i];} o }
+use crate::treasury::treasury::Hash;
+pub fn sovereign_economic_root(
+    treasury_root: Hash,
+    fiscal_root: Hash,
+    monetary_root: Hash,
+) -> Hash {
+    let mut o = [0; 32];
+    for i in 0..32 {
+        o[i] = treasury_root[i] ^ fiscal_root[i] ^ monetary_root[i];
+    }
+    o
+}

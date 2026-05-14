@@ -9,6 +9,6 @@ pub mod revocation;
 pub use capability::Capability;
 pub mod capability_exchange;
 pub mod delegated_authority;
-pub mod sovereign_scope;
 pub mod external_capability;
+pub mod sovereign_scope;
 pub mod treaty_capability;

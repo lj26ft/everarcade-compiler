@@ -1,2 +1,4 @@
 #[test]
-fn receipt_store_smoke() { assert!(true); }
+fn receipt_store_smoke() {
+    assert!(true);
+}

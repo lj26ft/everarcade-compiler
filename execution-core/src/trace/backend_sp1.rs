@@ -1,11 +1,16 @@
 use anyhow::{bail, Result};
 
-use crate::trace::{backend::{ExecutionProof, ProofBackend}, trace::ExecutionTrace};
+use crate::trace::{
+    backend::{ExecutionProof, ProofBackend},
+    trace::ExecutionTrace,
+};
 
 pub struct Sp1Backend;
 
 impl ProofBackend for Sp1Backend {
-    fn backend_id(&self) -> &'static str { "sp1" }
+    fn backend_id(&self) -> &'static str {
+        "sp1"
+    }
 
     fn generate_proof(&self, _trace: &ExecutionTrace) -> Result<ExecutionProof> {
         bail!("SP1 backend is scaffolding only")

@@ -20,7 +20,11 @@ impl RoutingTable {
             .iter()
             .filter(|n| n.execution && n.supports_epoch(epoch))
             .collect();
-        eligible.sort_by(|a, b| b.reputation_score.cmp(&a.reputation_score).then(a.node_id.cmp(&b.node_id)));
+        eligible.sort_by(|a, b| {
+            b.reputation_score
+                .cmp(&a.reputation_score)
+                .then(a.node_id.cmp(&b.node_id))
+        });
 
         eligible.first().map(|n| RoutingDecision {
             package_id: package_id.to_string(),

@@ -17,16 +17,30 @@ pub struct FederationTransitionResult {
     pub transition_hash: String,
 }
 
-pub fn reduce_federation_transition(previous: FederationState, event: FederationEvent) -> FederationTransitionResult {
+pub fn reduce_federation_transition(
+    previous: FederationState,
+    event: FederationEvent,
+) -> FederationTransitionResult {
     let mut next = previous.clone();
     match &event {
         FederationEvent::MemberJoined { member_id } => next.members.push(member_id.clone()),
         FederationEvent::MemberExited { member_id } => next.members.retain(|m| m != member_id),
-        FederationEvent::TreatyEstablished { treaty_id, .. } => next.treaty_root = treaty_id.clone(),
-        FederationEvent::TreatySuperseded { new_treaty_id, .. } => next.treaty_root = new_treaty_id.clone(),
-        FederationEvent::ConstitutionAmended { constitutional_root, .. } => next.constitutional_root = constitutional_root.clone(),
-        FederationEvent::ResolutionFinalized { resolution_id, .. } => next.governance_root = resolution_id.clone(),
-        FederationEvent::FederationMigrated { continuity_root, .. } => next.replay_root = continuity_root.clone(),
+        FederationEvent::TreatyEstablished { treaty_id, .. } => {
+            next.treaty_root = treaty_id.clone()
+        }
+        FederationEvent::TreatySuperseded { new_treaty_id, .. } => {
+            next.treaty_root = new_treaty_id.clone()
+        }
+        FederationEvent::ConstitutionAmended {
+            constitutional_root,
+            ..
+        } => next.constitutional_root = constitutional_root.clone(),
+        FederationEvent::ResolutionFinalized { resolution_id, .. } => {
+            next.governance_root = resolution_id.clone()
+        }
+        FederationEvent::FederationMigrated {
+            continuity_root, ..
+        } => next.replay_root = continuity_root.clone(),
         _ => {}
     }
 
@@ -49,5 +63,8 @@ pub fn reduce_federation_transition(previous: FederationState, event: Federation
     );
     next.replay_root = transition_hash.clone();
 
-    FederationTransitionResult { next, transition_hash }
+    FederationTransitionResult {
+        next,
+        transition_hash,
+    }
 }

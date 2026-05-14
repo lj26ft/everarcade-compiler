@@ -45,7 +45,10 @@ fn test_replay_identity_reconstruction() {
 #[test]
 fn test_archival_restoration() {
     let id = EntityIdentity::from_genesis(b"archive");
-    let archived = ArchivedEntity { identity: id.clone(), archive_ref: "archive://1".into() };
+    let archived = ArchivedEntity {
+        identity: id.clone(),
+        archive_ref: "archive://1".into(),
+    };
     assert_eq!(archived.identity, id);
 }
 

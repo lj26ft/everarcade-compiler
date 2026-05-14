@@ -1,5 +1,6 @@
 use super::{
-    civilization_package::CivilizationPackage, civilization_root::compute_civilization_root,
+    civilization_package::CivilizationPackage,
+    civilization_root::compute_civilization_root,
     genesis::{CivilizationGenesis, Hash},
 };
 
@@ -24,5 +25,11 @@ pub fn execute_civilization_genesis_flow(genesis: CivilizationGenesis) -> Civili
     let proof_root = derive(b"proof", &replay_root);
     let checkpoint_root = derive(b"checkpoint", &proof_root);
 
-    CivilizationPackage { genesis, execution_root, replay_root, proof_root, checkpoint_root }
+    CivilizationPackage {
+        genesis,
+        execution_root,
+        replay_root,
+        proof_root,
+        checkpoint_root,
+    }
 }

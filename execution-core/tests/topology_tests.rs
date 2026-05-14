@@ -1,5 +1,5 @@
-use std::collections::{BTreeMap, BTreeSet};
 use execution_core::execution::topology::{canonical_topological_sort, detect_execution_cycles};
+use std::collections::{BTreeMap, BTreeSet};
 
 #[test]
 fn cycle_detected() {

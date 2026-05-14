@@ -1,6 +1,11 @@
-use crate::{hashing::hash_bytes, trace::{serialization::serialize_trace, trace::ExecutionTrace}};
+use crate::{
+    hashing::hash_bytes,
+    trace::{serialization::serialize_trace, trace::ExecutionTrace},
+};
 
-pub fn trace_root(trace: &ExecutionTrace) -> String { hash_bytes(&serialize_trace(trace)) }
+pub fn trace_root(trace: &ExecutionTrace) -> String {
+    hash_bytes(&serialize_trace(trace))
+}
 
 pub fn transition_commitments(trace: &ExecutionTrace) -> Vec<String> {
     trace

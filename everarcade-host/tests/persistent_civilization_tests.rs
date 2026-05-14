@@ -1,1 +1,4 @@
-#[test] fn persistent_civilization_invariant() { assert!(true); }
+#[test]
+fn persistent_civilization_invariant() {
+    assert!(true);
+}

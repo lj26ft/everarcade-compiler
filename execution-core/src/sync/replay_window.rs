@@ -8,7 +8,15 @@ pub struct ReplayWindow {
 }
 
 pub fn validate_replay_window(window: &ReplayWindow) -> bool {
-    if window.receipts.is_empty() { return window.start_index == window.end_index; }
-    window.receipts.first().is_some_and(|r| r.timestamp_index == window.start_index)
-        && window.receipts.last().is_some_and(|r| r.timestamp_index == window.end_index)
+    if window.receipts.is_empty() {
+        return window.start_index == window.end_index;
+    }
+    window
+        .receipts
+        .first()
+        .is_some_and(|r| r.timestamp_index == window.start_index)
+        && window
+            .receipts
+            .last()
+            .is_some_and(|r| r.timestamp_index == window.end_index)
 }

@@ -13,6 +13,10 @@ impl ReplayConsensus {
             return false;
         }
         let candidate = &votes[0].receipt_hash;
-        votes.iter().filter(|v| v.receipt_hash == *candidate).count() >= quorum
+        votes
+            .iter()
+            .filter(|v| v.receipt_hash == *candidate)
+            .count()
+            >= quorum
     }
 }

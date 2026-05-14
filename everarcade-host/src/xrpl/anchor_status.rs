@@ -1,1 +1,6 @@
-#[derive(Clone,Debug,PartialEq,Eq)] pub enum AnchorStatus{Pending,Built,Submitted}
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum AnchorStatus {
+    Pending,
+    Built,
+    Submitted,
+}

@@ -12,4 +12,6 @@ pub fn verify_execution_root(proof: &ExecutionProof, expected_execution_root: &s
     proof.execution_root == expected_execution_root
 }
 
-pub fn verify_epoch(proof: &ExecutionProof, expected_epoch: u64) -> bool { proof.epoch_id == expected_epoch }
+pub fn verify_epoch(proof: &ExecutionProof, expected_epoch: u64) -> bool {
+    proof.epoch_id == expected_epoch
+}

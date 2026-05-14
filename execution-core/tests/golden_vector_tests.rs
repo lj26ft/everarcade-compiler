@@ -37,7 +37,11 @@ fn test_large_state_vector() {
     for i in 0..2000 {
         state.insert(format!("k{i}"), format!("v{i}"));
     }
-    let input = VmInput { protocol_epoch_id: 1, state, plan: ExecutionPlan { nodes: vec![] } };
+    let input = VmInput {
+        protocol_epoch_id: 1,
+        state,
+        plan: ExecutionPlan { nodes: vec![] },
+    };
     let a = execution_core::execute::execute_vm(input.clone());
     let b = execution_core::execute::execute_vm(input);
     assert_eq!(a.receipt.new_state_root, b.receipt.new_state_root);

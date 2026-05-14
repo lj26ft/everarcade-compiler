@@ -57,5 +57,9 @@ pub struct VmOutput {
     pub receipt: ExecutionReceipt,
 }
 
-pub fn serialize<T: Serialize>(value: &T) -> Result<Vec<u8>, bincode::Error> { bincode::serialize(value) }
-pub fn deserialize<T: for<'de> Deserialize<'de>>(bytes: &[u8]) -> Result<T, bincode::Error> { bincode::deserialize(bytes) }
+pub fn serialize<T: Serialize>(value: &T) -> Result<Vec<u8>, bincode::Error> {
+    bincode::serialize(value)
+}
+pub fn deserialize<T: for<'de> Deserialize<'de>>(bytes: &[u8]) -> Result<T, bincode::Error> {
+    bincode::deserialize(bytes)
+}

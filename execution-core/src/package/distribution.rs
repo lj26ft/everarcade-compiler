@@ -1,7 +1,9 @@
 use std::fs;
 use std::path::Path;
 
-use super::{bundle::ExecutionPackage, bundle::PackageError, export::export_package, import::import_package};
+use super::{
+    bundle::ExecutionPackage, bundle::PackageError, export::export_package, import::import_package,
+};
 
 pub fn store_local(path: &Path, package: &ExecutionPackage) -> Result<(), PackageError> {
     let bytes = export_package(package)?;

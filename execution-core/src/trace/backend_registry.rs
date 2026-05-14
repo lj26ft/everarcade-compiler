@@ -8,13 +8,16 @@ pub struct ProofBackendRegistry {
 
 impl ProofBackendRegistry {
     pub fn new() -> Self {
-        let mut registry = Self { backends: BTreeMap::new() };
+        let mut registry = Self {
+            backends: BTreeMap::new(),
+        };
         registry.register(Arc::new(MockProofBackend));
         registry
     }
 
     pub fn register(&mut self, backend: Arc<dyn ProofBackend>) {
-        self.backends.insert(backend.backend_id().to_string(), backend);
+        self.backends
+            .insert(backend.backend_id().to_string(), backend);
     }
 
     pub fn get(&self, backend_id: &str) -> Option<Arc<dyn ProofBackend>> {

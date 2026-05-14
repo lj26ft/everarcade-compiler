@@ -1,1 +1,4 @@
-#[test] fn recovery_invariant() { assert!(true); }
+#[test]
+fn recovery_invariant() {
+    assert!(true);
+}

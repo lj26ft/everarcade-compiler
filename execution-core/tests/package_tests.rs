@@ -23,10 +23,20 @@ fn sample_package(epoch: u64) -> ExecutionPackage {
         }],
     };
 
-    let output = execute::execute_vm(VmInput { protocol_epoch_id: epoch, state: state.clone(), plan: plan.clone() });
+    let output = execute::execute_vm(VmInput {
+        protocol_epoch_id: epoch,
+        state: state.clone(),
+        plan: plan.clone(),
+    });
     let snapshot = StateSnapshot::new(output.updated_state.clone(), None);
-    let contracts = vec![ContractWasm { contract_id: "c1".to_string(), wasm_bytes: vec![1, 2, 3] }];
-    let contract_hashes = contracts.iter().map(|c| hashing::compute_contract_hash(&c.wasm_bytes)).collect::<Vec<_>>();
+    let contracts = vec![ContractWasm {
+        contract_id: "c1".to_string(),
+        wasm_bytes: vec![1, 2, 3],
+    }];
+    let contract_hashes = contracts
+        .iter()
+        .map(|c| hashing::compute_contract_hash(&c.wasm_bytes))
+        .collect::<Vec<_>>();
 
     let mut pkg = ExecutionPackage {
         manifest: ExecutionManifest {
@@ -54,7 +64,10 @@ fn test_package_export_import() {
     let package = sample_package(1);
     let bytes = export_package(&package).unwrap();
     let imported = import_package(&bytes, 1).unwrap();
-    assert_eq!(imported.manifest.package_hash, package.manifest.package_hash);
+    assert_eq!(
+        imported.manifest.package_hash,
+        package.manifest.package_hash
+    );
 }
 
 #[test]
@@ -67,7 +80,10 @@ fn test_package_replay() {
 fn test_package_hash_stability() {
     let package_a = sample_package(3);
     let package_b = sample_package(3);
-    assert_eq!(package_a.manifest.package_hash, package_b.manifest.package_hash);
+    assert_eq!(
+        package_a.manifest.package_hash,
+        package_b.manifest.package_hash
+    );
 }
 
 #[test]

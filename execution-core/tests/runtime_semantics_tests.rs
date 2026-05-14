@@ -44,8 +44,14 @@ fn test_fuel_accounting_determinism() {
 
 #[test]
 fn test_contract_isolation() {
-    let a = IsolationBoundary { contract_id: 1, memory_namespace: 10 };
-    let b = IsolationBoundary { contract_id: 2, memory_namespace: 20 };
+    let a = IsolationBoundary {
+        contract_id: 1,
+        memory_namespace: 10,
+    };
+    let b = IsolationBoundary {
+        contract_id: 2,
+        memory_namespace: 20,
+    };
     assert!(isolated(&a, &b));
 }
 
@@ -59,11 +65,19 @@ fn test_runtime_transition_stability() {
 #[test]
 fn test_cross_verifier_runtime_replay() {
     let input = HostFrame::new(vec![1, 2, 3]).encode();
-    assert_eq!(execute_canonical(&input, 100), replay_for_verifier(&input, 100));
+    assert_eq!(
+        execute_canonical(&input, 100),
+        replay_for_verifier(&input, 100)
+    );
 }
 
 #[test]
 fn test_epoch_runtime_compatibility() {
-    let stamp = CompatibilityStamp { epoch: 1, runtime_version: 1, trace_version: 1, proof_version: 1 };
+    let stamp = CompatibilityStamp {
+        epoch: 1,
+        runtime_version: 1,
+        trace_version: 1,
+        proof_version: 1,
+    };
     assert!(stamp.is_compatible_with(stamp));
 }

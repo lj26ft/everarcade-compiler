@@ -1,5 +1,5 @@
-pub mod civilization_memory;
 pub mod checkpoint_index;
+pub mod civilization_memory;
 pub mod continuity_index;
 pub mod memory_index;
 pub mod memory_query;

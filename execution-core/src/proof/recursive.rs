@@ -9,6 +9,11 @@ pub struct RecursiveProofLineage {
 }
 
 pub fn compose_lineage(aggregate: &AggregateProof, parent_hash: &str) -> RecursiveProofLineage {
-    let lineage_hash = crate::hashing::hash_bytes(format!("{}:{}", parent_hash, aggregate.aggregate_hash).as_bytes());
-    RecursiveProofLineage { depth: 1, lineage_hash }
+    let lineage_hash = crate::hashing::hash_bytes(
+        format!("{}:{}", parent_hash, aggregate.aggregate_hash).as_bytes(),
+    );
+    RecursiveProofLineage {
+        depth: 1,
+        lineage_hash,
+    }
 }

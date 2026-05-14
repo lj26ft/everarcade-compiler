@@ -12,8 +12,15 @@ pub struct ExecutionBid {
     pub workload: PricingInput,
 }
 
-pub fn match_offer(offers: &[ExecutionOffer], bid: &ExecutionBid) -> Option<(ExecutionOffer, PricingVector)> {
-    let mut eligible: Vec<_> = offers.iter().filter(|o| o.capacity >= bid.workload.fuel_units).cloned().collect();
+pub fn match_offer(
+    offers: &[ExecutionOffer],
+    bid: &ExecutionBid,
+) -> Option<(ExecutionOffer, PricingVector)> {
+    let mut eligible: Vec<_> = offers
+        .iter()
+        .filter(|o| o.capacity >= bid.workload.fuel_units)
+        .cloned()
+        .collect();
     eligible.sort_by_key(|o| (o.latency_hint_ms, o.executor_id.clone()));
     eligible.into_iter().next().map(|offer| {
         let priced = price(bid.workload);

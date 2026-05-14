@@ -13,10 +13,26 @@ use execution_core::economy::{
 #[test]
 fn test_execution_market_determinism() {
     let offers = vec![
-        ExecutionOffer { executor_id: "b".into(), capacity: 1_000, latency_hint_ms: 15 },
-        ExecutionOffer { executor_id: "a".into(), capacity: 1_000, latency_hint_ms: 15 },
+        ExecutionOffer {
+            executor_id: "b".into(),
+            capacity: 1_000,
+            latency_hint_ms: 15,
+        },
+        ExecutionOffer {
+            executor_id: "a".into(),
+            capacity: 1_000,
+            latency_hint_ms: 15,
+        },
     ];
-    let bid = ExecutionBid { workload: PricingInput { fuel_units: 500, proof_units: 10, archival_bytes: 4096, routing_packets: 12, settlement_ops: 3 } };
+    let bid = ExecutionBid {
+        workload: PricingInput {
+            fuel_units: 500,
+            proof_units: 10,
+            archival_bytes: 4096,
+            routing_packets: 12,
+            settlement_ops: 3,
+        },
+    };
     let (winner, pricing) = match_offer(&offers, &bid).unwrap();
     assert_eq!(winner.executor_id, "a");
     assert_eq!(pricing.total, 1143);

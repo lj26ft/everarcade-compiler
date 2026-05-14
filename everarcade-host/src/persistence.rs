@@ -10,6 +10,9 @@ pub struct HostPaths {
     pub checkpoints: PathBuf,
     pub anchors: PathBuf,
     pub manifests: PathBuf,
+    pub proofs: PathBuf,
+    pub ipfs: PathBuf,
+    pub xrpl: PathBuf,
 }
 
 impl HostPaths {
@@ -20,12 +23,25 @@ impl HostPaths {
             checkpoints: root.join("checkpoints"),
             anchors: root.join("anchors"),
             manifests: root.join("manifests"),
+            proofs: root.join("proofs"),
+            ipfs: root.join("ipfs"),
+            xrpl: root.join("xrpl"),
             root,
         }
     }
 
     pub fn ensure(&self) -> Result<(), HostError> {
-        for d in [&self.root, &self.packages, &self.receipts, &self.checkpoints, &self.anchors, &self.manifests] {
+        for d in [
+            &self.root,
+            &self.packages,
+            &self.receipts,
+            &self.checkpoints,
+            &self.anchors,
+            &self.manifests,
+            &self.proofs,
+            &self.ipfs,
+            &self.xrpl,
+        ] {
             fs::create_dir_all(d)?;
         }
         Ok(())

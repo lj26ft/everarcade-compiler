@@ -1,6 +1,8 @@
 use std::collections::{BTreeMap, BTreeSet, VecDeque};
 
-pub fn canonical_topological_sort(edges: &BTreeMap<String, BTreeSet<String>>) -> Result<Vec<String>, String> {
+pub fn canonical_topological_sort(
+    edges: &BTreeMap<String, BTreeSet<String>>,
+) -> Result<Vec<String>, String> {
     let mut indegree: BTreeMap<String, usize> = BTreeMap::new();
     for (from, tos) in edges {
         indegree.entry(from.clone()).or_insert(0);
@@ -30,7 +32,9 @@ pub fn canonical_topological_sort(edges: &BTreeMap<String, BTreeSet<String>>) ->
         }
     }
 
-    if order.len() != indegree.len() { return Err("execution graph contains cycle".to_string()); }
+    if order.len() != indegree.len() {
+        return Err("execution graph contains cycle".to_string());
+    }
     Ok(order)
 }
 
@@ -38,7 +42,10 @@ pub fn detect_execution_cycles(edges: &BTreeMap<String, BTreeSet<String>>) -> bo
     canonical_topological_sort(edges).is_err()
 }
 
-pub fn canonical_execution_batches(order: &[String], edges: &BTreeMap<String, BTreeSet<String>>) -> Vec<Vec<String>> {
+pub fn canonical_execution_batches(
+    order: &[String],
+    edges: &BTreeMap<String, BTreeSet<String>>,
+) -> Vec<Vec<String>> {
     let mut level: BTreeMap<String, usize> = BTreeMap::new();
     for node in order {
         let mut max_parent = 0usize;

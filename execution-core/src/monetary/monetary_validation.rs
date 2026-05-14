@@ -1,1 +1,4 @@
-use super::{monetary_policy::MonetaryPolicy, monetary_root::derive_monetary_root}; pub fn validate_monetary_policy(policy:&MonetaryPolicy)->bool{ policy.monetary_root==derive_monetary_root(policy.issuance_root, policy.supply_root)}
+use super::{monetary_policy::MonetaryPolicy, monetary_root::derive_monetary_root};
+pub fn validate_monetary_policy(policy: &MonetaryPolicy) -> bool {
+    policy.monetary_root == derive_monetary_root(policy.issuance_root, policy.supply_root)
+}

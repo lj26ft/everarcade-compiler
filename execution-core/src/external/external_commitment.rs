@@ -11,9 +11,17 @@ fn hash_combine(parts: &[&[u8]]) -> [u8; 32] {
 }
 
 pub fn xrpl_anchor_commitment(anchor: &XrplAnchor) -> [u8; 32] {
-    hash_combine(&[&anchor.ledger_index.to_le_bytes(), &anchor.transaction_hash, &anchor.anchored_root])
+    hash_combine(&[
+        &anchor.ledger_index.to_le_bytes(),
+        &anchor.transaction_hash,
+        &anchor.anchored_root,
+    ])
 }
 
 pub fn evernode_anchor_commitment(anchor: &EvernodeAnchor) -> [u8; 32] {
-    hash_combine(&[&anchor.host_id, &anchor.instance_root, &anchor.anchored_root])
+    hash_combine(&[
+        &anchor.host_id,
+        &anchor.instance_root,
+        &anchor.anchored_root,
+    ])
 }

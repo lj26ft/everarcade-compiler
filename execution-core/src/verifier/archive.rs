@@ -1,5 +1,5 @@
-use crate::{ExecutionPlan, ExecutionReceipt};
 use crate::state_engine::snapshot::StateSnapshot;
+use crate::{ExecutionPlan, ExecutionReceipt};
 
 #[derive(Debug, Default)]
 pub struct VerifierArchive {
@@ -9,7 +9,13 @@ pub struct VerifierArchive {
 }
 
 impl VerifierArchive {
-    pub fn append_snapshot(&mut self, snapshot: StateSnapshot) { self.snapshots.push(snapshot); }
-    pub fn append_receipt(&mut self, receipt: ExecutionReceipt) { self.receipts.push(receipt); }
-    pub fn append_dag(&mut self, dag: ExecutionPlan) { self.dags.push(dag); }
+    pub fn append_snapshot(&mut self, snapshot: StateSnapshot) {
+        self.snapshots.push(snapshot);
+    }
+    pub fn append_receipt(&mut self, receipt: ExecutionReceipt) {
+        self.receipts.push(receipt);
+    }
+    pub fn append_dag(&mut self, dag: ExecutionPlan) {
+        self.dags.push(dag);
+    }
 }

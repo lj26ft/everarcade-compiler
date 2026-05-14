@@ -1,5 +1,11 @@
-use super::{clause::{ConstitutionalClause, Hash}, clause_lineage::derive_lineage_root};
-pub fn amend_clause(prior: &ConstitutionalClause, next_execution_root: Hash) -> ConstitutionalClause {
+use super::{
+    clause::{ConstitutionalClause, Hash},
+    clause_lineage::derive_lineage_root,
+};
+pub fn amend_clause(
+    prior: &ConstitutionalClause,
+    next_execution_root: Hash,
+) -> ConstitutionalClause {
     ConstitutionalClause {
         clause_id: prior.clause_id,
         constitutional_scope_root: prior.constitutional_scope_root,

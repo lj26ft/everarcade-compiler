@@ -8,6 +8,9 @@ pub struct HostConfig {
 
 impl HostConfig {
     pub fn new(package_path: impl Into<PathBuf>, data_dir: impl Into<PathBuf>) -> Self {
-        Self { package_path: package_path.into(), data_dir: data_dir.into() }
+        Self {
+            package_path: package_path.into(),
+            data_dir: data_dir.into(),
+        }
     }
 }

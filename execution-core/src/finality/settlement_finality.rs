@@ -7,11 +7,17 @@ pub struct SettlementAnchor {
     pub confirmed: bool,
 }
 
-pub fn create_settlement_anchor(checkpoint: &FinalityCheckpoint, xrpl_tx_hash: String) -> SettlementAnchor {
+pub fn create_settlement_anchor(
+    checkpoint: &FinalityCheckpoint,
+    xrpl_tx_hash: String,
+) -> SettlementAnchor {
     SettlementAnchor {
         checkpoint_hash: format!(
             "{}:{}:{}:{}",
-            checkpoint.execution_root, checkpoint.receipt_root, checkpoint.snapshot_root, checkpoint.epoch_id
+            checkpoint.execution_root,
+            checkpoint.receipt_root,
+            checkpoint.snapshot_root,
+            checkpoint.epoch_id
         ),
         xrpl_tx_hash,
         confirmed: true,

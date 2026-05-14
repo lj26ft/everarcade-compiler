@@ -18,15 +18,31 @@ pub fn execute_graph(graph: ExecutionGraph, mut state: ExecutionState) -> Execut
     let order = match canonical_topological_sort(&graph.edges) {
         Ok(v) => v,
         Err(e) => {
-            return ExecutionResult { final_state: state, outcomes: vec![ExecutionOutcome { node_id: "<graph>".into(), success: false, message: e }], stable_receipt_order: vec![], rolled_back: false };
+            return ExecutionResult {
+                final_state: state,
+                outcomes: vec![ExecutionOutcome {
+                    node_id: "<graph>".into(),
+                    success: false,
+                    message: e,
+                }],
+                stable_receipt_order: vec![],
+                rolled_back: false,
+            };
         }
     };
 
     let policies: BTreeMap<String, ExecutionPolicy> = BTreeMap::new();
     for node in &order {
-        let policy = policies.get(node).copied().unwrap_or(ExecutionPolicy::Required);
+        let policy = policies
+            .get(node)
+            .copied()
+            .unwrap_or(ExecutionPolicy::Required);
         let success = true;
-        outcomes.push(ExecutionOutcome { node_id: node.clone(), success, message: "applied".into() });
+        outcomes.push(ExecutionOutcome {
+            node_id: node.clone(),
+            success,
+            message: "applied".into(),
+        });
         state.applied_nodes.push(node.clone());
 
         if !success && should_rollback(policy) {
@@ -36,5 +52,10 @@ pub fn execute_graph(graph: ExecutionGraph, mut state: ExecutionState) -> Execut
         }
     }
 
-    ExecutionResult { final_state: state, outcomes, stable_receipt_order: order, rolled_back }
+    ExecutionResult {
+        final_state: state,
+        outcomes,
+        stable_receipt_order: order,
+        rolled_back,
+    }
 }

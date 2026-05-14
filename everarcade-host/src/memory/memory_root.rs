@@ -1,6 +1,6 @@
 pub type Hash = [u8; 32];
-use sha2::{Digest, Sha256};
 use super::civilization_memory::CivilizationMemoryRecord;
+use sha2::{Digest, Sha256};
 pub fn memory_root(records: &[CivilizationMemoryRecord]) -> Hash {
     let mut h = Sha256::new();
     for r in records {

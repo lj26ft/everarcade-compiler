@@ -4,10 +4,16 @@ use execution_core::vm::VmExecutionReceipt;
 
 use crate::error::HostError;
 
-pub fn write_receipt(dir: &Path, receipt: &VmExecutionReceipt) -> Result<std::path::PathBuf, HostError> {
+pub fn write_receipt(
+    dir: &Path,
+    receipt: &VmExecutionReceipt,
+) -> Result<std::path::PathBuf, HostError> {
     let name = format!("{}.bin", hex::encode(receipt.receipt_id));
     let path = dir.join(name);
-    fs::write(&path, bincode::serialize(receipt).map_err(HostError::Encode)?)?;
+    fs::write(
+        &path,
+        bincode::serialize(receipt).map_err(HostError::Encode)?,
+    )?;
     Ok(path)
 }
 

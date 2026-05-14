@@ -1,5 +1,5 @@
-use std::collections::BTreeMap;
 use execution_core::hash_runtime::state_hash::state_root;
+use std::collections::BTreeMap;
 
 #[test]
 fn state_root_is_deterministic() {

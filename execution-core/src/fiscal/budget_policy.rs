@@ -1,5 +1,5 @@
-use serde::{Deserialize, Serialize};
 use super::fiscal_policy::Hash;
+use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct BudgetPolicy {

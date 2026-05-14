@@ -1,4 +1,7 @@
-use crate::{checkpoint::checkpoint_snapshot::CheckpointSnapshot, merkle::Hash, receipt_runtime::execution_receipt::ExecutionReceipt, sync::SyncStatus};
+use crate::{
+    checkpoint::checkpoint_snapshot::CheckpointSnapshot, merkle::Hash,
+    receipt_runtime::execution_receipt::ExecutionReceipt, sync::SyncStatus,
+};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct SimulatedNode {

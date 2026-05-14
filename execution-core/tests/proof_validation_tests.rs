@@ -1,4 +1,7 @@
-use execution_core::merkle::{inclusion_proof::generate_inclusion_proof, leaf_hash::leaf_hash, merkle_tree::build_merkle_root, proof_validation::validate_proof};
+use execution_core::merkle::{
+    inclusion_proof::generate_inclusion_proof, leaf_hash::leaf_hash,
+    merkle_tree::build_merkle_root, proof_validation::validate_proof,
+};
 
 #[test]
 fn validate_proof_path() {

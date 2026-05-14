@@ -1,4 +1,6 @@
-use execution_core::amendment::{amendment_execution::execute_amendment, amendment_transition::transition_amendment};
+use execution_core::amendment::{
+    amendment_execution::execute_amendment, amendment_transition::transition_amendment,
+};
 
 #[test]
 fn amendment_continuity() {

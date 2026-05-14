@@ -16,6 +16,11 @@ impl Federation {
         let federation_root = hash_bytes(canonical.join("|").as_bytes());
         let federation_id = hash_bytes(format!("federation:{federation_root}").as_bytes());
         let continuity_root = hash_bytes(format!("continuity:{federation_id}").as_bytes());
-        Self { federation_id, member_entities: canonical, federation_root, continuity_root }
+        Self {
+            federation_id,
+            member_entities: canonical,
+            federation_root,
+            continuity_root,
+        }
     }
 }

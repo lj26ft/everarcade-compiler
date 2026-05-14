@@ -28,9 +28,15 @@ pub struct VerifierNode {
 }
 
 impl VerifierNode {
-    pub fn new(node_id: impl Into<String>) -> Self { Self { node_id: node_id.into() } }
+    pub fn new(node_id: impl Into<String>) -> Self {
+        Self {
+            node_id: node_id.into(),
+        }
+    }
 
-    pub fn execute_locally(&self, input: VmInput) -> crate::VmOutput { execute::execute_vm(input) }
+    pub fn execute_locally(&self, input: VmInput) -> crate::VmOutput {
+        execute::execute_vm(input)
+    }
 
     pub fn verify_bundle(&self, bundle: &VerifierExecutionBundle) -> VerifierResult {
         let replay = ReplayEngine::replay(bundle);
@@ -39,10 +45,16 @@ impl VerifierNode {
             .as_ref()
             .map(|remote| remote.receipt_hash != replay.receipt.receipt_hash)
             .unwrap_or(false);
-        VerifierResult { replay, challenge_triggered }
+        VerifierResult {
+            replay,
+            challenge_triggered,
+        }
     }
 
     pub fn contract_hashes(&self, contracts: &[ContractWasm]) -> Vec<String> {
-        contracts.iter().map(|c| hashing::compute_contract_hash(&c.wasm_bytes)).collect()
+        contracts
+            .iter()
+            .map(|c| hashing::compute_contract_hash(&c.wasm_bytes))
+            .collect()
     }
 }

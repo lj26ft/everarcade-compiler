@@ -27,7 +27,11 @@ impl TransportService {
     }
 
     pub fn reconstruct(packet: &TransportPacket) -> Option<(Vec<u8>, TransportReceipt)> {
-        let bytes = packet.chunks.iter().flat_map(|c| c.iter().copied()).collect::<Vec<_>>();
+        let bytes = packet
+            .chunks
+            .iter()
+            .flat_map(|c| c.iter().copied())
+            .collect::<Vec<_>>();
         let digest = checksum(&bytes);
         if digest != packet.digest {
             return None;
@@ -44,5 +48,7 @@ impl TransportService {
 }
 
 fn checksum(bytes: &[u8]) -> u64 {
-    bytes.iter().fold(0u64, |acc, b| acc.wrapping_mul(16777619).wrapping_add(*b as u64))
+    bytes.iter().fold(0u64, |acc, b| {
+        acc.wrapping_mul(16777619).wrapping_add(*b as u64)
+    })
 }

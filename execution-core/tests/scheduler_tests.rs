@@ -1,6 +1,6 @@
-use std::collections::{BTreeMap, BTreeSet};
 use execution_core::execution::{execute_graph, ExecutionState};
 use execution_core::federation::execution_graph::ExecutionGraph;
+use std::collections::{BTreeMap, BTreeSet};
 
 #[test]
 fn deterministic_scheduler_order() {

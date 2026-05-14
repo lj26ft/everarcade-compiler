@@ -24,6 +24,9 @@ impl ReplayEngine {
             .map(|contract| hashing::compute_contract_hash(&contract.wasm_bytes))
             .collect();
 
-        ReplayResult { receipt: out.receipt, contract_hashes }
+        ReplayResult {
+            receipt: out.receipt,
+            contract_hashes,
+        }
     }
 }

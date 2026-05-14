@@ -1,1 +1,8 @@
-use everarcade_host::proof_distribution::{proof_validation::proof_valid,proof_window::proof_within_window}; #[test] fn proof_distribution_invariants(){ assert!(proof_valid([1;32])); assert!(proof_within_window(10,1,10)); }
+use everarcade_host::proof_distribution::{
+    proof_validation::proof_valid, proof_window::proof_within_window,
+};
+#[test]
+fn proof_distribution_invariants() {
+    assert!(proof_valid([1; 32]));
+    assert!(proof_within_window(10, 1, 10));
+}

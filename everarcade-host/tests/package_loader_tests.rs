@@ -1,2 +1,4 @@
 #[test]
-fn package_loader_smoke() { assert!(true); }
+fn package_loader_smoke() {
+    assert!(true);
+}

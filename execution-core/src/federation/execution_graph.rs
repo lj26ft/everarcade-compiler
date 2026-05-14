@@ -8,7 +8,10 @@ pub struct ExecutionGraph {
 impl ExecutionGraph {
     pub fn canonical_topological_nodes(&self) -> Vec<String> {
         let mut nodes: BTreeSet<String> = BTreeSet::new();
-        for (from, tos) in &self.edges { nodes.insert(from.clone()); nodes.extend(tos.iter().cloned()); }
+        for (from, tos) in &self.edges {
+            nodes.insert(from.clone());
+            nodes.extend(tos.iter().cloned());
+        }
         nodes.into_iter().collect()
     }
 }

@@ -11,7 +11,11 @@ pub struct LocalTransport {
 }
 
 impl Transport for LocalTransport {
-    fn broadcast(&mut self, object: SyncObject) { self.queue.push(object); }
+    fn broadcast(&mut self, object: SyncObject) {
+        self.queue.push(object);
+    }
 
-    fn drain(&mut self) -> Vec<SyncObject> { std::mem::take(&mut self.queue) }
+    fn drain(&mut self) -> Vec<SyncObject> {
+        std::mem::take(&mut self.queue)
+    }
 }

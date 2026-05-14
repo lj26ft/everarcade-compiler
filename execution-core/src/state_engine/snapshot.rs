@@ -13,8 +13,14 @@ pub struct StateSnapshot {
 }
 
 impl StateSnapshot {
-    pub fn new(state_entries: BTreeMap<String, String>, previous_snapshot_hash: Option<String>) -> Self {
-        let ordered: Vec<(String, String)> = state_entries.iter().map(|(k, v)| (k.clone(), v.clone())).collect();
+    pub fn new(
+        state_entries: BTreeMap<String, String>,
+        previous_snapshot_hash: Option<String>,
+    ) -> Self {
+        let ordered: Vec<(String, String)> = state_entries
+            .iter()
+            .map(|(k, v)| (k.clone(), v.clone()))
+            .collect();
         let state_root = merkle::to_hex(&merkle::compute_state_root(&ordered));
         let mut snapshot = Self {
             state_root,

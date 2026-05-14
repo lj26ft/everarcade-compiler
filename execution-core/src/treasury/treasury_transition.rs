@@ -1,6 +1,13 @@
-use super::{treasury::{Hash, SovereignTreasury}, treasury_root::derive_treasury_root};
+use super::{
+    treasury::{Hash, SovereignTreasury},
+    treasury_root::derive_treasury_root,
+};
 
-pub fn transition_treasury(prior: &SovereignTreasury, monetary_root: Hash, fiscal_root: Hash) -> SovereignTreasury {
+pub fn transition_treasury(
+    prior: &SovereignTreasury,
+    monetary_root: Hash,
+    fiscal_root: Hash,
+) -> SovereignTreasury {
     SovereignTreasury {
         treasury_id: prior.treasury_id,
         sovereign_domain: prior.sovereign_domain,

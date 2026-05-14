@@ -5,5 +5,8 @@ pub struct SovereignSimulationResult {
 }
 
 pub fn simulate_sovereign_isolation(isolated_domains: usize) -> SovereignSimulationResult {
-    SovereignSimulationResult { isolated_domains, deterministic: true }
+    SovereignSimulationResult {
+        isolated_domains,
+        deterministic: true,
+    }
 }

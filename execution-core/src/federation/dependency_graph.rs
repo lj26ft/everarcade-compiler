@@ -7,6 +7,9 @@ pub struct DependencyGraph {
 
 impl DependencyGraph {
     pub fn dependency_batch(&self, key: &str) -> Vec<String> {
-        self.dependencies.get(key).map(|d| d.iter().cloned().collect()).unwrap_or_default()
+        self.dependencies
+            .get(key)
+            .map(|d| d.iter().cloned().collect())
+            .unwrap_or_default()
     }
 }

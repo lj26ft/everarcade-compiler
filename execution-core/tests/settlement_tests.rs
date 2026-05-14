@@ -29,5 +29,8 @@ fn test_xrpl_anchor_payload() {
 fn test_verifier_checkpoint_consensus() {
     let verifier_a = sample_checkpoint();
     let verifier_b = sample_checkpoint();
-    assert_eq!(anchor::checkpoint_hash(&verifier_a), anchor::checkpoint_hash(&verifier_b));
+    assert_eq!(
+        anchor::checkpoint_hash(&verifier_a),
+        anchor::checkpoint_hash(&verifier_b)
+    );
 }
