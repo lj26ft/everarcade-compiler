@@ -1,8 +1,13 @@
 pub mod connection;
+pub mod local_peer;
 pub mod message;
+pub mod message_framing;
 pub mod peer;
+pub mod peer_connection;
 pub mod peer_identity;
 pub mod peer_manifest;
+pub mod peer_registry;
 pub mod peer_validation;
 pub mod session;
+pub mod tcp_transport;
 pub mod transport;
