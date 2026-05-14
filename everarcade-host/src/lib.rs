@@ -50,3 +50,7 @@ pub mod memory;
 pub mod query;
 pub mod recovery;
 pub mod snapshot;
+
+pub mod fixture;
+
+pub mod verify;

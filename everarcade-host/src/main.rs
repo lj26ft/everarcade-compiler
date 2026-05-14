@@ -3,15 +3,15 @@ use std::{fs, path::PathBuf};
 use everarcade_host::{
     config::HostConfig,
     error::HostError,
+    fixture::generate_fixture_to_path,
     persistence::HostPaths,
-    receipt_store::read_receipt,
     run_package_once,
     state_folder::{
         node_manifest::{read_node_manifest, write_node_manifest, NodeManifest},
         validation::validate,
     },
+    verify::verify_state,
 };
-use execution_core::vm::validate_vm_receipt;
 
 fn main() {
     if let Err(e) = run_cli() {
@@ -39,6 +39,20 @@ fn run_cli() -> Result<(), HostError> {
             write_node_manifest(&state, &NodeManifest::new("everarcade-node"))?;
             println!("initialized={}", state.display());
         }
+        "generate-fixture" => {
+            let output = PathBuf::from(
+                arg_value(&args, "--output")
+                    .ok_or_else(|| HostError::InvalidArgs("missing --output".into()))?,
+            );
+            let result = generate_fixture_to_path(&output)?;
+            println!(
+                "fixture=ok output={} package_root={} replay_root={} checkpoint_root={}",
+                result.output_path,
+                hex::encode(result.package_root),
+                hex::encode(result.replay_root),
+                hex::encode(result.checkpoint_root)
+            );
+        }
         "run" => {
             let package =
                 PathBuf::from(arg_value(&args, "--package").ok_or(HostError::MissingPackage)?);
@@ -50,26 +64,24 @@ fn run_cli() -> Result<(), HostError> {
                 read_node_manifest(&state).unwrap_or_else(|_| NodeManifest::new("everarcade-node"));
             manifest.last_receipt_root = Some(hex::encode(result.receipt.receipt_id));
             manifest.last_checkpoint_root = Some(hex::encode(result.receipt.checkpoint_root));
-            manifest.last_anchor_root = Some(hex::encode(result.receipt.anchor_root));
-            manifest.state_root = hex::encode(result.receipt.checkpoint_root);
+            manifest.last_anchor_root = Some(hex::encode(result.receipt.receipt_id));
             write_node_manifest(&state, &manifest)?;
             println!("receipt={}", hex::encode(result.receipt.receipt_id));
         }
         "verify" => {
-            let manifest = read_node_manifest(&state)?;
-            let rid = manifest
-                .last_receipt_root
-                .ok_or(HostError::InvalidReceipt)?;
-            let receipt = read_receipt(&state.join("receipts").join(format!("{rid}.bin")))?;
-            if !validate_vm_receipt(&receipt) {
-                return Err(HostError::VerificationFailed("receipt invalid".into()));
+            let report = verify_state(&state)?;
+            if !report.all_valid() {
+                return Err(HostError::VerificationFailed(format!(
+                    "package_valid={} receipt_valid={} checkpoint_valid={} anchor_valid={}",
+                    report.package_valid,
+                    report.receipt_valid,
+                    report.checkpoint_valid,
+                    report.anchor_valid
+                )));
             }
-            let cp = manifest
-                .last_checkpoint_root
-                .ok_or(HostError::InvalidCheckpoint)?;
-            if !state.join("checkpoints").join(format!("{cp}.bin")).exists() {
-                return Err(HostError::InvalidCheckpoint);
-            }
+            let manifest =
+                read_node_manifest(&state).unwrap_or_else(|_| NodeManifest::new("everarcade-node"));
+            write_node_manifest(&state, &manifest)?;
             println!("verify=ok");
         }
         "status" => {
@@ -86,7 +98,7 @@ fn run_cli() -> Result<(), HostError> {
         "anchor-intent" => {
             let manifest = read_node_manifest(&state)?;
             let rid = manifest
-                .last_receipt_root
+                .last_anchor_root
                 .ok_or(HostError::AnchorIntentMissing)?;
             let p = state.join("anchors").join(format!("{rid}.json"));
             if !p.exists() {
@@ -96,7 +108,7 @@ fn run_cli() -> Result<(), HostError> {
         }
         _ => {
             return Err(HostError::InvalidArgs(
-                "usage: init|run|verify|status|anchor-intent".into(),
+                "usage: init|generate-fixture|run|verify|status|anchor-intent".into(),
             ))
         }
     }
