@@ -13,7 +13,11 @@ pub mod tcp_transport;
 pub mod transport;
 
 pub mod network_error;
+pub mod partial_transfer;
 pub mod peer_dialer;
 pub mod peer_listener;
+pub mod session_checkpoint;
+pub mod sync_resume;
+pub mod sync_session;
 pub mod tcp_client;
 pub mod tcp_server;

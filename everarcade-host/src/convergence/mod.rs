@@ -1,10 +1,14 @@
 pub mod anchor_exchange;
 pub mod artifact_validation;
 pub mod checkpoint_exchange;
+pub mod checkpoint_gap_detection;
 pub mod convergence_engine;
 pub mod convergence_report;
 pub mod deterministic_resolution;
 pub mod distributed_state;
+pub mod divergence_detection;
 pub mod receipt_exchange;
+pub mod receipt_gap_detection;
 pub mod replay_compare;
+pub mod root_comparison;
 pub mod root_validation;
