@@ -2,11 +2,17 @@ use everarcade_host::{
     config::HostConfig, fixture::generate_fixture_to_path, run_package_once,
     state_folder::storage_report::storage_report,
 };
-use std::{fs, time::{SystemTime, UNIX_EPOCH}};
+use std::{
+    fs,
+    time::{SystemTime, UNIX_EPOCH},
+};
 
 #[test]
 fn storage_report_counts_artifacts() {
-    let unique = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_nanos();
+    let unique = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .unwrap()
+        .as_nanos();
     let root = std::env::temp_dir().join(format!("everarcade-storage-report-{unique}"));
     let _ = fs::remove_dir_all(&root);
     fs::create_dir_all(&root).expect("mkdir");
@@ -22,4 +28,3 @@ fn storage_report_counts_artifacts() {
     assert!(report.anchor_count >= 1);
     assert!(report.total_bytes > 0);
 }
-

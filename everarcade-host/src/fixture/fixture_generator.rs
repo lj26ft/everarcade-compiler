@@ -23,7 +23,9 @@ pub fn generate_fixture_bytes() -> Result<Vec<u8>, HostError> {
     if !validate_fixture_package(&package) {
         return Err(HostError::InvalidPackage);
     }
-    bincode::serialize(&package).map_err(HostError::Encode)
+    Ok(execution_core::codec::package_encode::encode_package(
+        &package,
+    ))
 }
 
 pub fn generate_fixture_to_path(output: &Path) -> Result<FixtureGenerationResult, HostError> {
@@ -31,7 +33,7 @@ pub fn generate_fixture_to_path(output: &Path) -> Result<FixtureGenerationResult
     if !validate_fixture_package(&package) {
         return Err(HostError::InvalidPackage);
     }
-    let bytes = bincode::serialize(&package).map_err(HostError::Encode)?;
+    let bytes = execution_core::codec::package_encode::encode_package(&package);
     if let Some(parent) = output.parent() {
         fs::create_dir_all(parent)?;
     }
