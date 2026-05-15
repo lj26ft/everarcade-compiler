@@ -1,9 +1,12 @@
 pub mod assignment_continuity;
 pub mod assignment_recovery;
 pub mod continuity_transfer;
+pub mod distributed_receipt_failover;
 pub mod execution_resume;
 pub mod orphan_execution;
 pub mod partition_failover;
 pub mod reassignment;
+pub mod receipt_reassignment_recovery;
 pub mod receipt_recovery;
 pub mod recovery_validation;
+pub mod restart_receipt_resume;

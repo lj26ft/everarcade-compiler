@@ -1,0 +1,1 @@
+pub use crate::recovery_scan::distributed_receipt_recovery::recover_distributed_receipt_manifest as rebuild_distributed_receipt_manifest;
