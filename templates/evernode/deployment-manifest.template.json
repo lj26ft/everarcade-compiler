@@ -1,0 +1,11 @@
+{
+  "manifest_version": 1,
+  "runtime": "everarcade-host",
+  "profile": "dry-run",
+  "node": "evernode-operator-1",
+  "receipt": "<set-after-run>",
+  "checkpoint": "<set-after-run>",
+  "xrpl_anchor": "<dryrun-or-live-anchor>",
+  "ipfs_manifest": "<dryrun-or-live-cid>",
+  "stdout_protocol": "docs/stdout-protocol.md"
+}
