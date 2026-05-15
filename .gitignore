@@ -22,3 +22,8 @@ proofs/
 ipfs/
 xrpl/
 distributed_receipts/
+
+# Release artifacts
+dist/
+*.tar.gz
+*.sha256
