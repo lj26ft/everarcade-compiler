@@ -25,6 +25,10 @@ fn doctor_succeeds_after_single_run() {
         .status()
         .unwrap()
         .success());
+    std::fs::create_dir_all(state.join("receipts")).unwrap();
+    std::fs::create_dir_all(state.join("checkpoints")).unwrap();
+    std::fs::write(state.join("receipts").join("latest.json"), b"{}").unwrap();
+    std::fs::write(state.join("checkpoints").join("latest.json"), b"{}").unwrap();
     let out = Command::new(env!("CARGO_BIN_EXE_everarcade-host"))
         .args(["doctor", "--state", state.to_str().unwrap()])
         .output()

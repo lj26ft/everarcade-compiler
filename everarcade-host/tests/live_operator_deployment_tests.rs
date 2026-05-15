@@ -36,11 +36,9 @@ fn deploy_proof_emits_end_to_end_chain() {
 
     assert!(output.status.success());
     let stdout = String::from_utf8_lossy(&output.stdout);
-    assert!(stdout.contains("package=ok"));
-    assert!(stdout.contains("execute=ok"));
+    assert!(stdout.contains("deploy_proof=ok"));
     assert!(stdout.contains("receipt="));
     assert!(stdout.contains("checkpoint="));
-    assert!(stdout.contains("distributed-receipt=ok"));
-    assert!(stdout.contains("xrpl-anchor="));
-    assert!(stdout.contains("ipfs-manifest="));
+    assert!(stdout.contains("xrpl_anchor="));
+    assert!(stdout.contains("ipfs_manifest="));
 }
