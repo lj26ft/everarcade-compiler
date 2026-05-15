@@ -16,7 +16,20 @@ run() {
   "$@"
 }
 
-run cargo build --release -p everarcade-host
+cd "$ROOT"
+
+if [[ ! -f "$ROOT/Cargo.lock" ]]; then
+  echo "missing Cargo.lock" >&2
+  exit 1
+fi
+
+if [[ ! -d "$ROOT/vendor" ]]; then
+  echo "missing vendor directory; run scripts/vendor_deps.sh" >&2
+  exit 1
+fi
+
+run cargo build --release --locked --frozen --offline -p everarcade-host
+run cargo test --locked --frozen --offline
 run "$ROOT/scripts/release_smoke.sh"
 run "$ROOT/scripts/install_smoke.sh"
 
@@ -25,5 +38,4 @@ if [[ -z "$PKG_FILE" ]]; then
 fi
 
 echo "release_archive=$PKG_FILE"
-
 echo "release_validation=ok"
