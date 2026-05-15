@@ -27,3 +27,4 @@ distributed_receipts/
 dist/
 *.tar.gz
 *.sha256
+/vendor/
