@@ -31,8 +31,10 @@ fn arg_value(args: &[String], flag: &str) -> Option<String> {
     args.windows(2).find(|w| w[0] == flag).map(|w| w[1].clone())
 }
 
-
-fn publish_artifact_manifest(state: &std::path::Path, receipt_hex: &str) -> Result<String, HostError> {
+fn publish_artifact_manifest(
+    state: &std::path::Path,
+    receipt_hex: &str,
+) -> Result<String, HostError> {
     let manifest = serde_json::json!({
         "receipt": receipt_hex,
         "deterministic": true,
@@ -52,8 +54,7 @@ fn submit_xrpl_anchor_intent(receipt_hex: &str) -> Result<String, HostError> {
         payload_hex,
     };
     if everarcade_host::xrpl::xrpl_live::live_enabled() {
-        everarcade_host::xrpl::submission::submit_stub(&intent)
-            .map_err(HostError::InvalidArgs)?;
+        everarcade_host::xrpl::submission::submit_stub(&intent).map_err(HostError::InvalidArgs)?;
     }
     Ok(intent.anchor_root_hex)
 }
