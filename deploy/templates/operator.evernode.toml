@@ -1,0 +1,7 @@
+node_name = "evernode-operator-1"
+state_path = "evernode/state"
+profile = "live"
+dry_run = false
+xrpl_enabled = true
+ipfs_enabled = true
+evernode_enabled = true
