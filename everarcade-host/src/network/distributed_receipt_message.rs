@@ -1,7 +1,10 @@
-pub type Hash = [u8; 32];
+use crate::network::{
+    receipt_request::DistributedReceiptRequest, receipt_response::DistributedReceiptResponse,
+};
+use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct DistributedReceiptMessage {
-    pub receipt_root: Hash,
-    pub partition_root: Hash,
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub enum DistributedReceiptMessage {
+    Request(DistributedReceiptRequest),
+    Response(DistributedReceiptResponse),
 }

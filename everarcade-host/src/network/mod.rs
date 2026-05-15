@@ -28,4 +28,8 @@ pub mod execution_message;
 pub mod execution_resume_message;
 pub mod execution_transfer;
 pub mod partition_message;
+pub mod receipt_message_validation;
+pub mod receipt_request;
+pub mod receipt_response;
+pub mod receipt_stream;
 pub mod window_message;

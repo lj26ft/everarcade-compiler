@@ -1,3 +1,6 @@
+pub mod distributed_receipt_rebuild;
+pub mod distributed_receipt_recovery;
+pub mod distributed_receipt_repair;
 pub mod orphan_anchors;
 pub mod orphan_checkpoints;
 pub mod orphan_receipts;
