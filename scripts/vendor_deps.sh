@@ -4,6 +4,9 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
+VENDOR_DIR="${VENDOR_DIR:-$ROOT/vendor}"
+VENDOR_ARCHIVE="${VENDOR_ARCHIVE:-}"
+
 mkdir -p .cargo
 BACKUP=""
 if [[ -f .cargo/config.toml ]]; then
@@ -20,7 +23,7 @@ trap cleanup EXIT
 
 rm -f .cargo/config.toml
 cargo generate-lockfile
-cargo vendor --locked vendor > .cargo/config.toml
+cargo vendor --locked "$VENDOR_DIR" > .cargo/config.toml
 cat >> .cargo/config.toml <<'CFG'
 
 [net]
@@ -29,5 +32,11 @@ CFG
 
 rm -f "$BACKUP"
 trap - EXIT
+
+if [[ -n "$VENDOR_ARCHIVE" ]]; then
+  mkdir -p "$(dirname "$VENDOR_ARCHIVE")"
+  tar -C "$(dirname "$VENDOR_DIR")" -czf "$VENDOR_ARCHIVE" "$(basename "$VENDOR_DIR")"
+  echo "vendor_archive=$VENDOR_ARCHIVE"
+fi
 
 echo "dependency_vendor=ok"

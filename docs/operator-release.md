@@ -28,5 +28,8 @@ scripts/release_validate.sh
 ```
 
 Notes:
-- `scripts/vendor_deps.sh` refreshes `Cargo.lock` and vendors dependencies into `vendor/`.
-- `scripts/release_validate.sh` now fails fast if `Cargo.lock` or `vendor/` is missing, and validates offline build+test with `--locked --frozen --offline`.
+- `scripts/vendor_deps.sh` refreshes `Cargo.lock`, vendors dependencies into `vendor/`, and writes offline cargo source config at `.cargo/config.toml`.
+- Keep the repository lean: do **not** commit `vendor/` (it is intentionally gitignored).
+- Local offline builds are supported by running `scripts/vendor_deps.sh` before `cargo build/test --offline`.
+- Optional release artifact: package vendored dependencies separately with `VENDOR_ARCHIVE=dist/vendor.tar.gz scripts/vendor_deps.sh`.
+- `scripts/release_validate.sh` fails fast if `Cargo.lock` or `.cargo/config.toml` is missing, and accepts `VENDOR_ARCHIVE` to hydrate `vendor/` when validating offline without a checked-in vendor directory.
