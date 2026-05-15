@@ -1,0 +1,7 @@
+node_name = "everarcade-testnet"
+state_path = "evernode/testnet-anchor"
+profile = "testnet-anchor"
+dry_run = true
+xrpl_enabled = false
+ipfs_enabled = false
+evernode_enabled = false

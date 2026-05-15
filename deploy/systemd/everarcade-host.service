@@ -1,0 +1,18 @@
+[Unit]
+Description=EverArcade Host Operator Runtime
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/everarcade-host
+Environment=EVERARCADE_DRY_RUN=1
+Environment=ENABLE_XRPL_LIVE=0
+Environment=ENABLE_IPFS_LIVE=0
+Environment=ENABLE_EVERNODE_LIVE=0
+ExecStart=/opt/everarcade-host/bin/everarcade-host verify --state /var/lib/everarcade/state
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

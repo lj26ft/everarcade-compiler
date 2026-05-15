@@ -45,3 +45,18 @@ Run repeated deterministic execution and verification locally:
 ```bash
 bash scripts/linux_vm_stress.sh
 ```
+
+## Service-style Runner (Linux VM)
+
+Use packaged service baseline:
+
+```bash
+cp deploy/systemd/everarcade-host.service /etc/systemd/system/
+systemctl daemon-reload
+systemctl enable --now everarcade-host.service
+```
+
+Keep live external rails opt-in only by toggling these environment flags in the service file:
+- `ENABLE_XRPL_LIVE=1`
+- `ENABLE_IPFS_LIVE=1`
+- `ENABLE_EVERNODE_LIVE=1`

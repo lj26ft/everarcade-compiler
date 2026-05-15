@@ -1,0 +1,7 @@
+node_name = "everarcade-local"
+state_path = ".everarcade"
+profile = "local"
+dry_run = true
+xrpl_enabled = false
+ipfs_enabled = false
+evernode_enabled = false

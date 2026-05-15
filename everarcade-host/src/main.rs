@@ -187,7 +187,20 @@ fn run_cli() -> Result<(), HostError> {
             let checkpoint_hex = hex::encode(result.receipt.checkpoint_root);
             let anchor = submit_xrpl_anchor_intent(&receipt_hex)?;
             let cid = publish_artifact_manifest(&state, &receipt_hex)?;
-            println!("proof package=ok execute=ok receipt={} checkpoint={} distributed-receipt=ok xrpl-anchor={} ipfs-manifest={}", receipt_hex, checkpoint_hex, anchor, cid);
+            let deployment_manifest = serde_json::json!({
+                "manifest_version": 1,
+                "runtime": "everarcade-host",
+                "profile": profile,
+                "node": node,
+                "receipt": receipt_hex,
+                "checkpoint": checkpoint_hex,
+                "xrpl_anchor": anchor,
+                "ipfs_manifest": cid,
+            });
+            let manifest_path = state.join("deployment-manifest.json");
+            fs::write(&manifest_path, serde_json::to_vec_pretty(&deployment_manifest).map_err(|e| HostError::InvalidArgs(e.to_string()))?)?;
+            println!("proof package=ok execute=ok receipt={} checkpoint={} distributed-receipt=ok xrpl-anchor={} ipfs-manifest={}", deployment_manifest["receipt"], deployment_manifest["checkpoint"], deployment_manifest["xrpl_anchor"], deployment_manifest["ipfs_manifest"]);
+            println!("deployment-manifest={}", manifest_path.display());
             let cfg = everarcade_host::operator::config::OperatorConfig::live_testnet(node);
             println!("operator profile={:?} state={} xrpl={} ipfs={} evernode={}", cfg.profile, cfg.state_path, cfg.xrpl_enabled, cfg.ipfs_enabled, cfg.evernode_enabled);
         }
