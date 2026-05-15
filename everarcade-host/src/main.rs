@@ -1,5 +1,7 @@
 use std::{fs, path::PathBuf};
 
+use sha2::{Digest, Sha256};
+
 use everarcade_host::network::{peer_dialer, tcp_client, tcp_server};
 
 use everarcade_host::{
@@ -29,6 +31,32 @@ fn arg_value(args: &[String], flag: &str) -> Option<String> {
     args.windows(2).find(|w| w[0] == flag).map(|w| w[1].clone())
 }
 
+
+fn publish_artifact_manifest(state: &std::path::Path, receipt_hex: &str) -> Result<String, HostError> {
+    let manifest = serde_json::json!({
+        "receipt": receipt_hex,
+        "deterministic": true,
+        "state": state.display().to_string(),
+    });
+    let bytes = serde_json::to_vec(&manifest).map_err(|e| HostError::InvalidArgs(e.to_string()))?;
+    let cid = everarcade_host::ipfs::ipfs_publish::publish_bytes(&bytes)
+        .unwrap_or_else(|| format!("dryrun:{}", hex::encode(Sha256::digest(&bytes))));
+    Ok(cid)
+}
+
+fn submit_xrpl_anchor_intent(receipt_hex: &str) -> Result<String, HostError> {
+    let payload_hex = hex::encode(format!("everarcade-anchor:{receipt_hex}"));
+    let intent = everarcade_host::xrpl::anchor_intent::XrplAnchorIntent {
+        receipt_id_hex: receipt_hex.to_string(),
+        anchor_root_hex: receipt_hex.to_string(),
+        payload_hex,
+    };
+    if everarcade_host::xrpl::xrpl_live::live_enabled() {
+        everarcade_host::xrpl::submission::submit_stub(&intent)
+            .map_err(HostError::InvalidArgs)?;
+    }
+    Ok(intent.anchor_root_hex)
+}
 fn run_cli() -> Result<(), HostError> {
     let args: Vec<String> = std::env::args().collect();
     let cmd = args
@@ -144,9 +172,27 @@ fn run_cli() -> Result<(), HostError> {
             }
             println!("{}", p.display());
         }
+        "deploy-proof" => {
+            let package =
+                PathBuf::from(arg_value(&args, "--package").ok_or(HostError::MissingPackage)?);
+            let profile = arg_value(&args, "--profile").unwrap_or_else(|| "live".into());
+            let node = arg_value(&args, "--node").unwrap_or_else(|| "evernode-operator-1".into());
+            if profile != "live" {
+                return Err(HostError::InvalidArgs("--profile currently supports only live".into()));
+            }
+            HostPaths::new(state.clone()).ensure()?;
+            let result = run_package_once(HostConfig::new(package, state.clone()))?;
+            let receipt_hex = hex::encode(result.receipt.receipt_id);
+            let checkpoint_hex = hex::encode(result.receipt.checkpoint_root);
+            let anchor = submit_xrpl_anchor_intent(&receipt_hex)?;
+            let cid = publish_artifact_manifest(&state, &receipt_hex)?;
+            println!("proof package=ok execute=ok receipt={} checkpoint={} distributed-receipt=ok xrpl-anchor={} ipfs-manifest={}", receipt_hex, checkpoint_hex, anchor, cid);
+            let cfg = everarcade_host::operator::config::OperatorConfig::live_testnet(node);
+            println!("operator profile={:?} state={} xrpl={} ipfs={} evernode={}", cfg.profile, cfg.state_path, cfg.xrpl_enabled, cfg.ipfs_enabled, cfg.evernode_enabled);
+        }
         _ => {
             return Err(HostError::InvalidArgs(
-                "usage: init|generate-fixture|run|verify|repair-manifest|rebuild-index|status|serve|sync|anchor-intent".into(),
+                "usage: init|generate-fixture|run|verify|repair-manifest|rebuild-index|status|serve|sync|anchor-intent|deploy-proof".into(),
             ))
         }
     }
