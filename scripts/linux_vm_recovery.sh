@@ -1,12 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-STATE_DIR=".everarcade-recovery"
+STATE_DIR="$(mktemp -d /tmp/everarcade-recovery.XXXXXX)"
 TMP_FIXTURE="$(mktemp)"
-trap 'rm -f "$TMP_FIXTURE"' EXIT
+trap 'rm -rf "$STATE_DIR"; rm -f "$TMP_FIXTURE"' EXIT
 
-rm -rf "$STATE_DIR"
-mkdir -p "$STATE_DIR"
 
 cargo run -p everarcade-host -- generate-fixture --output "$TMP_FIXTURE"
 cargo run -p everarcade-host -- run --package "$TMP_FIXTURE" --state "$STATE_DIR"

@@ -1,6 +1,24 @@
-/target
+# Rust
+/target/
+
+# EverArcade generated runtime state
+.everarcade/
+.everarcade-*/
+**/.everarcade/
+**/.everarcade-*/
+
+# Generated fixture/runtime artifacts
 everarcade-host/tests/fixtures/*.bin
-.everarcade-smoke/
-.everarcade-stress/
-.everarcade-recovery/
 tmp/
+*.tmp
+*.log
+
+# Operator outputs
+receipts/
+checkpoints/
+anchors/
+manifests/
+proofs/
+ipfs/
+xrpl/
+distributed_receipts/
