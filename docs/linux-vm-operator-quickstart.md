@@ -60,3 +60,24 @@ Keep live external rails opt-in only by toggling these environment flags in the 
 - `ENABLE_XRPL_LIVE=1`
 - `ENABLE_IPFS_LIVE=1`
 - `ENABLE_EVERNODE_LIVE=1`
+
+## Installer and Debug Commands
+
+Use local-install flags:
+
+```bash
+./install.sh --prefix "$HOME/.local/everarcade" --bin-dir "$HOME/.local/bin"
+```
+
+Then run:
+
+```bash
+everarcade-host debug --state ~/.everarcade
+everarcade-host doctor --state ~/.everarcade
+```
+
+Uninstall:
+
+```bash
+./uninstall.sh --prefix "$HOME/.local/everarcade" --bin-dir "$HOME/.local/bin"
+```

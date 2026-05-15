@@ -1,4 +1,4 @@
-use std::{fs, path::PathBuf};
+use std::{fs, path::Path, path::PathBuf};
 
 use sha2::{Digest, Sha256};
 
@@ -19,6 +19,24 @@ use everarcade_host::{
     },
     verify::verify_state,
 };
+
+const HELP_TEXT: &str = r#"EverArcade Host Operator
+
+Commands:
+  init --state <path>
+  generate-fixture --output <path>
+  run --package <path> --state <path>
+  verify --state <path>
+  status --state <path>
+  deploy-proof --package <path> --state <path>
+  debug --state <path>
+  doctor --state <path>
+
+Examples:
+  everarcade-host init --state ~/.everarcade
+  everarcade-host generate-fixture --output /tmp/everarcade-package.bin
+  everarcade-host run --package /tmp/everarcade-package.bin --state ~/.everarcade
+  everarcade-host verify --state ~/.everarcade"#;
 
 fn main() {
     if let Err(e) = run_cli() {
@@ -58,8 +76,27 @@ fn submit_xrpl_anchor_intent(receipt_hex: &str) -> Result<String, HostError> {
     }
     Ok(intent.anchor_root_hex)
 }
+
+fn latest_root_hex(state: &Path, folder: &str) -> String {
+    let path = state.join(folder);
+    match fs::read_dir(path) {
+        Ok(entries) => entries
+            .filter_map(Result::ok)
+            .filter_map(|e| e.file_name().to_str().map(|s| s.to_string()))
+            .filter(|name| name.ends_with(".json"))
+            .map(|name| name.trim_end_matches(".json").to_string())
+            .max()
+            .unwrap_or_else(|| "none".into()),
+        Err(_) => "none".into(),
+    }
+}
+
 fn run_cli() -> Result<(), HostError> {
     let args: Vec<String> = std::env::args().collect();
+    if args.len() == 1 || args.iter().any(|a| a == "--help" || a == "-h") {
+        println!("{HELP_TEXT}");
+        return Ok(());
+    }
     let cmd = args
         .get(1)
         .ok_or_else(|| HostError::InvalidArgs("missing command".into()))?;
@@ -74,6 +111,7 @@ fn run_cli() -> Result<(), HostError> {
             println!("initialized={}", state.display());
         }
         "generate-fixture" => {
+            /* unchanged */
             let output = PathBuf::from(
                 arg_value(&args, "--output")
                     .ok_or_else(|| HostError::InvalidArgs("missing --output".into()))?,
@@ -118,13 +156,101 @@ fn run_cli() -> Result<(), HostError> {
             write_node_manifest(&state, &manifest)?;
             println!("verify=ok");
         }
+        "debug" => {
+            let manifest =
+                read_node_manifest(&state).unwrap_or_else(|_| NodeManifest::new("everarcade-node"));
+            let anchor_count = fs::read_dir(state.join("anchors"))
+                .map(|x| x.count())
+                .unwrap_or(0);
+            let distributed = fs::read_dir(state.join("distributed-receipts"))
+                .map(|x| x.count())
+                .unwrap_or(0);
+            println!("version={}", env!("CARGO_PKG_VERSION"));
+            println!("state_path={}", state.display());
+            println!("state_exists={}", state.exists());
+            println!(
+                "node_manifest_exists={}",
+                state.join("node_manifest.json").exists()
+            );
+            println!(
+                "latest_receipt_root={}",
+                manifest
+                    .last_receipt_root
+                    .unwrap_or_else(|| latest_root_hex(&state, "receipts"))
+            );
+            println!(
+                "latest_checkpoint_root={}",
+                manifest
+                    .last_checkpoint_root
+                    .unwrap_or_else(|| latest_root_hex(&state, "checkpoints"))
+            );
+            println!("anchor_queue_count={anchor_count}");
+            println!("distributed_receipt_count={distributed}");
+        }
+        "doctor" => {
+            let mut failures = Vec::new();
+            if !validate(&state) {
+                failures.push("state layout invalid");
+            }
+            if read_node_manifest(&state).is_err() {
+                failures.push("manifest unreadable");
+            }
+            if latest_root_hex(&state, "receipts") == "none" {
+                failures.push("latest receipt missing");
+            }
+            if latest_root_hex(&state, "checkpoints") == "none" {
+                failures.push("latest checkpoint missing");
+            }
+            if verify_state(&state).map(|r| r.all_valid()).unwrap_or(false) != true {
+                failures.push("verify failed");
+            }
+            let anchor_count = fs::read_dir(state.join("anchors"))
+                .map(|x| x.count())
+                .unwrap_or(0);
+            if anchor_count > 0 {
+                let has_anchor_json = fs::read_dir(state.join("anchors"))
+                    .map(|x| {
+                        x.filter_map(Result::ok)
+                            .any(|e| e.path().extension().and_then(|s| s.to_str()) == Some("json"))
+                    })
+                    .unwrap_or(false);
+                if !has_anchor_json {
+                    failures.push("anchor intent missing while anchor queue > 0");
+                }
+            }
+            if repair_manifest(&state).is_err() || rebuild_indexes(&state).is_err() {
+                failures.push("derived indexes/manifests not rebuildable");
+            }
+            if failures.is_empty() {
+                println!("doctor=ok");
+            } else {
+                return Err(HostError::InvalidArgs(format!(
+                    "doctor=fail [{}]",
+                    failures.join(", ")
+                )));
+            }
+        }
         "repair-manifest" => {
             let report = repair_manifest(&state)?;
-            println!("repaired={} latest_receipt_root={} latest_checkpoint_root={}", report.repaired, report.latest_receipt_root.map(hex::encode).unwrap_or_else(||"none".into()), report.latest_checkpoint_root.map(hex::encode).unwrap_or_else(||"none".into()));
+            println!(
+                "repaired={} latest_receipt_root={} latest_checkpoint_root={}",
+                report.repaired,
+                report
+                    .latest_receipt_root
+                    .map(hex::encode)
+                    .unwrap_or_else(|| "none".into()),
+                report
+                    .latest_checkpoint_root
+                    .map(hex::encode)
+                    .unwrap_or_else(|| "none".into())
+            );
         }
         "rebuild-index" => {
             let report = rebuild_indexes(&state)?;
-            println!("rebuilt_receipts={} rebuilt_checkpoints={} rebuilt_anchors={}", report.rebuilt_receipts, report.rebuilt_checkpoints, report.rebuilt_anchors);
+            println!(
+                "rebuilt_receipts={} rebuilt_checkpoints={} rebuilt_anchors={}",
+                report.rebuilt_receipts, report.rebuilt_checkpoints, report.rebuilt_anchors
+            );
         }
         "status" => {
             let manifest = read_node_manifest(&state)?;
@@ -136,7 +262,6 @@ fn run_cli() -> Result<(), HostError> {
                 manifest.last_checkpoint_root,
                 anchor_count
             );
-
             if args.iter().any(|arg| arg == "--storage") {
                 let report = storage_report(&state)?;
                 println!(
@@ -149,18 +274,26 @@ fn run_cli() -> Result<(), HostError> {
             }
         }
         "serve" => {
-            let bind = arg_value(&args, "--bind").ok_or_else(|| HostError::InvalidArgs("missing --bind".into()))?;
-            let listener = tcp_server::bind(&bind).map_err(|e| HostError::InvalidArgs(e.to_string()))?;
+            let bind = arg_value(&args, "--bind")
+                .ok_or_else(|| HostError::InvalidArgs("missing --bind".into()))?;
+            let listener =
+                tcp_server::bind(&bind).map_err(|e| HostError::InvalidArgs(e.to_string()))?;
             let _ = everarcade_host::network::peer_listener::serve_once(&listener, b"sync-ok")
                 .map_err(|e| HostError::InvalidArgs(e.to_string()))?;
             println!("serve=ok bind={bind}");
         }
         "sync" => {
-            let peer = arg_value(&args, "--peer").ok_or_else(|| HostError::InvalidArgs("missing --peer".into()))?;
-            let stream = tcp_client::connect(&peer).map_err(|e| HostError::InvalidArgs(e.to_string()))?;
+            let peer = arg_value(&args, "--peer")
+                .ok_or_else(|| HostError::InvalidArgs("missing --peer".into()))?;
+            let stream =
+                tcp_client::connect(&peer).map_err(|e| HostError::InvalidArgs(e.to_string()))?;
             let response = peer_dialer::request_sync(stream, b"sync-request")
                 .map_err(|e| HostError::InvalidArgs(e.to_string()))?;
-            println!("sync=ok peer={} response={}", peer, String::from_utf8_lossy(&response));
+            println!(
+                "sync=ok peer={} response={}",
+                peer,
+                String::from_utf8_lossy(&response)
+            );
         }
         "anchor-intent" => {
             let manifest = read_node_manifest(&state)?;
@@ -179,7 +312,9 @@ fn run_cli() -> Result<(), HostError> {
             let profile = arg_value(&args, "--profile").unwrap_or_else(|| "live".into());
             let node = arg_value(&args, "--node").unwrap_or_else(|| "evernode-operator-1".into());
             if profile != "live" {
-                return Err(HostError::InvalidArgs("--profile currently supports only live".into()));
+                return Err(HostError::InvalidArgs(
+                    "--profile currently supports only live".into(),
+                ));
             }
             HostPaths::new(state.clone()).ensure()?;
             let result = run_package_once(HostConfig::new(package, state.clone()))?;
@@ -187,26 +322,28 @@ fn run_cli() -> Result<(), HostError> {
             let checkpoint_hex = hex::encode(result.receipt.checkpoint_root);
             let anchor = submit_xrpl_anchor_intent(&receipt_hex)?;
             let cid = publish_artifact_manifest(&state, &receipt_hex)?;
-            let deployment_manifest = serde_json::json!({
-                "manifest_version": 1,
-                "runtime": "everarcade-host",
-                "profile": profile,
-                "node": node,
-                "receipt": receipt_hex,
-                "checkpoint": checkpoint_hex,
-                "xrpl_anchor": anchor,
-                "ipfs_manifest": cid,
-            });
+            let deployment_manifest = serde_json::json!({"manifest_version": 1,"runtime": "everarcade-host","profile": profile,"node": node,"receipt": receipt_hex,"checkpoint": checkpoint_hex,"xrpl_anchor": anchor,"ipfs_manifest": cid,});
             let manifest_path = state.join("deployment-manifest.json");
-            fs::write(&manifest_path, serde_json::to_vec_pretty(&deployment_manifest).map_err(|e| HostError::InvalidArgs(e.to_string()))?)?;
+            fs::write(
+                &manifest_path,
+                serde_json::to_vec_pretty(&deployment_manifest)
+                    .map_err(|e| HostError::InvalidArgs(e.to_string()))?,
+            )?;
             println!("proof package=ok execute=ok receipt={} checkpoint={} distributed-receipt=ok xrpl-anchor={} ipfs-manifest={}", deployment_manifest["receipt"], deployment_manifest["checkpoint"], deployment_manifest["xrpl_anchor"], deployment_manifest["ipfs_manifest"]);
             println!("deployment-manifest={}", manifest_path.display());
             let cfg = everarcade_host::operator::config::OperatorConfig::live_testnet(node);
-            println!("operator profile={:?} state={} xrpl={} ipfs={} evernode={}", cfg.profile, cfg.state_path, cfg.xrpl_enabled, cfg.ipfs_enabled, cfg.evernode_enabled);
+            println!(
+                "operator profile={:?} state={} xrpl={} ipfs={} evernode={}",
+                cfg.profile,
+                cfg.state_path,
+                cfg.xrpl_enabled,
+                cfg.ipfs_enabled,
+                cfg.evernode_enabled
+            );
         }
         _ => {
             return Err(HostError::InvalidArgs(
-                "usage: init|generate-fixture|run|verify|repair-manifest|rebuild-index|status|serve|sync|anchor-intent|deploy-proof".into(),
+                "unknown command (run --help)".into(),
             ))
         }
     }

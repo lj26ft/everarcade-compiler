@@ -18,6 +18,7 @@ run() {
 
 run cargo build --release -p everarcade-host
 run "$ROOT/scripts/release_smoke.sh"
+run "$ROOT/scripts/install_smoke.sh"
 
 if [[ -z "$PKG_FILE" ]]; then
   PKG_FILE="$(ls -1t "$DIST_DIR"/everarcade-host-operator-v*.tar.gz | head -n1)"
