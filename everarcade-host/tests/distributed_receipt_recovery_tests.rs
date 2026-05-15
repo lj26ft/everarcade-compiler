@@ -16,4 +16,6 @@ fn manifest_rebuild_preserves_latest_root() {
     std::fs::remove_file(temp.join(".everarcade/distributed_receipts/manifest.json")).unwrap();
     let rebuilt = recover_distributed_receipt_manifest(&temp).unwrap();
     assert_eq!(rebuilt.latest_receipt_root, Some([9; 32]));
+    assert_eq!(rebuilt.latest_replay_root, Some([8; 32]));
+    assert_eq!(rebuilt.latest_checkpoint_root, Some([7; 32]));
 }
