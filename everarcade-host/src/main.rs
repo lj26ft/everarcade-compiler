@@ -108,7 +108,7 @@ fn run_cli() -> Result<(), HostError> {
                 return Err(HostError::InvalidStateFolder);
             }
             write_node_manifest(&state, &NodeManifest::new("everarcade-node"))?;
-            println!("initialized={}", state.display());
+            println!("init=ok state={}", state.display());
         }
         "generate-fixture" => {
             /* unchanged */
@@ -256,10 +256,16 @@ fn run_cli() -> Result<(), HostError> {
             let manifest = read_node_manifest(&state)?;
             let anchor_count = fs::read_dir(state.join("anchors"))?.count();
             println!(
-                "node_name={} last_receipt_root={:?} last_checkpoint_root={:?} anchor_queue={}",
+                "status node_name={} last_receipt_root={} last_checkpoint_root={} anchor_queue={}",
                 manifest.node_name,
-                manifest.last_receipt_root,
-                manifest.last_checkpoint_root,
+                manifest
+                    .last_receipt_root
+                    .clone()
+                    .unwrap_or_else(|| "none".into()),
+                manifest
+                    .last_checkpoint_root
+                    .clone()
+                    .unwrap_or_else(|| "none".into()),
                 anchor_count
             );
             if args.iter().any(|arg| arg == "--storage") {
@@ -309,13 +315,8 @@ fn run_cli() -> Result<(), HostError> {
         "deploy-proof" => {
             let package =
                 PathBuf::from(arg_value(&args, "--package").ok_or(HostError::MissingPackage)?);
-            let profile = arg_value(&args, "--profile").unwrap_or_else(|| "live".into());
+            let profile = arg_value(&args, "--profile").unwrap_or_else(|| "dry-run".into());
             let node = arg_value(&args, "--node").unwrap_or_else(|| "evernode-operator-1".into());
-            if profile != "live" {
-                return Err(HostError::InvalidArgs(
-                    "--profile currently supports only live".into(),
-                ));
-            }
             HostPaths::new(state.clone()).ensure()?;
             let result = run_package_once(HostConfig::new(package, state.clone()))?;
             let receipt_hex = hex::encode(result.receipt.receipt_id);
@@ -329,8 +330,7 @@ fn run_cli() -> Result<(), HostError> {
                 serde_json::to_vec_pretty(&deployment_manifest)
                     .map_err(|e| HostError::InvalidArgs(e.to_string()))?,
             )?;
-            println!("proof package=ok execute=ok receipt={} checkpoint={} distributed-receipt=ok xrpl-anchor={} ipfs-manifest={}", deployment_manifest["receipt"], deployment_manifest["checkpoint"], deployment_manifest["xrpl_anchor"], deployment_manifest["ipfs_manifest"]);
-            println!("deployment-manifest={}", manifest_path.display());
+            println!("deploy_proof=ok manifest={} receipt={} checkpoint={} xrpl_anchor={} ipfs_manifest={}", manifest_path.display(), deployment_manifest["receipt"], deployment_manifest["checkpoint"], deployment_manifest["xrpl_anchor"], deployment_manifest["ipfs_manifest"]);
             let cfg = everarcade_host::operator::config::OperatorConfig::live_testnet(node);
             println!(
                 "operator profile={:?} state={} xrpl={} ipfs={} evernode={}",
