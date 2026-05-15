@@ -44,6 +44,15 @@ impl DistributedReceiptDiskStore {
         fs::write(&tmp, &bytes)?;
         fs::rename(tmp, &receipt_file)?;
 
+        let continuity_file = self
+            .base
+            .join("index")
+            .join(format!("{}.json", hex::encode(receipt.receipt_root)));
+        fs::write(
+            continuity_file,
+            serde_json::to_vec_pretty(&(replay_root, checkpoint_root))?,
+        )?;
+
         let mut manifest = self.load_manifest()?;
         manifest.receipt_count += 1;
         manifest.latest_receipt_root = Some(receipt.receipt_root);

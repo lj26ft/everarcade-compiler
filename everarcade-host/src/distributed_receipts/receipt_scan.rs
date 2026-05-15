@@ -6,9 +6,8 @@ use std::{fs, path::Path};
 pub fn rebuild_manifest_from_receipts(
     base: impl AsRef<Path>,
 ) -> Result<DistributedReceiptManifest, ReceiptStoreError> {
-    let dir = base
-        .as_ref()
-        .join(".everarcade/distributed_receipts/receipts");
+    let base = base.as_ref().join(".everarcade/distributed_receipts");
+    let dir = base.join("receipts");
     let mut roots: Vec<Hash> = fs::read_dir(dir)?
         .filter_map(|entry| entry.ok())
         .filter_map(|entry| {
@@ -28,10 +27,28 @@ pub fn rebuild_manifest_from_receipts(
         })
         .collect();
     roots.sort();
+
+    let latest_receipt_root = roots.last().copied();
+    let (latest_replay_root, latest_checkpoint_root) =
+        if let Some(receipt_root) = latest_receipt_root {
+            let continuity = base
+                .join("index")
+                .join(format!("{}.json", hex::encode(receipt_root)));
+            if continuity.exists() {
+                let (replay_root, checkpoint_root): (Hash, Hash) =
+                    serde_json::from_slice(&fs::read(continuity)?)?;
+                (Some(replay_root), Some(checkpoint_root))
+            } else {
+                (Some(receipt_root), Some(receipt_root))
+            }
+        } else {
+            (None, None)
+        };
+
     Ok(DistributedReceiptManifest {
         receipt_count: roots.len() as u64,
-        latest_receipt_root: roots.last().copied(),
-        latest_replay_root: roots.last().copied(),
-        latest_checkpoint_root: roots.last().copied(),
+        latest_receipt_root,
+        latest_replay_root,
+        latest_checkpoint_root,
     })
 }
