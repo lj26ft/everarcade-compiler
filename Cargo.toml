@@ -5,6 +5,7 @@ members = [
     "contract-api",
     "contracts/set-contract",
     "contracts/increment-contract",
+    "contracts/counter-world",
     "everarcade-host"
 ]
 
