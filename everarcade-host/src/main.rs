@@ -10,8 +10,8 @@ use everarcade_host::{
     fixture::generate_fixture_to_path,
     index::index_rebuild::rebuild_indexes,
     persistence::HostPaths,
-    run_package_once,
     replay_engine::verify_receipt_replay,
+    run_package_once,
     state_folder::{
         manifest_rebuild::repair_manifest,
         node_manifest::{read_node_manifest, write_node_manifest, NodeManifest},
@@ -34,6 +34,7 @@ Commands:
   replay-verify --package <path> --receipt <path>
   restore-verify --package <path> --receipt <path> --checkpoint <path>
   lineage-verify --lineage <path>
+  chain-restore-verify --package <path> --checkpoint <path> --lineage <path> --receipt <path> [--receipt <path> ...]
   doctor --state <path>
 
 Examples:
@@ -350,11 +351,79 @@ fn run_cli() -> Result<(), HostError> {
                 }
             }
         }
+        "chain-restore-verify" => {
+            let package_path =
+                PathBuf::from(arg_value(&args, "--package").ok_or(HostError::MissingPackage)?);
+            let checkpoint_path = PathBuf::from(
+                arg_value(&args, "--checkpoint")
+                    .ok_or_else(|| HostError::InvalidArgs("missing --checkpoint".into()))?,
+            );
+            let lineage_path = PathBuf::from(
+                arg_value(&args, "--lineage")
+                    .ok_or_else(|| HostError::InvalidArgs("missing --lineage".into()))?,
+            );
+            let receipt_paths: Vec<PathBuf> = args
+                .windows(2)
+                .filter(|w| w[0] == "--receipt")
+                .map(|w| PathBuf::from(w[1].clone()))
+                .collect();
+            let input = execution_core::continuity::ChainRestoreInput {
+                package_path,
+                checkpoint_path,
+                lineage_path,
+                receipt_paths,
+            };
+            match execution_core::continuity::restore_lineage_chain(input) {
+                Ok(report) => {
+                    println!("chain_restore_verify=ok");
+                    println!("checkpoint_match={}", report.checkpoint_match);
+                    println!("lineage_match={}", report.lineage_match);
+                    println!("receipts_match={}", report.receipts_match);
+                    println!("final_state_root={}", hex::encode(report.final_state_root));
+                    println!(
+                        "expected_final_state_root={}",
+                        hex::encode(report.expected_final_state_root)
+                    );
+                }
+                Err(execution_core::continuity::ChainRestoreError::Validation(m)) => {
+                    println!("chain_restore_verify=failed");
+                    println!("field={}", m.field);
+                    println!(
+                        "index={}",
+                        m.index
+                            .map(|v| v.to_string())
+                            .unwrap_or_else(|| "none".into())
+                    );
+                    println!("expected={}", m.expected);
+                    println!("actual={}", m.actual);
+                    return Err(HostError::VerificationFailed(m.field));
+                }
+                Err(e) => {
+                    println!("chain_restore_verify=failed");
+                    println!("field=chain_restore");
+                    println!("index=none");
+                    println!("expected=valid");
+                    println!("actual={e}");
+                    return Err(HostError::VerificationFailed(e.to_string()));
+                }
+            }
+        }
         "restore-verify" => {
-            let package = PathBuf::from(arg_value(&args, "--package").ok_or(HostError::MissingPackage)?);
-            let receipt_path = PathBuf::from(arg_value(&args, "--receipt").ok_or_else(|| HostError::InvalidArgs("missing --receipt".into()))?);
-            let checkpoint_path = PathBuf::from(arg_value(&args, "--checkpoint").ok_or_else(|| HostError::InvalidArgs("missing --checkpoint".into()))?);
-            match execution_core::persistence::restore_and_replay(&package, &receipt_path, &checkpoint_path) {
+            let package =
+                PathBuf::from(arg_value(&args, "--package").ok_or(HostError::MissingPackage)?);
+            let receipt_path = PathBuf::from(
+                arg_value(&args, "--receipt")
+                    .ok_or_else(|| HostError::InvalidArgs("missing --receipt".into()))?,
+            );
+            let checkpoint_path = PathBuf::from(
+                arg_value(&args, "--checkpoint")
+                    .ok_or_else(|| HostError::InvalidArgs("missing --checkpoint".into()))?,
+            );
+            match execution_core::persistence::restore_and_replay(
+                &package,
+                &receipt_path,
+                &checkpoint_path,
+            ) {
                 Ok(report) if report.state_match => {
                     println!("restore_verify=ok");
                     println!("checkpoint_match={}", report.checkpoint_match);
@@ -363,7 +432,13 @@ fn run_cli() -> Result<(), HostError> {
                 }
                 Ok(report) => {
                     println!("restore_verify=failed");
-                    let field = if !report.checkpoint_match { "checkpoint_root" } else if !report.receipt_match { "receipt" } else { "state" };
+                    let field = if !report.checkpoint_match {
+                        "checkpoint_root"
+                    } else if !report.receipt_match {
+                        "receipt"
+                    } else {
+                        "state"
+                    };
                     println!("field={field}");
                     println!("expected=true");
                     println!("actual=false");

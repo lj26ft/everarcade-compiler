@@ -6,6 +6,7 @@ pub mod checkpoint;
 pub mod codec;
 pub mod compression;
 pub mod constitution;
+pub mod continuity;
 pub mod domain;
 pub mod economics;
 pub mod economy;
