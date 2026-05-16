@@ -11,6 +11,7 @@ use everarcade_host::{
     index::index_rebuild::rebuild_indexes,
     persistence::HostPaths,
     run_package_once,
+    replay_engine::verify_receipt_replay,
     state_folder::{
         manifest_rebuild::repair_manifest,
         node_manifest::{read_node_manifest, write_node_manifest, NodeManifest},
@@ -30,6 +31,7 @@ Commands:
   status --state <path>
   deploy-proof --package <path> --state <path>
   debug --state <path>
+  replay-verify --package <path> --receipt <path>
   doctor --state <path>
 
 Examples:
@@ -311,6 +313,24 @@ fn run_cli() -> Result<(), HostError> {
                 return Err(HostError::AnchorIntentMissing);
             }
             println!("{}", p.display());
+        }
+        "replay-verify" => {
+            let package =
+                PathBuf::from(arg_value(&args, "--package").ok_or(HostError::MissingPackage)?);
+            let receipt_path = PathBuf::from(
+                arg_value(&args, "--receipt")
+                    .ok_or_else(|| HostError::InvalidArgs("missing --receipt".into()))?,
+            );
+            let report = verify_receipt_replay(&package, &receipt_path)?;
+            if !report.verified() {
+                return Err(HostError::VerificationFailed(format!(
+                    "receipt_canonical_valid={} package_matches_receipt={} deterministic_replay_match={}",
+                    report.receipt_canonical_valid,
+                    report.package_matches_receipt,
+                    report.deterministic_replay_match
+                )));
+            }
+            println!("replay_verify=ok");
         }
         "deploy-proof" => {
             let package =
