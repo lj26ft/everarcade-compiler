@@ -20,6 +20,7 @@ pub mod hash_runtime;
 pub mod hashing;
 pub mod interpretation;
 pub mod jurisprudence;
+pub mod lineage;
 pub mod merkle;
 pub mod migration;
 pub mod namespace;
