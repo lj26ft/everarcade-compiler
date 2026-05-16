@@ -1,3 +1,7 @@
+pub mod checkpoint;
+pub mod diff;
+pub mod errors;
+pub mod tree;
 pub mod execution_state;
 pub mod state_apply;
 pub mod state_commit;
@@ -13,3 +17,8 @@ pub use execution_state::{ExecutionState, StateValue};
 pub use state_diff::{StateDiff, StateInsert, StateRemoval, StateUpdate};
 pub use state_root::StateRoot;
 pub use state_transition::{apply_execution_transition, TransitionResult};
+
+pub use checkpoint::{decode_checkpoint, decode_checkpoint_with_expected_root, encode_checkpoint};
+pub use diff::apply_diff;
+pub use errors::StateError;
+pub use tree::{CanonicalState, Hash256};

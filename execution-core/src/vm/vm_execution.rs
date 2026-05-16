@@ -2,6 +2,7 @@ use sha2::{Digest, Sha256};
 
 use super::vm_input::VmExecutionInput;
 use super::vm_output::VmExecutionOutput;
+use everarcade_abi::StateChange;
 use super::vm_receipt::{compute_vm_receipt_root, VmExecutionReceipt};
 
 pub fn execute_vm_boundary(input: &VmExecutionInput) -> (VmExecutionReceipt, VmExecutionOutput) {
@@ -27,6 +28,12 @@ pub fn execute_vm_boundary(input: &VmExecutionInput) -> (VmExecutionReceipt, VmE
     )
     .into();
 
+    let state_diff = vec![StateChange {
+        key: "__replay_root__".to_string(),
+        before: hex::encode(input.replay_root),
+        after: hex::encode(next_replay_root),
+    }];
+
     let mut receipt = VmExecutionReceipt {
         receipt_id: [0; 32],
         package_root: input.package_manifest_root,
@@ -35,6 +42,7 @@ pub fn execute_vm_boundary(input: &VmExecutionInput) -> (VmExecutionReceipt, VmE
         execution_root,
         checkpoint_root: input.checkpoint_root,
         anchor_root,
+        state_diff,
     };
     receipt.receipt_id = compute_vm_receipt_root(&receipt);
 

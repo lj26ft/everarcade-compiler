@@ -1,3 +1,4 @@
+use everarcade_abi::StateChange;
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 
@@ -12,6 +13,7 @@ pub struct VmExecutionReceipt {
     pub execution_root: Hash,
     pub checkpoint_root: Hash,
     pub anchor_root: Hash,
+    pub state_diff: Vec<StateChange>,
 }
 
 pub fn compute_vm_receipt_root(receipt: &VmExecutionReceipt) -> Hash {
