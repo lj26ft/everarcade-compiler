@@ -1,7 +1,7 @@
 use std::path::PathBuf;
 
 use crate::{
-    canonical::{generate_execution_manifest, hashes, manifest_hash},
+    canonical::{generate_execution_manifest, hashes, load_manifest, manifest_hash, save_manifest},
     continuity::{restore_lineage_chain, ChainRestoreInput, ChainRestoreError},
     lineage,
     persistence::{checkpoint_store, package_store, receipt_store},
@@ -58,6 +58,25 @@ pub fn recover_world(input: OperatorRecoveryInput) -> Result<OperatorRecoveryOut
         restore.final_state_root,
     );
     let manifest_h = manifest_hash(&manifest);
+    let manifest_path = input
+        .descriptor_output_path
+        .parent()
+        .ok_or_else(|| OperatorRecoveryError::Storage("descriptor path has no parent".into()))?
+        .join("manifest.bin");
+    if manifest_path.exists() {
+        let stored_manifest = load_manifest(&manifest_path)
+            .map_err(|e| OperatorRecoveryError::Storage(e.to_string()))?;
+        if stored_manifest != manifest {
+            return Err(OperatorRecoveryError::Validation(OperatorRecoveryMismatch {
+                field: "manifest_hash".into(),
+                expected: hex::encode(manifest_hash(&stored_manifest)),
+                actual: hex::encode(manifest_h),
+            }));
+        }
+    } else {
+        save_manifest(&manifest_path, &manifest)
+            .map_err(|e| OperatorRecoveryError::Storage(e.to_string()))?;
+    }
     let latest_execution_id = lineage_chain.records.last().map(|r| r.execution_id).unwrap_or([0u8;32]);
     let descriptor = WorldRecoveryDescriptor {
         world_id: package_root,
