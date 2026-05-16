@@ -25,6 +25,7 @@ pub mod migration;
 pub mod namespace;
 pub mod network;
 pub mod package;
+pub mod persistence;
 pub mod proof;
 pub mod protocol_upgrade;
 pub mod pruning;
