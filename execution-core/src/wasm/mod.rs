@@ -1,7 +1,10 @@
+pub mod abi;
 pub mod engine;
+pub mod errors;
 pub mod instance;
 pub mod limits;
 pub mod memory;
+pub mod receipt;
 pub mod runtime;
 
 pub use runtime::WasmEngine;
