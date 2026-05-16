@@ -32,6 +32,7 @@ Commands:
   deploy-proof --package <path> --state <path>
   debug --state <path>
   replay-verify --package <path> --receipt <path>
+  restore-verify --package <path> --receipt <path> --checkpoint <path>
   doctor --state <path>
 
 Examples:
@@ -313,6 +314,34 @@ fn run_cli() -> Result<(), HostError> {
                 return Err(HostError::AnchorIntentMissing);
             }
             println!("{}", p.display());
+        }
+        "restore-verify" => {
+            let package = PathBuf::from(arg_value(&args, "--package").ok_or(HostError::MissingPackage)?);
+            let receipt_path = PathBuf::from(arg_value(&args, "--receipt").ok_or_else(|| HostError::InvalidArgs("missing --receipt".into()))?);
+            let checkpoint_path = PathBuf::from(arg_value(&args, "--checkpoint").ok_or_else(|| HostError::InvalidArgs("missing --checkpoint".into()))?);
+            match execution_core::persistence::restore_and_replay(&package, &receipt_path, &checkpoint_path) {
+                Ok(report) if report.state_match => {
+                    println!("restore_verify=ok");
+                    println!("checkpoint_match={}", report.checkpoint_match);
+                    println!("receipt_match={}", report.receipt_match);
+                    println!("state_match={}", report.state_match);
+                }
+                Ok(report) => {
+                    println!("restore_verify=failed");
+                    let field = if !report.checkpoint_match { "checkpoint_root" } else if !report.receipt_match { "receipt" } else { "state" };
+                    println!("field={field}");
+                    println!("expected=true");
+                    println!("actual=false");
+                    return Err(HostError::VerificationFailed(field.into()));
+                }
+                Err(e) => {
+                    println!("restore_verify=failed");
+                    println!("field=checkpoint_root");
+                    println!("expected=match");
+                    println!("actual={e}");
+                    return Err(HostError::VerificationFailed(e.to_string()));
+                }
+            }
         }
         "replay-verify" => {
             let package =

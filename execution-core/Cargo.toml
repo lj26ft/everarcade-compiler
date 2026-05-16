@@ -23,3 +23,6 @@ contract-api = { path = "../contract-api" }
 set-contract = { path = "../contracts/set-contract" }
 increment-contract = { path = "../contracts/increment-contract" }
 
+
+[dev-dependencies]
+tempfile = "3"
