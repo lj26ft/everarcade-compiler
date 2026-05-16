@@ -29,6 +29,7 @@ pub mod network;
 pub mod proof_distribution;
 pub mod protocol;
 pub mod replay_sync;
+pub mod replay_engine;
 pub mod security;
 pub mod session_security;
 pub mod signing;
