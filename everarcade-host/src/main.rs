@@ -33,6 +33,7 @@ Commands:
   debug --state <path>
   replay-verify --package <path> --receipt <path>
   restore-verify --package <path> --receipt <path> --checkpoint <path>
+  lineage-verify --lineage <path>
   doctor --state <path>
 
 Examples:
@@ -314,6 +315,40 @@ fn run_cli() -> Result<(), HostError> {
                 return Err(HostError::AnchorIntentMissing);
             }
             println!("{}", p.display());
+        }
+        "lineage-verify" => {
+            let lineage_path = PathBuf::from(
+                arg_value(&args, "--lineage")
+                    .ok_or_else(|| HostError::InvalidArgs("missing --lineage".into()))?,
+            );
+            match execution_core::lineage::load_lineage(&lineage_path)
+                .and_then(|chain| execution_core::lineage::validate_lineage_chain(&chain))
+            {
+                Ok(report) => {
+                    println!("lineage_verify=ok");
+                    println!("lineage_ok={}", report.lineage_ok);
+                    println!("sequence_ok={}", report.sequence_ok);
+                    println!("execution_link_ok={}", report.execution_link_ok);
+                    println!("state_link_ok={}", report.state_link_ok);
+                    println!("package_link_ok={}", report.package_link_ok);
+                }
+                Err(execution_core::lineage::LineageError::Validation(m)) => {
+                    println!("lineage_verify=failed");
+                    println!("field={}", m.field);
+                    println!("index={}", m.index);
+                    println!("expected={}", m.expected);
+                    println!("actual={}", m.actual);
+                    return Err(HostError::VerificationFailed(m.field.into()));
+                }
+                Err(e) => {
+                    println!("lineage_verify=failed");
+                    println!("field=lineage");
+                    println!("index=0");
+                    println!("expected=valid");
+                    println!("actual={e}");
+                    return Err(HostError::VerificationFailed(e.to_string()));
+                }
+            }
         }
         "restore-verify" => {
             let package = PathBuf::from(arg_value(&args, "--package").ok_or(HostError::MissingPackage)?);

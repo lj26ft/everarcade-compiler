@@ -10,4 +10,5 @@ fn help_exits_zero_and_contains_commands() {
     assert!(s.contains("EverArcade Host Operator"));
     assert!(s.contains("debug --state <path>"));
     assert!(s.contains("doctor --state <path>"));
+    assert!(s.contains("lineage-verify --lineage <path>"));
 }
