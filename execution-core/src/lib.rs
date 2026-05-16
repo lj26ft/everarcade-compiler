@@ -2,6 +2,7 @@ pub mod amendment;
 pub mod arbitration;
 pub mod budget;
 pub mod capability;
+pub mod canonical;
 pub mod checkpoint;
 pub mod codec;
 pub mod compression;

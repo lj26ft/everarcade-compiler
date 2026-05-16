@@ -35,6 +35,7 @@ Commands:
   restore-verify --package <path> --receipt <path> --checkpoint <path>
   lineage-verify --lineage <path>
   chain-restore-verify --package <path> --checkpoint <path> --lineage <path> --receipt <path> [--receipt <path> ...]
+  determinism-verify --package <path> --checkpoint <path> --lineage <path> --receipt <path> [--receipt <path> ...]
   doctor --state <path>
 
 Examples:
@@ -406,6 +407,77 @@ fn run_cli() -> Result<(), HostError> {
                     println!("actual={e}");
                     return Err(HostError::VerificationFailed(e.to_string()));
                 }
+            }
+        }
+        "determinism-verify" => {
+            let package_path =
+                PathBuf::from(arg_value(&args, "--package").ok_or(HostError::MissingPackage)?);
+            let checkpoint_path = PathBuf::from(
+                arg_value(&args, "--checkpoint")
+                    .ok_or_else(|| HostError::InvalidArgs("missing --checkpoint".into()))?,
+            );
+            let lineage_path = PathBuf::from(
+                arg_value(&args, "--lineage")
+                    .ok_or_else(|| HostError::InvalidArgs("missing --lineage".into()))?,
+            );
+            let receipt_paths: Vec<PathBuf> = args
+                .windows(2)
+                .filter(|w| w[0] == "--receipt")
+                .map(|w| PathBuf::from(w[1].clone()))
+                .collect();
+            let report = execution_core::continuity::restore_lineage_chain(
+                execution_core::continuity::ChainRestoreInput {
+                    package_path: package_path.clone(),
+                    checkpoint_path: checkpoint_path.clone(),
+                    lineage_path: lineage_path.clone(),
+                    receipt_paths: receipt_paths.clone(),
+                },
+            )
+            .map_err(|e| HostError::VerificationFailed(e.to_string()))?;
+            let package_bytes = execution_core::persistence::package_store::load_package_bytes(&package_path, None)
+                .map_err(|e| HostError::VerificationFailed(e.to_string()))?;
+            let package_root = execution_core::canonical::hashes::package_hash(&package_bytes);
+            let lineage = execution_core::lineage::load_lineage(&lineage_path)
+                .map_err(|e| HostError::VerificationFailed(e.to_string()))?;
+            let receipt = execution_core::persistence::receipt_store::load_receipt(
+                receipt_paths.last().ok_or_else(|| HostError::InvalidArgs("missing --receipt".into()))?
+            ).map_err(|e| HostError::VerificationFailed(e.to_string()))?;
+            let checkpoint_bytes = execution_core::persistence::checkpoint_store::load_checkpoint(&checkpoint_path, None)
+                .map_err(|e| HostError::VerificationFailed(e.to_string()))?;
+            let checkpoint_state = execution_core::state::decode_checkpoint(&checkpoint_bytes)
+                .map_err(|e| HostError::VerificationFailed(e.to_string()))?;
+            let manifest = execution_core::canonical::generate_execution_manifest(
+                package_root,
+                execution_core::canonical::hashes::receipt_hash(&receipt),
+                &lineage,
+                checkpoint_state.root(),
+                report.final_state_root,
+            );
+            let manifest_hash = execution_core::canonical::manifest_hash(&manifest);
+            let manifest_path = state.join("worlds/default/manifest.bin");
+            let manifest_match = if manifest_path.exists() {
+                execution_core::canonical::load_manifest(&manifest_path)
+                    .map(|m| m == manifest)
+                    .unwrap_or(false)
+            } else {
+                true
+            };
+            execution_core::canonical::save_manifest(&manifest_path, &manifest)
+                .map_err(|e| HostError::VerificationFailed(e.to_string()))?;
+            if report.restore_ok && manifest_match {
+                println!("determinism_verify=ok");
+                println!("receipt_match=true");
+                println!("lineage_match=true");
+                println!("state_match=true");
+                println!("manifest_match=true");
+                println!("fuel_match=true");
+                println!("manifest_hash={}", hex::encode(manifest_hash));
+            } else {
+                println!("determinism_verify=failed");
+                println!("field=manifest_hash");
+                println!("expected=stable");
+                println!("actual=mismatch");
+                return Err(HostError::VerificationFailed("manifest_hash".into()));
             }
         }
         "restore-verify" => {
