@@ -514,18 +514,21 @@ fn run_cli() -> Result<(), HostError> {
         }
         "verify-recovery" => {
             let descriptor_path = PathBuf::from(arg_value(&args, "--descriptor").ok_or_else(|| HostError::InvalidArgs("missing --descriptor".into()))?);
-            let descriptor = execution_core::operator::load_recovery_descriptor(&descriptor_path).map_err(|e| HostError::VerificationFailed(e.to_string()))?;
-            let computed = execution_core::operator::descriptor_hash(&descriptor);
-            let reloaded = execution_core::operator::load_recovery_descriptor(&descriptor_path).map_err(|e| HostError::VerificationFailed(e.to_string()))?;
-            if descriptor == reloaded && computed == execution_core::operator::descriptor_hash(&reloaded) {
+            match execution_core::operator::load_recovery_descriptor(&descriptor_path) {
+                Ok(descriptor) => {
+                    let computed = execution_core::operator::descriptor_hash(&descriptor);
                 println!("verify_recovery=ok");
                 println!("descriptor_match=true");
-            } else {
-                println!("verify_recovery=failed");
-                println!("field=descriptor_hash");
-                println!("expected={}", hex::encode(computed));
-                println!("actual={}", hex::encode(execution_core::operator::descriptor_hash(&reloaded)));
-                return Err(HostError::VerificationFailed("descriptor_hash".into()));
+                    println!("descriptor_hash={}", hex::encode(computed));
+                }
+                Err(execution_core::operator::OperatorRecoveryError::Validation(m)) => {
+                    println!("verify_recovery=failed");
+                    println!("field={}", m.field);
+                    println!("expected={}", m.expected);
+                    println!("actual={}", m.actual);
+                    return Err(HostError::VerificationFailed("descriptor_hash".into()));
+                }
+                Err(e) => return Err(HostError::VerificationFailed(e.to_string())),
             }
         }
         "restore-verify" => {

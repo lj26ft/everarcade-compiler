@@ -14,6 +14,12 @@ pub struct WorldRecoveryDescriptor {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct StoredRecoveryDescriptor {
+    pub descriptor: WorldRecoveryDescriptor,
+    pub descriptor_hash: Hash256,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct OperatorRecoveryReport {
     pub recovery_ok: bool,
     pub checkpoint_match: bool,
