@@ -36,6 +36,8 @@ Commands:
   lineage-verify --lineage <path>
   chain-restore-verify --package <path> --checkpoint <path> --lineage <path> --receipt <path> [--receipt <path> ...]
   determinism-verify --package <path> --checkpoint <path> --lineage <path> --receipt <path> [--receipt <path> ...]
+  recover-world --package <path> --checkpoint <path> --lineage <path> --receipt <path> [--receipt <path> ...]
+  verify-recovery --descriptor <path>
   doctor --state <path>
 
 Examples:
@@ -478,6 +480,52 @@ fn run_cli() -> Result<(), HostError> {
                 println!("expected=stable");
                 println!("actual=mismatch");
                 return Err(HostError::VerificationFailed("manifest_hash".into()));
+            }
+        }
+
+        "recover-world" => {
+            let package_path = PathBuf::from(arg_value(&args, "--package").ok_or(HostError::MissingPackage)?);
+            let checkpoint_path = PathBuf::from(arg_value(&args, "--checkpoint").ok_or_else(|| HostError::InvalidArgs("missing --checkpoint".into()))?);
+            let lineage_path = PathBuf::from(arg_value(&args, "--lineage").ok_or_else(|| HostError::InvalidArgs("missing --lineage".into()))?);
+            let receipt_paths: Vec<PathBuf> = args.windows(2).filter(|w| w[0] == "--receipt").map(|w| PathBuf::from(w[1].clone())).collect();
+            let world_id_hex = hex::encode(execution_core::persistence::package_store::package_root(&execution_core::persistence::package_store::load_package_bytes(&package_path, None).map_err(|e| HostError::InvalidArgs(e.to_string()))?));
+            let descriptor_output_path = state.join("worlds").join(world_id_hex).join("recovery_descriptor.bin");
+            match execution_core::operator::recover_world(execution_core::operator::OperatorRecoveryInput { package_path, checkpoint_path, lineage_path, receipt_paths, descriptor_output_path }) {
+                Ok(out) => {
+                    println!("recover_world=ok");
+                    println!("checkpoint_match={}", out.report.checkpoint_match);
+                    println!("lineage_match={}", out.report.lineage_match);
+                    println!("manifest_match={}", out.report.manifest_match);
+                    println!("replay_match={}", out.report.replay_match);
+                    println!("recovered_state_root={}", hex::encode(out.report.recovered_state_root));
+                    println!("expected_state_root={}", hex::encode(out.report.expected_state_root));
+                    println!("descriptor_hash={}", hex::encode(out.descriptor_hash));
+                    println!("manifest_hash={}", hex::encode(out.manifest_hash));
+                }
+                Err(execution_core::operator::OperatorRecoveryError::Validation(m)) => {
+                    println!("recover_world=failed");
+                    println!("field={}", m.field);
+                    println!("expected={}", m.expected);
+                    println!("actual={}", m.actual);
+                    return Err(HostError::VerificationFailed("recover_world".into()));
+                }
+                Err(e) => return Err(HostError::VerificationFailed(e.to_string())),
+            }
+        }
+        "verify-recovery" => {
+            let descriptor_path = PathBuf::from(arg_value(&args, "--descriptor").ok_or_else(|| HostError::InvalidArgs("missing --descriptor".into()))?);
+            let descriptor = execution_core::operator::load_recovery_descriptor(&descriptor_path).map_err(|e| HostError::VerificationFailed(e.to_string()))?;
+            let computed = execution_core::operator::descriptor_hash(&descriptor);
+            let reloaded = execution_core::operator::load_recovery_descriptor(&descriptor_path).map_err(|e| HostError::VerificationFailed(e.to_string()))?;
+            if descriptor == reloaded && computed == execution_core::operator::descriptor_hash(&reloaded) {
+                println!("verify_recovery=ok");
+                println!("descriptor_match=true");
+            } else {
+                println!("verify_recovery=failed");
+                println!("field=descriptor_hash");
+                println!("expected={}", hex::encode(computed));
+                println!("actual={}", hex::encode(execution_core::operator::descriptor_hash(&reloaded)));
+                return Err(HostError::VerificationFailed("descriptor_hash".into()));
             }
         }
         "restore-verify" => {
