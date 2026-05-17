@@ -34,28 +34,35 @@ pub fn generate_counter_world_fixture() -> CounterWorldFixture {
     state0
         .entries
         .insert(b"__replay_root__".to_vec(), hex::encode(h(7)).into_bytes());
+    let state0_root = state0.root();
     let checkpoint_0 = encode_checkpoint(&state0).unwrap();
 
     let (receipt_1, _next_1) = execute_vm_boundary(&VmExecutionInput {
         package_manifest_root: package_root,
         civilization_root: package_root,
-        replay_root: h(7),
+        replay_root: state0_root,
         checkpoint_root: h(31),
         payload_root: h(31),
     });
     let mut state1 = state0.clone();
     apply_diff(&mut state1, &receipt_1.state_diff).unwrap();
+    let state1_root = state1.root();
+    assert_eq!(receipt_1.prior_replay_root, state0_root);
+    assert_eq!(receipt_1.next_replay_root, state1_root);
     let checkpoint_1 = encode_checkpoint(&state1).unwrap();
 
     let (receipt_2, _next_2) = execute_vm_boundary(&VmExecutionInput {
         package_manifest_root: package_root,
         civilization_root: package_root,
-        replay_root: receipt_1.next_replay_root,
+        replay_root: state1_root,
         checkpoint_root: h(32),
         payload_root: h(32),
     });
     let mut state2 = state1.clone();
     apply_diff(&mut state2, &receipt_2.state_diff).unwrap();
+    let state2_root = state2.root();
+    assert_eq!(receipt_2.prior_replay_root, state1_root);
+    assert_eq!(receipt_2.next_replay_root, state2_root);
     let checkpoint_2 = encode_checkpoint(&state2).unwrap();
 
     let lineage = ExecutionLineageChain {
@@ -66,8 +73,8 @@ pub fn generate_counter_world_fixture() -> CounterWorldFixture {
                 sequence: 1,
                 previous_execution_id: None,
                 execution_id: receipt_1.execution_root,
-                pre_state_root: h(7),
-                post_state_root: receipt_1.next_replay_root,
+                pre_state_root: state0_root,
+                post_state_root: state1_root,
                 receipt_hash: receipt_1.receipt_id,
                 package_root,
             },
@@ -75,13 +82,17 @@ pub fn generate_counter_world_fixture() -> CounterWorldFixture {
                 sequence: 2,
                 previous_execution_id: Some(receipt_1.execution_root),
                 execution_id: receipt_2.execution_root,
-                pre_state_root: receipt_1.next_replay_root,
-                post_state_root: receipt_2.next_replay_root,
+                pre_state_root: state1_root,
+                post_state_root: state2_root,
                 receipt_hash: receipt_2.receipt_id,
                 package_root,
             },
         ],
     };
+    assert_eq!(state0_root, lineage.records[0].pre_state_root);
+    assert_eq!(state1_root, lineage.records[0].post_state_root);
+    assert_eq!(state1_root, lineage.records[1].pre_state_root);
+    assert_eq!(state2_root, lineage.records[1].post_state_root);
 
     CounterWorldFixture {
         package_bytes,
