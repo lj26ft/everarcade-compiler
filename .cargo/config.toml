@@ -2,7 +2,7 @@
 replace-with = "vendored-sources"
 
 [source.vendored-sources]
-directory = "/workspace/everarcade-compiler/vendor"
+directory = "vendor"
 
 [net]
 offline = true
