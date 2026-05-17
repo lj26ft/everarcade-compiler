@@ -9,7 +9,7 @@ use sha2::Digest;
 fn test_state_root_empty() {
     assert_eq!(
         CanonicalState::default().root(),
-        sha2::Sha256::digest([]).into()
+        sha2::Sha256::digest([]).to_vec()
     );
 }
 

@@ -8,7 +8,7 @@ use execution_core::{
     lineage::{save_lineage, ExecutionLineageChain, ExecutionLineageRecord},
     operator::{recover_world, OperatorRecoveryInput, OperatorRecoveryOutput},
     persistence::{package_store, receipt_store},
-    state::{decode_checkpoint, encode_checkpoint, CanonicalState},
+    state::{apply_diff, decode_checkpoint, encode_checkpoint, CanonicalState},
     vm::{execute_vm_boundary, VmExecutionInput, VmExecutionReceipt},
 };
 
@@ -36,23 +36,27 @@ pub fn generate_counter_world_fixture() -> CounterWorldFixture {
         .insert(b"__replay_root__".to_vec(), hex::encode(h(7)).into_bytes());
     let checkpoint_0 = encode_checkpoint(&state0).unwrap();
 
-    let (receipt_1, next_1) = execute_vm_boundary(&VmExecutionInput {
+    let (receipt_1, _next_1) = execute_vm_boundary(&VmExecutionInput {
         package_manifest_root: package_root,
         civilization_root: package_root,
-        replay_root: state0.root(),
+        replay_root: h(7),
         checkpoint_root: h(31),
         payload_root: h(31),
     });
-    let checkpoint_1 = encode_checkpoint(&next_1.next_state).unwrap();
+    let mut state1 = state0.clone();
+    apply_diff(&mut state1, &receipt_1.state_diff).unwrap();
+    let checkpoint_1 = encode_checkpoint(&state1).unwrap();
 
-    let (receipt_2, next_2) = execute_vm_boundary(&VmExecutionInput {
+    let (receipt_2, _next_2) = execute_vm_boundary(&VmExecutionInput {
         package_manifest_root: package_root,
         civilization_root: package_root,
         replay_root: receipt_1.next_replay_root,
         checkpoint_root: h(32),
         payload_root: h(32),
     });
-    let checkpoint_2 = encode_checkpoint(&next_2.next_state).unwrap();
+    let mut state2 = state1.clone();
+    apply_diff(&mut state2, &receipt_2.state_diff).unwrap();
+    let checkpoint_2 = encode_checkpoint(&state2).unwrap();
 
     let lineage = ExecutionLineageChain {
         world_id: package_root,
@@ -62,7 +66,7 @@ pub fn generate_counter_world_fixture() -> CounterWorldFixture {
                 sequence: 1,
                 previous_execution_id: None,
                 execution_id: receipt_1.execution_root,
-                pre_state_root: state0.root(),
+                pre_state_root: h(7),
                 post_state_root: receipt_1.next_replay_root,
                 receipt_hash: receipt_1.receipt_id,
                 package_root,
