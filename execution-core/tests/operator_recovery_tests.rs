@@ -1,3 +1,5 @@
+mod common;
+
 use std::{fs, path::PathBuf};
 
 use execution_core::{
@@ -11,7 +13,8 @@ use execution_core::{
 };
 
 fn fixture(name: &str) -> PathBuf {
-    PathBuf::from("everarcade-host/tests/fixtures/counter_world").join(name)
+    common::fixtures::ensure_repo_counter_world_fixtures();
+    common::fixtures::repo_counter_world_fixture_dir().join(name)
 }
 
 fn setup_fixture(dir: &std::path::Path) -> OperatorRecoveryInput {
@@ -258,4 +261,51 @@ fn test_operator_a_to_b_continuity() {
         a_out.report.recovered_state_root,
         b_out.report.recovered_state_root
     );
+}
+
+#[test]
+fn test_fixture_receipt_replay_valid() {
+    let tmp = tempfile::tempdir().unwrap();
+    let out = common::fixtures::generate_operator_recovery_fixture(tmp.path());
+    assert!(out.report.replay_match);
+}
+
+#[test]
+fn test_fixture_lineage_valid() {
+    common::fixtures::ensure_repo_counter_world_fixtures();
+    let lineage = execution_core::lineage::load_lineage(&fixture("lineage.bin")).unwrap();
+    assert!(execution_core::lineage::validate_lineage_chain(&lineage).is_ok());
+}
+
+#[test]
+fn test_fixture_manifest_valid() {
+    common::fixtures::ensure_repo_counter_world_fixtures();
+    let manifest = execution_core::canonical::load_manifest(&fixture("manifest.bin")).unwrap();
+    assert_ne!(
+        execution_core::canonical::manifest_hash(&manifest),
+        [0u8; 32]
+    );
+}
+
+#[test]
+fn test_fixture_recovery_descriptor_valid() {
+    common::fixtures::ensure_repo_counter_world_fixtures();
+    let d = load_recovery_descriptor(&fixture("recovery_descriptor.bin")).unwrap();
+    assert_ne!(descriptor_hash(&d), [0u8; 32]);
+}
+
+#[test]
+fn test_fixture_checkpoint_chain_valid() {
+    let tmp = tempfile::tempdir().unwrap();
+    let input = setup_fixture(tmp.path());
+    let report = execution_core::continuity::restore_lineage_chain(
+        execution_core::continuity::ChainRestoreInput {
+            package_path: input.package_path,
+            checkpoint_path: input.checkpoint_path,
+            lineage_path: input.lineage_path,
+            receipt_paths: input.receipt_paths,
+        },
+    )
+    .unwrap();
+    assert!(report.restore_ok);
 }

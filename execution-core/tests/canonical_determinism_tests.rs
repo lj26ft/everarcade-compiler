@@ -1,3 +1,5 @@
+mod common;
+
 use everarcade_abi::StateChange;
 use execution_core::canonical::{
     canonical_decode, canonical_encode, generate_execution_manifest, lineage_hash, manifest_hash,
@@ -139,4 +141,32 @@ fn test_manifest_mismatch_fails() {
         final_state_root: sample_hash(6),
     };
     assert_ne!(manifest_hash(&a), manifest_hash(&b));
+}
+
+#[test]
+fn test_fixture_generation_stable() {
+    let a = common::fixtures::generate_counter_world_fixture();
+    let b = common::fixtures::generate_counter_world_fixture();
+    assert_eq!(a.checkpoint_0, b.checkpoint_0);
+    assert_eq!(a.checkpoint_1, b.checkpoint_1);
+    assert_eq!(a.checkpoint_2, b.checkpoint_2);
+    assert_eq!(
+        execution_core::canonical::receipt_hash(&a.receipt_1),
+        execution_core::canonical::receipt_hash(&b.receipt_1)
+    );
+    assert_eq!(
+        execution_core::canonical::receipt_hash(&a.receipt_2),
+        execution_core::canonical::receipt_hash(&b.receipt_2)
+    );
+    assert_eq!(
+        execution_core::canonical::lineage_hash(&a.lineage),
+        execution_core::canonical::lineage_hash(&b.lineage)
+    );
+
+    let ta = tempfile::tempdir().unwrap();
+    let tb = tempfile::tempdir().unwrap();
+    let oa = common::fixtures::generate_operator_recovery_fixture(ta.path());
+    let ob = common::fixtures::generate_operator_recovery_fixture(tb.path());
+    assert_eq!(oa.manifest_hash, ob.manifest_hash);
+    assert_eq!(oa.descriptor_hash, ob.descriptor_hash);
 }
