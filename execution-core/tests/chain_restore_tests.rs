@@ -36,14 +36,20 @@ fn fixture_two_step() -> (tempfile::TempDir, ChainRestoreInput, ExecutionLineage
         payload_root: h(31),
     };
     let (r1, _) = execute_vm_boundary(&i1);
+    let mut state1 = checkpoint_state.clone();
+    execution_core::state::apply_diff(&mut state1, &r1.state_diff).unwrap();
+    let state1_root = state1.root();
     let i2 = VmExecutionInput {
         package_manifest_root: package_root,
         civilization_root: package_root,
-        replay_root: r1.next_replay_root,
+        replay_root: state1_root,
         checkpoint_root: h(32),
         payload_root: h(32),
     };
     let (r2, _) = execute_vm_boundary(&i2);
+    let mut state2 = state1.clone();
+    execution_core::state::apply_diff(&mut state2, &r2.state_diff).unwrap();
+    let state2_root = state2.root();
     std::fs::write(&receipt_1_path, bincode::serialize(&r1).unwrap()).unwrap();
     std::fs::write(&receipt_2_path, bincode::serialize(&r2).unwrap()).unwrap();
 
@@ -56,7 +62,7 @@ fn fixture_two_step() -> (tempfile::TempDir, ChainRestoreInput, ExecutionLineage
                 previous_execution_id: None,
                 execution_id: r1.execution_root,
                 pre_state_root: state0,
-                post_state_root: r1.next_replay_root,
+                post_state_root: state1_root,
                 receipt_hash: r1.receipt_id,
                 package_root,
             },
@@ -64,8 +70,8 @@ fn fixture_two_step() -> (tempfile::TempDir, ChainRestoreInput, ExecutionLineage
                 sequence: 2,
                 previous_execution_id: Some(r1.execution_root),
                 execution_id: r2.execution_root,
-                pre_state_root: r1.next_replay_root,
-                post_state_root: r2.next_replay_root,
+                pre_state_root: state1_root,
+                post_state_root: state2_root,
                 receipt_hash: r2.receipt_id,
                 package_root,
             },
@@ -180,4 +186,27 @@ fn test_chain_restore_state_diff_mismatch_fails() {
     .unwrap();
     let err = restore_lineage_chain(input).unwrap_err();
     assert!(matches!(err, ChainRestoreError::Validation(m) if m.field == "state_before"));
+}
+
+#[test]
+fn test_fixture_chain_continuity() {
+    let (_t, input, lineage) = fixture_two_step();
+    let state0: execution_core::state::CanonicalState =
+        execution_core::state::decode_checkpoint(&std::fs::read(&input.checkpoint_path).unwrap())
+            .unwrap();
+    let checkpoint_0_root = state0.root();
+    assert_eq!(checkpoint_0_root, lineage.records[0].pre_state_root);
+
+    let r1: execution_core::vm::VmExecutionReceipt =
+        bincode::deserialize(&std::fs::read(&input.receipt_paths[0]).unwrap()).unwrap();
+    let mut state1 = state0.clone();
+    let checkpoint_1_root = execution_core::state::apply_diff(&mut state1, &r1.state_diff).unwrap();
+    assert_eq!(checkpoint_1_root, lineage.records[0].post_state_root);
+    assert_eq!(checkpoint_1_root, lineage.records[1].pre_state_root);
+
+    let r2: execution_core::vm::VmExecutionReceipt =
+        bincode::deserialize(&std::fs::read(&input.receipt_paths[1]).unwrap()).unwrap();
+    let mut state2 = state1.clone();
+    let checkpoint_2_root = execution_core::state::apply_diff(&mut state2, &r2.state_diff).unwrap();
+    assert_eq!(checkpoint_2_root, lineage.records[1].post_state_root);
 }
