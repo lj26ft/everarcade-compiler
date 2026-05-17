@@ -1,6 +1,9 @@
 use execution_core::vm::{execute_vm_boundary, VmExecutionInput};
 
-use everarcade_host::{fixture::civilization_fixture::generate_civilization_fixture_package, replay_engine::verify_receipt_replay_from_artifacts};
+use everarcade_host::{
+    fixture::civilization_fixture::generate_civilization_fixture_package,
+    replay_engine::verify_receipt_replay_from_artifacts,
+};
 
 #[test]
 fn replay_engine_reconstructs_identical_receipt() {

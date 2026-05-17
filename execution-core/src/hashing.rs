@@ -6,6 +6,10 @@ pub fn hash_bytes(bytes: &[u8]) -> String {
     hex::encode(Sha256::digest(bytes))
 }
 
+pub fn sha256(bytes: &[u8]) -> [u8; 32] {
+    Sha256::digest(bytes).into()
+}
+
 pub fn compute_state_root(state: &BTreeMap<String, String>) -> String {
     hash_bytes(&bincode::serialize(state).expect("state serialize failed"))
 }

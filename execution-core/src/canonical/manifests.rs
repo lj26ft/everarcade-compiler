@@ -52,7 +52,10 @@ pub fn generate_execution_manifest(
     }
 }
 
-pub fn save_manifest(path: &Path, manifest: &CanonicalExecutionManifest) -> Result<(), CanonicalError> {
+pub fn save_manifest(
+    path: &Path,
+    manifest: &CanonicalExecutionManifest,
+) -> Result<(), CanonicalError> {
     let bytes = canonical_encode(manifest)?;
     if let Some(parent) = path.parent() {
         fs::create_dir_all(parent)?;

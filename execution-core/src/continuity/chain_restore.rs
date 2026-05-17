@@ -41,7 +41,14 @@ pub fn restore_lineage_chain(
     let package_bytes = package_store::load_package_bytes(&input.package_path, None)?;
     let package_root = package_store::package_root(&package_bytes);
     let checkpoint_bytes = checkpoint_store::load_checkpoint(&input.checkpoint_path, None)?;
-    let mut state: CanonicalState = decode_checkpoint(&checkpoint_bytes).map_err(|e| ChainRestoreError::Validation(ChainRestoreMismatch { field: "checkpoint_decode".into(), index: None, expected: "canonical_state".into(), actual: e.to_string(), }))?;
+    let mut state: CanonicalState = decode_checkpoint(&checkpoint_bytes).map_err(|e| {
+        ChainRestoreError::Validation(ChainRestoreMismatch {
+            field: "checkpoint_decode".into(),
+            index: None,
+            expected: "canonical_state".into(),
+            actual: e.to_string(),
+        })
+    })?;
     let checkpoint_root = state.root();
 
     let chain = lineage::load_lineage(&input.lineage_path)?;
@@ -119,7 +126,14 @@ pub fn restore_lineage_chain(
             }));
         }
 
-                current_state_root = apply_diff(&mut state, &replayed_receipt.state_diff).map_err(|e| ChainRestoreError::Validation(ChainRestoreMismatch { field: "state_before".into(), index: Some(idx), expected: "diff applies".into(), actual: e.to_string(), }))?;
+        current_state_root = apply_diff(&mut state, &replayed_receipt.state_diff).map_err(|e| {
+            ChainRestoreError::Validation(ChainRestoreMismatch {
+                field: "state_before".into(),
+                index: Some(idx),
+                expected: "diff applies".into(),
+                actual: e.to_string(),
+            })
+        })?;
         if record.post_state_root != current_state_root {
             return Err(ChainRestoreError::Validation(ChainRestoreMismatch {
                 field: "post_state_root".into(),

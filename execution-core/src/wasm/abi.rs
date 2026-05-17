@@ -1,3 +1,4 @@
+use bincode::Options;
 use serde::{de::DeserializeOwned, Serialize};
 
 pub fn encode<T: Serialize>(value: &T) -> Result<Vec<u8>, bincode::Error> {

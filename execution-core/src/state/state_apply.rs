@@ -6,10 +6,12 @@ pub fn apply_state_diff(previous: &ExecutionState, diff: &StateDiff) -> Executio
     let mut next = previous.clone();
 
     for insert in &diff.inserts {
-        next.entries.insert(insert.key.clone(), insert.value.clone());
+        next.entries
+            .insert(insert.key.clone(), insert.value.clone());
     }
     for update in &diff.updates {
-        next.entries.insert(update.key.clone(), update.value.clone());
+        next.entries
+            .insert(update.key.clone(), update.value.clone());
     }
     for removal in &diff.removals {
         next.entries.remove(&removal.key);

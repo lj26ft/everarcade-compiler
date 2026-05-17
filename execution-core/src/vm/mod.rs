@@ -8,4 +8,4 @@ pub mod vm_validation;
 pub use vm_execution::execute_vm_boundary;
 pub use vm_input::VmExecutionInput;
 pub use vm_output::VmExecutionOutput;
-pub use vm_receipt::{compute_vm_receipt_root, validate_vm_receipt, VmExecutionReceipt};
+pub use vm_receipt::{compute_vm_receipt_root, validate_vm_receipt, Hash, VmExecutionReceipt};

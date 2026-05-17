@@ -1,6 +1,8 @@
 use std::path::Path;
 
-use execution_core::vm::{execute_vm_boundary, validate_vm_receipt, VmExecutionInput, VmExecutionReceipt};
+use execution_core::vm::{
+    execute_vm_boundary, validate_vm_receipt, VmExecutionInput, VmExecutionReceipt,
+};
 
 use crate::{error::HostError, package_loader::load_package, receipt_store::read_receipt};
 
@@ -13,7 +15,9 @@ pub struct ReplayVerificationReport {
 
 impl ReplayVerificationReport {
     pub fn verified(&self) -> bool {
-        self.receipt_canonical_valid && self.package_matches_receipt && self.deterministic_replay_match
+        self.receipt_canonical_valid
+            && self.package_matches_receipt
+            && self.deterministic_replay_match
     }
 }
 

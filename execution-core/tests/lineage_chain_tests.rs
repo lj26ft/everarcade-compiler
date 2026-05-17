@@ -1,9 +1,11 @@
 use execution_core::lineage::{
-    load_lineage, save_lineage, validate_lineage_chain, ExecutionLineageChain, ExecutionLineageRecord,
-    LineageError,
+    load_lineage, save_lineage, validate_lineage_chain, ExecutionLineageChain,
+    ExecutionLineageRecord, LineageError,
 };
 
-fn h(v: u8) -> [u8; 32] { [v; 32] }
+fn h(v: u8) -> [u8; 32] {
+    [v; 32]
+}
 
 fn build_chain() -> ExecutionLineageChain {
     let r1 = ExecutionLineageRecord {
@@ -24,36 +26,46 @@ fn build_chain() -> ExecutionLineageChain {
         receipt_hash: h(14),
         package_root: h(9),
     };
-    ExecutionLineageChain { world_id: h(99), package_root: h(9), records: vec![r1, r2] }
+    ExecutionLineageChain {
+        world_id: h(99),
+        package_root: h(9),
+        records: vec![r1, r2],
+    }
 }
 
 #[test]
-fn test_lineage_chain_valid() { assert!(validate_lineage_chain(&build_chain()).is_ok()); }
+fn test_lineage_chain_valid() {
+    assert!(validate_lineage_chain(&build_chain()).is_ok());
+}
 
 #[test]
 fn test_lineage_sequence_gap_fails() {
-    let mut c = build_chain(); c.records[1].sequence = 3;
+    let mut c = build_chain();
+    c.records[1].sequence = 3;
     let err = validate_lineage_chain(&c).unwrap_err();
     assert!(matches!(err, LineageError::Validation(_)));
 }
 
 #[test]
 fn test_lineage_previous_execution_mismatch_fails() {
-    let mut c = build_chain(); c.records[1].previous_execution_id = Some(h(42));
+    let mut c = build_chain();
+    c.records[1].previous_execution_id = Some(h(42));
     let err = validate_lineage_chain(&c).unwrap_err();
     assert!(matches!(err, LineageError::Validation(_)));
 }
 
 #[test]
 fn test_lineage_state_root_mismatch_fails() {
-    let mut c = build_chain(); c.records[1].pre_state_root = h(99);
+    let mut c = build_chain();
+    c.records[1].pre_state_root = h(99);
     let err = validate_lineage_chain(&c).unwrap_err();
     assert!(matches!(err, LineageError::Validation(_)));
 }
 
 #[test]
 fn test_lineage_package_root_mismatch_fails() {
-    let mut c = build_chain(); c.records[1].package_root = h(88);
+    let mut c = build_chain();
+    c.records[1].package_root = h(88);
     let err = validate_lineage_chain(&c).unwrap_err();
     assert!(matches!(err, LineageError::Validation(_)));
 }
@@ -73,6 +85,9 @@ fn test_two_step_counter_world_lineage_shape() {
     let c = build_chain();
     assert_eq!(c.records.len(), 2);
     assert_eq!(c.records[0].post_state_root, c.records[1].pre_state_root);
-    assert_eq!(c.records[1].previous_execution_id, Some(c.records[0].execution_id));
+    assert_eq!(
+        c.records[1].previous_execution_id,
+        Some(c.records[0].execution_id)
+    );
     assert!(validate_lineage_chain(&c).is_ok());
 }

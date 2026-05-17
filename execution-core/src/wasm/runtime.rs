@@ -6,7 +6,9 @@ use super::errors::WasmRuntimeError;
 use super::instance::instantiate;
 use super::limits::ExecutionLimits;
 use super::memory::{read_memory, write_memory};
-use super::receipt::{compute_diff_hash, events_hash, execution_id, state_root, WasmExecutionReceipt};
+use super::receipt::{
+    compute_diff_hash, events_hash, execution_id, state_root, WasmExecutionReceipt,
+};
 use anyhow::Context;
 use wasmtime::{Linker, Module, Store};
 
