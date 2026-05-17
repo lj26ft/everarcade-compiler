@@ -2,13 +2,15 @@ use std::path::PathBuf;
 
 use crate::{
     canonical::{generate_execution_manifest, hashes, load_manifest, manifest_hash, save_manifest},
-    continuity::{restore_lineage_chain, ChainRestoreInput, ChainRestoreError},
+    continuity::{restore_lineage_chain, ChainRestoreError, ChainRestoreInput},
     lineage,
     persistence::{checkpoint_store, package_store, receipt_store},
 };
 
 use super::{
-    continuity::{descriptor_hash, OperatorRecoveryMismatch, OperatorRecoveryReport, WorldRecoveryDescriptor},
+    continuity::{
+        descriptor_hash, OperatorRecoveryMismatch, OperatorRecoveryReport, WorldRecoveryDescriptor,
+    },
     errors::OperatorRecoveryError,
     registry::save_recovery_descriptor,
 };
@@ -30,13 +32,16 @@ pub struct OperatorRecoveryOutput {
     pub manifest_hash: [u8; 32],
 }
 
-pub fn recover_world(input: OperatorRecoveryInput) -> Result<OperatorRecoveryOutput, OperatorRecoveryError> {
+pub fn recover_world(
+    input: OperatorRecoveryInput,
+) -> Result<OperatorRecoveryOutput, OperatorRecoveryError> {
     let restore = restore_lineage_chain(ChainRestoreInput {
         package_path: input.package_path.clone(),
         checkpoint_path: input.checkpoint_path.clone(),
         lineage_path: input.lineage_path.clone(),
         receipt_paths: input.receipt_paths.clone(),
-    }).map_err(map_chain_err)?;
+    })
+    .map_err(map_chain_err)?;
 
     let package_bytes = package_store::load_package_bytes(&input.package_path, None)
         .map_err(|e| OperatorRecoveryError::Storage(e.to_string()))?;
@@ -47,8 +52,13 @@ pub fn recover_world(input: OperatorRecoveryInput) -> Result<OperatorRecoveryOut
         .map_err(|e| OperatorRecoveryError::Storage(e.to_string()))?;
     let checkpoint_state = crate::state::decode_checkpoint(&checkpoint_bytes)
         .map_err(|e| OperatorRecoveryError::Storage(e.to_string()))?;
-    let latest_receipt = receipt_store::load_receipt(input.receipt_paths.last().ok_or_else(|| OperatorRecoveryError::Storage("missing receipt".into()))?)
-        .map_err(|e| OperatorRecoveryError::Storage(e.to_string()))?;
+    let latest_receipt = receipt_store::load_receipt(
+        input
+            .receipt_paths
+            .last()
+            .ok_or_else(|| OperatorRecoveryError::Storage("missing receipt".into()))?,
+    )
+    .map_err(|e| OperatorRecoveryError::Storage(e.to_string()))?;
 
     let manifest = generate_execution_manifest(
         package_root,
@@ -67,17 +77,23 @@ pub fn recover_world(input: OperatorRecoveryInput) -> Result<OperatorRecoveryOut
         let stored_manifest = load_manifest(&manifest_path)
             .map_err(|e| OperatorRecoveryError::Storage(e.to_string()))?;
         if stored_manifest != manifest {
-            return Err(OperatorRecoveryError::Validation(OperatorRecoveryMismatch {
-                field: "manifest_hash".into(),
-                expected: hex::encode(manifest_hash(&stored_manifest)),
-                actual: hex::encode(manifest_h),
-            }));
+            return Err(OperatorRecoveryError::Validation(
+                OperatorRecoveryMismatch {
+                    field: "manifest_hash".into(),
+                    expected: hex::encode(manifest_hash(&stored_manifest)),
+                    actual: hex::encode(manifest_h),
+                },
+            ));
         }
     } else {
         save_manifest(&manifest_path, &manifest)
             .map_err(|e| OperatorRecoveryError::Storage(e.to_string()))?;
     }
-    let latest_execution_id = lineage_chain.records.last().map(|r| r.execution_id).unwrap_or([0u8;32]);
+    let latest_execution_id = lineage_chain
+        .records
+        .last()
+        .map(|r| r.execution_id)
+        .unwrap_or([0u8; 32]);
     let descriptor = WorldRecoveryDescriptor {
         world_id: package_root,
         package_root,
@@ -105,11 +121,13 @@ pub fn recover_world(input: OperatorRecoveryInput) -> Result<OperatorRecoveryOut
 
 fn map_chain_err(err: ChainRestoreError) -> OperatorRecoveryError {
     match err {
-        ChainRestoreError::Validation(m) => OperatorRecoveryError::Validation(OperatorRecoveryMismatch {
-            field: m.field,
-            expected: m.expected,
-            actual: m.actual,
-        }),
+        ChainRestoreError::Validation(m) => {
+            OperatorRecoveryError::Validation(OperatorRecoveryMismatch {
+                field: m.field,
+                expected: m.expected,
+                actual: m.actual,
+            })
+        }
         other => OperatorRecoveryError::Storage(other.to_string()),
     }
 }

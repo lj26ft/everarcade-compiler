@@ -11,7 +11,11 @@ pub enum OperatorRecoveryError {
 impl Display for OperatorRecoveryError {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
-            Self::Validation(m) => write!(f, "validation failed: {} expected={} actual={}", m.field, m.expected, m.actual),
+            Self::Validation(m) => write!(
+                f,
+                "validation failed: {} expected={} actual={}",
+                m.field, m.expected, m.actual
+            ),
             Self::Storage(m) => write!(f, "storage error: {m}"),
         }
     }

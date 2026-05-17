@@ -21,7 +21,9 @@ fn fixture_two_step() -> (tempfile::TempDir, ChainRestoreInput, ExecutionLineage
     let package_root = execution_core::persistence::package_store::package_root(&package_bytes);
 
     let mut checkpoint_state = execution_core::state::CanonicalState::default();
-    checkpoint_state.entries.insert(b"__replay_root__".to_vec(), hex::encode(h(7)).into_bytes());
+    checkpoint_state
+        .entries
+        .insert(b"__replay_root__".to_vec(), hex::encode(h(7)).into_bytes());
     let checkpoint_0 = execution_core::state::encode_checkpoint(&checkpoint_state).unwrap();
     std::fs::write(&checkpoint_path, &checkpoint_0).unwrap();
     let state0 = checkpoint_state.root();
@@ -168,9 +170,14 @@ fn test_chain_restore_applies_diffs_to_reconstruct_final_root() {
 #[test]
 fn test_chain_restore_state_diff_mismatch_fails() {
     let (_t, input, _lineage) = fixture_two_step();
-    let mut receipt: execution_core::vm::VmExecutionReceipt = bincode::deserialize(&std::fs::read(&input.receipt_paths[0]).unwrap()).unwrap();
+    let mut receipt: execution_core::vm::VmExecutionReceipt =
+        bincode::deserialize(&std::fs::read(&input.receipt_paths[0]).unwrap()).unwrap();
     receipt.state_diff[0].before = "bad".into();
-    std::fs::write(&input.receipt_paths[0], bincode::serialize(&receipt).unwrap()).unwrap();
+    std::fs::write(
+        &input.receipt_paths[0],
+        bincode::serialize(&receipt).unwrap(),
+    )
+    .unwrap();
     let err = restore_lineage_chain(input).unwrap_err();
     assert!(matches!(err, ChainRestoreError::Validation(m) if m.field == "state_before"));
 }

@@ -1,9 +1,17 @@
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
-pub struct StateInsert { pub key: String, pub value: Vec<u8> }
+pub struct StateInsert {
+    pub key: String,
+    pub value: Vec<u8>,
+}
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
-pub struct StateUpdate { pub key: String, pub value: Vec<u8> }
+pub struct StateUpdate {
+    pub key: String,
+    pub value: Vec<u8>,
+}
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
-pub struct StateRemoval { pub key: String }
+pub struct StateRemoval {
+    pub key: String,
+}
 
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 pub struct StateDiff {

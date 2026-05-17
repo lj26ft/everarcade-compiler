@@ -11,14 +11,22 @@ pub fn execute_payload(payload: &ExecutionPayload, state: &ExecutionState) -> St
         match &mutation.value {
             Some(value) => {
                 if state.entries.contains_key(&mutation.key) {
-                    diff.updates.push(StateUpdate { key: mutation.key.clone(), value: value.clone() });
+                    diff.updates.push(StateUpdate {
+                        key: mutation.key.clone(),
+                        value: value.clone(),
+                    });
                 } else {
-                    diff.inserts.push(StateInsert { key: mutation.key.clone(), value: value.clone() });
+                    diff.inserts.push(StateInsert {
+                        key: mutation.key.clone(),
+                        value: value.clone(),
+                    });
                 }
             }
             None => {
                 if state.entries.contains_key(&mutation.key) {
-                    diff.removals.push(StateRemoval { key: mutation.key.clone() });
+                    diff.removals.push(StateRemoval {
+                        key: mutation.key.clone(),
+                    });
                 }
             }
         }

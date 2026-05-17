@@ -1,3 +1,4 @@
+use crate::hashing::sha256;
 use crate::payload::ExecutionPayload;
 use crate::receipt_runtime::execution_receipt::ExecutionReceipt;
 
@@ -25,9 +26,15 @@ pub fn apply_execution_transition(
         match mutation.value {
             Some(value) => {
                 if next.entries.contains_key(&mutation.key) {
-                    diff.updates.push(StateUpdate { key: mutation.key.clone(), value: value.clone() });
+                    diff.updates.push(StateUpdate {
+                        key: mutation.key.clone(),
+                        value: value.clone(),
+                    });
                 } else {
-                    diff.inserts.push(StateInsert { key: mutation.key.clone(), value: value.clone() });
+                    diff.inserts.push(StateInsert {
+                        key: mutation.key.clone(),
+                        value: value.clone(),
+                    });
                 }
                 next.entries.insert(mutation.key, value);
             }
@@ -41,5 +48,9 @@ pub fn apply_execution_transition(
 
     diff.canonicalize();
     next.revision = next.revision.saturating_add(1);
-    TransitionResult { next, diff, receipt_hash: receipt.receipt_hash() }
+    TransitionResult {
+        next,
+        diff,
+        receipt_hash: sha256(receipt.receipt_id.as_bytes()),
+    }
 }

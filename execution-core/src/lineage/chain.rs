@@ -38,7 +38,9 @@ pub struct LineageValidation {
     pub package_link_ok: bool,
 }
 
-pub fn validate_lineage_chain(chain: &ExecutionLineageChain) -> Result<LineageValidation, LineageError> {
+pub fn validate_lineage_chain(
+    chain: &ExecutionLineageChain,
+) -> Result<LineageValidation, LineageError> {
     for (idx, record) in chain.records.iter().enumerate() {
         if record.package_root != chain.package_root {
             return Err(LineageError::Validation(LineageMismatch {

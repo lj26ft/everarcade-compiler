@@ -34,7 +34,8 @@ pub extern "C" fn everarcade_execute(input_ptr: u32, input_len: u32) -> u64 {
         return 0;
     }
 
-    let input_bytes = unsafe { std::slice::from_raw_parts(input_ptr as *const u8, input_len as usize) };
+    let input_bytes =
+        unsafe { std::slice::from_raw_parts(input_ptr as *const u8, input_len as usize) };
     let output = match bincode::deserialize::<VmInput>(input_bytes) {
         Ok(input) => execute_counter(input),
         Err(_) => error_output(),
@@ -51,7 +52,11 @@ pub extern "C" fn everarcade_execute(input_ptr: u32, input_len: u32) -> u64 {
     }
 
     unsafe {
-        std::ptr::copy_nonoverlapping(output_bytes.as_ptr(), out_ptr as *mut u8, output_bytes.len());
+        std::ptr::copy_nonoverlapping(
+            output_bytes.as_ptr(),
+            out_ptr as *mut u8,
+            output_bytes.len(),
+        );
     }
 
     ((out_ptr as u64) << 32) | (output_bytes.len() as u64)
@@ -64,7 +69,11 @@ fn execute_counter(mut input: VmInput) -> VmOutput {
         .get(&key)
         .cloned()
         .unwrap_or_else(|| "0".to_string());
-    let next = before.parse::<u64>().unwrap_or(0).saturating_add(1).to_string();
+    let next = before
+        .parse::<u64>()
+        .unwrap_or(0)
+        .saturating_add(1)
+        .to_string();
     input.state.insert(key.clone(), next.clone());
 
     let state_change = StateChange {
@@ -95,7 +104,11 @@ fn execute_counter(mut input: VmInput) -> VmOutput {
         previous_snapshot_hash: None,
     };
     receipt.receipt_hash = hash_hex(
-        format!("{}:{}:{}", receipt.input_hash, receipt.output_hash, receipt.new_state_root).as_bytes(),
+        format!(
+            "{}:{}:{}",
+            receipt.input_hash, receipt.output_hash, receipt.new_state_root
+        )
+        .as_bytes(),
     );
 
     VmOutput {

@@ -1,7 +1,6 @@
 pub mod checkpoint;
 pub mod diff;
 pub mod errors;
-pub mod tree;
 pub mod execution_state;
 pub mod state_apply;
 pub mod state_commit;
@@ -12,6 +11,7 @@ pub mod state_root;
 pub mod state_transition;
 pub mod state_validation;
 pub mod transition_root;
+pub mod tree;
 
 pub use execution_state::{ExecutionState, StateValue};
 pub use state_diff::{StateDiff, StateInsert, StateRemoval, StateUpdate};

@@ -2,7 +2,7 @@ use std::{fs, path::PathBuf};
 
 use execution_core::{
     canonical::encoding::{canonical_decode, canonical_encode},
-    lineage::LineageChain,
+    lineage::ExecutionLineageChain,
     operator::{
         descriptor_hash, load_recovery_descriptor, recover_world, save_recovery_descriptor,
         OperatorRecoveryError, OperatorRecoveryInput, WorldRecoveryDescriptor,
@@ -11,7 +11,7 @@ use execution_core::{
 };
 
 fn fixture(name: &str) -> PathBuf {
-    PathBuf::from("../everarcade-host/tests/fixtures/counter_world").join(name)
+    PathBuf::from("everarcade-host/tests/fixtures/counter_world").join(name)
 }
 
 fn setup_fixture(dir: &std::path::Path) -> OperatorRecoveryInput {
@@ -68,7 +68,11 @@ fn test_world_recovery_manifest_mismatch_fails() {
     let tmp = tempfile::tempdir().unwrap();
     let input = setup_fixture(tmp.path());
     let _ = recover_world(input.clone()).unwrap();
-    let manifest_path = input.descriptor_output_path.parent().unwrap().join("manifest.bin");
+    let manifest_path = input
+        .descriptor_output_path
+        .parent()
+        .unwrap()
+        .join("manifest.bin");
     let mut bytes = fs::read(&manifest_path).unwrap();
     bytes[0] ^= 0x01;
     fs::write(&manifest_path, bytes).unwrap();
@@ -88,8 +92,8 @@ fn test_world_recovery_lineage_mismatch_fails() {
     let tmp = tempfile::tempdir().unwrap();
     let input = setup_fixture(tmp.path());
     let bytes = fs::read(&input.lineage_path).unwrap();
-    let mut chain: LineageChain = canonical_decode(&bytes).unwrap();
-    chain.records[1].previous_execution_id = [0u8; 32];
+    let mut chain: ExecutionLineageChain = canonical_decode(&bytes).unwrap();
+    chain.records[1].previous_execution_id = Some([0u8; 32]);
     fs::write(&input.lineage_path, canonical_encode(&chain).unwrap()).unwrap();
     let err = recover_world(input).unwrap_err();
     match err {
@@ -107,7 +111,7 @@ fn test_world_recovery_replay_mismatch_fails() {
     let tmp = tempfile::tempdir().unwrap();
     let input = setup_fixture(tmp.path());
     let mut receipt = receipt_store::load_receipt(&input.receipt_paths[1]).unwrap();
-    receipt.execution_id[0] ^= 0x80;
+    receipt.execution_root[0] ^= 0x80;
     receipt_store::save_receipt(&input.receipt_paths[1], &receipt).unwrap();
     let err = recover_world(input).unwrap_err();
     match err {
@@ -123,7 +127,13 @@ fn test_world_recovery_replay_mismatch_fails() {
 #[test]
 fn test_recovery_descriptor_roundtrip() {
     let tmp = tempfile::tempdir().unwrap();
-    let d = WorldRecoveryDescriptor { world_id:[1;32], package_root:[2;32], latest_checkpoint_root:[3;32], latest_execution_id:[4;32], manifest_hash:[5;32] };
+    let d = WorldRecoveryDescriptor {
+        world_id: [1; 32],
+        package_root: [2; 32],
+        latest_checkpoint_root: [3; 32],
+        latest_execution_id: [4; 32],
+        manifest_hash: [5; 32],
+    };
     let path = tmp.path().join("d.bin");
     save_recovery_descriptor(&path, &d).unwrap();
     let got = load_recovery_descriptor(&path).unwrap();
@@ -133,16 +143,31 @@ fn test_recovery_descriptor_roundtrip() {
 #[test]
 fn test_recovery_descriptor_envelope_roundtrip() {
     let tmp = tempfile::tempdir().unwrap();
-    let d = WorldRecoveryDescriptor { world_id:[6;32], package_root:[7;32], latest_checkpoint_root:[8;32], latest_execution_id:[9;32], manifest_hash:[10;32] };
+    let d = WorldRecoveryDescriptor {
+        world_id: [6; 32],
+        package_root: [7; 32],
+        latest_checkpoint_root: [8; 32],
+        latest_execution_id: [9; 32],
+        manifest_hash: [10; 32],
+    };
     let path = tmp.path().join("d2.bin");
     save_recovery_descriptor(&path, &d).unwrap();
-    assert_eq!(descriptor_hash(&d), descriptor_hash(&load_recovery_descriptor(&path).unwrap()));
+    assert_eq!(
+        descriptor_hash(&d),
+        descriptor_hash(&load_recovery_descriptor(&path).unwrap())
+    );
 }
 
 #[test]
 fn test_verify_recovery_descriptor_tamper_fails() {
     let tmp = tempfile::tempdir().unwrap();
-    let d = WorldRecoveryDescriptor { world_id:[1;32], package_root:[2;32], latest_checkpoint_root:[3;32], latest_execution_id:[4;32], manifest_hash:[5;32] };
+    let d = WorldRecoveryDescriptor {
+        world_id: [1; 32],
+        package_root: [2; 32],
+        latest_checkpoint_root: [3; 32],
+        latest_execution_id: [4; 32],
+        manifest_hash: [5; 32],
+    };
     let path = tmp.path().join("tampered.bin");
     save_recovery_descriptor(&path, &d).unwrap();
     let mut bytes = fs::read(&path).unwrap();
@@ -150,12 +175,21 @@ fn test_verify_recovery_descriptor_tamper_fails() {
     bytes[last] ^= 0x01;
     fs::write(&path, bytes).unwrap();
     let err = load_recovery_descriptor(&path).unwrap_err();
-    match err { OperatorRecoveryError::Validation(m) => assert_eq!(m.field, "descriptor_hash"), _ => panic!("expected validation") }
+    match err {
+        OperatorRecoveryError::Validation(m) => assert_eq!(m.field, "descriptor_hash"),
+        _ => panic!("expected validation"),
+    }
 }
 
 #[test]
 fn test_descriptor_hash_stable() {
-    let d = WorldRecoveryDescriptor { world_id:[9;32], package_root:[2;32], latest_checkpoint_root:[3;32], latest_execution_id:[4;32], manifest_hash:[5;32] };
+    let d = WorldRecoveryDescriptor {
+        world_id: [9; 32],
+        package_root: [2; 32],
+        latest_checkpoint_root: [3; 32],
+        latest_execution_id: [4; 32],
+        manifest_hash: [5; 32],
+    };
     assert_eq!(descriptor_hash(&d), descriptor_hash(&d));
 }
 
@@ -173,32 +207,55 @@ fn test_cross_run_recovery_equivalence() {
 fn test_operator_a_to_b_continuity() {
     let operator_a = tempfile::tempdir().unwrap();
     let mut a_input = setup_fixture(operator_a.path());
-    a_input.descriptor_output_path = operator_a.path().join("worlds/default/recovery_descriptor.bin");
+    a_input.descriptor_output_path = operator_a
+        .path()
+        .join("worlds/default/recovery_descriptor.bin");
     let a_out = recover_world(a_input.clone()).unwrap();
 
     let operator_b = tempfile::tempdir().unwrap();
     fs::create_dir_all(operator_b.path().join("worlds/default")).unwrap();
-    for file in ["world.wasm", "checkpoint_0.bin", "lineage.bin", "receipt_1.bin", "receipt_2.bin"] {
+    for file in [
+        "world.wasm",
+        "checkpoint_0.bin",
+        "lineage.bin",
+        "receipt_1.bin",
+        "receipt_2.bin",
+    ] {
         fs::copy(operator_a.path().join(file), operator_b.path().join(file)).unwrap();
     }
     fs::copy(
-        operator_a.path().join("worlds/default/recovery_descriptor.bin"),
-        operator_b.path().join("worlds/default/recovery_descriptor.bin"),
-    ).unwrap();
+        operator_a
+            .path()
+            .join("worlds/default/recovery_descriptor.bin"),
+        operator_b
+            .path()
+            .join("worlds/default/recovery_descriptor.bin"),
+    )
+    .unwrap();
     fs::copy(
         operator_a.path().join("worlds/default/manifest.bin"),
         operator_b.path().join("worlds/default/manifest.bin"),
-    ).unwrap();
+    )
+    .unwrap();
 
     let b_out = recover_world(OperatorRecoveryInput {
         package_path: operator_b.path().join("world.wasm"),
         checkpoint_path: operator_b.path().join("checkpoint_0.bin"),
         lineage_path: operator_b.path().join("lineage.bin"),
-        receipt_paths: vec![operator_b.path().join("receipt_1.bin"), operator_b.path().join("receipt_2.bin")],
-        descriptor_output_path: operator_b.path().join("worlds/default/recovery_descriptor.bin"),
-    }).unwrap();
+        receipt_paths: vec![
+            operator_b.path().join("receipt_1.bin"),
+            operator_b.path().join("receipt_2.bin"),
+        ],
+        descriptor_output_path: operator_b
+            .path()
+            .join("worlds/default/recovery_descriptor.bin"),
+    })
+    .unwrap();
 
     assert_eq!(a_out.descriptor_hash, b_out.descriptor_hash);
     assert_eq!(a_out.manifest_hash, b_out.manifest_hash);
-    assert_eq!(a_out.report.recovered_state_root, b_out.report.recovered_state_root);
+    assert_eq!(
+        a_out.report.recovered_state_root,
+        b_out.report.recovered_state_root
+    );
 }

@@ -1,4 +1,6 @@
-use execution_core::persistence::{checkpoint_store, package_store, receipt_store, restore_and_replay};
+use execution_core::persistence::{
+    checkpoint_store, package_store, receipt_store, restore_and_replay,
+};
 use execution_core::vm::{execute_vm_boundary, VmExecutionInput};
 use std::fs;
 
@@ -28,7 +30,10 @@ fn test_save_load_checkpoint_roundtrip() {
     let path = dir.path().join("cp.bin");
     checkpoint_store::save_checkpoint(&path, b"state-before").unwrap();
     let expected = checkpoint_store::checkpoint_root(b"state-before");
-    assert_eq!(checkpoint_store::load_checkpoint(&path, Some(expected)).unwrap(), b"state-before");
+    assert_eq!(
+        checkpoint_store::load_checkpoint(&path, Some(expected)).unwrap(),
+        b"state-before"
+    );
 }
 
 #[test]
@@ -40,7 +45,13 @@ fn test_checkpoint_root_mismatch_fails() {
 }
 
 #[test]
-fn test_save_load_package_roundtrip() { let dir = tempfile::tempdir().unwrap(); let path = dir.path().join("w.wasm"); package_store::save_package(&path, b"\0asm").unwrap(); let root = package_store::package_root(b"\0asm"); assert_eq!(package_store::load_package(&path, root).unwrap(), b"\0asm"); }
+fn test_save_load_package_roundtrip() {
+    let dir = tempfile::tempdir().unwrap();
+    let path = dir.path().join("w.wasm");
+    package_store::save_package(&path, b"\0asm").unwrap();
+    let root = package_store::package_root(b"\0asm");
+    assert_eq!(package_store::load_package(&path, root).unwrap(), b"\0asm");
+}
 
 #[test]
 fn test_package_root_mismatch_fails() {

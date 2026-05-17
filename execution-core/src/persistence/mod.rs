@@ -24,10 +24,12 @@ pub fn restore_and_replay(
 ) -> Result<ReplayVerification, PersistenceError> {
     let package = package_store::load_package_bytes(package_path, None)?;
     let receipt = receipt_store::load_receipt(receipt_path)?;
-    let checkpoint = checkpoint_store::load_checkpoint(checkpoint_path, Some(receipt.checkpoint_root))?;
+    let checkpoint =
+        checkpoint_store::load_checkpoint(checkpoint_path, Some(receipt.checkpoint_root))?;
 
     let package_match = package_store::package_root(&package) == receipt.package_root;
-    let checkpoint_match = checkpoint_store::checkpoint_root(&checkpoint) == receipt.checkpoint_root;
+    let checkpoint_match =
+        checkpoint_store::checkpoint_root(&checkpoint) == receipt.checkpoint_root;
 
     let input = VmExecutionInput {
         package_manifest_root: receipt.package_root,

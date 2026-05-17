@@ -27,7 +27,14 @@ pub fn events_hash(output: &[u8]) -> Hash256 {
 }
 
 pub fn execution_id(input_hash: Hash256, wasm_hash: Hash256, post_state_root: Hash256) -> Hash256 {
-    sha256(&[input_hash.as_slice(), wasm_hash.as_slice(), post_state_root.as_slice()].concat())
+    sha256(
+        &[
+            input_hash.as_slice(),
+            wasm_hash.as_slice(),
+            post_state_root.as_slice(),
+        ]
+        .concat(),
+    )
 }
 
 pub fn compute_diff_hash(diff: &[StateChange]) -> Hash256 {
