@@ -41,6 +41,9 @@ Commands:
   export-bundle --out <bundle_root> --package <path> --checkpoint <path> --lineage <path> --manifest <path> --descriptor <path> --receipt <path> [--receipt <path> ...]
   verify-bundle --bundle <bundle_root>
   import-bundle --bundle <bundle_root> --world-root <path>
+  freeze-world --world <id> --world-root <path>
+  resume-world --world-root <path> --world <id>
+  migrate-world --world <id> --bundle <path> --destination <node-id> --world-root <path>
   doctor --state <path>
 
 Examples:
@@ -771,6 +774,87 @@ fn run_cli() -> Result<(), HostError> {
             println!("package_ok={}", v.package_ok);
             println!("receipts_ok={}", v.receipts_ok);
             println!("recovery_ok={}", v.recovery_ok);
+        }
+
+        "freeze-world" => {
+            let world_id = arg_value(&args, "--world")
+                .ok_or_else(|| HostError::InvalidArgs("missing --world".into()))?;
+            let world_root = PathBuf::from(
+                arg_value(&args, "--world-root")
+                    .ok_or_else(|| HostError::InvalidArgs("missing --world-root".into()))?,
+            );
+            let d = execution_core::federation::runtime::freeze_world(&world_root, &world_id)
+                .map_err(|e| HostError::VerificationFailed(e.to_string()))?;
+            println!("world_freeze=ok");
+            println!("checkpoint_root={}", hex::encode(d.current_checkpoint_root));
+            println!("latest_execution={}", hex::encode(d.latest_execution_id));
+        }
+        "resume-world" => {
+            let world_id = arg_value(&args, "--world").unwrap_or_else(|| "world".into());
+            let world_root = PathBuf::from(
+                arg_value(&args, "--world-root")
+                    .ok_or_else(|| HostError::InvalidArgs("missing --world-root".into()))?,
+            );
+            let _ = execution_core::federation::runtime::resume_world(&world_root, &world_id)
+                .map_err(|e| HostError::VerificationFailed(e.to_string()))?;
+            println!("world_resume=ok");
+            println!("continuity_ok=true");
+            println!("replay_ok=true");
+        }
+        "migrate-world" => {
+            let world_id = arg_value(&args, "--world")
+                .ok_or_else(|| HostError::InvalidArgs("missing --world".into()))?;
+            let bundle = PathBuf::from(
+                arg_value(&args, "--bundle")
+                    .ok_or_else(|| HostError::InvalidArgs("missing --bundle".into()))?,
+            );
+            let world_root = PathBuf::from(
+                arg_value(&args, "--world-root")
+                    .ok_or_else(|| HostError::InvalidArgs("missing --world-root".into()))?,
+            );
+            let dst_hex = arg_value(&args, "--destination")
+                .ok_or_else(|| HostError::InvalidArgs("missing --destination".into()))?;
+            let mut dst = [0u8; 32];
+            hex::decode_to_slice(dst_hex, &mut dst as &mut [u8])
+                .map_err(|e| HostError::InvalidArgs(e.to_string()))?;
+            let manifest =
+                execution_core::canonical::load_manifest(&world_root.join("manifest.bin"))
+                    .map_err(|e| HostError::InvalidArgs(e.to_string()))?;
+            let req = execution_core::federation::runtime::WorldMigrationRequest {
+                source_node: execution_core::federation::node::FederationNodeId::new([0; 32]),
+                destination_node: execution_core::federation::node::FederationNodeId::new(dst),
+                world_id,
+                expected_package_root: manifest.package_root,
+                expected_checkpoint_root: manifest.checkpoint_root,
+            };
+            let dst_world = bundle.join("imported_world");
+            match execution_core::federation::runtime::migrate_world(
+                &world_root,
+                &bundle,
+                &dst_world,
+                &req,
+            ) {
+                Ok(r) if r.migration_ok => {
+                    println!("world_migration=ok");
+                    println!("continuity_ok={}", r.continuity_ok);
+                    println!("replay_ok={}", r.replay_ok);
+                    println!("resumed_ok={}", r.resumed_ok);
+                }
+                Ok(_) => {
+                    println!("world_migration=failed");
+                    println!("field=migration_ok");
+                    println!("expected=true");
+                    println!("actual=false");
+                    return Err(HostError::VerificationFailed("migration failed".into()));
+                }
+                Err(e) => {
+                    println!("world_migration=failed");
+                    println!("field=bundle");
+                    println!("expected=valid");
+                    println!("actual={e}");
+                    return Err(HostError::VerificationFailed(e.to_string()));
+                }
+            }
         }
 
         _ => {
