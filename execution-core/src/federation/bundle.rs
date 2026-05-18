@@ -183,7 +183,7 @@ fn sorted_receipts(receipts: &[PathBuf]) -> Vec<PathBuf> {
     sorted
 }
 
-fn receipt_files(dir: &Path) -> Result<Vec<PathBuf>> {
+pub fn receipt_files(dir: &Path) -> Result<Vec<PathBuf>> {
     let mut files: Vec<PathBuf> = fs::read_dir(dir)?
         .filter_map(|entry| entry.ok().map(|e| e.path()))
         .filter(|p| p.is_file())
