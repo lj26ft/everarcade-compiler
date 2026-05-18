@@ -25,7 +25,7 @@ fn fixture_round_trip() {
     let _input = VmExecutionInput {
         package_manifest_root: pkg.execution_root,
         civilization_root: pkg.execution_root,
-        replay_root: pkg.replay_root,
+        pre_state_root: pkg.replay_root,
         checkpoint_root: pkg.checkpoint_root,
         payload_root: pkg.proof_root,
     };

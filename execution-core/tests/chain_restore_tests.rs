@@ -32,7 +32,8 @@ fn fixture_two_step() -> (tempfile::TempDir, ChainRestoreInput, ExecutionLineage
     let i1 = VmExecutionInput {
         package_manifest_root: package_root,
         civilization_root: package_root,
-        replay_root: state0,
+        pre_state_root: state0,
+        prior_replay_root_value: state0,
         checkpoint_root: h(31),
         payload_root: h(31),
     };
@@ -52,7 +53,8 @@ fn fixture_two_step() -> (tempfile::TempDir, ChainRestoreInput, ExecutionLineage
     let i2 = VmExecutionInput {
         package_manifest_root: package_root,
         civilization_root: package_root,
-        replay_root: state1_root,
+        pre_state_root: state1_root,
+        prior_replay_root_value: state1_root,
         checkpoint_root: h(32),
         payload_root: h(32),
     };
@@ -243,7 +245,7 @@ fn test_fixture_no_synthetic_replay_root_seed() {
 
 #[test]
 fn test_genesis_replay_root_present_in_checkpoint_0() {
-    let (_t, input, _lineage) = fixture_two_step();
+    let (_t, input, lineage) = fixture_two_step();
     let state0: execution_core::state::CanonicalState =
         execution_core::state::decode_checkpoint(&std::fs::read(&input.checkpoint_path).unwrap())
             .unwrap();
@@ -261,5 +263,25 @@ fn test_genesis_replay_root_present_in_checkpoint_0() {
         .find(|change| change.key == REPLAY_ROOT_STATE_KEY)
         .map(|change| change.before.as_bytes().to_vec())
         .unwrap();
-    assert_eq!(replay_root_before, expected);
+    assert_eq!(
+        replay_root_before,
+        hex::encode(lineage.records[0].pre_state_root).into_bytes()
+    );
+}
+
+#[test]
+fn test_genesis_replay_root_derivation_matches_vm_output() {
+    let (_t, input, lineage) = fixture_two_step();
+    let r1: execution_core::vm::VmExecutionReceipt =
+        bincode::deserialize(&std::fs::read(&input.receipt_paths[0]).unwrap()).unwrap();
+    let replay_root_before = r1
+        .state_diff
+        .iter()
+        .find(|change| change.key == REPLAY_ROOT_STATE_KEY)
+        .map(|change| change.before.as_bytes().to_vec())
+        .unwrap();
+    assert_eq!(
+        replay_root_before,
+        hex::encode(lineage.records[0].pre_state_root).into_bytes()
+    );
 }

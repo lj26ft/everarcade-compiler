@@ -40,7 +40,8 @@ pub fn verify_receipt_replay_from_artifacts(
     let input = VmExecutionInput {
         package_manifest_root: package.execution_root,
         civilization_root: package.execution_root,
-        replay_root: receipt.prior_replay_root,
+        pre_state_root: receipt.prior_replay_root,
+        prior_replay_root_value: receipt.prior_replay_root,
         checkpoint_root: receipt.checkpoint_root,
         payload_root: package.proof_root,
     };

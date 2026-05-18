@@ -34,7 +34,8 @@ pub fn restore_and_replay(
     let input = VmExecutionInput {
         package_manifest_root: receipt.package_root,
         civilization_root: receipt.package_root,
-        replay_root: receipt.prior_replay_root,
+        pre_state_root: receipt.prior_replay_root,
+        prior_replay_root_value: receipt.prior_replay_root,
         checkpoint_root: receipt.checkpoint_root,
         payload_root: receipt.checkpoint_root,
     };

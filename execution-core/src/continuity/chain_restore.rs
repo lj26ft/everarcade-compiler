@@ -110,9 +110,11 @@ pub fn restore_lineage_chain(
         }
 
         let replay_input = VmExecutionInput {
+            // Keep state-root metadata separate from replay key state value semantics.
             package_manifest_root: package_root,
             civilization_root: package_root,
-            replay_root: receipt.prior_replay_root,
+            pre_state_root: receipt.prior_replay_root,
+            prior_replay_root_value: decode_replay_root_before_from_receipt(&receipt)?,
             checkpoint_root: receipt.checkpoint_root,
             payload_root: receipt.checkpoint_root,
         };
@@ -156,4 +158,39 @@ pub fn restore_lineage_chain(
             .map(|r| r.post_state_root)
             .unwrap_or(checkpoint_root),
     })
+}
+
+fn decode_replay_root_before_from_receipt(
+    receipt: &crate::vm::VmExecutionReceipt,
+) -> Result<Hash, ChainRestoreError> {
+    let before_hex = receipt
+        .state_diff
+        .iter()
+        .find(|change| change.key == crate::vm::REPLAY_ROOT_STATE_KEY)
+        .map(|change| change.before.as_str())
+        .ok_or_else(|| {
+            ChainRestoreError::Validation(ChainRestoreMismatch {
+                field: "state_before".into(),
+                index: None,
+                expected: "__replay_root__ diff present".into(),
+                actual: "missing".into(),
+            })
+        })?;
+    let bytes = hex::decode(before_hex).map_err(|e| {
+        ChainRestoreError::Validation(ChainRestoreMismatch {
+            field: "state_before".into(),
+            index: None,
+            expected: "valid hex".into(),
+            actual: e.to_string(),
+        })
+    })?;
+    let arr: [u8; 32] = bytes.as_slice().try_into().map_err(|_| {
+        ChainRestoreError::Validation(ChainRestoreMismatch {
+            field: "state_before".into(),
+            index: None,
+            expected: "32-byte replay root value".into(),
+            actual: format!("{} bytes", bytes.len()),
+        })
+    })?;
+    Ok(arr)
 }

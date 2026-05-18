@@ -23,7 +23,8 @@ pub fn execute_vm_boundary(input: &VmExecutionInput) -> (VmExecutionReceipt, VmE
     .into();
 
     let next_replay_root: [u8; 32] =
-        Sha256::digest([input.replay_root.as_slice(), execution_root.as_slice()].concat()).into();
+        Sha256::digest([input.pre_state_root.as_slice(), execution_root.as_slice()].concat())
+            .into();
 
     let anchor_root: [u8; 32] = Sha256::digest(
         [
@@ -36,14 +37,14 @@ pub fn execute_vm_boundary(input: &VmExecutionInput) -> (VmExecutionReceipt, VmE
 
     let state_diff = vec![StateChange {
         key: REPLAY_ROOT_STATE_KEY.to_string(),
-        before: hex::encode(input.replay_root),
+        before: hex::encode(input.prior_replay_root_value),
         after: hex::encode(next_replay_root),
     }];
 
     let mut receipt = VmExecutionReceipt {
         receipt_id: [0; 32],
         package_root: input.package_manifest_root,
-        prior_replay_root: input.replay_root,
+        prior_replay_root: input.pre_state_root,
         next_replay_root,
         execution_root,
         checkpoint_root: input.checkpoint_root,

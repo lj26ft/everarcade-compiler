@@ -32,7 +32,8 @@ pub fn run_package_once(config: HostConfig) -> Result<HostRunResult, HostError> 
     let input = VmExecutionInput {
         package_manifest_root: package.execution_root,
         civilization_root: package.execution_root,
-        replay_root: package.replay_root,
+        pre_state_root: package.replay_root,
+        prior_replay_root_value: package.replay_root,
         checkpoint_root: package.checkpoint_root,
         payload_root: package.proof_root,
     };

@@ -44,7 +44,8 @@ pub fn generate_counter_world_fixture() -> CounterWorldFixture {
     let (receipt_1, _next_1) = execute_vm_boundary(&VmExecutionInput {
         package_manifest_root: package_root,
         civilization_root: package_root,
-        replay_root: state0_root,
+        pre_state_root: state0_root,
+        prior_replay_root_value: state0_root,
         checkpoint_root: h(31),
         payload_root: h(31),
     });
@@ -71,7 +72,8 @@ pub fn generate_counter_world_fixture() -> CounterWorldFixture {
     let (receipt_2, _next_2) = execute_vm_boundary(&VmExecutionInput {
         package_manifest_root: package_root,
         civilization_root: package_root,
-        replay_root: state1_root,
+        pre_state_root: state1_root,
+        prior_replay_root_value: state1_root,
         checkpoint_root: h(32),
         payload_root: h(32),
     });
