@@ -1,6 +1,7 @@
 pub mod amendment;
 pub mod assembly;
 pub mod authority_propagation;
+pub mod bundle;
 pub mod collective_execution;
 pub mod constitution;
 pub mod constitutional_rules;

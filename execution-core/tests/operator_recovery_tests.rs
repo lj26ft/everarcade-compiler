@@ -305,7 +305,8 @@ fn test_fixture_checkpoint_chain_valid() {
 #[test]
 fn test_fixture_package_root_non_empty_and_consistent() {
     let fixture_data = common::fixtures::generate_counter_world_fixture();
-    let package_root = execution_core::persistence::package_store::package_root(&fixture_data.package_bytes);
+    let package_root =
+        execution_core::persistence::package_store::package_root(&fixture_data.package_bytes);
     assert!(!fixture_data.package_bytes.is_empty());
     assert_ne!(
         package_root,
@@ -322,12 +323,16 @@ fn test_fixture_package_root_non_empty_and_consistent() {
         package_path: tmp.path().join("world.wasm"),
         checkpoint_path: tmp.path().join("checkpoint_0.bin"),
         lineage_path: tmp.path().join("lineage.bin"),
-        receipt_paths: vec![tmp.path().join("receipt_1.bin"), tmp.path().join("receipt_2.bin")],
+        receipt_paths: vec![
+            tmp.path().join("receipt_1.bin"),
+            tmp.path().join("receipt_2.bin"),
+        ],
         descriptor_output_path: tmp.path().join("recovery_descriptor.bin"),
     })
     .unwrap();
 
     assert_eq!(recovered.descriptor.package_root, package_root);
-    let manifest = execution_core::canonical::load_manifest(&tmp.path().join("manifest.bin")).unwrap();
+    let manifest =
+        execution_core::canonical::load_manifest(&tmp.path().join("manifest.bin")).unwrap();
     assert_eq!(manifest.package_root, package_root);
 }

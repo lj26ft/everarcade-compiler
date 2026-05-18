@@ -11,4 +11,7 @@ fn help_exits_zero_and_contains_commands() {
     assert!(s.contains("debug --state <path>"));
     assert!(s.contains("doctor --state <path>"));
     assert!(s.contains("lineage-verify --lineage <path>"));
+    assert!(s.contains("import-bundle --bundle <bundle_root> --world-root <path>"));
+    assert!(s.contains("verify-bundle --bundle <bundle_root>"));
+    assert!(s.contains("export-bundle --out <bundle_root>"));
 }

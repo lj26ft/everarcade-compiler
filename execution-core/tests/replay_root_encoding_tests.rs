@@ -20,16 +20,23 @@ fn test_replay_root_raw_hash_representation() {
         payload_root: [5; 32],
     };
     let (receipt, _) = execute_vm_boundary(&input);
-    assert_eq!(decode_hex32(receipt.state_diff[0].before.as_bytes()), [3; 32]);
-    assert_eq!(decode_hex32(receipt.state_diff[0].after.as_bytes()), receipt.next_replay_root);
+    assert_eq!(
+        decode_hex32(receipt.state_diff[0].before.as_bytes()),
+        [3; 32]
+    );
+    assert_eq!(
+        decode_hex32(receipt.state_diff[0].after.as_bytes()),
+        receipt.next_replay_root
+    );
 }
 
 #[test]
 fn test_replay_root_state_encoding_roundtrip() {
     let mut state = CanonicalState::default();
-    state
-        .entries
-        .insert(REPLAY_ROOT_STATE_KEY.as_bytes().to_vec(), genesis_replay_root_value());
+    state.entries.insert(
+        REPLAY_ROOT_STATE_KEY.as_bytes().to_vec(),
+        genesis_replay_root_value(),
+    );
 
     let encoded = state.entries.get(REPLAY_ROOT_STATE_KEY.as_bytes()).unwrap();
     let decoded = decode_hex32(encoded);
@@ -39,9 +46,10 @@ fn test_replay_root_state_encoding_roundtrip() {
 #[test]
 fn test_replay_root_diff_encoding_consistency() {
     let mut state = CanonicalState::default();
-    state
-        .entries
-        .insert(REPLAY_ROOT_STATE_KEY.as_bytes().to_vec(), genesis_replay_root_value());
+    state.entries.insert(
+        REPLAY_ROOT_STATE_KEY.as_bytes().to_vec(),
+        genesis_replay_root_value(),
+    );
     let prior = decode_hex32(state.entries.get(REPLAY_ROOT_STATE_KEY.as_bytes()).unwrap());
 
     let (receipt, _) = execute_vm_boundary(&VmExecutionInput {
@@ -55,5 +63,8 @@ fn test_replay_root_diff_encoding_consistency() {
 
     apply_diff(&mut state, &receipt.state_diff).unwrap();
     let state_value = state.entries.get(REPLAY_ROOT_STATE_KEY.as_bytes()).unwrap();
-    assert_eq!(state_value, &receipt.state_diff[0].after.as_bytes().to_vec());
+    assert_eq!(
+        state_value,
+        &receipt.state_diff[0].after.as_bytes().to_vec()
+    );
 }
