@@ -26,6 +26,7 @@ fn fixture_round_trip() {
         package_manifest_root: pkg.execution_root,
         civilization_root: pkg.execution_root,
         pre_state_root: pkg.replay_root,
+        prior_replay_root_value: pkg.replay_root,
         checkpoint_root: pkg.checkpoint_root,
         payload_root: pkg.proof_root,
     };

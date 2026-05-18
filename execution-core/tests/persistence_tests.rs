@@ -71,8 +71,16 @@ fn test_restore_verify_success() {
     let pkg = b"wasm-package";
     package_store::save_package(&pp, pkg).unwrap();
     checkpoint_store::save_checkpoint(&cp, b"state-before").unwrap();
-    let mut receipt = sample_receipt();
-    receipt.package_root = package_store::package_root(pkg);
+    let package_root = package_store::package_root(pkg);
+    let input = VmExecutionInput {
+        package_manifest_root: package_root,
+        civilization_root: package_root,
+        pre_state_root: [2; 32],
+        prior_replay_root_value: [2; 32],
+        checkpoint_root: checkpoint_store::checkpoint_root(b"state-before"),
+        payload_root: checkpoint_store::checkpoint_root(b"state-before"),
+    };
+    let receipt = execute_vm_boundary(&input).0;
     receipt_store::save_receipt(&rp, &receipt).unwrap();
     let out = restore_and_replay(&pp, &rp, &cp).unwrap();
     assert!(out.state_match);
@@ -87,8 +95,16 @@ fn test_restore_verify_tampered_checkpoint_fails() {
     let pkg = b"wasm-package";
     package_store::save_package(&pp, pkg).unwrap();
     checkpoint_store::save_checkpoint(&cp, b"state-before").unwrap();
-    let mut receipt = sample_receipt();
-    receipt.package_root = package_store::package_root(pkg);
+    let package_root = package_store::package_root(pkg);
+    let input = VmExecutionInput {
+        package_manifest_root: package_root,
+        civilization_root: package_root,
+        pre_state_root: [2; 32],
+        prior_replay_root_value: [2; 32],
+        checkpoint_root: checkpoint_store::checkpoint_root(b"state-before"),
+        payload_root: checkpoint_store::checkpoint_root(b"state-before"),
+    };
+    let receipt = execute_vm_boundary(&input).0;
     receipt_store::save_receipt(&rp, &receipt).unwrap();
     fs::write(&cp, b"tampered").unwrap();
     assert!(restore_and_replay(&pp, &rp, &cp).is_err());
