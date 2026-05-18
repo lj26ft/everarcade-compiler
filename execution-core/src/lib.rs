@@ -46,6 +46,7 @@ pub mod state;
 pub mod state_engine;
 pub mod sync;
 pub mod tenancy;
+pub mod topology;
 pub mod trace;
 pub mod treaty;
 pub mod verifier;
