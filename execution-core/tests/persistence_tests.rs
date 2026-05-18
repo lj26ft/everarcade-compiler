@@ -8,7 +8,8 @@ fn sample_receipt() -> execution_core::vm::VmExecutionReceipt {
     let input = VmExecutionInput {
         package_manifest_root: [1; 32],
         civilization_root: [1; 32],
-        replay_root: [2; 32],
+        pre_state_root: [2; 32],
+        prior_replay_root_value: [2; 32],
         checkpoint_root: checkpoint_store::checkpoint_root(b"state-before"),
         payload_root: checkpoint_store::checkpoint_root(b"state-before"),
     };
