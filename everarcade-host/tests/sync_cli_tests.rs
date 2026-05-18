@@ -10,4 +10,7 @@ fn sync_commands_are_exposed() {
     assert!(s.contains("sync-advertise --world-root <path>"));
     assert!(s.contains("sync-verify --bundle <path>"));
     assert!(s.contains("sync-pull --world-root <path> --start-sequence <n> --end-sequence <n>"));
+    assert!(s.contains("observer-status --world-root <path>"));
+    assert!(s.contains("observer-resume --world-root <path>"));
+    assert!(s.contains("observer-verify --world-root <path>"));
 }

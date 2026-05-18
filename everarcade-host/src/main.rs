@@ -49,6 +49,9 @@ Commands:
   sync-advertise --world-root <path>
   sync-verify --bundle <path>
   sync-pull --world-root <path> --start-sequence <n> --end-sequence <n>
+  observer-status --world-root <path>
+  observer-resume --world-root <path>
+  observer-verify --world-root <path>
   doctor --state <path>
 
 Examples:
@@ -421,6 +424,66 @@ fn run_cli() -> Result<(), HostError> {
             println!("receipts={}", receipts.into_iter().take(n).count());
             println!("window_start={start_sequence}");
             println!("window_end={end_sequence}");
+        }
+        "observer-status" => {
+            let world_root = PathBuf::from(
+                arg_value(&args, "--world-root")
+                    .ok_or_else(|| HostError::InvalidArgs("missing --world-root".into()))?,
+            );
+            let state = execution_core::sync::persistence::load_observer_state(&world_root)
+                .map_err(HostError::InvalidArgs)?;
+            println!("observer_status=ok");
+            println!("latest_sequence={}", state.highest_verified_sequence);
+            println!(
+                "checkpoint_root={}",
+                hex::encode(state.latest_checkpoint_root)
+            );
+            println!("synchronized={}", state.synchronized);
+        }
+        "observer-resume" => {
+            let world_root = PathBuf::from(
+                arg_value(&args, "--world-root")
+                    .ok_or_else(|| HostError::InvalidArgs("missing --world-root".into()))?,
+            );
+            let mut history = Vec::new();
+            match execution_core::sync::resume::resume_from_cursor(&world_root, &[], &mut history) {
+                Ok((window_start, window_end, state)) => {
+                    println!("observer_resume=ok");
+                    println!("window_start={window_start}");
+                    println!("window_end={window_end}");
+                    println!("latest_sequence={}", state.highest_verified_sequence);
+                }
+                Err(e) => {
+                    println!("observer_resume=failed");
+                    println!("field=continuity");
+                    println!("expected=monotonic");
+                    println!("actual={e}");
+                    return Err(HostError::VerificationFailed(e));
+                }
+            }
+        }
+        "observer-verify" => {
+            let world_root = PathBuf::from(
+                arg_value(&args, "--world-root")
+                    .ok_or_else(|| HostError::InvalidArgs("missing --world-root".into()))?,
+            );
+            let state = execution_core::sync::persistence::load_observer_state(&world_root)
+                .map_err(HostError::InvalidArgs)?;
+            let report = execution_core::sync::rollback::detect_rollback(
+                &state.current_cursor,
+                &state.current_cursor,
+                &[],
+            );
+            if report.rollback_detected {
+                println!("observer_verify=failed");
+                println!("rollback_detected=true");
+                println!("expected_sequence={}", report.expected_sequence);
+                println!("actual_sequence={}", report.actual_sequence);
+                return Err(HostError::VerificationFailed("rollback_detected".into()));
+            }
+            println!("observer_verify=ok");
+            println!("rollback_detected=false");
+            println!("continuity_ok=true");
         }
         "doctor" => {
             let mut failures = Vec::new();
