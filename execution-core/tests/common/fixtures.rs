@@ -9,7 +9,10 @@ use execution_core::{
     operator::{recover_world, OperatorRecoveryInput, OperatorRecoveryOutput},
     persistence::{package_store, receipt_store},
     state::{apply_diff, decode_checkpoint, encode_checkpoint, CanonicalState},
-    vm::{execute_vm_boundary, VmExecutionInput, VmExecutionReceipt},
+    vm::{
+        execute_vm_boundary, genesis_replay_root_value, VmExecutionInput, VmExecutionReceipt,
+        REPLAY_ROOT_STATE_KEY,
+    },
 };
 
 #[derive(Clone)]
@@ -30,7 +33,11 @@ fn h(v: u8) -> [u8; 32] {
 pub fn generate_counter_world_fixture() -> CounterWorldFixture {
     let package_bytes = vec![1u8; 64];
     let package_root = package_store::package_root(&package_bytes);
-    let state0 = CanonicalState::default();
+    let mut state0 = CanonicalState::default();
+    state0.entries.insert(
+        REPLAY_ROOT_STATE_KEY.as_bytes().to_vec(),
+        genesis_replay_root_value(),
+    );
     let state0_root = state0.root();
     let checkpoint_0 = encode_checkpoint(&state0).unwrap();
 
@@ -42,6 +49,13 @@ pub fn generate_counter_world_fixture() -> CounterWorldFixture {
         payload_root: h(31),
     });
     let mut state1 = state0.clone();
+    let replay_root_before = state0
+        .entries
+        .get(REPLAY_ROOT_STATE_KEY.as_bytes())
+        .cloned()
+        .unwrap();
+    assert_eq!(Some(&replay_root_before), state1.entries.get(REPLAY_ROOT_STATE_KEY.as_bytes()));
+    assert_eq!(receipt_1.state_diff[0].before.as_bytes().to_vec(), replay_root_before);
     apply_diff(&mut state1, &receipt_1.state_diff).unwrap();
     let state1_root = state1.root();
     assert_eq!(receipt_1.prior_replay_root, state0_root);
