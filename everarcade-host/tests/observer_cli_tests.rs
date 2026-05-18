@@ -56,5 +56,35 @@ fn observer_status_resume_verify_commands() {
         .unwrap();
     assert!(String::from_utf8_lossy(&v.stdout).contains("observer_verify=ok"));
 
+    let ts = Command::new(env!("CARGO_BIN_EXE_everarcade-host"))
+        .args([
+            "topology-status",
+            "--world-root",
+            t.path().to_str().unwrap(),
+        ])
+        .output()
+        .unwrap();
+    assert!(String::from_utf8_lossy(&ts.stdout).contains("topology_status=ok"));
+
+    let tc = Command::new(env!("CARGO_BIN_EXE_everarcade-host"))
+        .args([
+            "topology-convergence",
+            "--world-root",
+            t.path().to_str().unwrap(),
+        ])
+        .output()
+        .unwrap();
+    assert!(String::from_utf8_lossy(&tc.stdout).contains("topology_convergence=ok"));
+
+    let tp = Command::new(env!("CARGO_BIN_EXE_everarcade-host"))
+        .args([
+            "topology-propagation",
+            "--world-root",
+            t.path().to_str().unwrap(),
+        ])
+        .output()
+        .unwrap();
+    assert!(String::from_utf8_lossy(&tp.stdout).contains("topology_propagation=ok"));
+
     let _ = fs::remove_dir_all(t.path());
 }
