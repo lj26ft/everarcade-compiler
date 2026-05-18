@@ -30,6 +30,15 @@ fn h(v: u8) -> [u8; 32] {
     [v; 32]
 }
 
+fn decode_state_replay_root_bytes(raw: &[u8]) -> [u8; 32] {
+    let hex_text = std::str::from_utf8(raw).expect("replay root state must be utf8 hex");
+    let decoded = hex::decode(hex_text).expect("replay root state must be valid hex");
+    decoded
+        .as_slice()
+        .try_into()
+        .expect("replay root state must decode to 32 bytes")
+}
+
 pub fn generate_counter_world_fixture() -> CounterWorldFixture {
     let package_bytes = vec![1u8; 64];
     let package_root = package_store::package_root(&package_bytes);
@@ -40,12 +49,18 @@ pub fn generate_counter_world_fixture() -> CounterWorldFixture {
     );
     let state0_root = state0.root();
     let checkpoint_0 = encode_checkpoint(&state0).unwrap();
+    let replay_root_0 = decode_state_replay_root_bytes(
+        state0
+            .entries
+            .get(REPLAY_ROOT_STATE_KEY.as_bytes())
+            .expect("genesis replay root exists"),
+    );
 
     let (receipt_1, _next_1) = execute_vm_boundary(&VmExecutionInput {
         package_manifest_root: package_root,
         civilization_root: package_root,
         pre_state_root: state0_root,
-        prior_replay_root_value: state0_root,
+        prior_replay_root_value: replay_root_0,
         checkpoint_root: h(31),
         payload_root: h(31),
     });
@@ -66,14 +81,25 @@ pub fn generate_counter_world_fixture() -> CounterWorldFixture {
     apply_diff(&mut state1, &receipt_1.state_diff).unwrap();
     let state1_root = state1.root();
     assert_eq!(receipt_1.prior_replay_root, state0_root);
-    assert_eq!(receipt_1.next_replay_root, state1_root);
+    assert_eq!(
+        decode_state_replay_root_bytes(
+            state1.entries.get(REPLAY_ROOT_STATE_KEY.as_bytes()).unwrap()
+        ),
+        receipt_1.next_replay_root
+    );
     let checkpoint_1 = encode_checkpoint(&state1).unwrap();
+    let replay_root_1 = decode_state_replay_root_bytes(
+        state1
+            .entries
+            .get(REPLAY_ROOT_STATE_KEY.as_bytes())
+            .expect("replay root exists after first execution"),
+    );
 
     let (receipt_2, _next_2) = execute_vm_boundary(&VmExecutionInput {
         package_manifest_root: package_root,
         civilization_root: package_root,
         pre_state_root: state1_root,
-        prior_replay_root_value: state1_root,
+        prior_replay_root_value: replay_root_1,
         checkpoint_root: h(32),
         payload_root: h(32),
     });
@@ -81,7 +107,12 @@ pub fn generate_counter_world_fixture() -> CounterWorldFixture {
     apply_diff(&mut state2, &receipt_2.state_diff).unwrap();
     let state2_root = state2.root();
     assert_eq!(receipt_2.prior_replay_root, state1_root);
-    assert_eq!(receipt_2.next_replay_root, state2_root);
+    assert_eq!(
+        decode_state_replay_root_bytes(
+            state2.entries.get(REPLAY_ROOT_STATE_KEY.as_bytes()).unwrap()
+        ),
+        receipt_2.next_replay_root
+    );
     let checkpoint_2 = encode_checkpoint(&state2).unwrap();
 
     let lineage = ExecutionLineageChain {
