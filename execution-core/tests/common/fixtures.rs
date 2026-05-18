@@ -54,8 +54,14 @@ pub fn generate_counter_world_fixture() -> CounterWorldFixture {
         .get(REPLAY_ROOT_STATE_KEY.as_bytes())
         .cloned()
         .unwrap();
-    assert_eq!(Some(&replay_root_before), state1.entries.get(REPLAY_ROOT_STATE_KEY.as_bytes()));
-    assert_eq!(receipt_1.state_diff[0].before.as_bytes().to_vec(), replay_root_before);
+    assert_eq!(
+        Some(&replay_root_before),
+        state1.entries.get(REPLAY_ROOT_STATE_KEY.as_bytes())
+    );
+    assert_eq!(
+        receipt_1.state_diff[0].before.as_bytes().to_vec(),
+        replay_root_before
+    );
     apply_diff(&mut state1, &receipt_1.state_diff).unwrap();
     let state1_root = state1.root();
     assert_eq!(receipt_1.prior_replay_root, state0_root);

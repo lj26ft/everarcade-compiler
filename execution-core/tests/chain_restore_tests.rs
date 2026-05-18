@@ -1,9 +1,7 @@
 use execution_core::{
     continuity::{restore_lineage_chain, ChainRestoreError, ChainRestoreInput},
     lineage::{ExecutionLineageChain, ExecutionLineageRecord},
-    vm::{
-        execute_vm_boundary, genesis_replay_root_value, VmExecutionInput, REPLAY_ROOT_STATE_KEY,
-    },
+    vm::{execute_vm_boundary, genesis_replay_root_value, VmExecutionInput, REPLAY_ROOT_STATE_KEY},
 };
 
 fn h(v: u8) -> [u8; 32] {
@@ -45,7 +43,10 @@ fn fixture_two_step() -> (tempfile::TempDir, ChainRestoreInput, ExecutionLineage
         .get(REPLAY_ROOT_STATE_KEY.as_bytes())
         .cloned()
         .unwrap();
-    assert_eq!(r1.state_diff[0].before.as_bytes().to_vec(), replay_root_before);
+    assert_eq!(
+        r1.state_diff[0].before.as_bytes().to_vec(),
+        replay_root_before
+    );
     execution_core::state::apply_diff(&mut state1, &r1.state_diff).unwrap();
     let state1_root = state1.root();
     let i2 = VmExecutionInput {
