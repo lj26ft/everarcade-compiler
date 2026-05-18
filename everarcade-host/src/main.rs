@@ -365,7 +365,7 @@ fn run_cli() -> Result<(), HostError> {
             println!("checkpoint_root={}", hex::encode(manifest.checkpoint_root));
             println!(
                 "manifest_hash={}",
-                hex::encode(execution_core::canonical::hash_manifest(&manifest))
+                hex::encode(execution_core::canonical::manifest_hash(&manifest))
             );
         }
         "sync-verify" => {

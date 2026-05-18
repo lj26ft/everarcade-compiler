@@ -1,7 +1,7 @@
 mod common;
 
 use execution_core::{
-    canonical::{generate_execution_manifest, hash_manifest},
+    canonical::{generate_execution_manifest, manifest_hash, receipt_hash},
     federation::{bundle::export_continuity_bundle, node::FederationNodeId},
     operator::continuity::Hash256,
     sync::{
@@ -186,7 +186,7 @@ fn test_sync_verification_success() {
     common::fixtures::persist_counter_world_fixture(t.path(), &f);
     let m = generate_execution_manifest(
         f.lineage.package_root,
-        f.receipt_2.receipt_id,
+        receipt_hash(&f.receipt_2),
         &f.lineage,
         execution_core::state::decode_checkpoint(&f.checkpoint_0)
             .unwrap()
@@ -228,19 +228,22 @@ fn test_sync_verification_tamper_fails() {
 #[test]
 fn test_sync_replay_consistency() {
     let f = common::fixtures::generate_counter_world_fixture();
-    assert_eq!(f.receipt_2.prior_replay_root, f.receipt_1.post_state_root);
+    assert_eq!(
+        f.receipt_2.prior_replay_root,
+        f.lineage.records[1].pre_state_root
+    );
 }
 #[test]
 fn test_sync_checkpoint_root_continuity() {
     let f = common::fixtures::generate_counter_world_fixture();
     let m = generate_execution_manifest(
         f.lineage.package_root,
-        f.receipt_2.receipt_id,
+        receipt_hash(&f.receipt_2),
         &f.lineage,
         execution_core::state::decode_checkpoint(&f.checkpoint_0)
             .unwrap()
             .root(),
         f.lineage.records[1].post_state_root,
     );
-    assert_ne!(hash_manifest(&m), [0; 32]);
+    assert_ne!(manifest_hash(&m), [0; 32]);
 }
