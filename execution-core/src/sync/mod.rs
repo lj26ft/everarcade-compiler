@@ -1,8 +1,17 @@
+pub mod advertisement;
+pub mod checkpoint;
 pub mod checkpoint_exchange;
 pub mod convergence;
+pub mod cursor;
+pub mod errors;
+pub mod lineage;
 pub mod proof_exchange;
+pub mod pull;
+pub mod push;
 pub mod receipt_exchange;
+pub mod receipts;
 pub mod replay_window;
+pub mod state;
 pub mod state_exchange;
 pub mod sync_apply;
 pub mod sync_plan;
@@ -16,6 +25,8 @@ pub mod sync_transcript;
 pub mod sync_transcript_root;
 pub mod sync_validation;
 pub mod sync_window;
+pub mod verification;
+pub mod window;
 
 pub use checkpoint_exchange::CheckpointExchange;
 pub use convergence::{validate_convergence, ConvergenceResult, DivergenceReason};
