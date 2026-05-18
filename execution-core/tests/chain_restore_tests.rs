@@ -1,7 +1,9 @@
 use execution_core::{
     continuity::{restore_lineage_chain, ChainRestoreError, ChainRestoreInput},
     lineage::{ExecutionLineageChain, ExecutionLineageRecord},
-    vm::{execute_vm_boundary, VmExecutionInput},
+    vm::{
+        execute_vm_boundary, genesis_replay_root_value, VmExecutionInput, REPLAY_ROOT_STATE_KEY,
+    },
 };
 
 fn h(v: u8) -> [u8; 32] {
@@ -20,7 +22,11 @@ fn fixture_two_step() -> (tempfile::TempDir, ChainRestoreInput, ExecutionLineage
     std::fs::write(&package_path, &package_bytes).unwrap();
     let package_root = execution_core::persistence::package_store::package_root(&package_bytes);
 
-    let checkpoint_state = execution_core::state::CanonicalState::default();
+    let mut checkpoint_state = execution_core::state::CanonicalState::default();
+    checkpoint_state.entries.insert(
+        REPLAY_ROOT_STATE_KEY.as_bytes().to_vec(),
+        genesis_replay_root_value(),
+    );
     let checkpoint_0 = execution_core::state::encode_checkpoint(&checkpoint_state).unwrap();
     std::fs::write(&checkpoint_path, &checkpoint_0).unwrap();
     let state0 = checkpoint_state.root();
@@ -34,6 +40,12 @@ fn fixture_two_step() -> (tempfile::TempDir, ChainRestoreInput, ExecutionLineage
     };
     let (r1, _) = execute_vm_boundary(&i1);
     let mut state1 = checkpoint_state.clone();
+    let replay_root_before = checkpoint_state
+        .entries
+        .get(REPLAY_ROOT_STATE_KEY.as_bytes())
+        .cloned()
+        .unwrap();
+    assert_eq!(r1.state_diff[0].before.as_bytes().to_vec(), replay_root_before);
     execution_core::state::apply_diff(&mut state1, &r1.state_diff).unwrap();
     let state1_root = state1.root();
     let i2 = VmExecutionInput {
@@ -226,4 +238,27 @@ fn test_fixture_no_synthetic_replay_root_seed() {
             }
         }
     }
+}
+
+#[test]
+fn test_genesis_replay_root_present_in_checkpoint_0() {
+    let (_t, input, _lineage) = fixture_two_step();
+    let state0: execution_core::state::CanonicalState =
+        execution_core::state::decode_checkpoint(&std::fs::read(&input.checkpoint_path).unwrap())
+            .unwrap();
+    let expected = genesis_replay_root_value();
+    assert_eq!(
+        state0.entries.get(REPLAY_ROOT_STATE_KEY.as_bytes()),
+        Some(&expected)
+    );
+
+    let r1: execution_core::vm::VmExecutionReceipt =
+        bincode::deserialize(&std::fs::read(&input.receipt_paths[0]).unwrap()).unwrap();
+    let replay_root_before = r1
+        .state_diff
+        .iter()
+        .find(|change| change.key == REPLAY_ROOT_STATE_KEY)
+        .map(|change| change.before.as_bytes().to_vec())
+        .unwrap();
+    assert_eq!(replay_root_before, expected);
 }

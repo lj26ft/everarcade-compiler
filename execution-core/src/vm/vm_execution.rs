@@ -5,6 +5,12 @@ use super::vm_output::VmExecutionOutput;
 use super::vm_receipt::{compute_vm_receipt_root, VmExecutionReceipt};
 use everarcade_abi::StateChange;
 
+pub const REPLAY_ROOT_STATE_KEY: &str = "__replay_root__";
+
+pub fn genesis_replay_root_value() -> Vec<u8> {
+    hex::encode(Sha256::digest([])).into_bytes()
+}
+
 pub fn execute_vm_boundary(input: &VmExecutionInput) -> (VmExecutionReceipt, VmExecutionOutput) {
     let execution_root: [u8; 32] = Sha256::digest(
         [
@@ -29,7 +35,7 @@ pub fn execute_vm_boundary(input: &VmExecutionInput) -> (VmExecutionReceipt, VmE
     .into();
 
     let state_diff = vec![StateChange {
-        key: "__replay_root__".to_string(),
+        key: REPLAY_ROOT_STATE_KEY.to_string(),
         before: hex::encode(input.replay_root),
         after: hex::encode(next_replay_root),
     }];
