@@ -7,10 +7,8 @@ use sha2::Digest;
 
 #[test]
 fn test_state_root_empty() {
-    assert_eq!(
-        CanonicalState::default().root(),
-        sha2::Sha256::digest([]).to_vec()
-    );
+    let expected_root: [u8; 32] = sha2::Sha256::digest([]).into();
+    assert_eq!(CanonicalState::default().root(), expected_root);
 }
 
 #[test]
