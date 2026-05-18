@@ -20,10 +20,7 @@ fn fixture_two_step() -> (tempfile::TempDir, ChainRestoreInput, ExecutionLineage
     std::fs::write(&package_path, &package_bytes).unwrap();
     let package_root = execution_core::persistence::package_store::package_root(&package_bytes);
 
-    let mut checkpoint_state = execution_core::state::CanonicalState::default();
-    checkpoint_state
-        .entries
-        .insert(b"__replay_root__".to_vec(), hex::encode(h(7)).into_bytes());
+    let checkpoint_state = execution_core::state::CanonicalState::default();
     let checkpoint_0 = execution_core::state::encode_checkpoint(&checkpoint_state).unwrap();
     std::fs::write(&checkpoint_path, &checkpoint_0).unwrap();
     let state0 = checkpoint_state.root();
@@ -209,4 +206,24 @@ fn test_fixture_chain_continuity() {
     let mut state2 = state1.clone();
     let checkpoint_2_root = execution_core::state::apply_diff(&mut state2, &r2.state_diff).unwrap();
     assert_eq!(checkpoint_2_root, lineage.records[1].post_state_root);
+}
+
+#[test]
+fn test_fixture_no_synthetic_replay_root_seed() {
+    let (_t, input, _lineage) = fixture_two_step();
+    let state0: execution_core::state::CanonicalState =
+        execution_core::state::decode_checkpoint(&std::fs::read(&input.checkpoint_path).unwrap())
+            .unwrap();
+    let synthetic = "0707070707070707070707070707070707070707070707070707070707070707";
+    assert!(state0.entries.values().all(|v| v != synthetic.as_bytes()));
+
+    for receipt_path in &input.receipt_paths {
+        let receipt: execution_core::vm::VmExecutionReceipt =
+            bincode::deserialize(&std::fs::read(receipt_path).unwrap()).unwrap();
+        for change in &receipt.state_diff {
+            if change.key == "__replay_root__" {
+                assert_ne!(change.before, synthetic);
+            }
+        }
+    }
 }

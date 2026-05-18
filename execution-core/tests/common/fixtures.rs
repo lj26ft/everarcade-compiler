@@ -30,10 +30,7 @@ fn h(v: u8) -> [u8; 32] {
 pub fn generate_counter_world_fixture() -> CounterWorldFixture {
     let package_bytes = vec![1u8; 64];
     let package_root = package_store::package_root(&package_bytes);
-    let mut state0 = CanonicalState::default();
-    state0
-        .entries
-        .insert(b"__replay_root__".to_vec(), hex::encode(h(7)).into_bytes());
+    let state0 = CanonicalState::default();
     let state0_root = state0.root();
     let checkpoint_0 = encode_checkpoint(&state0).unwrap();
 
