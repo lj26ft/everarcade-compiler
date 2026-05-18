@@ -1,6 +1,7 @@
 use std::{
     fs,
     path::{Path, PathBuf},
+    sync::{Mutex, OnceLock},
 };
 
 use execution_core::{
@@ -26,6 +27,8 @@ pub struct CounterWorldFixture {
     pub lineage: ExecutionLineageChain,
 }
 
+pub const CANONICAL_FIXTURE_PACKAGE_BYTES: &[u8] = b"everarcade-counter-world-fixture-v1";
+
 fn h(v: u8) -> [u8; 32] {
     [v; 32]
 }
@@ -40,8 +43,14 @@ fn decode_state_replay_root_bytes(raw: &[u8]) -> [u8; 32] {
 }
 
 pub fn generate_counter_world_fixture() -> CounterWorldFixture {
-    let package_bytes = vec![1u8; 64];
+    let package_bytes = CANONICAL_FIXTURE_PACKAGE_BYTES.to_vec();
+    assert!(!package_bytes.is_empty(), "fixture package bytes must be non-empty");
     let package_root = package_store::package_root(&package_bytes);
+    assert_ne!(
+        package_root,
+        package_store::package_root(&[]),
+        "fixture package root must not equal sha256(empty)"
+    );
     let mut state0 = CanonicalState::default();
     state0.entries.insert(
         REPLAY_ROOT_STATE_KEY.as_bytes().to_vec(),
@@ -166,12 +175,21 @@ pub fn repo_counter_world_fixture_dir() -> PathBuf {
 
 pub fn persist_counter_world_fixture(dir: &Path, fixture: &CounterWorldFixture) {
     fs::create_dir_all(dir).unwrap();
-    fs::write(dir.join("world.wasm"), &fixture.package_bytes).unwrap();
-    fs::write(dir.join("checkpoint_0.bin"), &fixture.checkpoint_0).unwrap();
-    fs::write(dir.join("checkpoint_1.bin"), &fixture.checkpoint_1).unwrap();
-    fs::write(dir.join("checkpoint_2.bin"), &fixture.checkpoint_2).unwrap();
-    receipt_store::save_receipt(&dir.join("receipt_1.bin"), &fixture.receipt_1).unwrap();
-    receipt_store::save_receipt(&dir.join("receipt_2.bin"), &fixture.receipt_2).unwrap();
+    fn write_atomic(path: &Path, bytes: &[u8]) {
+        let tmp = path.with_extension("tmp");
+        fs::write(&tmp, bytes).unwrap();
+        fs::rename(tmp, path).unwrap();
+    }
+    write_atomic(&dir.join("world.wasm"), &fixture.package_bytes);
+    write_atomic(&dir.join("checkpoint_0.bin"), &fixture.checkpoint_0);
+    write_atomic(&dir.join("checkpoint_1.bin"), &fixture.checkpoint_1);
+    write_atomic(&dir.join("checkpoint_2.bin"), &fixture.checkpoint_2);
+    let receipt_1_path = dir.join("receipt_1.bin");
+    let receipt_2_path = dir.join("receipt_2.bin");
+    receipt_store::save_receipt(&receipt_1_path, &fixture.receipt_1).unwrap();
+    receipt_store::save_receipt(&receipt_2_path, &fixture.receipt_2).unwrap();
+    assert!(!fs::read(&receipt_1_path).unwrap().is_empty());
+    assert!(!fs::read(&receipt_2_path).unwrap().is_empty());
     save_lineage(&dir.join("lineage.bin"), &fixture.lineage).unwrap();
 
     let manifest = generate_execution_manifest(
@@ -198,6 +216,8 @@ pub fn generate_operator_recovery_fixture(dir: &Path) -> OperatorRecoveryOutput 
 }
 
 pub fn ensure_repo_counter_world_fixtures() {
+    static LOCK: OnceLock<Mutex<()>> = OnceLock::new();
+    let _guard = LOCK.get_or_init(|| Mutex::new(())).lock().unwrap();
     let dir = repo_counter_world_fixture_dir();
     let fixture = generate_counter_world_fixture();
     persist_counter_world_fixture(&dir, &fixture);
