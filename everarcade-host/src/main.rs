@@ -44,6 +44,8 @@ Commands:
   freeze-world --world <id> --world-root <path>
   resume-world --world-root <path> --world <id>
   migrate-world --world <id> --bundle <path> --destination <node-id> --world-root <path>
+  scheduler-run-once --world-root <path>
+  scheduler-status --world-root <path>
   doctor --state <path>
 
 Examples:
@@ -102,6 +104,145 @@ fn latest_root_hex(state: &Path, folder: &str) -> String {
             .max()
             .unwrap_or_else(|| "none".into()),
         Err(_) => "none".into(),
+    }
+}
+
+#[derive(Clone)]
+struct WorldSchedulerState {
+    latest_tick: u64,
+    checkpoint_root: [u8; 32],
+}
+
+impl WorldSchedulerState {
+    fn load(world_root: &Path) -> Result<Self, HostError> {
+        let path = world_root.join("runtime").join("scheduler_state.json");
+        if !path.exists() {
+            return Ok(Self {
+                latest_tick: 0,
+                checkpoint_root: [0u8; 32],
+            });
+        }
+        let raw = fs::read_to_string(&path).map_err(|e| HostError::InvalidArgs(e.to_string()))?;
+        let value: serde_json::Value =
+            serde_json::from_str(&raw).map_err(|e| HostError::InvalidArgs(e.to_string()))?;
+        let latest_tick = value
+            .get("latest_tick")
+            .and_then(|v| v.as_u64())
+            .unwrap_or(0);
+        let checkpoint_root = value
+            .get("checkpoint_root")
+            .and_then(|v| v.as_str())
+            .and_then(|s| hex::decode(s).ok())
+            .and_then(|bytes| bytes.try_into().ok())
+            .unwrap_or([0u8; 32]);
+        Ok(Self {
+            latest_tick,
+            checkpoint_root,
+        })
+    }
+
+    fn persist(&self, world_root: &Path) -> Result<(), HostError> {
+        let runtime_dir = world_root.join("runtime");
+        fs::create_dir_all(&runtime_dir).map_err(|e| HostError::InvalidArgs(e.to_string()))?;
+        let body = serde_json::json!({
+            "latest_tick": self.latest_tick,
+            "checkpoint_root": hex::encode(self.checkpoint_root),
+        });
+        fs::write(
+            runtime_dir.join("scheduler_state.json"),
+            serde_json::to_vec_pretty(&body).map_err(|e| HostError::InvalidArgs(e.to_string()))?,
+        )
+        .map_err(|e| HostError::InvalidArgs(e.to_string()))?;
+        Ok(())
+    }
+}
+
+fn scheduler_queue_events(
+    world_root: &Path,
+) -> Result<Vec<execution_core::scheduler::events::ScheduledEvent>, HostError> {
+    let queue_dir = world_root.join("queue");
+    fs::create_dir_all(&queue_dir).map_err(|e| HostError::InvalidArgs(e.to_string()))?;
+    let mut events = Vec::new();
+    for entry in fs::read_dir(&queue_dir).map_err(|e| HostError::InvalidArgs(e.to_string()))? {
+        let path = entry
+            .map_err(|e| HostError::InvalidArgs(e.to_string()))?
+            .path();
+        if path.extension().and_then(|s| s.to_str()) != Some("json") {
+            continue;
+        }
+        let raw = fs::read_to_string(&path).map_err(|e| HostError::InvalidArgs(e.to_string()))?;
+        let value: serde_json::Value =
+            serde_json::from_str(&raw).map_err(|e| HostError::InvalidArgs(e.to_string()))?;
+        let sequence = value.get("sequence").and_then(|v| v.as_u64()).unwrap_or(0);
+        let source = value
+            .get("source")
+            .and_then(|v| v.as_str())
+            .unwrap_or("world")
+            .to_string();
+        let payload = value
+            .get("payload")
+            .and_then(|v| v.as_str())
+            .map(|s| s.as_bytes().to_vec())
+            .unwrap_or_default();
+        events.push(execution_core::scheduler::events::ScheduledEvent {
+            sequence,
+            source,
+            payload,
+        });
+    }
+    events.sort();
+    Ok(events)
+}
+
+fn write_scheduler_receipt(
+    world_root: &Path,
+    tick: u64,
+    event_sequence: Option<u64>,
+    checkpoint_root: [u8; 32],
+) -> Result<PathBuf, HostError> {
+    let receipts = world_root.join("receipts");
+    fs::create_dir_all(&receipts).map_err(|e| HostError::InvalidArgs(e.to_string()))?;
+    let path = receipts.join(format!("tick-{tick:020}.json"));
+    let body = serde_json::json!({
+        "tick": tick,
+        "event_sequence": event_sequence,
+        "checkpoint_root": hex::encode(checkpoint_root),
+    });
+    fs::write(
+        &path,
+        serde_json::to_vec_pretty(&body).map_err(|e| HostError::InvalidArgs(e.to_string()))?,
+    )
+    .map_err(|e| HostError::InvalidArgs(e.to_string()))?;
+    Ok(path)
+}
+
+struct SchedulerWorld {
+    lineage: u64,
+    checkpoint: execution_core::scheduler::world::WorldCheckpoint,
+}
+
+impl execution_core::scheduler::world::DeterministicWorld for SchedulerWorld {
+    fn checkpoint(&self) -> execution_core::scheduler::world::WorldCheckpoint {
+        self.checkpoint.clone()
+    }
+
+    fn apply(
+        &mut self,
+        tick: execution_core::scheduler::tick::DeterministicTick,
+        event: Option<&execution_core::scheduler::events::ScheduledEvent>,
+    ) -> execution_core::scheduler::world::TickReceipt {
+        execution_core::scheduler::world::TickReceipt {
+            lineage: self.lineage,
+            tick,
+            event_sequence: event.map(|e| e.sequence),
+        }
+    }
+
+    fn persist_checkpoint(
+        &mut self,
+        checkpoint: execution_core::scheduler::world::WorldCheckpoint,
+    ) {
+        self.checkpoint = checkpoint;
     }
 }
 
@@ -855,6 +996,67 @@ fn run_cli() -> Result<(), HostError> {
                     return Err(HostError::VerificationFailed(e.to_string()));
                 }
             }
+        }
+        "scheduler-run-once" => {
+            let world_root = PathBuf::from(
+                arg_value(&args, "--world-root")
+                    .ok_or_else(|| HostError::InvalidArgs("missing --world-root".into()))?,
+            );
+            fs::create_dir_all(&world_root).map_err(|e| HostError::InvalidArgs(e.to_string()))?;
+            let mut state = WorldSchedulerState::load(&world_root)?;
+            let mut queue = execution_core::scheduler::queue::DeterministicQueue::default();
+            let events = scheduler_queue_events(&world_root)?;
+            for event in &events {
+                let _ = queue.push(event.clone());
+            }
+            let mut runtime = execution_core::scheduler::SchedulerRuntime::new(
+                SchedulerWorld {
+                    lineage: 1,
+                    checkpoint: execution_core::scheduler::world::WorldCheckpoint {
+                        lineage: 1,
+                        tick: execution_core::scheduler::tick::DeterministicTick(state.latest_tick),
+                    },
+                },
+                queue,
+                execution_core::scheduler::tick::DeterministicTick(state.latest_tick + 1),
+            );
+            let receipt = runtime.run_one_tick();
+            let mut hasher = Sha256::new();
+            hasher.update(state.checkpoint_root);
+            hasher.update(receipt.tick.0.to_le_bytes());
+            if let Some(sequence) = receipt.event_sequence {
+                hasher.update(sequence.to_le_bytes());
+            }
+            state.latest_tick = receipt.tick.0;
+            state.checkpoint_root = hasher.finalize().into();
+            state.persist(&world_root)?;
+            let receipt_path = write_scheduler_receipt(
+                &world_root,
+                receipt.tick.0,
+                receipt.event_sequence,
+                state.checkpoint_root,
+            )?;
+            println!("scheduler_run=ok");
+            println!("tick={}", receipt.tick.0);
+            println!(
+                "events_processed={}",
+                usize::from(receipt.event_sequence.is_some())
+            );
+            println!("checkpoint_root={}", hex::encode(state.checkpoint_root));
+            println!("receipt={}", receipt_path.display());
+        }
+        "scheduler-status" => {
+            let world_root = PathBuf::from(
+                arg_value(&args, "--world-root")
+                    .ok_or_else(|| HostError::InvalidArgs("missing --world-root".into()))?,
+            );
+            let state = WorldSchedulerState::load(&world_root)?;
+            let pending_events = scheduler_queue_events(&world_root)?.len();
+            println!("scheduler_status=ok");
+            println!("world_root={}", world_root.display());
+            println!("latest_tick={}", state.latest_tick);
+            println!("checkpoint_root={}", hex::encode(state.checkpoint_root));
+            println!("pending_events={pending_events}");
         }
 
         _ => {
