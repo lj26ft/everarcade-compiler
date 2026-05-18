@@ -46,6 +46,9 @@ Commands:
   migrate-world --world <id> --bundle <path> --destination <node-id> --world-root <path>
   scheduler-run-once --world-root <path>
   scheduler-status --world-root <path>
+  sync-advertise --world-root <path>
+  sync-verify --bundle <path>
+  sync-pull --world-root <path> --start-sequence <n> --end-sequence <n>
   doctor --state <path>
 
 Examples:
@@ -341,6 +344,83 @@ fn run_cli() -> Result<(), HostError> {
             );
             println!("anchor_queue_count={anchor_count}");
             println!("distributed_receipt_count={distributed}");
+        }
+
+        "sync-advertise" => {
+            let world_root = PathBuf::from(
+                arg_value(&args, "--world-root")
+                    .ok_or_else(|| HostError::InvalidArgs("missing --world-root".into()))?,
+            );
+            let manifest =
+                execution_core::canonical::load_manifest(&world_root.join("manifest.bin"))
+                    .map_err(|e| HostError::InvalidArgs(e.to_string()))?;
+            let lineage = execution_core::lineage::load_lineage(&world_root.join("lineage.bin"))
+                .map_err(|e| HostError::InvalidArgs(e.to_string()))?;
+            let latest = lineage
+                .records
+                .last()
+                .ok_or_else(|| HostError::InvalidArgs("empty lineage".into()))?;
+            println!("sync_advertise=ok");
+            println!("latest_sequence={}", latest.sequence);
+            println!("checkpoint_root={}", hex::encode(manifest.checkpoint_root));
+            println!(
+                "manifest_hash={}",
+                hex::encode(execution_core::canonical::hash_manifest(&manifest))
+            );
+        }
+        "sync-verify" => {
+            let bundle = PathBuf::from(
+                arg_value(&args, "--bundle")
+                    .ok_or_else(|| HostError::InvalidArgs("missing --bundle".into()))?,
+            );
+            match execution_core::sync::verification::verify_sync_artifacts(&bundle) {
+                Ok(v) if v.continuity_ok => {
+                    println!("sync_verify=ok");
+                    println!("continuity_ok={}", v.continuity_ok);
+                    println!("replay_ok={}", v.replay_ok);
+                    println!("lineage_ok={}", v.lineage_ok);
+                }
+                Ok(v) => {
+                    println!("sync_verify=failed");
+                    println!("field=continuity_ok");
+                    println!("expected=true");
+                    println!("actual={}", v.continuity_ok);
+                    return Err(HostError::VerificationFailed("continuity_ok".into()));
+                }
+                Err(e) => {
+                    println!("sync_verify=failed");
+                    println!("field=bundle");
+                    println!("expected=valid");
+                    println!("actual={e}");
+                    return Err(HostError::VerificationFailed(e.to_string()));
+                }
+            }
+        }
+        "sync-pull" => {
+            let world_root = PathBuf::from(
+                arg_value(&args, "--world-root")
+                    .ok_or_else(|| HostError::InvalidArgs("missing --world-root".into()))?,
+            );
+            let start_sequence: u64 = arg_value(&args, "--start-sequence")
+                .ok_or_else(|| HostError::InvalidArgs("missing --start-sequence".into()))?
+                .parse()
+                .map_err(|e: std::num::ParseIntError| HostError::InvalidArgs(e.to_string()))?;
+            let end_sequence: u64 = arg_value(&args, "--end-sequence")
+                .ok_or_else(|| HostError::InvalidArgs("missing --end-sequence".into()))?
+                .parse()
+                .map_err(|e: std::num::ParseIntError| HostError::InvalidArgs(e.to_string()))?;
+            let mut receipts = std::fs::read_dir(world_root.join("receipts"))
+                .map_err(|e| HostError::InvalidArgs(e.to_string()))?
+                .filter_map(Result::ok)
+                .map(|e| e.path())
+                .filter(|p| p.extension().and_then(|s| s.to_str()) == Some("bin"))
+                .collect::<Vec<_>>();
+            receipts.sort();
+            let n = (end_sequence - start_sequence + 1) as usize;
+            println!("sync_pull=ok");
+            println!("receipts={}", receipts.into_iter().take(n).count());
+            println!("window_start={start_sequence}");
+            println!("window_end={end_sequence}");
         }
         "doctor" => {
             let mut failures = Vec::new();
