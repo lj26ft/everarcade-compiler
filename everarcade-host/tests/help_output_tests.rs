@@ -14,4 +14,6 @@ fn help_exits_zero_and_contains_commands() {
     assert!(s.contains("import-bundle --bundle <bundle_root> --world-root <path>"));
     assert!(s.contains("verify-bundle --bundle <bundle_root>"));
     assert!(s.contains("export-bundle --out <bundle_root>"));
+    assert!(s.contains("scheduler-run-once --world-root <path>"));
+    assert!(s.contains("scheduler-status --world-root <path>"));
 }
