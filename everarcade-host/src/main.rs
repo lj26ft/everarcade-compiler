@@ -38,6 +38,9 @@ Commands:
   determinism-verify --package <path> --checkpoint <path> --lineage <path> --receipt <path> [--receipt <path> ...]
   recover-world --package <path> --checkpoint <path> --lineage <path> --receipt <path> [--receipt <path> ...]
   verify-recovery --descriptor <path>
+  export-bundle --out <bundle_root> --package <path> --checkpoint <path> --lineage <path> --manifest <path> --descriptor <path> --receipt <path> [--receipt <path> ...]
+  verify-bundle --bundle <bundle_root>
+  import-bundle --bundle <bundle_root> --world-root <path>
   doctor --state <path>
 
 Examples:
@@ -668,6 +671,108 @@ fn run_cli() -> Result<(), HostError> {
                 cfg.evernode_enabled
             );
         }
+
+        "export-bundle" => {
+            let out = PathBuf::from(
+                arg_value(&args, "--out")
+                    .ok_or_else(|| HostError::InvalidArgs("missing --out".into()))?,
+            );
+            let package_path =
+                PathBuf::from(arg_value(&args, "--package").ok_or(HostError::MissingPackage)?);
+            let checkpoint_path = PathBuf::from(
+                arg_value(&args, "--checkpoint")
+                    .ok_or_else(|| HostError::InvalidArgs("missing --checkpoint".into()))?,
+            );
+            let lineage_path = PathBuf::from(
+                arg_value(&args, "--lineage")
+                    .ok_or_else(|| HostError::InvalidArgs("missing --lineage".into()))?,
+            );
+            let manifest_path = PathBuf::from(
+                arg_value(&args, "--manifest")
+                    .ok_or_else(|| HostError::InvalidArgs("missing --manifest".into()))?,
+            );
+            let descriptor_path = PathBuf::from(
+                arg_value(&args, "--descriptor")
+                    .ok_or_else(|| HostError::InvalidArgs("missing --descriptor".into()))?,
+            );
+            let receipt_paths: Vec<PathBuf> = args
+                .windows(2)
+                .filter(|w| w[0] == "--receipt")
+                .map(|w| PathBuf::from(w[1].clone()))
+                .collect();
+            let v = execution_core::federation::bundle::export_continuity_bundle(
+                &out,
+                &package_path,
+                &checkpoint_path,
+                &lineage_path,
+                &receipt_paths,
+                &manifest_path,
+                &descriptor_path,
+            )
+            .map_err(|e| HostError::VerificationFailed(e.to_string()))?;
+            println!("bundle_export=ok");
+            println!("bundle_ok={}", v.bundle_ok);
+            println!("manifest_ok={}", v.manifest_ok);
+            println!("lineage_ok={}", v.lineage_ok);
+            println!("checkpoint_ok={}", v.checkpoint_ok);
+            println!("package_ok={}", v.package_ok);
+            println!("receipts_ok={}", v.receipts_ok);
+            println!("recovery_ok={}", v.recovery_ok);
+        }
+        "verify-bundle" => {
+            let bundle = PathBuf::from(
+                arg_value(&args, "--bundle")
+                    .ok_or_else(|| HostError::InvalidArgs("missing --bundle".into()))?,
+            );
+            match execution_core::federation::bundle::verify_continuity_bundle(&bundle) {
+                Ok(v) if v.bundle_ok => {
+                    println!("bundle_verify=ok");
+                    println!("bundle_ok={}", v.bundle_ok);
+                    println!("manifest_ok={}", v.manifest_ok);
+                    println!("lineage_ok={}", v.lineage_ok);
+                    println!("checkpoint_ok={}", v.checkpoint_ok);
+                    println!("package_ok={}", v.package_ok);
+                    println!("receipts_ok={}", v.receipts_ok);
+                    println!("recovery_ok={}", v.recovery_ok);
+                }
+                Ok(_) => {
+                    println!("bundle_verify=failed");
+                    println!("field=bundle_ok");
+                    println!("expected=true");
+                    println!("actual=false");
+                    return Err(HostError::VerificationFailed("bundle_ok".into()));
+                }
+                Err(e) => {
+                    println!("bundle_verify=failed");
+                    println!("field=bundle");
+                    println!("expected=valid");
+                    println!("actual={e}");
+                    return Err(HostError::VerificationFailed(e.to_string()));
+                }
+            }
+        }
+        "import-bundle" => {
+            let bundle = PathBuf::from(
+                arg_value(&args, "--bundle")
+                    .ok_or_else(|| HostError::InvalidArgs("missing --bundle".into()))?,
+            );
+            let world_root = PathBuf::from(
+                arg_value(&args, "--world-root")
+                    .ok_or_else(|| HostError::InvalidArgs("missing --world-root".into()))?,
+            );
+            let v =
+                execution_core::federation::bundle::import_continuity_bundle(&bundle, &world_root)
+                    .map_err(|e| HostError::VerificationFailed(e.to_string()))?;
+            println!("bundle_import=ok");
+            println!("bundle_ok={}", v.bundle_ok);
+            println!("manifest_ok={}", v.manifest_ok);
+            println!("lineage_ok={}", v.lineage_ok);
+            println!("checkpoint_ok={}", v.checkpoint_ok);
+            println!("package_ok={}", v.package_ok);
+            println!("receipts_ok={}", v.receipts_ok);
+            println!("recovery_ok={}", v.recovery_ok);
+        }
+
         _ => {
             return Err(HostError::InvalidArgs(
                 "unknown command (run --help)".into(),

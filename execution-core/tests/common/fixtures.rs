@@ -44,7 +44,10 @@ fn decode_state_replay_root_bytes(raw: &[u8]) -> [u8; 32] {
 
 pub fn generate_counter_world_fixture() -> CounterWorldFixture {
     let package_bytes = CANONICAL_FIXTURE_PACKAGE_BYTES.to_vec();
-    assert!(!package_bytes.is_empty(), "fixture package bytes must be non-empty");
+    assert!(
+        !package_bytes.is_empty(),
+        "fixture package bytes must be non-empty"
+    );
     let package_root = package_store::package_root(&package_bytes);
     assert_ne!(
         package_root,
@@ -92,7 +95,10 @@ pub fn generate_counter_world_fixture() -> CounterWorldFixture {
     assert_eq!(receipt_1.prior_replay_root, state0_root);
     assert_eq!(
         decode_state_replay_root_bytes(
-            state1.entries.get(REPLAY_ROOT_STATE_KEY.as_bytes()).unwrap()
+            state1
+                .entries
+                .get(REPLAY_ROOT_STATE_KEY.as_bytes())
+                .unwrap()
         ),
         receipt_1.next_replay_root
     );
@@ -118,7 +124,10 @@ pub fn generate_counter_world_fixture() -> CounterWorldFixture {
     assert_eq!(receipt_2.prior_replay_root, state1_root);
     assert_eq!(
         decode_state_replay_root_bytes(
-            state2.entries.get(REPLAY_ROOT_STATE_KEY.as_bytes()).unwrap()
+            state2
+                .entries
+                .get(REPLAY_ROOT_STATE_KEY.as_bytes())
+                .unwrap()
         ),
         receipt_2.next_replay_root
     );

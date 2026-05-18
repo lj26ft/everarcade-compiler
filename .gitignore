@@ -28,3 +28,5 @@ dist/
 *.tar.gz
 *.sha256
 /vendor/
+everarcade-host/tests/fixtures/counter_world/*.bin
+everarcade-host/tests/fixtures/counter_world/*.wasm

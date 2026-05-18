@@ -143,7 +143,9 @@ fn test_chain_restore_checkpoint_root_mismatch_fails() {
     let (_t, input, _lineage) = fixture_two_step();
     std::fs::write(&input.checkpoint_path, [1u8; 8]).unwrap();
     let err = restore_lineage_chain(input).unwrap_err();
-    assert!(matches!(err, ChainRestoreError::Validation(ref m) if m.field == "checkpoint_root" || m.field == "checkpoint_decode"));
+    assert!(
+        matches!(err, ChainRestoreError::Validation(ref m) if m.field == "checkpoint_root" || m.field == "checkpoint_decode")
+    );
 }
 
 #[test]
@@ -161,7 +163,10 @@ fn test_chain_restore_receipt_execution_id_mismatch_fails() {
     lineage.records[0].execution_id = h(55);
     std::fs::write(&input.lineage_path, bincode::serialize(&lineage).unwrap()).unwrap();
     let err = restore_lineage_chain(input).unwrap_err();
-    assert!(matches!(err, ChainRestoreError::Validation(ref m) if m.field == "execution_id") || matches!(err, ChainRestoreError::Lineage(_)));
+    assert!(
+        matches!(err, ChainRestoreError::Validation(ref m) if m.field == "execution_id")
+            || matches!(err, ChainRestoreError::Lineage(_))
+    );
 }
 
 #[test]
