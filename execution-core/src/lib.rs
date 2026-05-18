@@ -44,6 +44,7 @@ pub mod simulation;
 pub mod state;
 pub mod state_engine;
 pub mod sync;
+pub mod scheduler;
 pub mod tenancy;
 pub mod trace;
 pub mod treaty;
