@@ -59,6 +59,7 @@ pub mod trace;
 pub mod treaty;
 pub mod verifier;
 pub mod wasm;
+pub mod wasm_abi;
 
 pub use everarcade_abi::{
     ExecutionNode, ExecutionPlan, ExecutionReceipt, State, StateChange, VmInput, VmOutput,
