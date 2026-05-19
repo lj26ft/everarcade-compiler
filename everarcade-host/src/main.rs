@@ -58,6 +58,9 @@ Commands:
   authority-status --world-root <path>
   authority-verify --world-root <path>
   authority-handoff --world-root <path> --from <node-id> --to <node-id>
+  lease-status --world-root <path>
+  lease-verify --world-root <path>
+  lease-renew --world-root <path>
   doctor --state <path>
 
 Examples:
@@ -261,6 +264,7 @@ impl execution_core::scheduler::world::DeterministicWorld for SchedulerWorld {
 #[derive(Clone)]
 struct AuthorityCliState {
     registry: execution_core::authority::AuthorityRegistry,
+    lease_registry: execution_core::leases::LeaseRegistry,
     checkpoint_root: [u8; 32],
     lineage_hash: [u8; 32],
 }
@@ -294,6 +298,15 @@ fn load_authority_cli_state(world_root: &Path) -> Result<AuthorityCliState, Host
                 ),
                 current_epoch: 0,
             },
+            lease_registry: execution_core::leases::LeaseRegistry {
+                current_lease: execution_core::leases::ExecutionLease {
+                    authority: execution_core::federation::node::FederationNodeId::new([0u8; 32]),
+                    epoch: 0,
+                    lease_start_tick: 0,
+                    lease_end_tick: 100,
+                    checkpoint_root: [1u8; 32],
+                },
+            },
             checkpoint_root: [1u8; 32],
             lineage_hash: [2u8; 32],
         });
@@ -314,6 +327,14 @@ fn load_authority_cli_state(world_root: &Path) -> Result<AuthorityCliState, Host
         .map(parse_hex32)
         .transpose()?
         .unwrap_or([1u8; 32]);
+    let lease_start_tick = value
+        .get("lease_start_tick")
+        .and_then(|v| v.as_u64())
+        .unwrap_or(0);
+    let lease_end_tick = value
+        .get("lease_end_tick")
+        .and_then(|v| v.as_u64())
+        .unwrap_or(100);
     let lineage_hash = value
         .get("lineage_hash")
         .and_then(|v| v.as_str())
@@ -324,6 +345,15 @@ fn load_authority_cli_state(world_root: &Path) -> Result<AuthorityCliState, Host
         registry: execution_core::authority::AuthorityRegistry {
             current_authority: authority,
             current_epoch: epoch,
+        },
+        lease_registry: execution_core::leases::LeaseRegistry {
+            current_lease: execution_core::leases::ExecutionLease {
+                authority,
+                epoch,
+                lease_start_tick,
+                lease_end_tick,
+                checkpoint_root,
+            },
         },
         checkpoint_root,
         lineage_hash,
@@ -338,6 +368,8 @@ fn save_authority_cli_state(world_root: &Path, state: &AuthorityCliState) -> Res
         "epoch": state.registry.current_epoch,
         "checkpoint_root": hex::encode(state.checkpoint_root),
         "lineage_hash": hex::encode(state.lineage_hash),
+        "lease_start_tick": state.lease_registry.current_lease.lease_start_tick,
+        "lease_end_tick": state.lease_registry.current_lease.lease_end_tick,
     });
     fs::write(
         authority_state_path(world_root),
@@ -711,6 +743,84 @@ fn run_cli() -> Result<(), HostError> {
             save_authority_cli_state(&world_root, &state)?;
             println!("authority_handoff=ok");
             println!("new_epoch={}", state.registry.current_epoch);
+        }
+        "lease-status" => {
+            let world_root = PathBuf::from(
+                arg_value(&args, "--world-root")
+                    .ok_or_else(|| HostError::InvalidArgs("missing --world-root".into()))?,
+            );
+            let state = load_authority_cli_state(&world_root)?;
+            let report = execution_core::leases::verify_lease_expiration(
+                &state.lease_registry.current_lease,
+                state.lease_registry.current_lease.lease_start_tick,
+            )
+            .map_err(|e| HostError::VerificationFailed(e.to_string()))?;
+            println!("lease_status=ok");
+            println!("authority={}", state.lease_registry.current_lease.authority);
+            println!("epoch={}", state.lease_registry.current_lease.epoch);
+            println!(
+                "lease_start={}",
+                state.lease_registry.current_lease.lease_start_tick
+            );
+            println!(
+                "lease_end={}",
+                state.lease_registry.current_lease.lease_end_tick
+            );
+            println!("expired={}", report.expired);
+        }
+        "lease-verify" => {
+            let world_root = PathBuf::from(
+                arg_value(&args, "--world-root")
+                    .ok_or_else(|| HostError::InvalidArgs("missing --world-root".into()))?,
+            );
+            let state = load_authority_cli_state(&world_root)?;
+            match execution_core::leases::verify_execution_lease(
+                &state.lease_registry.current_lease,
+                &state.lease_registry,
+                state.lease_registry.current_lease.lease_start_tick,
+            ) {
+                Ok(report) => {
+                    println!("lease_verify=ok");
+                    println!("valid={}", report.valid);
+                    println!("expired={}", report.expired);
+                    println!("overlapping={}", report.overlapping);
+                }
+                Err(e) => {
+                    println!("lease_verify=failed");
+                    println!("field=lease");
+                    println!("expected=valid");
+                    println!("actual={e}");
+                    return Err(HostError::VerificationFailed(e.to_string()));
+                }
+            }
+        }
+        "lease-renew" => {
+            let world_root = PathBuf::from(
+                arg_value(&args, "--world-root")
+                    .ok_or_else(|| HostError::InvalidArgs("missing --world-root".into()))?,
+            );
+            let mut state = load_authority_cli_state(&world_root)?;
+            let previous = state.lease_registry.current_lease.clone();
+            let renewed = execution_core::leases::ExecutionLease {
+                authority: previous.authority,
+                epoch: previous.epoch + 1,
+                lease_start_tick: previous.lease_end_tick + 1,
+                lease_end_tick: previous.lease_end_tick + 100,
+                checkpoint_root: state.checkpoint_root,
+            };
+            let renewal = execution_core::leases::LeaseRenewal {
+                previous_lease_hash: execution_core::leases::hash_execution_lease(&previous),
+                renewed_lease: renewed.clone(),
+            };
+            execution_core::leases::verify_lease_renewal(&previous, &renewal, false)
+                .map_err(|e| HostError::VerificationFailed(e.to_string()))?;
+            state.lease_registry =
+                execution_core::leases::update_lease_registry(&state.lease_registry, &renewed)
+                    .map_err(|e| HostError::VerificationFailed(e.to_string()))?;
+            save_authority_cli_state(&world_root, &state)?;
+            println!("lease_renew=ok");
+            println!("new_start={}", renewed.lease_start_tick);
+            println!("new_end={}", renewed.lease_end_tick);
         }
         "doctor" => {
             let mut failures = Vec::new();
