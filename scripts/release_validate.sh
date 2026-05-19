@@ -29,6 +29,12 @@ if [[ ! -f "$ROOT/.cargo/config.toml" ]]; then
   exit 1
 fi
 
+
+if ! grep -q 'directory = "vendor"' "$ROOT/.cargo/config.toml" || grep -q '/workspace/everarcade-compiler/vendor' "$ROOT/.cargo/config.toml"; then
+  echo "release_validate=failed reason=absolute_vendor_path" >&2
+  exit 1
+fi
+
 if [[ ! -d "$ROOT/vendor" ]]; then
   if [[ -f "$VENDOR_ARCHIVE" ]]; then
     mkdir -p "$ROOT/vendor"
