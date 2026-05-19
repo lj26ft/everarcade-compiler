@@ -9,6 +9,7 @@ pub mod codec;
 pub mod compression;
 pub mod constitution;
 pub mod continuity;
+pub mod divergence;
 pub mod domain;
 pub mod economics;
 pub mod economy;
