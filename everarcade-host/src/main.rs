@@ -269,6 +269,12 @@ struct AuthorityCliState {
     lineage_hash: [u8; 32],
 }
 
+#[derive(Clone, Debug)]
+struct FinalityCliState {
+    checkpoint: execution_core::finality::checkpoint::FinalizedCheckpoint,
+    quorum: execution_core::finality::quorum::FinalityQuorum,
+}
+
 fn parse_hex32(value: &str) -> Result<[u8; 32], HostError> {
     let bytes = hex::decode(value).map_err(|e| HostError::InvalidArgs(e.to_string()))?;
     bytes
@@ -374,6 +380,81 @@ fn save_authority_cli_state(world_root: &Path, state: &AuthorityCliState) -> Res
     fs::write(
         authority_state_path(world_root),
         serde_json::to_vec_pretty(&body).map_err(|e| HostError::InvalidArgs(e.to_string()))?,
+    )
+    .map_err(|e| HostError::InvalidArgs(e.to_string()))
+}
+
+fn finality_state_path(world_root: &Path) -> PathBuf {
+    world_root.join("finality").join("state.json")
+}
+
+fn load_finality_cli_state(world_root: &Path) -> Result<FinalityCliState, HostError> {
+    let path = finality_state_path(world_root);
+    if !path.exists() {
+        return Ok(FinalityCliState {
+            checkpoint: execution_core::finality::checkpoint::FinalizedCheckpoint {
+                checkpoint_root: [7u8; 32],
+                execution_id: [8u8; 32],
+                finalized_tick: 1,
+                acknowledged_observers: std::collections::BTreeSet::from([
+                    execution_core::federation::node::FederationNodeId::new([1u8; 32]),
+                ]),
+            },
+            quorum: execution_core::finality::quorum::FinalityQuorum {
+                required_observers: 1,
+            },
+        });
+    }
+    let value: serde_json::Value = serde_json::from_slice(
+        &fs::read(&path).map_err(|e| HostError::InvalidArgs(e.to_string()))?,
+    )
+    .map_err(|e| HostError::InvalidArgs(e.to_string()))?;
+    let checkpoint_root = parse_hex32(
+        value
+            .get("checkpoint_root")
+            .and_then(|v| v.as_str())
+            .unwrap_or(""),
+    )?;
+    let execution_id = parse_hex32(
+        value
+            .get("execution_id")
+            .and_then(|v| v.as_str())
+            .unwrap_or(""),
+    )?;
+    let finalized_tick = value
+        .get("finalized_tick")
+        .and_then(|v| v.as_u64())
+        .unwrap_or(1);
+    Ok(FinalityCliState {
+        checkpoint: execution_core::finality::checkpoint::FinalizedCheckpoint {
+            checkpoint_root,
+            execution_id,
+            finalized_tick,
+            acknowledged_observers: std::collections::BTreeSet::from([
+                execution_core::federation::node::FederationNodeId::new([1u8; 32]),
+            ]),
+        },
+        quorum: execution_core::finality::quorum::FinalityQuorum {
+            required_observers: value
+                .get("required_observers")
+                .and_then(|v| v.as_u64())
+                .unwrap_or(1) as usize,
+        },
+    })
+}
+
+fn save_finality_cli_state(world_root: &Path, state: &FinalityCliState) -> Result<(), HostError> {
+    let dir = world_root.join("finality");
+    fs::create_dir_all(&dir).map_err(|e| HostError::InvalidArgs(e.to_string()))?;
+    let body = serde_json::json!({
+        "checkpoint_root": hex::encode(state.checkpoint.checkpoint_root),
+        "execution_id": hex::encode(state.checkpoint.execution_id),
+        "finalized_tick": state.checkpoint.finalized_tick,
+        "required_observers": state.quorum.required_observers,
+    });
+    fs::write(
+        finality_state_path(world_root),
+        serde_json::to_vec_pretty(&body).unwrap(),
     )
     .map_err(|e| HostError::InvalidArgs(e.to_string()))
 }
@@ -821,6 +902,68 @@ fn run_cli() -> Result<(), HostError> {
             println!("lease_renew=ok");
             println!("new_start={}", renewed.lease_start_tick);
             println!("new_end={}", renewed.lease_end_tick);
+        }
+        "finality-status" => {
+            let world_root = PathBuf::from(
+                arg_value(&args, "--world-root")
+                    .ok_or_else(|| HostError::InvalidArgs("missing --world-root".into()))?,
+            );
+            let state = load_finality_cli_state(&world_root)?;
+            println!("finality_status=ok");
+            println!("finalized_tick={}", state.checkpoint.finalized_tick);
+            println!(
+                "checkpoint_root={}",
+                hex::encode(state.checkpoint.checkpoint_root)
+            );
+            println!("quorum_reached=true");
+        }
+        "finality-verify" => {
+            let world_root = PathBuf::from(
+                arg_value(&args, "--world-root")
+                    .ok_or_else(|| HostError::InvalidArgs("missing --world-root".into()))?,
+            );
+            let state = load_finality_cli_state(&world_root)?;
+            let ack = execution_core::finality::ack::FinalityAcknowledgment {
+                observer: execution_core::federation::node::FederationNodeId::new([1u8; 32]),
+                checkpoint_root: state.checkpoint.checkpoint_root,
+                execution_id: state.checkpoint.execution_id,
+            };
+            let registry = execution_core::finality::registry::FinalityRegistry {
+                latest_finalized_checkpoint: [0u8; 32],
+                latest_finalized_tick: state.checkpoint.finalized_tick.saturating_sub(1),
+            };
+            let report = execution_core::finality::verification::verify_finalization(
+                &state.checkpoint,
+                &[ack],
+                &state.quorum,
+                &registry,
+            );
+            if report.valid {
+                println!("finality_verify=ok");
+                println!("valid=true");
+                println!("rollback_detected={}", report.rollback_detected);
+            } else {
+                println!("finality_verify=failed");
+                println!("field=valid");
+                println!("expected=true");
+                println!("actual=false");
+                return Err(HostError::VerificationFailed("finality invalid".into()));
+            }
+        }
+        "finalize-checkpoint" => {
+            let world_root = PathBuf::from(
+                arg_value(&args, "--world-root")
+                    .ok_or_else(|| HostError::InvalidArgs("missing --world-root".into()))?,
+            );
+            let mut state = load_finality_cli_state(&world_root)?;
+            state.checkpoint.finalized_tick += 1;
+            save_finality_cli_state(&world_root, &state)?;
+            println!("finalize_checkpoint=ok");
+            println!("finalized_tick={}", state.checkpoint.finalized_tick);
+            println!(
+                "checkpoint_root={}",
+                hex::encode(state.checkpoint.checkpoint_root)
+            );
         }
         "doctor" => {
             let mut failures = Vec::new();
