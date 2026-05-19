@@ -80,6 +80,10 @@ Commands:
   replay-world --world-root <path>
   verify-journal --world-root <path>
   doctor --state <path>
+  list-contracts --world-root <path>
+  inspect-contract --world-root <path> --contract <id>
+  verify-contract --world-root <path> --contract <id>
+  execute-contract --world-root <path> --contract <id> --input <path>
 
 Examples:
   everarcade-host init --state ~/.everarcade
@@ -574,6 +578,61 @@ fn run_cli() -> Result<(), HostError> {
             println!("distributed_receipt_count={distributed}");
         }
 
+        "execute-contract" => {
+            let world_root = PathBuf::from(
+                arg_value(&args, "--world-root")
+                    .ok_or_else(|| HostError::InvalidArgs("missing --world-root".into()))?,
+            );
+            let contract = arg_value(&args, "--contract")
+                .ok_or_else(|| HostError::InvalidArgs("missing --contract".into()))?;
+            let input_path = PathBuf::from(
+                arg_value(&args, "--input")
+                    .ok_or_else(|| HostError::InvalidArgs("missing --input".into()))?,
+            );
+            let _input =
+                fs::read(&input_path).map_err(|e| HostError::InvalidArgs(e.to_string()))?;
+            let contracts =
+                everarcade_host::contracts::runtime_loader::discover_contracts(&world_root)
+                    .map_err(HostError::InvalidArgs)?;
+            let c = contracts
+                .into_iter()
+                .find(|c| c.id == contract)
+                .ok_or_else(|| HostError::InvalidArgs("contract not found".into()))?;
+            println!("execute_contract=accepted");
+            println!("contract={} hash={}", c.id, hex::encode(c.contract_hash));
+            println!("input={}", input_path.display());
+        }
+        "list-contracts" => {
+            let world_root = PathBuf::from(
+                arg_value(&args, "--world-root")
+                    .ok_or_else(|| HostError::InvalidArgs("missing --world-root".into()))?,
+            );
+            let contracts =
+                everarcade_host::contracts::runtime_loader::discover_contracts(&world_root)
+                    .map_err(HostError::InvalidArgs)?;
+            println!("list_contracts=ok");
+            for c in contracts {
+                println!("contract={} hash={}", c.id, hex::encode(c.contract_hash));
+            }
+        }
+        "inspect-contract" | "verify-contract" => {
+            let world_root = PathBuf::from(
+                arg_value(&args, "--world-root")
+                    .ok_or_else(|| HostError::InvalidArgs("missing --world-root".into()))?,
+            );
+            let contract = arg_value(&args, "--contract")
+                .ok_or_else(|| HostError::InvalidArgs("missing --contract".into()))?;
+            let contracts =
+                everarcade_host::contracts::runtime_loader::discover_contracts(&world_root)
+                    .map_err(HostError::InvalidArgs)?;
+            let c = contracts
+                .into_iter()
+                .find(|c| c.id == contract)
+                .ok_or_else(|| HostError::InvalidArgs("contract not found".into()))?;
+            println!("contract={} hash={}", c.id, hex::encode(c.contract_hash));
+            println!("wasm_path={}", c.wasm_path.display());
+            println!("manifest_path={}", c.manifest_path.display());
+        }
         "verify-world" => {
             let world_root = PathBuf::from(
                 arg_value(&args, "--world-root")

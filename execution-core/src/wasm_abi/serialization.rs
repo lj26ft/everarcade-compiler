@@ -1,3 +1,4 @@
+use bincode::Options;
 use super::errors::WasmAbiError;
 use serde::{de::DeserializeOwned, Serialize};
 

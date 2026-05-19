@@ -1,0 +1,3 @@
+contract_id = "counter-contract"
+abi_version = 1
+entrypoint = "everarcade_execute"
