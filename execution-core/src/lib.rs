@@ -44,6 +44,7 @@ pub mod receipt_runtime;
 pub mod reconciliation;
 pub mod replay;
 pub mod replay_runtime;
+pub mod runtime_commit;
 pub mod runtime_semantics;
 pub mod scheduler;
 pub mod session;

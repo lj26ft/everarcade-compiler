@@ -76,6 +76,9 @@ Commands:
   envelope-verify --world-root <path>
   envelope-status --world-root <path>
   quarantine-fork --world-root <path>
+  verify-world --world-root <path>
+  replay-world --world-root <path>
+  verify-journal --world-root <path>
   doctor --state <path>
 
 Examples:
@@ -571,6 +574,34 @@ fn run_cli() -> Result<(), HostError> {
             println!("distributed_receipt_count={distributed}");
         }
 
+        "verify-world" => {
+            let world_root = PathBuf::from(
+                arg_value(&args, "--world-root")
+                    .ok_or_else(|| HostError::InvalidArgs("missing --world-root".into()))?,
+            );
+            everarcade_host::runtime_persistence::verify_world(&world_root)
+                .map_err(HostError::InvalidArgs)?;
+            println!("verify_world=ok");
+        }
+        "replay-world" => {
+            let world_root = PathBuf::from(
+                arg_value(&args, "--world-root")
+                    .ok_or_else(|| HostError::InvalidArgs("missing --world-root".into()))?,
+            );
+            let root = everarcade_host::runtime_persistence::replay_world(&world_root)
+                .map_err(HostError::InvalidArgs)?;
+            println!("replay_world=ok");
+            println!("state_root={}", hex::encode(root));
+        }
+        "verify-journal" => {
+            let world_root = PathBuf::from(
+                arg_value(&args, "--world-root")
+                    .ok_or_else(|| HostError::InvalidArgs("missing --world-root".into()))?,
+            );
+            everarcade_host::runtime_persistence::verify_journal(&world_root)
+                .map_err(HostError::InvalidArgs)?;
+            println!("verify_journal=ok");
+        }
         "sync-advertise" => {
             let world_root = PathBuf::from(
                 arg_value(&args, "--world-root")
