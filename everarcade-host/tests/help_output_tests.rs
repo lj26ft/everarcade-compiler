@@ -28,4 +28,7 @@ fn help_exits_zero_and_contains_commands() {
     assert!(s.contains("detect-fork --world-root <path>"));
     assert!(s.contains("divergence-verify --world-root <path>"));
     assert!(s.contains("divergence-status --world-root <path>"));
+    assert!(s.contains("reconciliation-status --world-root <path>"));
+    assert!(s.contains("reconciliation-verify --world-root <path>"));
+    assert!(s.contains("quarantine-fork --world-root <path>"));
 }
