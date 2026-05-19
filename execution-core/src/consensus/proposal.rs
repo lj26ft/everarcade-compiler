@@ -16,7 +16,8 @@ pub struct ConsensusProposal {
 }
 
 pub fn hash_consensus_proposal(proposal: &ConsensusProposal) -> Hash256 {
-    Sha256::digest(&canonical_encode(proposal).expect("consensus proposal encode")).into()
+    let payload = (proposal.checkpoint_root, proposal.proposed_by);
+    Sha256::digest(&canonical_encode(&payload).expect("consensus proposal encode")).into()
 }
 
 pub fn verify_consensus_proposal(
