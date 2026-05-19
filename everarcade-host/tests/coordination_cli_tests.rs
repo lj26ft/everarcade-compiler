@@ -11,6 +11,9 @@ fn coordination_commands() {
             "register-coordination-session",
             "register_coordination_session=ok",
         ),
+        ("envelope-status", "envelope_status=ok"),
+        ("envelope-verify", "envelope_verify=ok"),
+        ("register-envelope-message", "register_envelope_message=ok"),
     ] {
         let out = Command::new(env!("CARGO_BIN_EXE_everarcade-host"))
             .args([cmd, "--world-root", t.path().to_str().unwrap()])

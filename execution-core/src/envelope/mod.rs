@@ -1,0 +1,21 @@
+pub mod descriptor;
+pub mod errors;
+pub mod message;
+pub mod policy;
+pub mod quarantine;
+pub mod registry;
+pub mod replay;
+pub mod signature;
+pub mod state;
+pub mod verification;
+
+pub use descriptor::{hash_envelope_descriptor, ContinuityEnvelopeDescriptor};
+pub use errors::EnvelopeError;
+pub use message::{hash_signed_message, verify_signed_message, SignedContinuityMessage};
+pub use policy::{verify_envelope_policy, EnvelopePolicy};
+pub use quarantine::{verify_envelope_quarantine, EnvelopeQuarantine};
+pub use registry::{hash_envelope_registry, update_envelope_registry, EnvelopeRegistry};
+pub use replay::{verify_replay_protection, ReplayProtection};
+pub use signature::{verify_continuity_signature, ContinuitySignature};
+pub use state::{hash_envelope_state, verify_envelope_state, EnvelopeState};
+pub use verification::{verify_envelope, EnvelopeVerificationReport};
