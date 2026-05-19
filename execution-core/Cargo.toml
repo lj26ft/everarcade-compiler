@@ -27,3 +27,4 @@ increment-contract = { path = "../contracts/increment-contract" }
 
 [dev-dependencies]
 tempfile = "3"
+wat = "1"
