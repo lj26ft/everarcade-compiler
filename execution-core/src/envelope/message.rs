@@ -12,7 +12,9 @@ pub struct SignedContinuityMessage {
     pub payload_hash: Hash256,
 }
 pub fn hash_signed_message(message: &SignedContinuityMessage) -> Hash256 {
-    Sha256::digest(&canonical_encode(message).expect("signed continuity message encode")).into()
+    let canonical = canonical_encode(&(message.sender, message.payload_hash))
+        .expect("signed continuity message encode");
+    Sha256::digest(&canonical).into()
 }
 pub fn verify_signed_message(message: &SignedContinuityMessage) -> Result<(), EnvelopeError> {
     if message.payload_hash == [0u8; 32] {
