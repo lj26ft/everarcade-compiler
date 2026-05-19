@@ -10,6 +10,7 @@ pub mod compression;
 pub mod consensus;
 pub mod constitution;
 pub mod continuity;
+pub mod coordination;
 pub mod divergence;
 pub mod domain;
 pub mod economics;
