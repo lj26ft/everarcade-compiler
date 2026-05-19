@@ -5,7 +5,10 @@ pub mod fuel;
 pub mod layout;
 pub mod memory;
 pub mod receipt;
+pub mod replay_execution;
+pub mod runtime_execution;
 pub mod serialization;
+pub mod validation;
 
 pub use abi::*;
 pub use errors::*;
@@ -13,3 +16,5 @@ pub use execution::*;
 pub use fuel::*;
 pub use memory::*;
 pub use receipt::*;
+pub use replay_execution::*;
+pub use runtime_execution::*;

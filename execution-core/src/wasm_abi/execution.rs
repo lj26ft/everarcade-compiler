@@ -4,14 +4,13 @@ use super::{
     fuel::{FuelConsumed, FuelLimit, FuelReport},
     layout,
     memory::{allocate_input_buffer, read_response, write_request},
+    validation::validate_module_bytes,
 };
 use wasmtime::{Config, Engine, Instance, Linker, Module, Store};
 
 fn deterministic_engine() -> Result<Engine, WasmAbiError> {
     let mut config = Config::new();
-    config.wasm_threads(false);
     config.wasm_simd(false);
-    config.wasm_reference_types(false);
     config.wasm_relaxed_simd(false);
     config.wasm_tail_call(false);
     config.consume_fuel(true);
@@ -30,6 +29,7 @@ pub fn execute_contract(
         });
     }
     let engine = deterministic_engine()?;
+    validate_module_bytes(&engine, wasm)?;
     let module =
         Module::from_binary(&engine, wasm).map_err(|e| WasmAbiError::Runtime(e.to_string()))?;
     let mut store = Store::new(&engine, ());
