@@ -1,4 +1,4 @@
-use super::checkpoint::FinalityCheckpoint;
+use super::checkpoint::FinalizedCheckpoint;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SettlementAnchor {
@@ -8,16 +8,16 @@ pub struct SettlementAnchor {
 }
 
 pub fn create_settlement_anchor(
-    checkpoint: &FinalityCheckpoint,
+    checkpoint: &FinalizedCheckpoint,
     xrpl_tx_hash: String,
 ) -> SettlementAnchor {
     SettlementAnchor {
         checkpoint_hash: format!(
-            "{}:{}:{}:{}",
-            checkpoint.execution_root,
-            checkpoint.receipt_root,
-            checkpoint.snapshot_root,
-            checkpoint.epoch_id
+            "{:?}:{:?}:{}:{}",
+            checkpoint.checkpoint_root,
+            checkpoint.execution_id,
+            checkpoint.finalized_tick,
+            checkpoint.acknowledged_observers.len()
         ),
         xrpl_tx_hash,
         confirmed: true,

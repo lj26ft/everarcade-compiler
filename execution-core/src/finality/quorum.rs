@@ -2,8 +2,6 @@ use std::collections::BTreeSet;
 
 use serde::{Deserialize, Serialize};
 
-use crate::federation::node::FederationNodeId;
-
 use super::{ack::FinalityAcknowledgment, errors::FinalityError};
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
