@@ -22,4 +22,7 @@ fn help_exits_zero_and_contains_commands() {
     assert!(s.contains("authority-status --world-root <path>"));
     assert!(s.contains("authority-verify --world-root <path>"));
     assert!(s.contains("authority-handoff --world-root <path> --from <node-id> --to <node-id>"));
+    assert!(s.contains("lease-status --world-root <path>"));
+    assert!(s.contains("lease-verify --world-root <path>"));
+    assert!(s.contains("lease-renew --world-root <path>"));
 }
