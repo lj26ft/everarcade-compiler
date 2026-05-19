@@ -1,0 +1,10 @@
+[storage]
+append_only = true
+fsync_on_append = true
+
+[paths]
+state = "./world/state"
+checkpoints = "./world/checkpoints"
+journal = "./world/journal"
+receipts = "./world/receipts"
+logs = "./logs"

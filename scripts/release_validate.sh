@@ -49,6 +49,7 @@ run cargo build --release --locked --frozen --offline -p everarcade-host
 run cargo test --locked --frozen --offline
 run "$ROOT/scripts/release_smoke.sh"
 run "$ROOT/scripts/install_smoke.sh"
+run "$ROOT/scripts/validate_runtime_distribution.sh"
 
 if [[ -z "$PKG_FILE" ]]; then
   PKG_FILE="$(ls -1t "$DIST_DIR"/everarcade-host-operator-v*.tar.gz | head -n1)"
