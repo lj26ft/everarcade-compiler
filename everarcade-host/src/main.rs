@@ -55,6 +55,9 @@ Commands:
   topology-status --world-root <path>
   topology-convergence --world-root <path>
   topology-propagation --world-root <path>
+  authority-status --world-root <path>
+  authority-verify --world-root <path>
+  authority-handoff --world-root <path> --from <node-id> --to <node-id>
   doctor --state <path>
 
 Examples:
@@ -253,6 +256,94 @@ impl execution_core::scheduler::world::DeterministicWorld for SchedulerWorld {
     ) {
         self.checkpoint = checkpoint;
     }
+}
+
+#[derive(Clone)]
+struct AuthorityCliState {
+    registry: execution_core::authority::AuthorityRegistry,
+    checkpoint_root: [u8; 32],
+    lineage_hash: [u8; 32],
+}
+
+fn parse_hex32(value: &str) -> Result<[u8; 32], HostError> {
+    let bytes = hex::decode(value).map_err(|e| HostError::InvalidArgs(e.to_string()))?;
+    bytes
+        .try_into()
+        .map_err(|_| HostError::InvalidArgs("expected 32-byte hex value".into()))
+}
+
+fn parse_node_id(
+    value: &str,
+) -> Result<execution_core::federation::node::FederationNodeId, HostError> {
+    Ok(execution_core::federation::node::FederationNodeId::new(
+        parse_hex32(value)?,
+    ))
+}
+
+fn authority_state_path(world_root: &Path) -> PathBuf {
+    world_root.join("authority").join("registry.json")
+}
+
+fn load_authority_cli_state(world_root: &Path) -> Result<AuthorityCliState, HostError> {
+    let path = authority_state_path(world_root);
+    if !path.exists() {
+        return Ok(AuthorityCliState {
+            registry: execution_core::authority::AuthorityRegistry {
+                current_authority: execution_core::federation::node::FederationNodeId::new(
+                    [0u8; 32],
+                ),
+                current_epoch: 0,
+            },
+            checkpoint_root: [1u8; 32],
+            lineage_hash: [2u8; 32],
+        });
+    }
+    let raw = fs::read_to_string(&path).map_err(|e| HostError::InvalidArgs(e.to_string()))?;
+    let value: serde_json::Value =
+        serde_json::from_str(&raw).map_err(|e| HostError::InvalidArgs(e.to_string()))?;
+    let authority = value
+        .get("authority")
+        .and_then(|v| v.as_str())
+        .map(parse_node_id)
+        .transpose()?
+        .unwrap_or_else(|| execution_core::federation::node::FederationNodeId::new([0u8; 32]));
+    let epoch = value.get("epoch").and_then(|v| v.as_u64()).unwrap_or(0);
+    let checkpoint_root = value
+        .get("checkpoint_root")
+        .and_then(|v| v.as_str())
+        .map(parse_hex32)
+        .transpose()?
+        .unwrap_or([1u8; 32]);
+    let lineage_hash = value
+        .get("lineage_hash")
+        .and_then(|v| v.as_str())
+        .map(parse_hex32)
+        .transpose()?
+        .unwrap_or([2u8; 32]);
+    Ok(AuthorityCliState {
+        registry: execution_core::authority::AuthorityRegistry {
+            current_authority: authority,
+            current_epoch: epoch,
+        },
+        checkpoint_root,
+        lineage_hash,
+    })
+}
+
+fn save_authority_cli_state(world_root: &Path, state: &AuthorityCliState) -> Result<(), HostError> {
+    let dir = world_root.join("authority");
+    fs::create_dir_all(&dir).map_err(|e| HostError::InvalidArgs(e.to_string()))?;
+    let body = serde_json::json!({
+        "authority": state.registry.current_authority.to_string(),
+        "epoch": state.registry.current_epoch,
+        "checkpoint_root": hex::encode(state.checkpoint_root),
+        "lineage_hash": hex::encode(state.lineage_hash),
+    });
+    fs::write(
+        authority_state_path(world_root),
+        serde_json::to_vec_pretty(&body).map_err(|e| HostError::InvalidArgs(e.to_string()))?,
+    )
+    .map_err(|e| HostError::InvalidArgs(e.to_string()))
 }
 
 fn run_cli() -> Result<(), HostError> {
@@ -529,6 +620,97 @@ fn run_cli() -> Result<(), HostError> {
             println!("topology_propagation=ok");
             println!("propagation_complete=true");
             println!("observers_reached=1");
+        }
+        "authority-status" => {
+            let world_root = PathBuf::from(
+                arg_value(&args, "--world-root")
+                    .ok_or_else(|| HostError::InvalidArgs("missing --world-root".into()))?,
+            );
+            let state = load_authority_cli_state(&world_root)?;
+            println!("authority_status=ok");
+            println!("authority={}", state.registry.current_authority);
+            println!("epoch={}", state.registry.current_epoch);
+            println!("authorized=true");
+        }
+        "authority-verify" => {
+            let world_root = PathBuf::from(
+                arg_value(&args, "--world-root")
+                    .ok_or_else(|| HostError::InvalidArgs("missing --world-root".into()))?,
+            );
+            let state = load_authority_cli_state(&world_root)?;
+            let epoch = execution_core::authority::AuthorityEpoch {
+                epoch: state.registry.current_epoch,
+                authority: state.registry.current_authority,
+                previous_epoch_hash: None,
+            };
+            let report = execution_core::authority::verify_authority_chain(&[epoch], &[]);
+            if report.authorized {
+                println!("authority_verify=ok");
+                println!("epoch_valid={}", report.epoch_valid);
+                println!("handoff_valid={}", report.handoff_valid);
+            } else {
+                println!("authority_verify=failed");
+                println!("field=authority_chain");
+                println!("expected=authorized");
+                println!("actual=unauthorized");
+                return Err(HostError::VerificationFailed("authority_chain".into()));
+            }
+        }
+        "authority-handoff" => {
+            let world_root = PathBuf::from(
+                arg_value(&args, "--world-root").unwrap_or_else(|| ".everarcade".into()),
+            );
+            let from = parse_node_id(
+                &arg_value(&args, "--from")
+                    .ok_or_else(|| HostError::InvalidArgs("missing --from".into()))?,
+            )?;
+            let to = parse_node_id(
+                &arg_value(&args, "--to")
+                    .ok_or_else(|| HostError::InvalidArgs("missing --to".into()))?,
+            )?;
+            let mut state = load_authority_cli_state(&world_root)?;
+            if state.registry.current_epoch != 0 && state.registry.current_authority != from {
+                println!("authority_handoff=failed");
+                println!("field=from");
+                println!("expected={}", state.registry.current_authority);
+                println!("actual={from}");
+                return Err(HostError::VerificationFailed(
+                    "authority from mismatch".into(),
+                ));
+            }
+            let previous = execution_core::authority::AuthorityEpoch {
+                epoch: state.registry.current_epoch,
+                authority: from,
+                previous_epoch_hash: None,
+            };
+            let next = execution_core::authority::AuthorityEpoch {
+                epoch: state.registry.current_epoch + 1,
+                authority: to,
+                previous_epoch_hash: Some(execution_core::authority::hash_authority_epoch(
+                    &previous,
+                )),
+            };
+            let handoff = execution_core::authority::AuthorityHandoff {
+                from,
+                to,
+                epoch: next.epoch,
+                checkpoint_root: state.checkpoint_root,
+                lineage_hash: state.lineage_hash,
+            };
+            execution_core::authority::verify_handoff(
+                &previous,
+                &next,
+                &handoff,
+                state.checkpoint_root,
+                state.lineage_hash,
+            )
+            .map_err(|e| HostError::VerificationFailed(e.to_string()))?;
+            state.registry =
+                execution_core::authority::update_authority_registry(&state.registry, &next)
+                    .map_err(|e| HostError::VerificationFailed(e.to_string()))?;
+            save_authority_cli_state(&world_root, &state)?;
+            println!("authority_handoff=ok");
+            println!("new_epoch={}", state.registry.current_epoch);
         }
         "doctor" => {
             let mut failures = Vec::new();
