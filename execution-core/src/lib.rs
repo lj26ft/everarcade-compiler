@@ -38,6 +38,7 @@ pub mod proof;
 pub mod protocol_upgrade;
 pub mod pruning;
 pub mod receipt_runtime;
+pub mod reconciliation;
 pub mod replay;
 pub mod replay_runtime;
 pub mod runtime_semantics;

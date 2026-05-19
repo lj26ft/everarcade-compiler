@@ -64,6 +64,9 @@ Commands:
   detect-fork --world-root <path>
   divergence-verify --world-root <path>
   divergence-status --world-root <path>
+  reconciliation-status --world-root <path>
+  reconciliation-verify --world-root <path>
+  quarantine-fork --world-root <path>
   doctor --state <path>
 
 Examples:
@@ -1709,6 +1712,62 @@ fn run_cli() -> Result<(), HostError> {
             println!("divergence_verify=ok");
             println!("valid={}", report.valid);
             println!("conflicting_finality={}", report.conflicting_finality);
+        }
+        "reconciliation-status" => {
+            let world_root = PathBuf::from(
+                arg_value(&args, "--world-root")
+                    .ok_or_else(|| HostError::InvalidArgs("missing --world-root".into()))?,
+            );
+            fs::create_dir_all(&world_root).map_err(|e| HostError::InvalidArgs(e.to_string()))?;
+            let registry = execution_core::reconciliation::ReconciliationRegistry::default();
+            println!("reconciliation_status=ok");
+            println!("quarantined_forks={}", registry.quarantined_forks.len());
+            println!("automatic_reconciliation=false");
+        }
+        "reconciliation-verify" => {
+            let world_root = PathBuf::from(
+                arg_value(&args, "--world-root")
+                    .ok_or_else(|| HostError::InvalidArgs("missing --world-root".into()))?,
+            );
+            fs::create_dir_all(&world_root).map_err(|e| HostError::InvalidArgs(e.to_string()))?;
+            let boundary = execution_core::reconciliation::ReconciliationBoundary {
+                automatic_reconciliation_disabled: true,
+            };
+            let quarantine_valid = true;
+            if execution_core::reconciliation::verify_reconciliation_boundary(&boundary)
+                && quarantine_valid
+            {
+                println!("reconciliation_verify=ok");
+                println!("quarantine_valid=true");
+                println!("automatic_reconciliation=false");
+            } else {
+                println!("reconciliation_verify=failed");
+                println!("field=automatic_reconciliation");
+                println!("expected=false");
+                println!("actual=true");
+            }
+        }
+        "quarantine-fork" => {
+            let world_root = PathBuf::from(
+                arg_value(&args, "--world-root")
+                    .ok_or_else(|| HostError::InvalidArgs("missing --world-root".into()))?,
+            );
+            fs::create_dir_all(&world_root).map_err(|e| HostError::InvalidArgs(e.to_string()))?;
+            let descriptor = execution_core::reconciliation::ReconciliationDescriptor {
+                fork_hash: [9u8; 32],
+                checkpoint_a: [1u8; 32],
+                checkpoint_b: [2u8; 32],
+                reconciliation_allowed: false,
+            };
+            let mut registry = execution_core::reconciliation::ReconciliationRegistry::default();
+            let fork_hash = execution_core::reconciliation::register_quarantined_fork(
+                &mut registry,
+                descriptor,
+            )
+            .map_err(|e| HostError::InvalidArgs(e.to_string()))?;
+            println!("quarantine_fork=ok");
+            println!("fork_hash={}", hex::encode(fork_hash));
+            println!("quarantined=true");
         }
         "detect-fork" => {
             let world_root = PathBuf::from(

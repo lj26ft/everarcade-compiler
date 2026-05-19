@@ -34,3 +34,41 @@ fn divergence_status_verify_detect_commands() {
     assert!(detect.status.success());
     assert!(String::from_utf8_lossy(&detect.stdout).contains("detect_fork=ok"));
 }
+
+#[test]
+fn reconciliation_status_verify_quarantine_commands() {
+    let t = tempdir().unwrap();
+
+    let status = Command::new(env!("CARGO_BIN_EXE_everarcade-host"))
+        .args([
+            "reconciliation-status",
+            "--world-root",
+            t.path().to_str().unwrap(),
+        ])
+        .output()
+        .unwrap();
+    assert!(status.status.success());
+    assert!(String::from_utf8_lossy(&status.stdout).contains("reconciliation_status=ok"));
+
+    let verify = Command::new(env!("CARGO_BIN_EXE_everarcade-host"))
+        .args([
+            "reconciliation-verify",
+            "--world-root",
+            t.path().to_str().unwrap(),
+        ])
+        .output()
+        .unwrap();
+    assert!(verify.status.success());
+    assert!(String::from_utf8_lossy(&verify.stdout).contains("reconciliation_verify=ok"));
+
+    let quarantine = Command::new(env!("CARGO_BIN_EXE_everarcade-host"))
+        .args([
+            "quarantine-fork",
+            "--world-root",
+            t.path().to_str().unwrap(),
+        ])
+        .output()
+        .unwrap();
+    assert!(quarantine.status.success());
+    assert!(String::from_utf8_lossy(&quarantine.stdout).contains("quarantine_fork=ok"));
+}
