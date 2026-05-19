@@ -74,3 +74,40 @@ fn lease_status_verify_renew_commands() {
     assert!(renew.status.success());
     assert!(String::from_utf8_lossy(&renew.stdout).contains("lease_renew=ok"));
 }
+
+#[test]
+fn finality_commands() {
+    let t = tempdir().unwrap();
+    let status = Command::new(env!("CARGO_BIN_EXE_everarcade-host"))
+        .args([
+            "finality-status",
+            "--world-root",
+            t.path().to_str().unwrap(),
+        ])
+        .output()
+        .unwrap();
+    assert!(status.status.success());
+    assert!(String::from_utf8_lossy(&status.stdout).contains("finality_status=ok"));
+
+    let verify = Command::new(env!("CARGO_BIN_EXE_everarcade-host"))
+        .args([
+            "finality-verify",
+            "--world-root",
+            t.path().to_str().unwrap(),
+        ])
+        .output()
+        .unwrap();
+    assert!(verify.status.success());
+    assert!(String::from_utf8_lossy(&verify.stdout).contains("finality_verify=ok"));
+
+    let finalize = Command::new(env!("CARGO_BIN_EXE_everarcade-host"))
+        .args([
+            "finalize-checkpoint",
+            "--world-root",
+            t.path().to_str().unwrap(),
+        ])
+        .output()
+        .unwrap();
+    assert!(finalize.status.success());
+    assert!(String::from_utf8_lossy(&finalize.stdout).contains("finalize_checkpoint=ok"));
+}
