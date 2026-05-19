@@ -16,6 +16,7 @@ pub mod domain;
 pub mod economics;
 pub mod economy;
 pub mod entity;
+pub mod envelope;
 pub mod epoch;
 pub mod execute;
 pub mod execution;
