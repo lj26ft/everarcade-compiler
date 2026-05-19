@@ -25,4 +25,7 @@ fn help_exits_zero_and_contains_commands() {
     assert!(s.contains("lease-status --world-root <path>"));
     assert!(s.contains("lease-verify --world-root <path>"));
     assert!(s.contains("lease-renew --world-root <path>"));
+    assert!(s.contains("detect-fork --world-root <path>"));
+    assert!(s.contains("divergence-verify --world-root <path>"));
+    assert!(s.contains("divergence-status --world-root <path>"));
 }
