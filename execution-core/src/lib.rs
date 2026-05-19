@@ -7,6 +7,7 @@ pub mod capability;
 pub mod checkpoint;
 pub mod codec;
 pub mod compression;
+pub mod consensus;
 pub mod constitution;
 pub mod continuity;
 pub mod divergence;
