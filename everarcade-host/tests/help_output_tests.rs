@@ -19,4 +19,7 @@ fn help_exits_zero_and_contains_commands() {
     assert!(s.contains("topology-propagation --world-root <path>"));
     assert!(s.contains("topology-convergence --world-root <path>"));
     assert!(s.contains("topology-status --world-root <path>"));
+    assert!(s.contains("authority-status --world-root <path>"));
+    assert!(s.contains("authority-verify --world-root <path>"));
+    assert!(s.contains("authority-handoff --world-root <path> --from <node-id> --to <node-id>"));
 }

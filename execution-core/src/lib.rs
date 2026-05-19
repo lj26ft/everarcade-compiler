@@ -1,5 +1,6 @@
 pub mod amendment;
 pub mod arbitration;
+pub mod authority;
 pub mod budget;
 pub mod canonical;
 pub mod capability;
