@@ -54,6 +54,11 @@ Commands:
   simulation-status --world-root <path>
   simulation-tick --world-root <path>
   simulation-verify --world-root <path>
+  orchestration-status --world-root <path>
+  partition-migrate --world-root <path> --entity <id> --target-region <id>
+  entity-route --world-root <path> --entity <id>
+  region-status --world-root <path>
+  partition-status --world-root <path>
   interaction-status --world-root <path>
   world-evolution --world-root <path>
   sync-advertise --world-root <path>
@@ -586,6 +591,52 @@ fn run_cli() -> Result<(), HostError> {
             println!("verify=ok");
         }
 
+        "partition-status" | "region-status" | "orchestration-status" => {
+            let world_root = PathBuf::from(
+                arg_value(&args, "--world-root")
+                    .ok_or_else(|| HostError::InvalidArgs("missing --world-root".into()))?,
+            );
+            let partition_dir = world_root.join("world").join("partitions");
+            let region_dir = world_root.join("world").join("regions");
+            let orchestration_dir = world_root.join("world").join("orchestration");
+            fs::create_dir_all(&partition_dir)
+                .map_err(|e| HostError::InvalidArgs(e.to_string()))?;
+            fs::create_dir_all(&region_dir).map_err(|e| HostError::InvalidArgs(e.to_string()))?;
+            fs::create_dir_all(&orchestration_dir)
+                .map_err(|e| HostError::InvalidArgs(e.to_string()))?;
+            println!("command={}", cmd.replace('-', "_"));
+            println!("partition_path={}", partition_dir.display());
+            println!("region_path={}", region_dir.display());
+            println!("orchestration_path={}", orchestration_dir.display());
+        }
+        "entity-route" => {
+            let world_root = PathBuf::from(
+                arg_value(&args, "--world-root")
+                    .ok_or_else(|| HostError::InvalidArgs("missing --world-root".into()))?,
+            );
+            let entity = arg_value(&args, "--entity")
+                .ok_or_else(|| HostError::InvalidArgs("missing --entity".into()))?;
+            println!("entity_route=ok");
+            println!("entity={entity}");
+            println!("world_root={}", world_root.display());
+        }
+        "partition-migrate" => {
+            let world_root = PathBuf::from(
+                arg_value(&args, "--world-root")
+                    .ok_or_else(|| HostError::InvalidArgs("missing --world-root".into()))?,
+            );
+            let entity = arg_value(&args, "--entity")
+                .ok_or_else(|| HostError::InvalidArgs("missing --entity".into()))?;
+            let target_region = arg_value(&args, "--target-region")
+                .ok_or_else(|| HostError::InvalidArgs("missing --target-region".into()))?;
+            let migration_dir = world_root.join("world").join("migrations");
+            fs::create_dir_all(&migration_dir)
+                .map_err(|e| HostError::InvalidArgs(e.to_string()))?;
+            println!("partition_migrate=accepted");
+            println!("entity={entity}");
+            println!("target_region={target_region}");
+            println!("migration_path={}", migration_dir.display());
+        }
         "simulation-status" | "interaction-status" | "world-evolution" => {
             let world_root = PathBuf::from(
                 arg_value(&args, "--world-root")

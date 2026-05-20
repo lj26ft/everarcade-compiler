@@ -37,6 +37,12 @@ bash "$WORK/runtime/scripts/start-everarcade.sh"
 "$WORK/runtime/bin/everarcade-host" entity-status --world-root "$WORK/runtime/world" --entity player-001
 "$WORK/runtime/bin/everarcade-host" entity-migrate --world-root "$WORK/runtime/world" --entity player-001 --target-peer 10.0.0.2:9222
 
+"$WORK/runtime/bin/everarcade-host" partition-status --world-root "$WORK/runtime/world"
+"$WORK/runtime/bin/everarcade-host" region-status --world-root "$WORK/runtime/world"
+"$WORK/runtime/bin/everarcade-host" orchestration-status --world-root "$WORK/runtime/world"
+"$WORK/runtime/bin/everarcade-host" entity-route --world-root "$WORK/runtime/world" --entity player-001
+"$WORK/runtime/bin/everarcade-host" partition-migrate --world-root "$WORK/runtime/world" --entity player-001 --target-region region-b
+
 echo "validate_runtime_distribution=ok archive=$ARCHIVE"
 
 "$WORK/runtime/bin/everarcade-host" federation-runtime-health --world-root "$WORK/runtime/world"
