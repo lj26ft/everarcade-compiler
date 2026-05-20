@@ -7,6 +7,7 @@ pub mod package_loader;
 pub mod persistence;
 pub mod receipt_store;
 pub mod runner;
+pub mod xahau_gateway;
 pub mod xrpl;
 
 pub use config::HostConfig;
