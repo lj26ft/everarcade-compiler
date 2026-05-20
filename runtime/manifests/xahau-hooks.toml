@@ -1,0 +1,39 @@
+[registry]
+account = ""
+hook_hash = ""
+
+[vault]
+account = ""
+hook_hash = ""
+
+[settlement]
+account = ""
+hook_hash = ""
+
+[governance]
+account = ""
+hook_hash = ""
+
+[asset_ownership]
+account = ""
+hook_hash = ""
+
+[reward_distribution]
+account = ""
+hook_hash = ""
+
+[operator_lease]
+account = ""
+hook_hash = ""
+
+[dispute]
+account = ""
+hook_hash = ""
+
+[checkpoint_anchor]
+account = ""
+hook_hash = ""
+
+[package_verification]
+account = ""
+hook_hash = ""

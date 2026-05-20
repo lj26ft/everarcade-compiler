@@ -22,8 +22,14 @@ fn run() -> Result<(), String> {
         "run-local-federation" => run_local_federation(),
         "replay-world" => replay_world(),
         "inspect-simulation" => inspect_simulation(),
+        "xahau-build-hooks" => xahau_build_hooks(),
+        "xahau-install-hooks" => xahau_install_hooks(),
+        "xahau-verify-hooks" => xahau_verify_hooks(),
+        "xahau-submit-settlement" => xahau_submit_settlement(),
+        "xahau-anchor-checkpoint" => xahau_anchor_checkpoint(),
+        "xahau-vault-status" => xahau_vault_status(),
         _ => {
-            println!("everarcade <init-game|build-game|package-game|run-local-federation|replay-world|inspect-simulation>");
+            println!("everarcade <init-game|build-game|package-game|run-local-federation|replay-world|inspect-simulation|xahau-build-hooks|xahau-install-hooks|xahau-verify-hooks|xahau-submit-settlement|xahau-anchor-checkpoint|xahau-vault-status>");
             Ok(())
         }
     }
@@ -70,4 +76,46 @@ fn inspect_simulation() -> Result<(), String> {
         "inspect=ok\ncontinuity=ok",
     )
     .map_err(|e| e.to_string())
+}
+
+fn xahau_root() -> PathBuf {
+    root().join("xahau")
+}
+
+fn xahau_build_hooks() -> Result<(), String> {
+    fs::create_dir_all(xahau_root()).map_err(|e| e.to_string())?;
+    fs::write(xahau_root().join("hooks.build"), "status=built\n").map_err(|e| e.to_string())
+}
+
+fn xahau_install_hooks() -> Result<(), String> {
+    fs::create_dir_all(xahau_root()).map_err(|e| e.to_string())?;
+    fs::write(xahau_root().join("hooks.install"), "status=installed\n").map_err(|e| e.to_string())
+}
+
+fn xahau_verify_hooks() -> Result<(), String> {
+    fs::create_dir_all(xahau_root()).map_err(|e| e.to_string())?;
+    fs::write(xahau_root().join("hooks.verify"), "status=verified\n").map_err(|e| e.to_string())
+}
+
+fn xahau_submit_settlement() -> Result<(), String> {
+    fs::create_dir_all(xahau_root()).map_err(|e| e.to_string())?;
+    fs::write(
+        xahau_root().join("settlement.receipt"),
+        "settlement=submitted\nfinality=pending\n",
+    )
+    .map_err(|e| e.to_string())
+}
+
+fn xahau_anchor_checkpoint() -> Result<(), String> {
+    fs::create_dir_all(xahau_root()).map_err(|e| e.to_string())?;
+    fs::write(
+        xahau_root().join("checkpoint.anchor"),
+        "checkpoint=anchored\nmonotonic=true\n",
+    )
+    .map_err(|e| e.to_string())
+}
+
+fn xahau_vault_status() -> Result<(), String> {
+    fs::create_dir_all(xahau_root()).map_err(|e| e.to_string())?;
+    fs::write(xahau_root().join("vault.status"), "vault=healthy\n").map_err(|e| e.to_string())
 }
