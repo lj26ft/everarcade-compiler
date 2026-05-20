@@ -1,5 +1,5 @@
-use bincode::Options;
 use super::errors::WasmAbiError;
+use bincode::Options;
 use serde::{de::DeserializeOwned, Serialize};
 
 pub fn serialize<T: Serialize>(value: &T) -> Result<Vec<u8>, WasmAbiError> {

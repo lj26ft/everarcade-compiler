@@ -79,6 +79,8 @@ Commands:
   verify-world --world-root <path>
   replay-world --world-root <path>
   verify-journal --world-root <path>
+  inspect-checkpoint --world-root <path>
+  inspect-journal --world-root <path>
   doctor --state <path>
   list-contracts --world-root <path>
   inspect-contract --world-root <path> --contract <id>
@@ -638,8 +640,8 @@ fn run_cli() -> Result<(), HostError> {
                 arg_value(&args, "--world-root")
                     .ok_or_else(|| HostError::InvalidArgs("missing --world-root".into()))?,
             );
-            everarcade_host::runtime_persistence::verify_world(&world_root)
-                .map_err(HostError::InvalidArgs)?;
+            everarcade_host::runtime_replay::verify_world(&world_root)
+                .map_err(|e| HostError::InvalidArgs(e.to_string()))?;
             println!("verify_world=ok");
         }
         "replay-world" => {
@@ -647,8 +649,8 @@ fn run_cli() -> Result<(), HostError> {
                 arg_value(&args, "--world-root")
                     .ok_or_else(|| HostError::InvalidArgs("missing --world-root".into()))?,
             );
-            let root = everarcade_host::runtime_persistence::replay_world(&world_root)
-                .map_err(HostError::InvalidArgs)?;
+            let root = everarcade_host::runtime_replay::replay_world(&world_root)
+                .map_err(|e| HostError::InvalidArgs(e.to_string()))?;
             println!("replay_world=ok");
             println!("state_root={}", hex::encode(root));
         }
@@ -657,9 +659,37 @@ fn run_cli() -> Result<(), HostError> {
                 arg_value(&args, "--world-root")
                     .ok_or_else(|| HostError::InvalidArgs("missing --world-root".into()))?,
             );
-            everarcade_host::runtime_persistence::verify_journal(&world_root)
-                .map_err(HostError::InvalidArgs)?;
+            everarcade_host::runtime_replay::verify_journal_chain(&world_root)
+                .map_err(|e| HostError::InvalidArgs(e.to_string()))?;
             println!("verify_journal=ok");
+        }
+        "inspect-checkpoint" => {
+            let world_root = PathBuf::from(
+                arg_value(&args, "--world-root")
+                    .ok_or_else(|| HostError::InvalidArgs("missing --world-root".into()))?,
+            );
+            let checkpoints = everarcade_host::runtime_replay::verify_checkpoints(&world_root)
+                .map_err(|e| HostError::InvalidArgs(e.to_string()))?;
+            let latest = checkpoints
+                .last()
+                .ok_or_else(|| HostError::InvalidArgs("no checkpoints".into()))?;
+            println!("inspect_checkpoint=ok");
+            println!("journal_sequence={}", latest.journal_sequence);
+            println!("state_root={}", hex::encode(latest.state_root));
+        }
+        "inspect-journal" => {
+            let world_root = PathBuf::from(
+                arg_value(&args, "--world-root")
+                    .ok_or_else(|| HostError::InvalidArgs("missing --world-root".into()))?,
+            );
+            let journal = everarcade_host::runtime_replay::verify_journal_chain(&world_root)
+                .map_err(|e| HostError::InvalidArgs(e.to_string()))?;
+            println!("inspect_journal=ok");
+            println!("entries={}", journal.len());
+            if let Some(last) = journal.last() {
+                println!("latest_sequence={}", last.sequence_number);
+                println!("latest_hash={}", hex::encode(last.entry_hash));
+            }
         }
         "sync-advertise" => {
             let world_root = PathBuf::from(
