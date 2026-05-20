@@ -1,5 +1,5 @@
 use execution_core::wasm_abi::{
-    abi::{AbiExecutionContext, AbiRequest, AbiResponse, EVERARCADE_ABI_VERSION},
+    abi::{AbiExecutionContext, AbiRequest, EVERARCADE_ABI_VERSION},
     layout::{decode_return_handle, encode_return_handle},
     serialization,
 };
@@ -46,9 +46,9 @@ fn test_abi_version_mismatch_rejected() {
 
     let wasm = wat::parse_str(
         r#"(module
-      (memory (export \"memory\") 1)
-      (func (export \"alloc\") (param i32) (result i32) i32.const 0)
-      (func (export \"everarcade_execute\") (param i32 i32) (result i64) i64.const 0)
+      (memory (export "memory") 1)
+      (func (export "alloc") (param i32) (result i32) i32.const 0)
+      (func (export "everarcade_execute") (param i32 i32) (result i64) i64.const 0)
     )"#,
     )
     .unwrap();
