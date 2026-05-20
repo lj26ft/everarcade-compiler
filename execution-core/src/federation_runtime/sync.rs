@@ -9,3 +9,28 @@ pub fn synchronize(local: &ContinuityBundle, peer: &ContinuityBundle) -> Option<
         reconcile_peer(local, peer)
     }
 }
+
+pub fn sync_latest_checkpoint(
+    local: &ContinuityBundle,
+    peer: &ContinuityBundle,
+) -> Option<ContinuityBundle> {
+    synchronize(local, peer)
+}
+
+pub fn sync_incremental_journal(
+    local: &ContinuityBundle,
+    peer: &ContinuityBundle,
+) -> Option<ContinuityBundle> {
+    reconcile_peer(local, peer)
+}
+
+pub fn recover_missing_checkpoint(
+    local: &ContinuityBundle,
+    peer: &ContinuityBundle,
+) -> Option<ContinuityBundle> {
+    if sync_checkpoint(local, peer) {
+        Some(peer.clone())
+    } else {
+        None
+    }
+}
