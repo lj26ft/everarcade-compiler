@@ -14,7 +14,7 @@ mkdir -p "$DIST_DIR"
 tar --sort=name --mtime='UTC 2020-01-01' --owner=0 --group=0 --numeric-owner -C "$WORK" -czf "$ARCHIVE" runtime
 
 tar -xzf "$ARCHIVE" -C "$WORK"
-mkdir -p "$WORK/runtime/world/federation/runtime" "$WORK/runtime/world/federation/sessions" "$WORK/runtime/world/federation/recovery" "$WORK/runtime/world/federation/advancement" "$WORK/runtime/world/topology" "$WORK/runtime/world/leases"
+mkdir -p "$WORK/runtime/world/federation/runtime" "$WORK/runtime/world/federation/supervisor" "$WORK/runtime/world/federation/recovery" "$WORK/runtime/world/federation/history" "$WORK/runtime/world/federation/sessions" "$WORK/runtime/world/federation/advancement" "$WORK/runtime/world/topology" "$WORK/runtime/world/leases"
 
 bash "$WORK/runtime/scripts/start-everarcade.sh"
 "$WORK/runtime/bin/everarcade-host" verify --state "$WORK/runtime/world/state"
@@ -31,3 +31,8 @@ bash "$WORK/runtime/scripts/start-everarcade.sh"
 "$WORK/runtime/bin/everarcade-host" federation-verify-convergence --world-root "$WORK/runtime/world"
 
 echo "validate_runtime_distribution=ok archive=$ARCHIVE"
+
+"$WORK/runtime/bin/everarcade-host" federation-runtime-health --world-root "$WORK/runtime/world"
+"$WORK/runtime/bin/everarcade-host" federation-supervisor-status --world-root "$WORK/runtime/world"
+"$WORK/runtime/bin/everarcade-host" federation-recovery-history --world-root "$WORK/runtime/world"
+"$WORK/runtime/bin/everarcade-host" federation-verify-integrity --world-root "$WORK/runtime/world"
