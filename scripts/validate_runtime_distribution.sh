@@ -55,3 +55,6 @@ echo "validate_runtime_distribution=ok archive=$ARCHIVE"
 "$WORK/runtime/bin/everarcade" build-game
 "$WORK/runtime/bin/everarcade" run-local-federation
 "$WORK/runtime/bin/everarcade" replay-world
+
+"$WORK/runtime/bin/everarcade" inspect-simulation
+echo "runtime_distribution_replay_workflow=ok"

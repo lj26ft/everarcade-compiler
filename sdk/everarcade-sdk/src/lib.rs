@@ -1,3 +1,4 @@
+pub mod replay_tooling;
 use sha2::{Digest, Sha256};
 use std::{fs, path::Path};
 
@@ -82,13 +83,18 @@ where
     pub fn on_interaction(&mut self, source: &str, target: &str, action: &str) {
         self.world.on_interaction(source, target, action)
     }
-    pub fn on_partition_migrate(&mut self, entity_id: &str, partition: &str) {
+    pub fn on_entity_update(&mut self, entity_id: &str, partition: &str) {
         self.world.on_partition_migrate(entity_id, partition)
     }
-    pub fn on_settlement(&mut self, tx_id: &str, amount_drops: u64) {
+    pub fn on_partition_change(&mut self, entity_id: &str, partition: &str) {
+        self.world.on_partition_migrate(entity_id, partition)
+    }
+    pub fn on_settlement_event(&mut self, tx_id: &str, amount_drops: u64) {
         self.world.on_settlement(tx_id, amount_drops)
     }
-    pub fn on_governance_event(&mut self, event_id: &str) {
+    pub fn on_governance_transition(&mut self, event_id: &str) {
         self.world.on_governance_event(event_id)
     }
 }
+
+pub use replay_tooling::*;
