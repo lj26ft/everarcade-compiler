@@ -23,4 +23,6 @@ if [[ ! -f "$STATE/node.json" ]]; then
 fi
 
 echo "runtime_start=ok root=$ROOT state=$STATE"
+"$BIN" verify-journal --world-root "$ROOT/world" | tee -a "$LOG"
+"$BIN" replay-world --world-root "$ROOT/world" | tee -a "$LOG"
 "$BIN" status --state "$STATE" | tee -a "$LOG"

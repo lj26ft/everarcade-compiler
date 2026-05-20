@@ -16,5 +16,7 @@ tar --sort=name --mtime='UTC 2020-01-01' --owner=0 --group=0 --numeric-owner -C 
 tar -xzf "$ARCHIVE" -C "$WORK"
 bash "$WORK/runtime/scripts/start-everarcade.sh"
 "$WORK/runtime/bin/everarcade-host" verify --state "$WORK/runtime/world/state"
+"$WORK/runtime/bin/everarcade-host" verify-world --world-root "$WORK/runtime/world"
+"$WORK/runtime/bin/everarcade-host" replay-world --world-root "$WORK/runtime/world"
 
 echo "validate_runtime_distribution=ok archive=$ARCHIVE"
