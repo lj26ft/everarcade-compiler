@@ -25,6 +25,7 @@ pub mod crypto_identity;
 pub mod discovery;
 pub mod federation_network;
 pub mod federation_security;
+pub mod federation_transport;
 pub mod network;
 pub mod proof_distribution;
 pub mod protocol;

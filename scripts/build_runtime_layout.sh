@@ -14,6 +14,7 @@ require_file() {
 mkdir -p "$OUT_ROOT"
 rm -rf "$OUT_ROOT"
 mkdir -p "$OUT_ROOT"/{bin,config,world,logs,contracts,vendor,scripts}
+mkdir -p "$OUT_ROOT/world"/{federation,topology,leases}
 mkdir -p "$OUT_ROOT/world"/{state,checkpoints,journal,receipts}
 
 if [[ "$PROFILE" == "release" ]]; then

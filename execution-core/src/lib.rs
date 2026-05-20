@@ -21,6 +21,7 @@ pub mod epoch;
 pub mod execute;
 pub mod execution;
 pub mod federation;
+pub mod federation_runtime;
 pub mod finality;
 pub mod freeze;
 pub mod hash_runtime;
