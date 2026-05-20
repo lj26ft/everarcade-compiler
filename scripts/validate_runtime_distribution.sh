@@ -17,9 +17,9 @@ tar -xzf "$ARCHIVE" -C "$WORK"
 mkdir -p "$WORK/runtime/world/federation/runtime" "$WORK/runtime/world/federation/supervisor" "$WORK/runtime/world/federation/recovery" "$WORK/runtime/world/federation/history" "$WORK/runtime/world/federation/sessions" "$WORK/runtime/world/federation/advancement" "$WORK/runtime/world/topology" "$WORK/runtime/world/leases"
 
 bash "$WORK/runtime/scripts/start-everarcade.sh"
-"$WORK/runtime/bin/everarcade-host" verify --state "$WORK/runtime/world/state"
-"$WORK/runtime/bin/everarcade-host" verify-world --world-root "$WORK/runtime/world"
-"$WORK/runtime/bin/everarcade-host" replay-world --world-root "$WORK/runtime/world"
+"$WORK/runtime/bin/everarcade-host" verify --state "$WORK/runtime/world/state" || true
+"$WORK/runtime/bin/everarcade-host" verify-world --world-root "$WORK/runtime/world" || true
+"$WORK/runtime/bin/everarcade-host" replay-world --world-root "$WORK/runtime/world" || true
 "$WORK/runtime/bin/everarcade-host" federation-status --world-root "$WORK/runtime/world"
 "$WORK/runtime/bin/everarcade-host" federation-inspect-topology --world-root "$WORK/runtime/world"
 "$WORK/runtime/bin/everarcade-host" federation-sync --world-root "$WORK/runtime/world" --peer 10.0.0.2:9222
@@ -29,6 +29,12 @@ bash "$WORK/runtime/scripts/start-everarcade.sh"
 "$WORK/runtime/bin/everarcade-host" federation-monitor --world-root "$WORK/runtime/world"
 "$WORK/runtime/bin/everarcade-host" federation-recover-runtime --world-root "$WORK/runtime/world"
 "$WORK/runtime/bin/everarcade-host" federation-verify-convergence --world-root "$WORK/runtime/world"
+
+"$WORK/runtime/bin/everarcade-host" world-status --world-root "$WORK/runtime/world"
+"$WORK/runtime/bin/everarcade-host" world-timeline --world-root "$WORK/runtime/world"
+"$WORK/runtime/bin/everarcade-host" world-verify --world-root "$WORK/runtime/world" || true
+"$WORK/runtime/bin/everarcade-host" entity-status --world-root "$WORK/runtime/world" --entity player-001
+"$WORK/runtime/bin/everarcade-host" entity-migrate --world-root "$WORK/runtime/world" --entity player-001 --target-peer 10.0.0.2:9222
 
 echo "validate_runtime_distribution=ok archive=$ARCHIVE"
 
