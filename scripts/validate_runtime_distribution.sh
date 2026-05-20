@@ -49,3 +49,9 @@ echo "validate_runtime_distribution=ok archive=$ARCHIVE"
 "$WORK/runtime/bin/everarcade-host" federation-supervisor-status --world-root "$WORK/runtime/world"
 "$WORK/runtime/bin/everarcade-host" federation-recovery-history --world-root "$WORK/runtime/world"
 "$WORK/runtime/bin/everarcade-host" federation-verify-integrity --world-root "$WORK/runtime/world"
+
+# Developer platform CLI validation
+"$WORK/runtime/bin/everarcade" init-game test-world
+"$WORK/runtime/bin/everarcade" build-game
+"$WORK/runtime/bin/everarcade" run-local-federation
+"$WORK/runtime/bin/everarcade" replay-world

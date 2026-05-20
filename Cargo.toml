@@ -7,7 +7,14 @@ members = [
     "contracts/increment-contract",
     "contracts/counter-world",
     "contracts/counter-contract",
-    "everarcade-host"
+    "everarcade-host",
+    "sdk/everarcade-sdk",
+    "sdk/everarcade-world-sdk",
+    "sdk/everarcade-entity-sdk",
+    "sdk/everarcade-simulation-sdk",
+    "sdk/everarcade-economy-sdk",
+    "sdk/everarcade-governance-sdk",
+    "src-bin-everarcade",
 ]
 
 resolver = "2"

@@ -1,0 +1,13 @@
+[package]
+name = "everarcade-sdk"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+everarcade-world-sdk = { path = "../everarcade-world-sdk" }
+everarcade-entity-sdk = { path = "../everarcade-entity-sdk" }
+everarcade-simulation-sdk = { path = "../everarcade-simulation-sdk" }
+everarcade-economy-sdk = { path = "../everarcade-economy-sdk" }
+everarcade-governance-sdk = { path = "../everarcade-governance-sdk" }
+sha2 = "0.10"
+hex = "0.4"
