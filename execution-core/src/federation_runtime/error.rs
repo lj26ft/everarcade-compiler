@@ -10,4 +10,6 @@ pub enum FederationRuntimeError {
     DivergenceDetected(&'static str),
     #[error("canonical serialization error: {0}")]
     Serialization(String),
+    #[error("continuity verification failed")]
+    ContinuityVerificationFailed,
 }

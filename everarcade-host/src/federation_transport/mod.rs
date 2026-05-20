@@ -1,3 +1,4 @@
+pub mod bundle_exchange;
 pub mod client;
 pub mod error;
 pub mod message;

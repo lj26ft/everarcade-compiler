@@ -5,8 +5,12 @@ pub mod error;
 pub mod lease;
 pub mod peer;
 pub mod reconciliation;
+pub mod reconciliation_engine;
+pub mod replay_verification;
 pub mod sync;
+pub mod sync_engine;
 pub mod topology;
+pub mod topology_state;
 pub mod transport;
 pub mod verification;
 
@@ -21,3 +25,8 @@ pub use sync::*;
 pub use topology::*;
 pub use transport::*;
 pub use verification::*;
+
+pub use reconciliation_engine::*;
+pub use replay_verification::*;
+pub use sync_engine::*;
+pub use topology_state::*;
