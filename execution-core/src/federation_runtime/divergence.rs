@@ -46,3 +46,18 @@ pub fn detect_divergence(
     }
     None
 }
+
+pub fn suspend_peer_advancement(active: &mut bool) {
+    *active = false;
+}
+
+pub fn resolve_divergence(
+    local: &super::bundle::ContinuityBundle,
+    peer: &super::bundle::ContinuityBundle,
+) -> Option<super::bundle::ContinuityBundle> {
+    super::reconciliation::reconcile_peer(local, peer)
+}
+
+pub fn resume_continuity_advancement(active: &mut bool) {
+    *active = true;
+}

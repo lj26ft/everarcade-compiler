@@ -1,8 +1,8 @@
 use everarcade_host::federation_transport::bundle_exchange;
+use execution_core::federation_runtime::replay_verification::verify_peer_replay;
 use execution_core::federation_runtime::{
     reconcile_peer_state, sync_peer, ContinuityBundle, TopologyStateEngine,
 };
-use execution_core::federation_runtime::replay_verification::verify_peer_replay;
 
 fn bundle(seed: u8) -> ContinuityBundle {
     ContinuityBundle {
