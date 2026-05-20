@@ -13,10 +13,10 @@ pub use authority::{
     assign_runtime_authority, transfer_runtime_authority, verify_authority_lineage, AuthorityState,
 };
 pub use checkpoint::GovernanceCheckpoint;
-pub use error::GovernanceError;
 pub use continuity::{
     sync_governance_continuity, verify_federated_governance, GovernanceContinuity,
 };
+pub use error::GovernanceError;
 pub use policy::{apply_governance_policy, verify_policy_continuity, GovernancePolicy};
 pub use proposal::{create_governance_proposal, verify_proposal_lineage, GovernanceProposal};
 pub use replay::{replay_governance_lineage, verify_governance_replay};
