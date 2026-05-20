@@ -303,6 +303,28 @@ dependencies = [
 ]
 
 [[package]]
+name = "everarcade-cli"
+version = "0.1.0"
+dependencies = [
+ "hex",
+ "serde",
+ "serde_json",
+ "sha2",
+]
+
+[[package]]
+name = "everarcade-economy-sdk"
+version = "0.1.0"
+
+[[package]]
+name = "everarcade-entity-sdk"
+version = "0.1.0"
+
+[[package]]
+name = "everarcade-governance-sdk"
+version = "0.1.0"
+
+[[package]]
 name = "everarcade-host"
 version = "0.1.0"
 dependencies = [
@@ -315,6 +337,27 @@ dependencies = [
  "tempfile",
  "thiserror 1.0.69",
 ]
+
+[[package]]
+name = "everarcade-sdk"
+version = "0.1.0"
+dependencies = [
+ "everarcade-economy-sdk",
+ "everarcade-entity-sdk",
+ "everarcade-governance-sdk",
+ "everarcade-simulation-sdk",
+ "everarcade-world-sdk",
+ "hex",
+ "sha2",
+]
+
+[[package]]
+name = "everarcade-simulation-sdk"
+version = "0.1.0"
+
+[[package]]
+name = "everarcade-world-sdk"
+version = "0.1.0"
 
 [[package]]
 name = "execution-core"

@@ -18,14 +18,18 @@ mkdir -p "$OUT_ROOT/world"/{federation,topology,leases}
 mkdir -p "$OUT_ROOT/world"/{state,checkpoints,journal,receipts}
 
 if [[ "$PROFILE" == "release" ]]; then
-  cargo build --release --locked --frozen --offline -p everarcade-host
+  cargo build --release --locked --frozen --offline -p everarcade-host -p everarcade-cli
 else
-  cargo build --locked --frozen --offline -p everarcade-host
+  cargo build --locked --frozen --offline -p everarcade-host -p everarcade-cli
 fi
 
 require_file "$TARGET_DIR/everarcade-host"
 cp "$TARGET_DIR/everarcade-host" "$OUT_ROOT/bin/everarcade-host"
 strip "$OUT_ROOT/bin/everarcade-host" 2>/dev/null || true
+if [[ -f "$TARGET_DIR/everarcade" ]]; then
+  cp "$TARGET_DIR/everarcade" "$OUT_ROOT/bin/everarcade"
+  strip "$OUT_ROOT/bin/everarcade" 2>/dev/null || true
+fi
 
 for optional_bin in execution-core-tool verification-tool scheduler-tool; do
   if [[ -f "$TARGET_DIR/$optional_bin" ]]; then
