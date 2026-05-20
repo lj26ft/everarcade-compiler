@@ -125,3 +125,5 @@ pub mod host;
 pub mod identity;
 pub mod vm;
 pub mod zk;
+
+pub mod xrpl_settlement;
