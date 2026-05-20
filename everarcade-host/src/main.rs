@@ -108,6 +108,11 @@ Commands:
   everarcade-host federation-supervisor-status --world-root <path>
   everarcade-host federation-recovery-history --world-root <path>
   everarcade-host federation-verify-integrity --world-root <path>
+  xrpl-status --world-root <path>
+  asset-transfer --world-root <path>
+  asset-status --world-root <path>
+  settlement-verify --world-root <path>
+  settlement-status --world-root <path>
 
 Examples:
   everarcade-host init --state ~/.everarcade
@@ -569,6 +574,75 @@ fn run_cli() -> Result<(), HostError> {
                 read_node_manifest(&state).unwrap_or_else(|_| NodeManifest::new("everarcade-node"));
             write_node_manifest(&state, &manifest)?;
             println!("verify=ok");
+        }
+
+        "settlement-status" | "settlement-verify" | "asset-status" | "xrpl-status"
+        | "asset-transfer" => {
+            let world_root = PathBuf::from(
+                arg_value(&args, "--world-root")
+                    .ok_or_else(|| HostError::InvalidArgs("missing --world-root".into()))?,
+            );
+            let settlements_dir = world_root.join("world").join("settlements");
+            let assets_dir = world_root.join("world").join("assets");
+            let economy_dir = world_root.join("world").join("economy");
+            let xrpl_dir = world_root.join("world").join("xrpl");
+            fs::create_dir_all(&settlements_dir)
+                .map_err(|e| HostError::InvalidArgs(e.to_string()))?;
+            fs::create_dir_all(&assets_dir).map_err(|e| HostError::InvalidArgs(e.to_string()))?;
+            fs::create_dir_all(&economy_dir).map_err(|e| HostError::InvalidArgs(e.to_string()))?;
+            fs::create_dir_all(&xrpl_dir).map_err(|e| HostError::InvalidArgs(e.to_string()))?;
+            if cmd == "asset-transfer" {
+                let asset_id = arg_value(&args, "--asset")
+                    .ok_or_else(|| HostError::InvalidArgs("missing --asset".into()))?;
+                let target_owner = arg_value(&args, "--target-owner")
+                    .ok_or_else(|| HostError::InvalidArgs("missing --target-owner".into()))?;
+                let ownership_path = assets_dir.join("ownership.json");
+                let mut lineage = execution_core::xrpl_settlement::AssetLineage::default();
+                if ownership_path.exists() {
+                    let raw = fs::read(&ownership_path)
+                        .map_err(|e| HostError::InvalidArgs(e.to_string()))?;
+                    lineage = serde_json::from_slice(&raw)
+                        .map_err(|e| HostError::InvalidArgs(e.to_string()))?;
+                }
+                let current_owner = lineage
+                    .ownership
+                    .iter()
+                    .rev()
+                    .find(|o| o.asset_id == asset_id)
+                    .map(|o| o.owner_id.clone());
+                let next_epoch = lineage.ownership.len() as u64 + 1;
+                match current_owner {
+                    Some(owner) => execution_core::xrpl_settlement::transfer_asset_ownership(
+                        &mut lineage,
+                        &asset_id,
+                        &owner,
+                        &target_owner,
+                        next_epoch,
+                    ),
+                    None => execution_core::xrpl_settlement::assign_asset_owner(
+                        &mut lineage,
+                        &asset_id,
+                        &target_owner,
+                        1,
+                    ),
+                }
+                .map_err(|e| HostError::InvalidArgs(e.to_string()))?;
+                fs::write(
+                    &ownership_path,
+                    serde_json::to_vec_pretty(&lineage)
+                        .map_err(|e| HostError::InvalidArgs(e.to_string()))?,
+                )
+                .map_err(|e| HostError::InvalidArgs(e.to_string()))?;
+                println!("asset_transfer=ok");
+                println!("asset={asset_id}");
+                println!("target_owner={target_owner}");
+            } else {
+                println!("command={}", cmd.replace('-', "_"));
+                println!("settlements_path={}", settlements_dir.display());
+                println!("assets_path={}", assets_dir.display());
+                println!("economy_path={}", economy_dir.display());
+                println!("xrpl_path={}", xrpl_dir.display());
+            }
         }
         "debug" => {
             let manifest =
