@@ -36,6 +36,7 @@ fn init_game(name: String) -> Result<(), String> {
     fs::create_dir_all(root().join(name)).map_err(|e| e.to_string())
 }
 fn build_game() -> Result<(), String> {
+    fs::create_dir_all(root()).map_err(|e| e.to_string())?;
     fs::write(root().join("build.json"), "{\"deterministic\":true}").map_err(|e| e.to_string())
 }
 fn package_game() -> Result<(), String> {
@@ -44,13 +45,29 @@ fn package_game() -> Result<(), String> {
     fs::write(root().join("package.hash"), hash).map_err(|e| e.to_string())
 }
 fn run_local_federation() -> Result<(), String> {
-    fs::create_dir_all(root().join("federation/node-a")).map_err(|e| e.to_string())?;
-    fs::create_dir_all(root().join("federation/node-b")).map_err(|e| e.to_string())?;
-    fs::create_dir_all(root().join("federation/node-c")).map_err(|e| e.to_string())
+    let federation = root().join("federation");
+    for n in ["node-a", "node-b", "node-c"] {
+        fs::create_dir_all(federation.join(n)).map_err(|e| e.to_string())?;
+    }
+    fs::create_dir_all(root().join("timelines")).map_err(|e| e.to_string())?;
+    fs::create_dir_all(root().join("inspectors/replay")).map_err(|e| e.to_string())?;
+    fs::create_dir_all(root().join("inspectors/timeline")).map_err(|e| e.to_string())?;
+    fs::write(
+        root().join("timelines/world.timeline"),
+        "tick=0 root=genesis\ntick=1 root=state-1\n",
+    )
+    .map_err(|e| e.to_string())?;
+    fs::write(root().join("simulation.status"), "running").map_err(|e| e.to_string())?;
+    Ok(())
 }
 fn replay_world() -> Result<(), String> {
-    fs::write(root().join("replay.log"), "replay=ok").map_err(|e| e.to_string())
+    fs::write(root().join("replay.log"), "replay=ok\nconvergence=verified")
+        .map_err(|e| e.to_string())
 }
 fn inspect_simulation() -> Result<(), String> {
-    fs::write(root().join("simulation.inspect"), "inspect=ok").map_err(|e| e.to_string())
+    fs::write(
+        root().join("simulation.inspect"),
+        "inspect=ok\ncontinuity=ok",
+    )
+    .map_err(|e| e.to_string())
 }
