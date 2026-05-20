@@ -24,6 +24,7 @@ pub mod federation;
 pub mod federation_runtime;
 pub mod finality;
 pub mod freeze;
+pub mod genesis;
 pub mod hash_runtime;
 pub mod hashing;
 pub mod interpretation;

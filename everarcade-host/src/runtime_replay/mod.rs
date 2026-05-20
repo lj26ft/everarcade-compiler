@@ -83,10 +83,13 @@ pub fn verify_checkpoints(world_root: &Path) -> Result<Vec<CheckpointRecord>, Ru
 pub fn reconstruct_state_root(
     receipts: &[ExecutionReceipt],
 ) -> Result<[u8; 32], RuntimeReplayError> {
-    receipts
-        .last()
-        .map(|r| r.new_state_root)
-        .ok_or_else(|| RuntimeReplayError::Invalid("empty replay".into()))
+    if let Some(last) = receipts.last() {
+        Ok(last.new_state_root)
+    } else {
+        Ok(execution_core::genesis::compute_genesis_root()
+            .world_root
+            .world_root)
+    }
 }
 
 pub fn replay_world(world_root: &Path) -> Result<[u8; 32], RuntimeReplayError> {
