@@ -5,6 +5,7 @@ pub mod heartbeat;
 pub mod message_codec;
 pub mod peer_session;
 pub mod server;
+pub mod session_coordinator;
 pub mod timeout;
 
 pub use client::*;
@@ -14,4 +15,5 @@ pub use heartbeat::*;
 pub use message_codec::*;
 pub use peer_session::*;
 pub use server::*;
+pub use session_coordinator::*;
 pub use timeout::*;
