@@ -63,6 +63,7 @@ pub mod treaty;
 pub mod verifier;
 pub mod wasm;
 pub mod wasm_abi;
+pub mod world_partition;
 pub mod world_scheduler;
 
 pub use everarcade_abi::{
