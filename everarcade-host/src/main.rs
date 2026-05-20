@@ -51,6 +51,11 @@ Commands:
   world-verify --world-root <path>
   world-timeline --world-root <path>
   world-status --world-root <path>
+  simulation-status --world-root <path>
+  simulation-tick --world-root <path>
+  simulation-verify --world-root <path>
+  interaction-status --world-root <path>
+  world-evolution --world-root <path>
   sync-advertise --world-root <path>
   sync-verify --bundle <path>
   sync-pull --world-root <path> --start-sequence <n> --end-sequence <n>
@@ -581,6 +586,38 @@ fn run_cli() -> Result<(), HostError> {
             println!("verify=ok");
         }
 
+        "simulation-status" | "interaction-status" | "world-evolution" => {
+            let world_root = PathBuf::from(
+                arg_value(&args, "--world-root")
+                    .ok_or_else(|| HostError::InvalidArgs("missing --world-root".into()))?,
+            );
+            let sim_dir = world_root.join("world").join("simulation");
+            fs::create_dir_all(&sim_dir).map_err(|e| HostError::InvalidArgs(e.to_string()))?;
+            println!("command={}", cmd.replace('-', "_"));
+            println!("simulation_path={}", sim_dir.display());
+        }
+        "simulation-tick" => {
+            let world_root = PathBuf::from(
+                arg_value(&args, "--world-root")
+                    .ok_or_else(|| HostError::InvalidArgs("missing --world-root".into()))?,
+            );
+            let mut state = execution_core::simulation::state::SimulationState::default();
+            let tick =
+                execution_core::simulation::engine::advance_simulation_tick(&mut state, 1, &[])
+                    .map_err(|e| HostError::InvalidArgs(e.to_string()))?;
+            println!("simulation_tick=ok");
+            println!("tick_id={}", tick.tick_id);
+            println!("world_root={}", world_root.display());
+        }
+        "simulation-verify" => {
+            let mut state = execution_core::simulation::state::SimulationState::default();
+            let tick =
+                execution_core::simulation::engine::advance_simulation_tick(&mut state, 1, &[])
+                    .map_err(|e| HostError::InvalidArgs(e.to_string()))?;
+            execution_core::simulation::engine::verify_simulation_tick(&state, &tick, &[])
+                .map_err(|e| HostError::VerificationFailed(e.to_string()))?;
+            println!("simulation_verify=ok");
+        }
         "settlement-status" | "settlement-verify" | "asset-status" | "xrpl-status"
         | "asset-transfer" => {
             let world_root = PathBuf::from(
