@@ -22,6 +22,10 @@ fn run() -> Result<(), String> {
         "run-local-federation" => run_local_federation(),
         "replay-world" => replay_world(),
         "inspect-simulation" => inspect_simulation(),
+        "start" => start(),
+        "doctor" => doctor(),
+        "demo" => demo(),
+        "reset" => reset(),
         "xahau-build-hooks" => xahau_build_hooks(),
         "xahau-install-hooks" => xahau_install_hooks(),
         "xahau-verify-hooks" => xahau_verify_hooks(),
@@ -29,7 +33,7 @@ fn run() -> Result<(), String> {
         "xahau-anchor-checkpoint" => xahau_anchor_checkpoint(),
         "xahau-vault-status" => xahau_vault_status(),
         _ => {
-            println!("everarcade <init-game|build-game|package-game|run-local-federation|replay-world|inspect-simulation|xahau-build-hooks|xahau-install-hooks|xahau-verify-hooks|xahau-submit-settlement|xahau-anchor-checkpoint|xahau-vault-status>");
+            println!("everarcade <init-game|build-game|package-game|run-local-federation|replay-world|inspect-simulation|start|doctor|demo|reset|xahau-build-hooks|xahau-install-hooks|xahau-verify-hooks|xahau-submit-settlement|xahau-anchor-checkpoint|xahau-vault-status>");
             Ok(())
         }
     }
@@ -118,4 +122,49 @@ fn xahau_anchor_checkpoint() -> Result<(), String> {
 fn xahau_vault_status() -> Result<(), String> {
     fs::create_dir_all(xahau_root()).map_err(|e| e.to_string())?;
     fs::write(xahau_root().join("vault.status"), "vault=healthy\n").map_err(|e| e.to_string())
+}
+
+fn start() -> Result<(), String> {
+    init_game("first-world".into())?;
+    build_game()?;
+    package_game()?;
+    run_local_federation()?;
+    replay_world()?;
+    inspect_simulation()
+}
+
+fn doctor() -> Result<(), String> {
+    let dev = root();
+    let vendor = env::current_dir()
+        .map_err(|e| e.to_string())?
+        .join("vendor");
+    let mut lines = Vec::new();
+    lines.push(format!(
+        "rustc={} cargo={}",
+        command_exists("rustc"),
+        command_exists("cargo")
+    ));
+    lines.push(format!("vendor_exists={}", vendor.exists()));
+    lines.push(format!("runtime_dir_exists={}", dev.exists()));
+    fs::create_dir_all(&dev).map_err(|e| e.to_string())?;
+    fs::write(dev.join("doctor.quick"), lines.join("\n")).map_err(|e| e.to_string())
+}
+
+fn demo() -> Result<(), String> {
+    start()
+}
+
+fn reset() -> Result<(), String> {
+    let dev = root();
+    if dev.exists() {
+        fs::remove_dir_all(&dev).map_err(|e| e.to_string())?;
+    }
+    start()
+}
+
+fn command_exists(cmd: &str) -> bool {
+    std::process::Command::new(cmd)
+        .arg("--version")
+        .output()
+        .is_ok()
 }
