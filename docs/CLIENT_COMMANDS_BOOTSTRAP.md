@@ -98,6 +98,8 @@ cargo run -p everarcade-host -- status --state "$STATE_DIR"
   - Exercises release packaging and install/uninstall lifecycle.
 - `./scripts/release_smoke.sh`
   - End-to-end release package integrity + deployment smoke.
+- `./scripts/bootstrap_e2e.sh`
+  - One-command happy path: vendors deps, runs `everarcade` dev flow, then runs `everarcade-host` init/generate/run/verify/status.
 - `./scripts/local_cluster.sh`
   - Runs selected multi-node/local-cluster integration tests.
 - `./scripts/networked_cluster.sh`
@@ -107,4 +109,4 @@ cargo run -p everarcade-host -- status --state "$STATE_DIR"
 
 - If `cargo` fails with missing `vendor/` or crates index errors, run `./scripts/vendor_deps.sh` first.
 - Use temp state directories (`mktemp -d`) for clean local loops.
-- Start with `linux_vm_smoke.sh`, then move to `local_cluster.sh` for broader confidence.
+- Start with `bootstrap_e2e.sh` for one-command bring-up, then use `linux_vm_smoke.sh`/`local_cluster.sh` for deeper confidence.
