@@ -58,3 +58,13 @@ echo "validate_runtime_distribution=ok archive=$ARCHIVE"
 
 "$WORK/runtime/bin/everarcade" inspect-simulation
 echo "runtime_distribution_replay_workflow=ok"
+
+
+# Zero-friction onboarding validation flow
+bash "$ROOT/scripts/everarcade_start.sh"
+bash "$ROOT/scripts/doctor_quick.sh"
+"$WORK/runtime/bin/everarcade" start
+"$WORK/runtime/bin/everarcade" doctor
+"$WORK/runtime/bin/everarcade" demo
+"$WORK/runtime/bin/everarcade" reset
+echo "runtime_distribution_bootstrap_validation=ok"
