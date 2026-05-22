@@ -313,6 +313,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "everarcade-client-bridge"
+version = "0.1.0"
+dependencies = [
+ "execution-core",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "everarcade-economy-sdk"
 version = "0.1.0"
 

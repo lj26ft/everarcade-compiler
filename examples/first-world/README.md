@@ -4,11 +4,10 @@
 
 ## What this demonstrates
 
-- **Local federation boot**: creates a 3-node local federation (`node-a/node-b/node-c`).
-- **Replay artifacts**: produces `.everarcade-dev/replay.log` from the replay pipeline.
-- **Deterministic ticks**: `timelines/world.timeline` records deterministic tick progression.
-- **Interaction replay**: replay command reconstructs the deterministic sequence from generated artifacts.
-- **Convergence verification**: replay and inspect outputs provide convergence markers for quick verification.
+- **Runtime start flow** using `cargo run -p everarcade-cli -- start`.
+- **Replay artifacts** produced at `runtime/replay/latest/frame-0001.json`.
+- **World state output** produced at `runtime/world/status.txt`.
+- **Game manifest materialization** under `runtime/games/2d-arena/`.
 
 ## Fast path
 
@@ -20,15 +19,15 @@ Run:
 
 Then inspect:
 
-- `.everarcade-dev/replay.log`
-- `.everarcade-dev/simulation.inspect`
-- `.everarcade-dev/timelines/world.timeline`
+- `runtime/world/status.txt`
+- `runtime/replay/latest/frame-0001.json`
+- `runtime/games/2d-arena/game.toml`
+- `clients/web-reference/index.html`
 
 ## Useful commands
 
 ```bash
-cargo run -p everarcade-cli -- run-local-federation
-cargo run -p everarcade-cli -- replay-world
-cargo run -p everarcade-cli -- inspect-simulation
-cargo run -p everarcade-cli -- reset
+cargo run -p everarcade-cli -- start
+cargo run -p everarcade-cli -- start-game 2d-arena
+cargo run -p everarcade-cli -- list-games
 ```

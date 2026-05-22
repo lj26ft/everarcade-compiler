@@ -3,32 +3,32 @@
 ## 1) Run this first
 
 ```bash
-git clone <repo-url>
+git clone git@github.com:lj26ft/everarcade-compiler.git
 cd everarcade-compiler
 ./scripts/everarcade_start.sh
 ```
 
-That single command validates environment, vendors dependencies if needed, builds binaries, boots a local federation, generates replay artifacts, and runs simulation inspection.
+If cloning over HTTPS and the repository is private, use a Personal Access Token (PAT).
 
 ## 2) What artifacts to inspect
 
-After bootstrap completes, inspect `.everarcade-dev/`:
+After bootstrap completes, inspect `runtime/` artifacts:
 
-- `replay.log` — replay execution + convergence marker.
-- `simulation.inspect` — simulation inspection output.
-- `federation/node-a`, `federation/node-b`, `federation/node-c` — local multi-node federation directories.
+- `runtime/world/status.txt`
+- `runtime/replay/latest/frame-0001.json`
+- `runtime/games/2d-arena/`
+- `clients/web-reference/index.html`
 
 ## 3) Next commands
 
 ```bash
-cargo run -p everarcade-cli -- run-local-federation
-cargo run -p everarcade-cli -- replay-world
-cargo run -p everarcade-cli -- inspect-simulation
+cargo run -p everarcade-cli -- start
+cargo run -p everarcade-cli -- start-game 2d-arena
+cargo run -p everarcade-cli -- list-games
 ```
 
 Optional quick diagnostics:
 
 ```bash
 ./scripts/doctor_quick.sh
-cargo run -p everarcade-cli -- doctor
 ```

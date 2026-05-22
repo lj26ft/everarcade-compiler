@@ -44,11 +44,25 @@ else
   status=1
 fi
 
-if [[ -d .everarcade-dev ]]; then
-  pass "runtime directory .everarcade-dev exists"
+if [[ -d runtime ]]; then
+  pass "runtime/ exists"
 else
-  fail "runtime directory .everarcade-dev missing" "./scripts/everarcade_start.sh"
+  fail "runtime/ missing" "cargo run -p everarcade-cli -- start"
   status=1
 fi
+
+for f in \
+  runtime/world/status.txt \
+  runtime/replay/latest/frame-0001.json \
+  runtime/games/2d-arena/game.toml \
+  runtime/config/runtime.toml \
+  clients/web-reference/index.html; do
+  if [[ -f "$f" ]]; then
+    pass "artifact present: $f"
+  else
+    fail "artifact missing: $f" "cargo run -p everarcade-cli -- start"
+    status=1
+  fi
+done
 
 exit "$status"
