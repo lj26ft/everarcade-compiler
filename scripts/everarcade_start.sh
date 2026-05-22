@@ -5,7 +5,7 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
 STEP=0
-TOTAL=9
+TOTAL=5
 
 step() {
   STEP=$((STEP + 1))
@@ -52,24 +52,30 @@ else
 fi
 
 run_step "Building core binaries (everarcade-cli, everarcade-host)..." "cargo build -p everarcade-cli -p everarcade-host" cargo build -p everarcade-cli -p everarcade-host
-run_step "Initializing example world..." "cargo run -p everarcade-cli -- init-game first-world" cargo run -p everarcade-cli -- init-game first-world
-run_step "Building game..." "cargo run -p everarcade-cli -- build-game" cargo run -p everarcade-cli -- build-game
-run_step "Packaging game..." "cargo run -p everarcade-cli -- package-game" cargo run -p everarcade-cli -- package-game
-run_step "Launching local federation..." "cargo run -p everarcade-cli -- run-local-federation" cargo run -p everarcade-cli -- run-local-federation
-run_step "Generating replay artifacts..." "cargo run -p everarcade-cli -- replay-world" cargo run -p everarcade-cli -- replay-world
-run_step "Inspecting simulation..." "cargo run -p everarcade-cli -- inspect-simulation" cargo run -p everarcade-cli -- inspect-simulation
+run_step "Starting runtime flow..." "cargo run -p everarcade-cli -- start" cargo run -p everarcade-cli -- start
+
+step "Checking runtime artifacts..."
+for f in \
+  runtime/world/status.txt \
+  runtime/replay/latest/frame-0001.json \
+  runtime/games/2d-arena/game.toml \
+  clients/web-reference/index.html; do
+  [[ -f "$f" ]] || fail "missing required artifact: $f" "cargo run -p everarcade-cli -- start"
+  echo "  ✅ $f"
+done
 
 echo
 cat <<'OUT'
 ✅ EverArcade bootstrapped successfully
 
 Artifacts:
-  .everarcade-dev/
-  .everarcade-dev/replay.log
-  .everarcade-dev/simulation.inspect
+  runtime/world/status.txt
+  runtime/replay/latest/frame-0001.json
+  runtime/games/2d-arena/
+  clients/web-reference/index.html
 
 Next commands:
-  cargo run -p everarcade-cli -- run-local-federation
-  cargo run -p everarcade-cli -- replay-world
-  cargo run -p everarcade-cli -- inspect-simulation
+  cargo run -p everarcade-cli -- start
+  cargo run -p everarcade-cli -- start-game 2d-arena
+  cargo run -p everarcade-cli -- list-games
 OUT

@@ -30,11 +30,28 @@ fn run() -> Result<(), String> {
         "asset-build" => asset_build(),
         "asset-verify" => asset_verify(),
         "start" => start_game("2d-arena"),
-        _ => {
-            println!("everarcade <install-game|list-games|inspect-game|run-game|start-game|asset-register|asset-build|asset-verify|start>");
+        // legacy compatibility aliases
+        "init-game" => start_game(args.get(2).map(String::as_str).unwrap_or("2d-arena")),
+        "build-game" => verify_game_manifest("2d-arena"),
+        "package-game" => package_game("2d-arena"),
+        "run-local-federation" => start_game("2d-arena"),
+        "replay-world" => verify_replay_frame(),
+        "inspect-simulation" => inspect_simulation(),
+        "help" | "--help" | "-h" => {
+            print_help();
             Ok(())
         }
+        _ => {
+            print_help();
+            Err(format!("unknown command: {cmd}"))
+        }
     }
+}
+
+fn print_help() {
+    println!(
+        "everarcade <install-game|list-games|inspect-game|run-game|start-game|asset-register|asset-build|asset-verify|start|init-game|build-game|package-game|run-local-federation|replay-world|inspect-simulation>"
+    );
 }
 
 fn runtime_root() -> PathBuf {
@@ -98,6 +115,46 @@ fn start_game(game_id: &str) -> Result<(), String> {
     Ok(())
 }
 
+fn verify_game_manifest(game_id: &str) -> Result<(), String> {
+    let game_toml = games_root().join(game_id).join("game.toml");
+    if game_toml.is_file() {
+        println!("validated manifest: {}", game_toml.display());
+        Ok(())
+    } else {
+        Err(format!("missing game manifest: {}", game_toml.display()))
+    }
+}
+
+fn package_game(game_id: &str) -> Result<(), String> {
+    verify_game_manifest(game_id)?;
+    let body = fs::read(games_root().join(game_id).join("game.toml")).map_err(|e| e.to_string())?;
+    fs::write(
+        games_root().join(game_id).join("package.hash"),
+        hex::encode(Sha256::digest(&body)),
+    )
+    .map_err(|e| e.to_string())
+}
+
+fn verify_replay_frame() -> Result<(), String> {
+    let frame = runtime_root().join("replay/latest/frame-0001.json");
+    if frame.is_file() {
+        println!("replay verified: {}", frame.display());
+        Ok(())
+    } else {
+        Err(format!("missing replay frame: {}", frame.display()))
+    }
+}
+
+fn inspect_simulation() -> Result<(), String> {
+    verify_replay_frame()?;
+    let frame = fs::read_to_string(runtime_root().join("replay/latest/frame-0001.json"))
+        .map_err(|e| e.to_string())?;
+    let out = runtime_root().join("replay/latest/inspection.txt");
+    fs::write(&out, format!("simulation.inspect\n{frame}\n")).map_err(|e| e.to_string())?;
+    println!("inspection summary: {}", out.display());
+    Ok(())
+}
+
 fn asset_register() -> Result<(), String> {
     seed_runtime()?;
     fs::write(runtime_root().join("manifests/assets.toml"), "asset_id=\"hero-sprite\"\nasset_type=\"image\"\ncontent_hash=\"sha256:demo\"\npath=\"assets/hero.png\"\nversion=\"0.1.0\"\n").map_err(|e| e.to_string())
@@ -123,9 +180,15 @@ fn seed_runtime() -> Result<(), String> {
         "runtime/manifests",
         "runtime/replay",
         "runtime/logs",
+        "runtime/config",
     ] {
         fs::create_dir_all(d).map_err(|e| e.to_string())?;
     }
+    fs::write(
+        runtime_root().join("config/runtime.toml"),
+        "mode=\"local\"\n",
+    )
+    .map_err(|e| e.to_string())?;
     Ok(())
 }
 
