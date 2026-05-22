@@ -10,5 +10,5 @@ mkdir -p "$WORK/runtime/sdk-docs" "$WORK/runtime/local-federation"
 cp -R "$ROOT/docs/developer/." "$WORK/runtime/sdk-docs/" || true
 cp -R "$ROOT/tools/local-federation/." "$WORK/runtime/local-federation/" || true
 mkdir -p "$DIST_DIR"
-tar --sort=name --mtime='UTC 2020-01-01' --owner=0 --group=0 --numeric-owner -C "$WORK" -czf "$OUT" runtime
+tar --sort=name --mtime='UTC 2020-01-01' --owner=0 --group=0 --numeric-owner -C "$WORK" -cf - runtime | gzip -n > "$OUT"
 echo "vm_runtime_appliance=ok archive=$OUT"
