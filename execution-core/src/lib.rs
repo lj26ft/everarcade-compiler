@@ -56,6 +56,10 @@ pub mod settlement;
 pub mod simulation;
 pub mod state;
 pub mod state_engine;
+
+
+pub mod state_root;
+
 pub mod sync;
 pub mod tenancy;
 pub mod topology;
@@ -64,6 +68,8 @@ pub mod treaty;
 pub mod verifier;
 pub mod wasm;
 pub mod wasm_abi;
+pub mod receipt_canonical;
+pub mod journal;
 pub mod world_partition;
 pub mod world_scheduler;
 pub mod xahau_gateway;
