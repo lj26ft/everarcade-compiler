@@ -60,5 +60,11 @@ Runs full baseline:
 4. verify artifacts exist
 
 ```bash
-bash scripts/release_validate.sh
+bash scripts/release_validate_fresh_vm.sh
 ```
+
+
+Notes:
+- `runtime/...` is the canonical generated runtime layout for validation.
+- `.everarcade-dev` is legacy and not the primary runtime contract.
+- HTTPS + PAT is only needed when cloning a private repository; local validation itself does not require credentials.
