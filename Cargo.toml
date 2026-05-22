@@ -14,6 +14,7 @@ members = [
     "sdk/everarcade-simulation-sdk",
     "sdk/everarcade-economy-sdk",
     "sdk/everarcade-governance-sdk",
+    "sdk/client-bridge",
     "src-bin-everarcade",
 ]
 

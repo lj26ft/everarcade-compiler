@@ -1,0 +1,4 @@
+<!doctype html><html><body><h1>EverArcade Web Reference</h1><div id='tick'>tick:0</div><pre id='entities'>[]</pre><button onclick='submitCmd()'>Send Input</button><script>
+let tick=0;setInterval(()=>{tick++;document.getElementById('tick').textContent='tick:'+tick;document.getElementById('entities').textContent=JSON.stringify([{id:'player-001',x:tick,y:1}],null,2)},1000);
+function submitCmd(){console.log('submit_player_command',{player:'player-001',command:'move'})}
+</script></body></html>

@@ -5,6 +5,7 @@ pub mod budget;
 pub mod canonical;
 pub mod capability;
 pub mod checkpoint;
+pub mod client_protocol;
 pub mod codec;
 pub mod compression;
 pub mod consensus;

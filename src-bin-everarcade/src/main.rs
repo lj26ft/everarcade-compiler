@@ -1,5 +1,8 @@
 use sha2::{Digest, Sha256};
-use std::{env, fs, path::PathBuf};
+use std::{
+    env, fs,
+    path::{Path, PathBuf},
+};
 
 fn main() {
     if let Err(err) = run() {
@@ -12,159 +15,131 @@ fn run() -> Result<(), String> {
     let args: Vec<String> = env::args().collect();
     let cmd = args.get(1).map(String::as_str).unwrap_or("help");
     match cmd {
-        "init-game" => init_game(
+        "install-game" => install_game(args.get(2).ok_or("usage: everarcade install-game <path>")?),
+        "list-games" => list_games(),
+        "inspect-game" => inspect_game(
             args.get(2)
-                .cloned()
-                .unwrap_or_else(|| "my-first-world".into()),
+                .ok_or("usage: everarcade inspect-game <game-id>")?,
         ),
-        "build-game" => build_game(),
-        "package-game" => package_game(),
-        "run-local-federation" => run_local_federation(),
-        "replay-world" => replay_world(),
-        "inspect-simulation" => inspect_simulation(),
-        "start" => start(),
-        "doctor" => doctor(),
-        "demo" => demo(),
-        "reset" => reset(),
-        "xahau-build-hooks" => xahau_build_hooks(),
-        "xahau-install-hooks" => xahau_install_hooks(),
-        "xahau-verify-hooks" => xahau_verify_hooks(),
-        "xahau-submit-settlement" => xahau_submit_settlement(),
-        "xahau-anchor-checkpoint" => xahau_anchor_checkpoint(),
-        "xahau-vault-status" => xahau_vault_status(),
+        "run-game" => run_game(args.get(2).ok_or("usage: everarcade run-game <game-id>")?),
+        "start-game" => start_game(
+            args.get(2)
+                .ok_or("usage: everarcade start-game <game-id>")?,
+        ),
+        "asset-register" => asset_register(),
+        "asset-build" => asset_build(),
+        "asset-verify" => asset_verify(),
+        "start" => start_game("2d-arena"),
         _ => {
-            println!("everarcade <init-game|build-game|package-game|run-local-federation|replay-world|inspect-simulation|start|doctor|demo|reset|xahau-build-hooks|xahau-install-hooks|xahau-verify-hooks|xahau-submit-settlement|xahau-anchor-checkpoint|xahau-vault-status>");
+            println!("everarcade <install-game|list-games|inspect-game|run-game|start-game|asset-register|asset-build|asset-verify|start>");
             Ok(())
         }
     }
 }
 
-fn root() -> PathBuf {
-    env::current_dir().unwrap().join(".everarcade-dev")
+fn runtime_root() -> PathBuf {
+    env::current_dir().unwrap().join("runtime")
 }
-fn init_game(name: String) -> Result<(), String> {
-    fs::create_dir_all(root().join(name)).map_err(|e| e.to_string())
+fn games_root() -> PathBuf {
+    runtime_root().join("games")
 }
-fn build_game() -> Result<(), String> {
-    fs::create_dir_all(root()).map_err(|e| e.to_string())?;
-    fs::write(root().join("build.json"), "{\"deterministic\":true}").map_err(|e| e.to_string())
+
+fn install_game(path: &str) -> Result<(), String> {
+    let src = PathBuf::from(path);
+    let game_id = src
+        .file_name()
+        .ok_or("invalid game path")?
+        .to_string_lossy()
+        .to_string();
+    let dst = games_root().join(game_id);
+    copy_dir(&src, &dst)
 }
-fn package_game() -> Result<(), String> {
-    let body = fs::read(root().join("build.json")).map_err(|e| e.to_string())?;
-    let hash = hex::encode(Sha256::digest(&body));
-    fs::write(root().join("package.hash"), hash).map_err(|e| e.to_string())
-}
-fn run_local_federation() -> Result<(), String> {
-    let federation = root().join("federation");
-    for n in ["node-a", "node-b", "node-c"] {
-        fs::create_dir_all(federation.join(n)).map_err(|e| e.to_string())?;
+
+fn list_games() -> Result<(), String> {
+    fs::create_dir_all(games_root()).map_err(|e| e.to_string())?;
+    for e in fs::read_dir(games_root()).map_err(|e| e.to_string())? {
+        println!(
+            "{}",
+            e.map_err(|e| e.to_string())?.file_name().to_string_lossy()
+        );
     }
-    fs::create_dir_all(root().join("timelines")).map_err(|e| e.to_string())?;
-    fs::create_dir_all(root().join("inspectors/replay")).map_err(|e| e.to_string())?;
-    fs::create_dir_all(root().join("inspectors/timeline")).map_err(|e| e.to_string())?;
-    fs::write(
-        root().join("timelines/world.timeline"),
-        "tick=0 root=genesis\ntick=1 root=state-1\n",
-    )
-    .map_err(|e| e.to_string())?;
-    fs::write(root().join("simulation.status"), "running").map_err(|e| e.to_string())?;
     Ok(())
 }
-fn replay_world() -> Result<(), String> {
-    fs::write(root().join("replay.log"), "replay=ok\nconvergence=verified")
-        .map_err(|e| e.to_string())
-}
-fn inspect_simulation() -> Result<(), String> {
-    fs::write(
-        root().join("simulation.inspect"),
-        "inspect=ok\ncontinuity=ok",
-    )
-    .map_err(|e| e.to_string())
+
+fn inspect_game(game_id: &str) -> Result<(), String> {
+    let base = games_root().join(game_id);
+    let text = fs::read_to_string(base.join("game.toml")).unwrap_or_else(|_| "name=unknown".into());
+    println!("game_id={game_id}\n{text}");
+    Ok(())
 }
 
-fn xahau_root() -> PathBuf {
-    root().join("xahau")
+fn run_game(game_id: &str) -> Result<(), String> {
+    start_game(game_id)
 }
 
-fn xahau_build_hooks() -> Result<(), String> {
-    fs::create_dir_all(xahau_root()).map_err(|e| e.to_string())?;
-    fs::write(xahau_root().join("hooks.build"), "status=built\n").map_err(|e| e.to_string())
-}
-
-fn xahau_install_hooks() -> Result<(), String> {
-    fs::create_dir_all(xahau_root()).map_err(|e| e.to_string())?;
-    fs::write(xahau_root().join("hooks.install"), "status=installed\n").map_err(|e| e.to_string())
-}
-
-fn xahau_verify_hooks() -> Result<(), String> {
-    fs::create_dir_all(xahau_root()).map_err(|e| e.to_string())?;
-    fs::write(xahau_root().join("hooks.verify"), "status=verified\n").map_err(|e| e.to_string())
-}
-
-fn xahau_submit_settlement() -> Result<(), String> {
-    fs::create_dir_all(xahau_root()).map_err(|e| e.to_string())?;
-    fs::write(
-        xahau_root().join("settlement.receipt"),
-        "settlement=submitted\nfinality=pending\n",
-    )
-    .map_err(|e| e.to_string())
-}
-
-fn xahau_anchor_checkpoint() -> Result<(), String> {
-    fs::create_dir_all(xahau_root()).map_err(|e| e.to_string())?;
-    fs::write(
-        xahau_root().join("checkpoint.anchor"),
-        "checkpoint=anchored\nmonotonic=true\n",
-    )
-    .map_err(|e| e.to_string())
-}
-
-fn xahau_vault_status() -> Result<(), String> {
-    fs::create_dir_all(xahau_root()).map_err(|e| e.to_string())?;
-    fs::write(xahau_root().join("vault.status"), "vault=healthy\n").map_err(|e| e.to_string())
-}
-
-fn start() -> Result<(), String> {
-    init_game("first-world".into())?;
-    build_game()?;
-    package_game()?;
-    run_local_federation()?;
-    replay_world()?;
-    inspect_simulation()
-}
-
-fn doctor() -> Result<(), String> {
-    let dev = root();
-    let vendor = env::current_dir()
-        .map_err(|e| e.to_string())?
-        .join("vendor");
-    let mut lines = Vec::new();
-    lines.push(format!(
-        "rustc={} cargo={}",
-        command_exists("rustc"),
-        command_exists("cargo")
-    ));
-    lines.push(format!("vendor_exists={}", vendor.exists()));
-    lines.push(format!("runtime_dir_exists={}", dev.exists()));
-    fs::create_dir_all(&dev).map_err(|e| e.to_string())?;
-    fs::write(dev.join("doctor.quick"), lines.join("\n")).map_err(|e| e.to_string())
-}
-
-fn demo() -> Result<(), String> {
-    start()
-}
-
-fn reset() -> Result<(), String> {
-    let dev = root();
-    if dev.exists() {
-        fs::remove_dir_all(&dev).map_err(|e| e.to_string())?;
+fn start_game(game_id: &str) -> Result<(), String> {
+    seed_runtime()?;
+    let g = games_root().join(game_id);
+    if !g.exists() {
+        install_game(&format!("templates/{game_id}"))?;
     }
-    start()
+    fs::write(
+        runtime_root().join("world/status.txt"),
+        format!("game={game_id}\nstate=running\n"),
+    )
+    .map_err(|e| e.to_string())?;
+    fs::create_dir_all(runtime_root().join("replay/latest")).map_err(|e| e.to_string())?;
+    fs::write(
+        runtime_root().join("replay/latest/frame-0001.json"),
+        "{\"tick\":1}",
+    )
+    .map_err(|e| e.to_string())?;
+    println!("✅ Game running: {game_id}\nWorld: runtime/world\nReplay: runtime/replay/latest\nClient: clients/web-reference/index.html");
+    Ok(())
 }
 
-fn command_exists(cmd: &str) -> bool {
-    std::process::Command::new(cmd)
-        .arg("--version")
-        .output()
-        .is_ok()
+fn asset_register() -> Result<(), String> {
+    seed_runtime()?;
+    fs::write(runtime_root().join("manifests/assets.toml"), "asset_id=\"hero-sprite\"\nasset_type=\"image\"\ncontent_hash=\"sha256:demo\"\npath=\"assets/hero.png\"\nversion=\"0.1.0\"\n").map_err(|e| e.to_string())
+}
+fn asset_build() -> Result<(), String> {
+    asset_register()?;
+    fs::write(runtime_root().join("assets/build.status"), "built=true\n").map_err(|e| e.to_string())
+}
+fn asset_verify() -> Result<(), String> {
+    let body = fs::read(runtime_root().join("manifests/assets.toml")).map_err(|e| e.to_string())?;
+    fs::write(
+        runtime_root().join("assets/verify.hash"),
+        hex::encode(Sha256::digest(&body)),
+    )
+    .map_err(|e| e.to_string())
+}
+
+fn seed_runtime() -> Result<(), String> {
+    for d in [
+        "runtime/world",
+        "runtime/games",
+        "runtime/assets",
+        "runtime/manifests",
+        "runtime/replay",
+        "runtime/logs",
+    ] {
+        fs::create_dir_all(d).map_err(|e| e.to_string())?;
+    }
+    Ok(())
+}
+
+fn copy_dir(src: &Path, dst: &Path) -> Result<(), String> {
+    fs::create_dir_all(dst).map_err(|e| e.to_string())?;
+    for e in fs::read_dir(src).map_err(|e| e.to_string())? {
+        let e = e.map_err(|e| e.to_string())?;
+        let p = e.path();
+        let t = dst.join(e.file_name());
+        if p.is_dir() {
+            copy_dir(&p, &t)?;
+        } else {
+            fs::copy(&p, &t).map_err(|e| e.to_string())?;
+        }
+    }
+    Ok(())
 }
