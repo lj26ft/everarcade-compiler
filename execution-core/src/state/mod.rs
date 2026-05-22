@@ -1,3 +1,4 @@
+pub mod canonical;
 pub mod checkpoint;
 pub mod diff;
 pub mod errors;
@@ -13,6 +14,7 @@ pub mod state_validation;
 pub mod transition_root;
 pub mod tree;
 
+pub use canonical::CanonicalExecutionState;
 pub use execution_state::{ExecutionState, StateValue};
 pub use state_diff::{StateDiff, StateInsert, StateRemoval, StateUpdate};
 pub use state_root::StateRoot;
