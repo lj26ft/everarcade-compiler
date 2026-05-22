@@ -5,12 +5,23 @@
 ```bash
 git clone git@github.com:lj26ft/everarcade-compiler.git
 cd everarcade-compiler
-./scripts/everarcade_start.sh
+bash scripts/release_validate_fresh_vm.sh
 ```
 
 If cloning over HTTPS and the repository is private, use a Personal Access Token (PAT).
 
-## 2) What artifacts to inspect
+
+## 2) Canonical pre-release validation
+
+Run this before tagging or packaging a release:
+
+```bash
+bash scripts/release_validate_fresh_vm.sh
+```
+
+This validates the fresh-VM runtime-first path (`runtime/...` as canonical layout), and does **not** require `.everarcade-dev` as a primary bootstrap contract.
+
+## 3) What artifacts to inspect
 
 After bootstrap completes, inspect `runtime/` artifacts:
 
@@ -19,7 +30,7 @@ After bootstrap completes, inspect `runtime/` artifacts:
 - `runtime/games/2d-arena/`
 - `clients/web-reference/index.html`
 
-## 3) Next commands
+## 4) Next commands
 
 ```bash
 cargo run -p everarcade-cli -- start
