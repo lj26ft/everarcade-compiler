@@ -38,6 +38,7 @@ pub mod merkle;
 pub mod migration;
 pub mod namespace;
 pub mod network;
+pub mod operations;
 pub mod operator;
 pub mod package;
 pub mod payload;
