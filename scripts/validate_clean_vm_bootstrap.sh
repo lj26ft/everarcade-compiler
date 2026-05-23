@@ -2,6 +2,8 @@
 set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 TMP="$(mktemp -d)"
+
+"$ROOT/scripts/preflight_vendor.sh"
 tar -xzf "$ROOT/dist/everarcade-runtime-linux-x86_64.tar.gz" -C "$TMP"
 cd "$TMP/everarcade-runtime"
 ./scripts/bootstrap.sh
@@ -9,5 +11,7 @@ cd "$TMP/everarcade-runtime"
 ./scripts/start.sh --foreground >/tmp/everarcade-runtime-start.log 2>&1 &
 PID=$!
 sleep 2
-kill "$PID" || true
+if kill -0 "$PID" >/dev/null 2>&1; then
+  kill "$PID"
+fi
 ./scripts/shutdown.sh || true

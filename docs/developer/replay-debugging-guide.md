@@ -1,3 +1,5 @@
-# Replay Debugging Guide
+# Replay Debugging Guide (Redirect)
 
-Run `everarcade replay-world` and `everarcade inspect-simulation`.
+Canonical location: `docs/replay-debugging-guide.md`.
+
+This file is kept as a short compatibility pointer for developers following older links.

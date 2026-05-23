@@ -30,3 +30,7 @@ dist/
 /vendor/
 everarcade-host/tests/fixtures/counter_world/*.bin
 everarcade-host/tests/fixtures/counter_world/*.wasm
+__pycache__/
+*.pyc
+vendor/
+target/
