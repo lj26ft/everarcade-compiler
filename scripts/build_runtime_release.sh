@@ -6,6 +6,8 @@ STAGE_DIR="$DIST_DIR/everarcade-runtime"
 TARGET_TRIPLE="${TARGET_TRIPLE:-x86_64-unknown-linux-gnu}"
 RELEASE_VERSION="${RELEASE_VERSION:-0.1.0}"
 BUILD_TIMESTAMP="${SOURCE_DATE_EPOCH:-$(date -u +%Y-%m-%dT%H:%M:%SZ)}"
+
+"$ROOT_DIR/scripts/preflight_vendor.sh"
 rm -rf "$STAGE_DIR"
 mkdir -p "$STAGE_DIR"/{bin,logs,docs,scripts,runtime/{config,games,worlds,replay,archives,manifests,state}}
 cargo build --release -p everarcade-host -p everarcade-cli

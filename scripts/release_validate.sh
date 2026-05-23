@@ -18,6 +18,7 @@ run() {
 }
 
 cd "$ROOT"
+"$ROOT/scripts/preflight_vendor.sh"
 
 if [[ ! -f "$ROOT/Cargo.lock" ]]; then
   echo "missing Cargo.lock" >&2
@@ -35,15 +36,6 @@ if ! grep -q 'directory = "vendor"' "$ROOT/.cargo/config.toml" || grep -q '/work
   exit 1
 fi
 
-if [[ ! -d "$ROOT/vendor" ]]; then
-  if [[ -f "$VENDOR_ARCHIVE" ]]; then
-    mkdir -p "$ROOT/vendor"
-    tar -C "$ROOT" -xzf "$VENDOR_ARCHIVE"
-  else
-    echo "missing vendor directory; run scripts/vendor_deps.sh (optionally VENDOR_ARCHIVE=$VENDOR_ARCHIVE)" >&2
-    exit 1
-  fi
-fi
 
 run cargo build --release --locked --frozen --offline -p everarcade-host
 run cargo test --locked --frozen --offline
