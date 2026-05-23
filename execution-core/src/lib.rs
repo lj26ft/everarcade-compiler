@@ -139,3 +139,5 @@ pub mod vm;
 pub mod zk;
 
 pub mod xrpl_settlement;
+
+pub mod dag_loader;

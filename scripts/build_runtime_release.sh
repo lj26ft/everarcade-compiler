@@ -5,7 +5,20 @@ DIST_DIR="$ROOT_DIR/dist"
 STAGE_DIR="$DIST_DIR/everarcade-runtime"
 TARGET_TRIPLE="${TARGET_TRIPLE:-x86_64-unknown-linux-gnu}"
 RELEASE_VERSION="${RELEASE_VERSION:-0.1.0}"
-BUILD_TIMESTAMP="${SOURCE_DATE_EPOCH:-$(date -u +%Y-%m-%dT%H:%M:%SZ)}"
+MODE="dev"
+if [[ "${1:-}" == "--release" ]]; then
+  MODE="release"
+fi
+
+if [[ "$MODE" == "release" && -z "${SOURCE_DATE_EPOCH:-}" ]]; then
+  echo "ERROR: SOURCE_DATE_EPOCH is required in release mode" >&2
+  exit 1
+fi
+
+if [[ -z "${SOURCE_DATE_EPOCH:-}" ]]; then
+  echo "WARN: SOURCE_DATE_EPOCH not set; using deterministic dev fallback timestamp" >&2
+fi
+BUILD_TIMESTAMP="${SOURCE_DATE_EPOCH:-1700000000}"
 
 "$ROOT_DIR/scripts/preflight_vendor.sh"
 rm -rf "$STAGE_DIR"
