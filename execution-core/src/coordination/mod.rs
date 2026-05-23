@@ -1,11 +1,21 @@
+pub mod capability;
+pub mod compatibility;
 pub mod descriptor;
+pub mod epoch;
 pub mod errors;
 pub mod exchange;
+pub mod governance;
+pub mod migration;
+pub mod persistence;
 pub mod policy;
 pub mod quarantine;
 pub mod registry;
+pub mod replay_continuity;
+pub mod routing;
 pub mod session;
 pub mod state;
+pub mod topology;
+pub mod upgrade;
 pub mod verification;
 
 pub use descriptor::{hash_coordination_descriptor, CoordinationDescriptor};
