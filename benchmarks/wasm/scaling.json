@@ -1,0 +1,6 @@
+[
+  {"scenario":"small_payload","wasm_calls":1000,"fuel_consumed":50000,"memory_pages_touched":4,"receipt_count":1000,"diagnostic_duration_ns":12000000},
+  {"scenario":"medium_payload","wasm_calls":1000,"fuel_consumed":180000,"memory_pages_touched":16,"receipt_count":1000,"diagnostic_duration_ns":34000000},
+  {"scenario":"large_payload","wasm_calls":1000,"fuel_consumed":480000,"memory_pages_touched":64,"receipt_count":1000,"diagnostic_duration_ns":96000000},
+  {"scenario":"repeated_calls","wasm_calls":10000,"fuel_consumed":620000,"memory_pages_touched":24,"receipt_count":10000,"diagnostic_duration_ns":110000000}
+]
