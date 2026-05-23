@@ -16,5 +16,8 @@ fn dag_reordered_input_same_output() {
     let mut g2 = ExecutionGraph::new();
     g2.add_node(b);
     g2.add_node(a);
-    assert_eq!(g1.topo_sort_checked().unwrap(), g2.topo_sort_checked().unwrap());
+    assert_eq!(
+        g1.topo_sort_checked().unwrap(),
+        g2.topo_sort_checked().unwrap()
+    );
 }
