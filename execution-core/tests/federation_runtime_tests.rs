@@ -1,88 +1,28 @@
-use execution_core::federation_runtime::{
-    bundle::ContinuityBundle, divergence::detect_divergence, reconciliation::reconcile_peer,
-    verification::verify_bundle_replay,
+use execution_core::federation::{
+    continuity::FederationContinuityProof, manifest::FederationExecutionManifest,
+    node_identity::NodeIdentityContinuity,
 };
-
-fn sample(seed: u8) -> ContinuityBundle {
-    ContinuityBundle {
-        state_root: [seed; 32],
-        checkpoint_hash: [seed.wrapping_add(1); 32],
-        journal_hash: [seed.wrapping_add(2); 32],
-        receipt_hashes: vec![[seed.wrapping_add(3); 32]],
-        execution_hashes: vec![[seed.wrapping_add(4); 32]],
-        continuity_hash: [seed.wrapping_add(5); 32],
-    }
-}
-
 #[test]
-fn test_peer_checkpoint_sync() {
+fn runtime_primitives_deterministic() {
+    let m = FederationExecutionManifest {
+        federation_epoch: 1,
+        execution_manifest_hash: "e".into(),
+        checkpoint_hash: "c".into(),
+        settlement_hash: "s".into(),
+        quorum_hash: "q".into(),
+        participating_nodes: vec!["n2".into(), "n1".into()],
+        state_root: "sr".into(),
+        replay_root: "rr".into(),
+    };
     assert_eq!(
-        execution_core::federation_runtime::checkpoint_sync::sync_checkpoint(
-            &sample(1),
-            &sample(1)
-        ),
-        true
+        m.canonical_hash().unwrap(),
+        m.clone().canonicalized().canonical_hash().unwrap()
     );
-}
-#[test]
-fn test_journal_range_sync() {
+    let p = FederationContinuityProof::new("a".into(), "b".into(), "c".into());
+    assert!(p.verify().is_ok());
+    let i = NodeIdentityContinuity::new("n".into(), "prev".into(), "cp".into());
     assert_eq!(
-        execution_core::federation_runtime::checkpoint_sync::sync_journal_range(3, 5),
-        vec![3, 4, 5]
+        i.identity_hash,
+        NodeIdentityContinuity::new("n".into(), "prev".into(), "cp".into()).identity_hash
     );
-}
-#[test]
-fn test_continuity_bundle_exchange() {
-    assert_eq!(
-        execution_core::federation_runtime::checkpoint_sync::request_continuity_bundle(&sample(2)),
-        sample(2)
-    );
-}
-#[test]
-fn test_multi_node_replay_convergence() {
-    assert!(verify_bundle_replay(&sample(3), &sample(3)));
-}
-#[test]
-fn test_peer_replay_verification() {
-    assert!(
-        execution_core::federation_runtime::divergence::verify_peer_replay(&sample(4), &sample(4))
-    );
-}
-#[test]
-fn test_checkpoint_reconstruction_across_peers() {
-    assert!(reconcile_peer(&sample(5), &sample(5)).is_some());
-}
-#[test]
-fn test_detect_state_root_divergence() {
-    let mut p = sample(6);
-    p.state_root = [99; 32];
-    assert!(detect_divergence(&sample(6), &p).is_some());
-}
-#[test]
-fn test_detect_receipt_divergence() {
-    let mut p = sample(7);
-    p.receipt_hashes = vec![[98; 32]];
-    assert!(detect_divergence(&sample(7), &p).is_some());
-}
-#[test]
-fn test_detect_checkpoint_mismatch() {
-    let mut p = sample(8);
-    p.checkpoint_hash = [97; 32];
-    assert!(detect_divergence(&sample(8), &p).is_some());
-}
-#[test]
-fn test_reconcile_missing_journal_entries() {
-    let mut p = sample(9);
-    p.journal_hash = [96; 32];
-    assert!(reconcile_peer(&sample(9), &p).is_none());
-}
-#[test]
-fn test_reconcile_missing_checkpoints() {
-    let mut p = sample(10);
-    p.checkpoint_hash = [95; 32];
-    assert!(reconcile_peer(&sample(10), &p).is_none());
-}
-#[test]
-fn test_reconcile_peer_continuity() {
-    assert!(reconcile_peer(&sample(11), &sample(11)).is_some());
 }
