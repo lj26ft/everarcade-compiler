@@ -1,0 +1,109 @@
+{
+  "profile_version": 1,
+  "slowest_runtime_path": {
+    "dag_nodes": 10000,
+    "execution_count": 10000,
+    "receipt_count": 10000,
+    "state_diff_count": 10000,
+    "memory_bytes": 33554432,
+    "diagnostic_duration_ns": 980000000
+  },
+  "dag_scaling": [
+    {
+      "dag_nodes": 10,
+      "execution_count": 10,
+      "receipt_count": 10,
+      "state_diff_count": 10,
+      "memory_bytes": 32768,
+      "diagnostic_duration_ns": 1000000
+    },
+    {
+      "dag_nodes": 100,
+      "execution_count": 100,
+      "receipt_count": 100,
+      "state_diff_count": 100,
+      "memory_bytes": 262144,
+      "diagnostic_duration_ns": 9000000
+    },
+    {
+      "dag_nodes": 1000,
+      "execution_count": 1000,
+      "receipt_count": 1000,
+      "state_diff_count": 1000,
+      "memory_bytes": 2097152,
+      "diagnostic_duration_ns": 85000000
+    },
+    {
+      "dag_nodes": 10000,
+      "execution_count": 10000,
+      "receipt_count": 10000,
+      "state_diff_count": 10000,
+      "memory_bytes": 33554432,
+      "diagnostic_duration_ns": 980000000
+    }
+  ],
+  "replay_scaling": [
+    {
+      "replay_operations": 100,
+      "archive_bytes": 65536,
+      "verify_duration_ns": 1500000,
+      "reconstruct_duration_ns": 1000000,
+      "checkpoint_restore_duration_ns": 800000
+    },
+    {
+      "replay_operations": 1000,
+      "archive_bytes": 786432,
+      "verify_duration_ns": 11000000,
+      "reconstruct_duration_ns": 9000000,
+      "checkpoint_restore_duration_ns": 5000000
+    },
+    {
+      "replay_operations": 10000,
+      "archive_bytes": 9437184,
+      "verify_duration_ns": 130000000,
+      "reconstruct_duration_ns": 98000000,
+      "checkpoint_restore_duration_ns": 42000000
+    },
+    {
+      "replay_operations": 100000,
+      "archive_bytes": 125829120,
+      "verify_duration_ns": 1700000000,
+      "reconstruct_duration_ns": 1320000000,
+      "checkpoint_restore_duration_ns": 600000000
+    }
+  ],
+  "wasm_scaling": [
+    {
+      "scenario": "small_payload",
+      "wasm_calls": 1000,
+      "fuel_consumed": 50000,
+      "memory_pages_touched": 4,
+      "receipt_count": 1000,
+      "diagnostic_duration_ns": 12000000
+    },
+    {
+      "scenario": "medium_payload",
+      "wasm_calls": 1000,
+      "fuel_consumed": 180000,
+      "memory_pages_touched": 16,
+      "receipt_count": 1000,
+      "diagnostic_duration_ns": 34000000
+    },
+    {
+      "scenario": "large_payload",
+      "wasm_calls": 1000,
+      "fuel_consumed": 480000,
+      "memory_pages_touched": 64,
+      "receipt_count": 1000,
+      "diagnostic_duration_ns": 96000000
+    },
+    {
+      "scenario": "repeated_calls",
+      "wasm_calls": 10000,
+      "fuel_consumed": 620000,
+      "memory_pages_touched": 24,
+      "receipt_count": 10000,
+      "diagnostic_duration_ns": 110000000
+    }
+  ]
+}

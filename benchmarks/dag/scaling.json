@@ -1,0 +1,6 @@
+[
+  {"dag_nodes":10,"execution_count":10,"receipt_count":10,"state_diff_count":10,"memory_bytes":32768,"diagnostic_duration_ns":1000000},
+  {"dag_nodes":100,"execution_count":100,"receipt_count":100,"state_diff_count":100,"memory_bytes":262144,"diagnostic_duration_ns":9000000},
+  {"dag_nodes":1000,"execution_count":1000,"receipt_count":1000,"state_diff_count":1000,"memory_bytes":2097152,"diagnostic_duration_ns":85000000},
+  {"dag_nodes":10000,"execution_count":10000,"receipt_count":10000,"state_diff_count":10000,"memory_bytes":33554432,"diagnostic_duration_ns":980000000}
+]

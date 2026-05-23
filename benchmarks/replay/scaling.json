@@ -1,0 +1,6 @@
+[
+  {"replay_operations":100,"archive_bytes":65536,"verify_duration_ns":1500000,"reconstruct_duration_ns":1000000,"checkpoint_restore_duration_ns":800000},
+  {"replay_operations":1000,"archive_bytes":786432,"verify_duration_ns":11000000,"reconstruct_duration_ns":9000000,"checkpoint_restore_duration_ns":5000000},
+  {"replay_operations":10000,"archive_bytes":9437184,"verify_duration_ns":130000000,"reconstruct_duration_ns":98000000,"checkpoint_restore_duration_ns":42000000},
+  {"replay_operations":100000,"archive_bytes":125829120,"verify_duration_ns":1700000000,"reconstruct_duration_ns":1320000000,"checkpoint_restore_duration_ns":600000000}
+]
