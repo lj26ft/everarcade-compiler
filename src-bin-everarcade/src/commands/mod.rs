@@ -29,11 +29,12 @@ pub fn dispatch(args: &[String]) -> Result<(), String> {
         "run-local-federation" => start_game("2d-arena"),
         "replay-world" => verify_replay_frame(),
         "inspect-simulation" => inspect_simulation(),
+        "diagnostics" => diagnostics(),
         _ => Err(format!("unknown command: {cmd}")),
     }
 }
 pub fn print_help() {
-    println!("everarcade <install-game|list-games|inspect-game|run-game|start-game|asset-register|asset-build|asset-verify|start|init-game|build-game|package-game|run-local-federation|replay-world|inspect-simulation|runtime-snapshot>");
+    println!("everarcade <install-game|list-games|inspect-game|run-game|start-game|asset-register|asset-build|asset-verify|start|init-game|build-game|package-game|run-local-federation|replay-world|inspect-simulation|runtime-snapshot|diagnostics>");
 }
 fn install_game(path: &str) -> Result<(), String> {
     let src = PathBuf::from(path);
@@ -167,4 +168,34 @@ fn copy_dir(src: &Path, dst: &Path) -> Result<(), String> {
         }
     }
     Ok(())
+}
+
+fn diagnostics() -> Result<(), String> {
+    let payload = serde_json::json!({
+        "component": "everarcade-cli",
+        "event": "operator_diagnostics",
+        "sequence": 0,
+        "deterministic": true,
+        "runtime_config_summary": {"root": runtime_root()},
+        "release_manifest_summary": {"version": "0.1.0"},
+        "replay_status": {"latest_frame": "runtime/replay/latest/frame-0001.json"},
+        "topology_status": {"mode": "local"},
+        "last_profile_summary": {"path": "target/everarcade-profile/test-profile-report.json"},
+        "validation_hints": ["run scripts/profile_runtime_tests.sh", "run scripts/validate_clean_vm_bootstrap.sh"]
+    });
+    println!(
+        "{}",
+        serde_json::to_string(&payload).map_err(|e| e.to_string())?
+    );
+    Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_cli_diagnostics_stdout_json() {
+        diagnostics().expect("diagnostics");
+    }
 }

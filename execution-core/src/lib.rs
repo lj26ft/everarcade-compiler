@@ -13,6 +13,7 @@ pub mod constitution;
 pub mod continuity;
 pub mod coordination;
 pub mod dag;
+pub mod diagnostics;
 pub mod divergence;
 pub mod domain;
 pub mod economics;
@@ -141,3 +142,6 @@ pub mod zk;
 pub mod xrpl_settlement;
 
 pub mod dag_loader;
+
+#[cfg(test)]
+mod diagnostics_tests;

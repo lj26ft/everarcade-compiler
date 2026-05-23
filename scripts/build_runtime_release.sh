@@ -6,9 +6,11 @@ STAGE_DIR="$DIST_DIR/everarcade-runtime"
 TARGET_TRIPLE="${TARGET_TRIPLE:-x86_64-unknown-linux-gnu}"
 RELEASE_VERSION="${RELEASE_VERSION:-0.1.0}"
 MODE="dev"
-if [[ "${1:-}" == "--release" ]]; then
-  MODE="release"
-fi
+PROFILE="false"
+for arg in "$@"; do
+  [[ "$arg" == "--release" ]] && MODE="release"
+  [[ "$arg" == "--profile" ]] && PROFILE="true"
+done
 
 if [[ "$MODE" == "release" && -z "${SOURCE_DATE_EPOCH:-}" ]]; then
   echo "ERROR: SOURCE_DATE_EPOCH is required in release mode" >&2
@@ -52,3 +54,9 @@ TARBALL="$DIST_DIR/everarcade-runtime-linux-x86_64.tar.gz"
 tar --sort=name --mtime='UTC 2020-01-01' --owner=0 --group=0 --numeric-owner -czf "$TARBALL" -C "$DIST_DIR" everarcade-runtime
 (cd "$DIST_DIR" && sha256sum "$(basename "$TARBALL")" > SHA256SUMS && cp everarcade-runtime/MANIFEST.json MANIFEST.json)
 echo "built $TARBALL"
+
+if [[ "$PROFILE" == "true" ]]; then
+  mkdir -p "$ROOT_DIR/target/everarcade-profile"
+  printf '{"component":"build_runtime_release.sh","event":"profile_enabled","deterministic":true}
+' > "$ROOT_DIR/target/everarcade-profile/build-profile.jsonl"
+fi
