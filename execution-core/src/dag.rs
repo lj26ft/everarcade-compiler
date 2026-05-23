@@ -1,4 +1,4 @@
-use std::collections::{HashMap, HashSet};
+use std::collections::{BTreeMap, BTreeSet};
 
 #[derive(Clone)]
 pub struct ExecutionNode {
@@ -7,13 +7,13 @@ pub struct ExecutionNode {
 }
 
 pub struct ExecutionGraph {
-    pub nodes: HashMap<String, ExecutionNode>,
+    pub nodes: BTreeMap<String, ExecutionNode>,
 }
 
 impl ExecutionGraph {
     pub fn new() -> Self {
         Self {
-            nodes: HashMap::new(),
+            nodes: BTreeMap::new(),
         }
     }
 
@@ -22,33 +22,31 @@ impl ExecutionGraph {
     }
 
     pub fn topo_sort(&self) -> Vec<String> {
-        let mut visited = HashSet::new();
-        let mut order = Vec::new();
+        self.topo_sort_checked().unwrap_or_default()
+    }
 
-        fn visit(
-            id: &String,
-            graph: &ExecutionGraph,
-            visited: &mut HashSet<String>,
-            order: &mut Vec<String>,
-        ) {
-            if visited.contains(id) {
-                return;
+    pub fn topo_sort_checked(&self) -> anyhow::Result<Vec<String>> {
+        let mut done = BTreeSet::new();
+        let mut ordered = Vec::new();
+        loop {
+            let mut progressed = false;
+            for (id, node) in &self.nodes {
+                if done.contains(id) {
+                    continue;
+                }
+                if node.deps.iter().all(|d| done.contains(d)) {
+                    done.insert(id.clone());
+                    ordered.push(id.clone());
+                    progressed = true;
+                }
             }
-
-            let node = graph.nodes.get(id).expect("missing node");
-
-            for dep in &node.deps {
-                visit(dep, graph, visited, order);
+            if !progressed {
+                break;
             }
-
-            visited.insert(id.clone());
-            order.push(id.clone());
         }
-
-        for id in self.nodes.keys() {
-            visit(id, self, &mut visited, &mut order);
+        if done.len() != self.nodes.len() {
+            anyhow::bail!("cycle detected")
         }
-
-        order
+        Ok(ordered)
     }
 }

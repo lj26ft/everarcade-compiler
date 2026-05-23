@@ -1,5 +1,14 @@
 use bincode::Options;
-use serde::{de::DeserializeOwned, Serialize};
+use serde::{de::DeserializeOwned, Deserialize, Serialize};
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+pub enum HostCall {
+    ReadInput { seq: u64 },
+    WriteOutput { seq: u64, bytes_len: u32 },
+    EmitStateDiff { seq: u64, bytes_len: u32 },
+    EmitLog { seq: u64, bytes_len: u32 },
+    Abort { seq: u64, code: u32 },
+}
 
 pub fn encode<T: Serialize>(value: &T) -> Result<Vec<u8>, bincode::Error> {
     bincode::DefaultOptions::new()
