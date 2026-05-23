@@ -1,13 +1,2 @@
-[runtime]
-name = "everarcade"
-mode = "deterministic"
-state_root = "./world/state"
-checkpoint_root = "./world/checkpoints"
-journal_root = "./world/journal"
-receipt_root = "./world/receipts"
-contract_root = "./contracts"
-
-[logging]
-stdout = true
-append_only_file = "./logs/runtime.log"
-level = "info"
+deterministic_mode = true
+runtime_version = "0.1.0"
