@@ -1,8 +1,13 @@
+pub mod archive;
 pub mod checkpoint_store;
+pub mod compression;
+pub mod entity_evolution;
 pub mod errors;
 pub mod layout;
 pub mod package_store;
 pub mod receipt_store;
+pub mod restoration;
+pub mod storage_lineage;
 
 use std::path::Path;
 

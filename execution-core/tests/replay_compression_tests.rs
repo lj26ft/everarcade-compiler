@@ -1,10 +1,13 @@
-use execution_core::compression::{
-    compression_validation::validate_replay_summary, replay_compression::compress_replay,
-};
-
+use execution_core::persistence::compression::ReplayCompressionManifest;
 #[test]
-fn replay_compression_remains_recomputable() {
-    let replay_root = [9; 32];
-    let summary = compress_replay(7, replay_root, vec![[1; 32], [2; 32]], [3; 32]);
-    assert!(validate_replay_summary(&summary, replay_root));
+fn compression_continuity() {
+    let c = ReplayCompressionManifest {
+        range_start: 0,
+        range_end: 10,
+        snapshot_root: "s".into(),
+        continuity_anchor_root: "a".into(),
+        compressed_chunks: 2,
+    };
+    assert!(c.restores_to("s", "a"));
+    assert_eq!(c.canonical_hash().unwrap(), c.canonical_hash().unwrap());
 }
