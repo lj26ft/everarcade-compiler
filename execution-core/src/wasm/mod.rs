@@ -6,6 +6,7 @@ pub mod limits;
 pub mod memory;
 pub mod receipt;
 pub mod runtime;
+pub mod types;
 
 pub use runtime::WasmEngine;
 

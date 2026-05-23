@@ -9,7 +9,10 @@ fn state_serialization_is_deterministic() {
     let mut entries = BTreeMap::new();
     entries.insert("b".to_string(), vec![2]);
     entries.insert("a".to_string(), vec![1]);
-    let state = CanonicalExecutionState { revision: 7, entries };
+    let state = CanonicalExecutionState {
+        revision: 7,
+        entries,
+    };
 
     assert_eq!(state.to_canonical_bytes(), state.to_canonical_bytes());
     assert_eq!(state.to_canonical_json(), state.to_canonical_json());
