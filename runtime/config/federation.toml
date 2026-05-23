@@ -1,9 +1,2 @@
-[federation]
-continuity_required = true
-replay_protection = true
-topology = "static"
-authority_mode = "strict"
-
-[verification]
-envelope_verification = true
-continuity_verification = true
+federation_id = "fed-local"
+topology_role = "validator"
