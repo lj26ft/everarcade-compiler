@@ -47,6 +47,7 @@ pub mod runtime;
 pub mod settlement;
 pub mod snapshot;
 pub mod succession;
+pub mod sync_window;
 pub mod topology;
 pub mod treaty;
 pub mod trust;
