@@ -13,7 +13,11 @@ pub struct OperationalLedgerReader;
 
 impl OperationalStore {
     pub fn append(path: &std::path::Path, entry: &str) {
+        assert!(!entry.is_empty(), "empty ledger entry");
         let mut entries = OperationalLedgerReader::read(path);
+        if let Some(prev) = entries.last() {
+            assert_ne!(prev, entry, "continuity break: duplicate entry");
+        }
         entries.push(entry.to_string());
         let bytes = bincode::serialize(&entries).expect("serializable");
         std::fs::write(path, bytes).expect("write ledger");

@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 set -euo pipefail
-mkdir -p deployment/reports
-cargo test --package execution-core --test runtime_operations_tests
+bash scripts/vendor_deps.sh
+cargo test --package execution-core --test runtime_operations_tests "$@" test_stdout_log_determinism
