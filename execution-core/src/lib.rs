@@ -54,6 +54,7 @@ pub mod replay_runtime;
 pub mod runtime_commit;
 pub mod runtime_semantics;
 pub mod scheduler;
+pub mod security;
 pub mod session;
 pub mod settlement;
 pub mod simulation;
