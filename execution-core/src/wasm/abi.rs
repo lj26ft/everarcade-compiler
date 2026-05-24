@@ -1,35 +1,38 @@
-use bincode::Options;
-use serde::{de::DeserializeOwned, Deserialize, Serialize};
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
-pub enum HostCall {
-    ReadInput { seq: u64 },
-    WriteOutput { seq: u64, bytes_len: u32 },
-    EmitStateDiff { seq: u64, bytes_len: u32 },
-    EmitLog { seq: u64, bytes_len: u32 },
-    Abort { seq: u64, code: u32 },
+use super::serialization::canonical_bytes;
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct CanonicalAbiEnvelope {
+    pub version: u32,
+    pub payload: Vec<u8>,
+}
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct AbiExecutionRequest {
+    pub contract_id: String,
+    pub input: Vec<u8>,
+}
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct AbiExecutionResponse {
+    pub output: Vec<u8>,
+    pub events: Vec<Vec<u8>>,
+}
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct AbiMutationSet {
+    pub mutations: Vec<(String, Vec<u8>)>,
+}
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct AbiStateEnvelope {
+    pub state_root: String,
+    pub state: Vec<(String, Vec<u8>)>,
 }
 
-pub fn encode<T: Serialize>(value: &T) -> Result<Vec<u8>, bincode::Error> {
-    bincode::DefaultOptions::new()
-        .with_fixint_encoding()
-        .allow_trailing_bytes()
-        .serialize(value)
+pub fn encode<T: Serialize>(value: &T) -> anyhow::Result<Vec<u8>> {
+    canonical_bytes(value)
 }
-
-pub fn decode<T: DeserializeOwned>(bytes: &[u8]) -> Result<T, bincode::Error> {
-    bincode::DefaultOptions::new()
-        .with_fixint_encoding()
-        .allow_trailing_bytes()
-        .deserialize(bytes)
+pub fn decode<T: for<'de> Deserialize<'de>>(bytes: &[u8]) -> anyhow::Result<T> {
+    Ok(serde_json::from_slice(bytes)?)
 }
-
-#[inline]
-pub fn encode_handle(ptr: u32, len: u32) -> u64 {
-    ((ptr as u64) << 32) | (len as u64)
-}
-
-#[inline]
-pub fn decode_handle(handle: u64) -> (u32, u32) {
-    ((handle >> 32) as u32, handle as u32)
+pub fn decode_handle(raw: u64) -> (u32, u32) {
+    ((raw >> 32) as u32, (raw & 0xffff_ffff) as u32)
 }

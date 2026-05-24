@@ -89,3 +89,9 @@ impl WasmEngine {
         Ok((output, receipt))
     }
 }
+
+#[derive(Clone, Debug, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+pub struct RuntimeExecutionBoundary {
+    pub execution_id: String,
+    pub deterministic: bool,
+}
