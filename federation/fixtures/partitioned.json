@@ -1,0 +1,10 @@
+{
+  "federation_id": "partitioned federation",
+  "topology": "partitioned",
+  "replay_lineage": "lineage:partitioned",
+  "appliance_identities": ["node-01", "node-02"],
+  "deterministic_workload": ["spawn", "tick", "commit"],
+  "expected_outputs": ["replay_root", "receipt_root", "state_root"],
+  "expected_replay_roots": [],
+  "expected_archive_hashes": []
+}
