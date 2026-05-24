@@ -1,17 +1,43 @@
 pub mod abi;
+pub mod capabilities;
+pub mod checkpoints;
+pub mod deterministic_io;
+pub mod diagnostics;
 pub mod engine;
 pub mod errors;
+pub mod events;
+pub mod execution;
+pub mod exports;
+pub mod fuel;
+pub mod host;
+pub mod imports;
 pub mod instance;
+pub mod isolation;
 pub mod limits;
+pub mod linker;
+pub mod logs;
 pub mod memory;
-pub mod receipt;
+pub mod metering;
+pub mod mutations;
+pub mod permissions;
+pub mod persistence;
+pub mod receipts;
+pub mod replay;
+pub mod restore;
 pub mod runtime;
+pub mod scheduler;
+pub mod serialization;
+pub mod snapshot;
+pub mod state;
+pub mod storage;
+pub mod validation;
+
+pub mod receipt;
 pub mod types;
-
-pub use runtime::WasmEngine;
-
 pub mod wasm_boundary;
 pub mod wasm_execution_validation;
 pub mod wasm_memory_bridge;
 pub mod wasm_package;
 pub mod wasm_receipt;
+
+pub use runtime::WasmEngine;
