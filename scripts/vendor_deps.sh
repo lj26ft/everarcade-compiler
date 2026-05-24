@@ -9,6 +9,12 @@ if [[ ! -f Cargo.lock ]]; then
 fi
 
 if [[ ! -d vendor ]]; then
+  tmp_cfg=".cargo/config.toml"
+  cp "$tmp_cfg" "$tmp_cfg.bak" 2>/dev/null || true
+  cat > "$tmp_cfg" <<'CFG'
+[net]
+offline = false
+CFG
   cargo vendor --locked vendor >/tmp/everarcade-vendor-config.toml
 fi
 
@@ -23,7 +29,11 @@ directory = "vendor"
 offline = true
 CFG
 
-cargo metadata --offline --locked >/tmp/runtime_vendor_metadata.json
+if ! cargo metadata --offline --locked >/tmp/runtime_vendor_metadata.json 2>/tmp/runtime_vendor_err.log; then
+  echo "Vendor validation failed. Ensure vendor/ exists and rerun: bash scripts/vendor_deps.sh" >&2
+  cat /tmp/runtime_vendor_err.log >&2
+  exit 1
+fi
 vendor_hash="$(tar -cf - vendor 2>/dev/null | sha256sum | awk '{print $1}')"
 cat > deployment/reports/vendor_validation_report.md <<RPT
 # Vendor Validation Report

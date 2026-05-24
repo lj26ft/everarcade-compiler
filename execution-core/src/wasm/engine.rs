@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use wasmtime::{Config, Engine};
+use wasmtime::{Config, Engine, Module};
 
 use crate::hashing::sha256;
 
@@ -39,6 +39,13 @@ pub struct ExecutionEnvironment {
     pub module_hash: String,
 }
 
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct ModuleLoadReceipt {
+    pub module_hash: String,
+    pub config_hash: String,
+    pub status: String,
+}
+
 pub struct DeterministicWasmEngine {
     pub config: DeterministicExecutionConfig,
     pub engine: Engine,
@@ -53,7 +60,6 @@ impl DeterministicWasmEngine {
         c.wasm_tail_call(config.enable_tail_calls);
         c.wasm_simd(config.enable_simd);
         c.wasm_relaxed_simd(config.enable_relaxed_simd);
-        c.wasm_threads(config.enable_threads);
         Ok(Self {
             config,
             engine: Engine::new(&c)?,
@@ -67,6 +73,15 @@ impl DeterministicWasmEngine {
     pub fn config_hash(&self) -> String {
         let canonical = serde_json::to_vec(&self.config).unwrap_or_default();
         hex::encode(sha256(&canonical))
+    }
+
+    pub fn compile_module(&self, module: &[u8]) -> anyhow::Result<ModuleLoadReceipt> {
+        Module::from_binary(&self.engine, module)?;
+        Ok(ModuleLoadReceipt {
+            module_hash: self.module_hash(module),
+            config_hash: self.config_hash(),
+            status: "module_loaded".to_string(),
+        })
     }
 
     pub fn environment(&self, module: &[u8]) -> ExecutionEnvironment {
@@ -89,7 +104,6 @@ pub fn deterministic_engine_config() -> Config {
     config.wasm_tail_call(false);
     config.wasm_multi_memory(false);
     config.wasm_bulk_memory(true);
-    config.wasm_threads(false);
     config
 }
 

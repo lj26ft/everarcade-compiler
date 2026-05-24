@@ -15,9 +15,18 @@ pub struct StateTransitionEnvelope {
 
 pub struct StatefulExecutionRuntime;
 impl StatefulExecutionRuntime {
+    pub fn validate_mutations(m: &ExecutionMutationSet) -> anyhow::Result<()> {
+        if !m.reject_duplicates() {
+            anyhow::bail!("duplicate mutation keys are forbidden");
+        }
+        Ok(())
+    }
+
     pub fn derive_root(m: &ExecutionMutationSet) -> PersistentStateRoot {
+        let mut entries = m.entries.clone();
+        entries.sort_by(|a, b| a.0.cmp(&b.0));
         PersistentStateRoot(hex::encode(sha256(
-            &serde_json::to_vec(m).unwrap_or_default(),
+            &serde_json::to_vec(&entries).unwrap_or_default(),
         )))
     }
 }

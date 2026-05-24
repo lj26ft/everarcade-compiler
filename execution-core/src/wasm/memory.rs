@@ -18,13 +18,27 @@ pub struct MemoryExportEnvelope {
 
 pub struct DeterministicMemoryBridge;
 impl DeterministicMemoryBridge {
-    pub fn verify_export(e: &MemoryExportEnvelope) -> bool {
-        e.layout
-            .regions
-            .iter()
-            .map(|r| r.length as usize)
-            .sum::<usize>()
-            <= e.bytes.len()
+    pub fn verify_export(e: &MemoryExportEnvelope) -> anyhow::Result<()> {
+        let mut regions = e.layout.regions.clone();
+        regions.sort_by_key(|r| r.offset);
+        let mut last_end = 0u32;
+        for r in regions {
+            if r.length == 0 {
+                anyhow::bail!("zero-length memory region")
+            }
+            if r.offset < last_end {
+                anyhow::bail!("overlapping memory region")
+            }
+            let end = r
+                .offset
+                .checked_add(r.length)
+                .ok_or_else(|| anyhow::anyhow!("memory region overflow"))?;
+            if end as usize > e.bytes.len() {
+                anyhow::bail!("memory layout exceeds export bytes")
+            }
+            last_end = end;
+        }
+        Ok(())
     }
 }
 

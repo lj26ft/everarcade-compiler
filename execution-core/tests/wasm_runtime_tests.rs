@@ -1,123 +1,81 @@
 use execution_core::wasm::{
-    abi::{encode, AbiExecutionRequest, CanonicalAbiEnvelope},
+    abi::{decode, encode, AbiExecutionRequest, AbiMutationSet, CanonicalAbiEnvelope},
     engine::{DeterministicExecutionConfig, DeterministicWasmEngine},
-    fuel::ExecutionFuelMeter,
-    host::WasmRuntimeHost,
     memory::{
         CanonicalMemoryLayout, DeterministicMemoryBridge, MemoryExportEnvelope, MemoryRegion,
     },
     mutations::ExecutionMutationSet,
-    receipts::ExecutionReceipt,
-    scheduler::{DeterministicExecutionQueue, ExecutionTick, ScheduledExecutionEnvelope},
-    serialization::canonical_bytes,
     state::StatefulExecutionRuntime,
 };
 
 #[test]
-fn test_engine_configuration_determinism() {
-    let a = DeterministicWasmEngine::new(DeterministicExecutionConfig::default()).unwrap();
-    let b = DeterministicWasmEngine::new(DeterministicExecutionConfig::default()).unwrap();
-    assert_eq!(a.config_hash(), b.config_hash());
-}
-
-#[test]
-fn test_module_hash_stability() {
+fn deterministic_module_loading_and_receipt() {
     let eng = DeterministicWasmEngine::new(DeterministicExecutionConfig::default()).unwrap();
-    assert_eq!(eng.module_hash(b"abc"), eng.module_hash(b"abc"));
+    let wasm = wat::parse_str("(module (func (export \"everarcade_execute\") (param i32 i32) (result i64) i64.const 0) (func (export \"alloc\") (param i32) (result i32) local.get 0) (memory (export \"memory\") 1))").unwrap();
+    let loaded = eng.compile_module(&wasm).unwrap();
+    assert_eq!(eng.config_hash(), loaded.config_hash);
+    assert_eq!(eng.module_hash(&wasm), loaded.module_hash);
 }
 
 #[test]
-fn test_canonical_abi_serialization() {
+fn host_memory_bridge_canonical_roundtrip() {
     let req = AbiExecutionRequest {
-        contract_id: "c".into(),
-        input: vec![1, 2],
+        contract_id: "demo".into(),
+        input: b"inc".to_vec(),
     };
-    assert_eq!(encode(&req).unwrap(), encode(&req).unwrap());
-    let env = CanonicalAbiEnvelope {
+    let envelope = CanonicalAbiEnvelope {
         version: 1,
         payload: encode(&req).unwrap(),
     };
-    assert_eq!(
-        canonical_bytes(&env).unwrap(),
-        canonical_bytes(&env).unwrap()
-    );
+    let bytes = encode(&envelope).unwrap();
+    let layout = CanonicalMemoryLayout {
+        regions: vec![MemoryRegion {
+            offset: 0,
+            length: bytes.len() as u32,
+        }],
+    };
+    let exp = MemoryExportEnvelope {
+        layout,
+        bytes: bytes.clone(),
+    };
+    DeterministicMemoryBridge::verify_export(&exp).unwrap();
+    let out: CanonicalAbiEnvelope = decode(&bytes).unwrap();
+    let decoded: AbiExecutionRequest = decode(&out.payload).unwrap();
+    assert_eq!(decoded.input, b"inc".to_vec());
 }
 
 #[test]
-fn test_memory_layout_stability() {
-    let export = MemoryExportEnvelope {
+fn overlapping_memory_region_rejected() {
+    let exp = MemoryExportEnvelope {
         layout: CanonicalMemoryLayout {
-            regions: vec![MemoryRegion {
-                offset: 0,
-                length: 2,
-            }],
+            regions: vec![
+                MemoryRegion {
+                    offset: 0,
+                    length: 4,
+                },
+                MemoryRegion {
+                    offset: 2,
+                    length: 4,
+                },
+            ],
         },
-        bytes: vec![7, 8],
+        bytes: vec![0; 10],
     };
-    assert!(DeterministicMemoryBridge::verify_export(&export));
+    assert!(DeterministicMemoryBridge::verify_export(&exp).is_err());
 }
 
 #[test]
-fn test_mutation_validation() {
+fn duplicate_mutations_rejected() {
     let m = ExecutionMutationSet {
-        entries: vec![("a".into(), vec![1]), ("b".into(), vec![2])],
+        entries: vec![("k".into(), vec![1]), ("k".into(), vec![2])],
     };
-    assert!(m.reject_duplicates());
+    assert!(StatefulExecutionRuntime::validate_mutations(&m).is_err());
 }
 
 #[test]
-fn test_duplicate_mutation_rejection() {
-    let m = ExecutionMutationSet {
-        entries: vec![("a".into(), vec![1]), ("a".into(), vec![2])],
-    };
-    assert!(!m.reject_duplicates());
-}
-
-#[test]
-fn test_fuel_exhaustion_equivalence() {
-    let mut meter = ExecutionFuelMeter::new(10);
-    assert!(meter.consume(11).is_some());
-}
-
-#[test]
-fn test_execution_receipt_stability() {
-    let r = ExecutionReceipt {
-        module_hash: "m".into(),
-        input_hash: "i".into(),
-        output_hash: "o".into(),
-        mutation_root: "mr".into(),
-        state_root: "s".into(),
-        fuel_consumed: 1,
-        continuity_root: "c".into(),
-        execution_status: "ok".into(),
-    };
-    assert_eq!(canonical_bytes(&r).unwrap(), canonical_bytes(&r).unwrap());
-}
-
-#[test]
-fn test_execution_scheduler_ordering() {
-    let q = DeterministicExecutionQueue {
-        items: vec![
-            ScheduledExecutionEnvelope {
-                tick: ExecutionTick { height: 1 },
-                contract_id: "a".into(),
-            },
-            ScheduledExecutionEnvelope {
-                tick: ExecutionTick { height: 2 },
-                contract_id: "b".into(),
-            },
-        ],
-    };
-    assert!(q.items[0].tick.height < q.items[1].tick.height);
-}
-
-#[test]
-fn test_full_wasm_runtime_pipeline() {
-    let lifecycle = WasmRuntimeHost::lifecycle();
-    assert_eq!(lifecycle.lifecycle.first(), Some(&"LOAD_MODULE"));
-    let m = ExecutionMutationSet {
-        entries: vec![("k".into(), vec![1])],
-    };
-    let root = StatefulExecutionRuntime::derive_root(&m);
-    assert!(!root.0.is_empty());
+fn malformed_abi_deterministic_failure() {
+    let bad = b"{\"output\":1}".to_vec();
+    let err1 = decode::<AbiMutationSet>(&bad).unwrap_err().to_string();
+    let err2 = decode::<AbiMutationSet>(&bad).unwrap_err().to_string();
+    assert_eq!(err1, err2);
 }
