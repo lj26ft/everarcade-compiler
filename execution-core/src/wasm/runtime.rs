@@ -2,6 +2,8 @@ use crate::{hashing::sha256, VmInput, VmOutput};
 
 use super::abi::{decode, decode_handle, encode};
 use super::engine::deterministic_engine;
+use super::engine::DeterministicExecutionConfig;
+use super::engine::DeterministicWasmEngine;
 use super::errors::WasmRuntimeError;
 use super::instance::instantiate;
 use super::limits::ExecutionLimits;
@@ -18,6 +20,18 @@ pub struct WasmEngine {
 }
 
 impl WasmEngine {
+    pub fn default_for_testing() -> anyhow::Result<Self> {
+        Self::new(ExecutionLimits {
+            fuel: 10_000_000,
+            ..Default::default()
+        })
+    }
+    pub fn with_fuel_limit_for_testing(fuel: u64) -> anyhow::Result<Self> {
+        Self::new(ExecutionLimits {
+            fuel,
+            ..Default::default()
+        })
+    }
     pub fn new(limits: ExecutionLimits) -> anyhow::Result<Self> {
         Ok(Self {
             engine: deterministic_engine()?,
@@ -34,6 +48,8 @@ impl WasmEngine {
         wasm: &[u8],
         input: VmInput,
     ) -> anyhow::Result<(VmOutput, WasmExecutionReceipt)> {
+        let det = DeterministicWasmEngine::new(DeterministicExecutionConfig::default())?;
+        let _load = det.compile_module(wasm)?;
         let module = Module::from_binary(&self.engine, wasm)?;
         let mut store = Store::new(&self.engine, ());
         store.set_fuel(self.limits.fuel)?;
