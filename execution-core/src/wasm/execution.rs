@@ -150,6 +150,7 @@ pub fn execute_contract(
     };
     receipt.continuity_proof_hash = receipt.derive_continuity_proof_hash()?;
     let checkpoint = ExecutionCheckpoint::new(
+        "00".repeat(32),
         receipt.previous_state_root.clone(),
         receipt.new_state_root.clone(),
         receipt.receipt_hash()?,

@@ -6,6 +6,7 @@ use super::serialization::canonical_bytes;
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct ExecutionCheckpoint {
+    pub prior_checkpoint_hash: String,
     pub previous_state_root: String,
     pub new_state_root: String,
     pub execution_receipt_hash: String,
@@ -16,6 +17,7 @@ pub struct ExecutionCheckpoint {
 
 impl ExecutionCheckpoint {
     pub fn new(
+        prior_checkpoint_hash: String,
         previous_state_root: String,
         new_state_root: String,
         execution_receipt_hash: String,
@@ -24,6 +26,7 @@ impl ExecutionCheckpoint {
     ) -> anyhow::Result<Self> {
         #[derive(Serialize)]
         struct HashInput<'a> {
+            prior_checkpoint_hash: &'a str,
             previous_state_root: &'a str,
             new_state_root: &'a str,
             execution_receipt_hash: &'a str,
@@ -32,6 +35,7 @@ impl ExecutionCheckpoint {
         }
 
         let input = HashInput {
+            prior_checkpoint_hash: &prior_checkpoint_hash,
             previous_state_root: &previous_state_root,
             new_state_root: &new_state_root,
             execution_receipt_hash: &execution_receipt_hash,
@@ -40,6 +44,7 @@ impl ExecutionCheckpoint {
         };
         let checkpoint_hash = hex::encode(sha256(&canonical_bytes(&input)?));
         Ok(Self {
+            prior_checkpoint_hash,
             previous_state_root,
             new_state_root,
             execution_receipt_hash,
