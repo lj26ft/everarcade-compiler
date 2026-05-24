@@ -13,6 +13,7 @@ pub struct ReplayValidationReceipt {
     pub same_fuel_used: bool,
     pub same_checkpoint_hash: bool,
     pub same_continuity_proof_hash: bool,
+    pub same_execution_status: bool,
 }
 
 pub fn replay_equivalence(
@@ -36,5 +37,6 @@ pub fn replay_equivalence(
             == expected_checkpoint.checkpoint_hash,
         same_continuity_proof_hash: replay.receipt.continuity_proof_hash
             == expected_receipt.continuity_proof_hash,
+        same_execution_status: replay.receipt.execution_status == expected_receipt.execution_status,
     })
 }
