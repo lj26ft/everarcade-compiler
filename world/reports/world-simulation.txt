@@ -1,0 +1,2 @@
+simulation_scale: 1h,1d,1w,multi-era
+status: deterministic
