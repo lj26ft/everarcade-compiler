@@ -13,6 +13,7 @@ pub mod constitution;
 pub mod continuity;
 pub mod coordination;
 pub mod dag;
+pub mod deployment;
 pub mod diagnostics;
 pub mod divergence;
 pub mod domain;
