@@ -1,22 +1,18 @@
-use serde::{Deserialize, Serialize};
+use std::collections::BTreeMap;
 
-#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
-pub struct StorageMutation {
-    pub key: String,
-    pub value: Vec<u8>,
-}
-#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
-pub struct StorageCheckpoint {
-    pub height: u64,
-    pub root: String,
-}
-#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
-pub struct StorageContinuityEnvelope {
-    pub lineage: Vec<StorageCheckpoint>,
+use super::mutations::ExecutionMutationSet;
+
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct HostOwnedState {
+    pub data: BTreeMap<String, Vec<u8>>,
 }
 
-#[derive(Default)]
-pub struct DeterministicStorageEngine {
-    pub data: std::collections::BTreeMap<String, Vec<u8>>,
-    pub checkpoints: Vec<StorageCheckpoint>,
+impl HostOwnedState {
+    pub fn apply_mutations(&self, mutations: &ExecutionMutationSet) -> Self {
+        let mut next = self.clone();
+        for (k, v) in &mutations.entries {
+            next.data.insert(k.clone(), v.clone());
+        }
+        next
+    }
 }
