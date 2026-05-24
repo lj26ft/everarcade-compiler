@@ -11,7 +11,6 @@ fn request(op: &str) -> ContractExecutionRequest {
     }
 }
 
-
 fn fuel_exhausting_module() -> Vec<u8> {
     wat::parse_str(
         r#"(module
@@ -100,13 +99,8 @@ fn test_malformed_operation_rejected() {
 fn test_fuel_operation_rolls_back_state() {
     let mut prior = HostOwnedState::default();
     prior.data.insert("stable".into(), b"1".to_vec());
-    let out = execute_contract(
-        &guest_runtime_module(),
-        request("f"),
-        prior.clone(),
-        10_000,
-    )
-    .unwrap();
+    let out =
+        execute_contract(&guest_runtime_module(), request("f"), prior.clone(), 10_000).unwrap();
     assert_eq!(out.receipt.execution_status, ExecutionStatus::FuelExhausted);
     assert_eq!(out.next_state, prior);
 }

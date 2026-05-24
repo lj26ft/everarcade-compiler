@@ -50,9 +50,9 @@ fn test_stateful_contract_execution_commits_host_owned_mutation() {
         execute_contract(&wasm, request(b"inc"), HostOwnedState::default(), 1_000_000).unwrap();
     assert_eq!(
         result.receipt.execution_status,
-        ExecutionStatus::MalformedAbi
+        ExecutionStatus::Success
     );
-    assert_eq!(result.next_state.data.get("counter").cloned(), None);
+    assert_eq!(result.next_state.data.get("counter").cloned(), Some(b"1".to_vec()));
 }
 
 #[test]
@@ -178,7 +178,7 @@ fn test_duplicate_mutation_rejection_receipt_equivalence() {
         execute_contract(&wasm, request(b"dup"), HostOwnedState::default(), 1_000_000).unwrap();
     assert_eq!(
         first.receipt.execution_status,
-        ExecutionStatus::MalformedAbi
+        ExecutionStatus::DuplicateMutation
     );
     let replay = replay_equivalence(
         &wasm,
