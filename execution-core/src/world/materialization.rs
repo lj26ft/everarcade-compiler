@@ -8,7 +8,7 @@ use super::{
     epochs::{
         AggregatedCheckpointRoot, AggregatedMutationRoot, AggregatedReceiptRoot, ExecutionEpochId,
     },
-    events::{EventChunk, EventRoot, EventStream, ExecutionEvent},
+    events::{EventChunk, EventStream, ExecutionEvent},
 };
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]

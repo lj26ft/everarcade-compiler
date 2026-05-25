@@ -60,7 +60,13 @@ pub use lanes::{
     LaneMergePhase,
 };
 pub use lifecycle::EntityLifecycle;
-pub use materialization::*;
+pub use materialization::{
+    AggregatedEventRoot, AggregatedWitnessRoot, CompressedEpochBundle, CompressedPartitionDelta,
+    EpochMaterializationReceipt, EpochMaterializationSummary, EpochWitnessBundle, EventArchive,
+    EventChunkManifest, ExecutionWitnessBundle, MaterializedEpoch, MaterializedEventStream,
+    MaterializedExecution, MaterializedPartition, PartitionWitness, ReplayMaterializationWindow,
+    ReplayRestorationArtifact, SnapshotAnchor, SnapshotManifest, WorldSnapshot,
+};
 pub use replay_compression::{
     CompressedEpochRange, ExecutionWitness, IncrementalReplayWindow, ReplayAnchor,
     ReplayCompressionWindow, ReplayCursor, ReplayDelta, ReplayMaterializationCursor,

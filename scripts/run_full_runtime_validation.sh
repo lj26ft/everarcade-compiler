@@ -1,3 +1,4 @@
+export RUSTFLAGS="-D warnings"
 #!/usr/bin/env bash
 set -euo pipefail
 
