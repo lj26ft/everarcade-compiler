@@ -63,6 +63,7 @@ fn test_quarantine_recovery_equivalence() {
         }),
         eligibility: RecoveryEligibility::Eligible,
         diagnostics: SecurityDiagnosticsEnvelope::fault("corruption", 1, true, true),
+        receipt: None,
     };
     assert!(q.quarantined);
 }

@@ -2,4 +2,5 @@
 set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT"
+"$ROOT/scripts/preflight_vendor.sh"
 echo "full runtime validation placeholder (offline deterministic path)"

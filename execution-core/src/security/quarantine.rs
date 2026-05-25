@@ -33,7 +33,7 @@ pub struct RecoveryManifest {
 #[derive(Clone, Debug, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub enum RecoveryEligibility {
     Eligible,
-    Ineligible(&'static str),
+    Ineligible(String),
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
