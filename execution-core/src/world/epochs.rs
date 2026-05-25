@@ -125,3 +125,18 @@ pub struct EpochWitness {
     pub mutation_root: AggregatedMutationRoot,
     pub stdout_root: AggregatedStdoutRoot,
 }
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct RollingEpochWindow {
+    pub start_epoch: u64,
+    pub end_epoch: u64,
+}
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct RollingEpochAnchor {
+    pub epoch: u64,
+    pub epoch_hash: String,
+}
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct WindowMaterializationBoundary {
+    pub trim_before_epoch: u64,
+}
