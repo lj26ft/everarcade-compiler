@@ -34,6 +34,7 @@ pub use wasm_isolation::*;
 
 pub use capabilities::*;
 pub use governance::*;
+pub use isolation::*;
 pub use metrics::*;
 pub use sandbox::*;
 pub use validation_root::*;

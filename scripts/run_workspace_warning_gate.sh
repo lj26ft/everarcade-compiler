@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+"$ROOT/scripts/preflight_vendor.sh"
+
 export RUSTFLAGS="-D warnings"
 
 CLEAN_BETWEEN_STAGES=0

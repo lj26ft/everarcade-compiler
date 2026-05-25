@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+"$ROOT/scripts/preflight_vendor.sh"
+
 echo "capability validation"
 cargo test --package execution-core --test security_runtime_tests "$@"
 echo "isolation validation"
