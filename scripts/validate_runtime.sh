@@ -2,4 +2,4 @@
 set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT"
-echo "full runtime validation placeholder (offline deterministic path)"
+echo "validation root: $(cat release/VALIDATION_ROOT)"

@@ -1,0 +1,9 @@
+profile = "evernode-runtime"
+stdout_event_streaming = true
+low_memory_mode = true
+incremental_windows = true
+offline_replay_restoration = true
+single_lane_deterministic_execution = true
+resource_constrained_vm = true
+networking_enabled = false
+distributed_orchestration = false
