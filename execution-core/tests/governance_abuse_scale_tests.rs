@@ -19,6 +19,16 @@ fn governance_abuse_scale_rejection_is_deterministic() {
     }
     let policy = RuntimeGovernancePolicy {
         max_replay_window_depth: 100_000,
+        max_mutations_per_execution: u64::MAX,
+        max_mutation_bytes: u64::MAX,
+        max_events_per_execution: u64::MAX,
+        max_event_chunk_size: u64::MAX,
+        max_event_window_size: u64::MAX,
+        max_witness_chunk_size: u64::MAX,
+        max_witness_chain_depth: u64::MAX,
+        max_snapshot_chain_depth: u64::MAX,
+        max_partition_merge_inputs: u64::MAX,
+        max_validation_export_size: u64::MAX,
         ..Default::default()
     };
     let receipt = runtime.enforce_governance(&policy, 0, 0, 0, 0, 0, 0, 0, true, true);
