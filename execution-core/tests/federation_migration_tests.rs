@@ -5,7 +5,7 @@ use std::{fs, path::PathBuf};
 use execution_core::federation::{
     node::FederationNodeId,
     runtime::{
-        freeze_world, migrate_world, resume_world, validate_world_handoff, WorldMigrationRequest,
+        freeze_world, migrate_world, resume_world, WorldMigrationRequest,
     },
 };
 

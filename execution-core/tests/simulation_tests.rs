@@ -1,10 +1,8 @@
 use execution_core::simulation::{
     checkpoint::SimulationCheckpoint,
-    engine::{advance_simulation_tick, verify_simulation_tick},
-    interaction::{propagate_interaction_event, resolve_multiplayer_interaction, InteractionEvent},
-    replay::{
-        reconstruct_world_evolution, replay_simulation_timeline, verify_simulation_convergence,
-    },
+    engine::advance_simulation_tick,
+    interaction::InteractionEvent,
+    replay::replay_simulation_timeline,
     scheduler::{schedule_simulation_execution, verify_execution_schedule},
     state::SimulationState,
 };

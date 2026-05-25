@@ -173,10 +173,12 @@ pub fn generate_counter_world_fixture() -> CounterWorldFixture {
     }
 }
 
+#[allow(dead_code)]
 pub fn generate_two_step_lineage_fixture() -> CounterWorldFixture {
     generate_counter_world_fixture()
 }
 
+#[allow(dead_code)]
 pub fn repo_counter_world_fixture_dir() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))
         .join("../everarcade-host/tests/fixtures/counter_world")
@@ -211,6 +213,7 @@ pub fn persist_counter_world_fixture(dir: &Path, fixture: &CounterWorldFixture) 
     save_manifest(&dir.join("manifest.bin"), &manifest).unwrap();
 }
 
+#[allow(dead_code)]
 pub fn generate_operator_recovery_fixture(dir: &Path) -> OperatorRecoveryOutput {
     let fixture = generate_counter_world_fixture();
     persist_counter_world_fixture(dir, &fixture);
@@ -224,6 +227,7 @@ pub fn generate_operator_recovery_fixture(dir: &Path) -> OperatorRecoveryOutput 
     .unwrap()
 }
 
+#[allow(dead_code)]
 pub fn ensure_repo_counter_world_fixtures() {
     static LOCK: OnceLock<Mutex<()>> = OnceLock::new();
     let _guard = LOCK.get_or_init(|| Mutex::new(())).lock().unwrap();
