@@ -1,0 +1,21 @@
+enabled = ["event_emission", "snapshot_access", "replay_access"]
+disabled = ["filesystem_access"]
+
+[resource_ceilings]
+max_guest_memory_bytes = 1048576
+max_host_memory_bytes = 8388608
+max_fuel = 1000000
+max_mutations = 10000
+
+[replay_ceilings]
+max_replay_window = 2048
+max_restoration_depth = 128
+
+[snapshot_ceilings]
+max_segment_count = 4096
+max_snapshot_chain_depth = 256
+
+[event_ceilings]
+max_events_per_execution = 1024
+max_event_chunk_size_bytes = 16384
+max_archive_growth_bytes = 1048576
