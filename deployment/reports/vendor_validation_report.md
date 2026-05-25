@@ -3,4 +3,7 @@
 - cargo_lock: present
 - cargo_config: .cargo/config.toml
 - vendor_dir: vendor
-- vendor_hash: 0edded7de83989de26a1608b9a685a40791eceff89b844cc1b6fb086c35eec08
+codex/build-deterministic-epoch-materialization-engine
+
+- vendor_hash: deaf76e7958d83bff89f77f5d495327d13f555b7437a31f91d29394e93caa4d5
+

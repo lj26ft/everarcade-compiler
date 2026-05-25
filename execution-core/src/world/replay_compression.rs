@@ -33,3 +33,45 @@ pub struct ExecutionWitness {
     pub receipt_hash: String,
     pub mutation_hash: String,
 }
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct IncrementalReplayWindow {
+    pub start_tick: u64,
+    pub end_tick: u64,
+    pub delta_root: String,
+}
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct ReplayCursor {
+    pub next_window_start: u64,
+}
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct ReplayDelta {
+    pub window: IncrementalReplayWindow,
+    pub mutation_count: u64,
+}
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct ReplayMergeBoundary {
+    pub merged_until_tick: u64,
+}
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct ReplayMaterializationCursor {
+    pub materialized_until_tick: u64,
+}
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize, Default)]
+pub struct StreamingWitnessBundle {
+    pub chunks: Vec<WitnessChunk>,
+}
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct WitnessChunk {
+    pub chunk_id: u64,
+    pub witness_root: String,
+}
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct WitnessSegment {
+    pub segment_id: u64,
+    pub chunk_ids: Vec<u64>,
+}
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct WitnessCursor {
+    pub next_chunk_id: u64,
+}
