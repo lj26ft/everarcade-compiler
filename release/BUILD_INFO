@@ -1,0 +1,5 @@
+git_commit=428c7b84c4aa
+build_target=x86_64-unknown-linux-gnu
+cargo_lock_hash=6b2f11476301a4a4687151202109155abcf88bf972217d5463b39692ef3146b8
+release_timestamp_policy=SOURCE_DATE_EPOCH_or_UTC0
+vendor_hash=959e25864396402663a1d02aeaa6106760664491bfae20d96c167fb8ee54e7ea

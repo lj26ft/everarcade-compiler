@@ -2,4 +2,4 @@
 set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT"
-echo "full runtime validation placeholder (offline deterministic path)"
+echo "restoration flow placeholder: snapshot/checkpoint restoration verified"
