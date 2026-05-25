@@ -11,6 +11,7 @@ fn request(op: &str) -> ContractExecutionRequest {
     }
 }
 
+#[allow(dead_code)]
 fn fuel_exhausting_module() -> Vec<u8> {
     wat::parse_str(
         r#"(module

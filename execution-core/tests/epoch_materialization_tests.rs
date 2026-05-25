@@ -1,3 +1,4 @@
+use execution_core::world::materialization::{EpochMaterializer, SnapshotRestorationReceipt};
 use execution_core::world::*;
 
 fn fixture() -> (ExecutionGraph, Vec<ExecutionPartition>, WorldCheckpoint) {

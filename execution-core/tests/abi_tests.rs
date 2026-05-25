@@ -1,4 +1,4 @@
-use execution_core::wasm::memory::{deserialize_abi, serialize_abi};
+use everarcade_abi::{deserialize, serialize};
 use execution_core::{ExecutionPlan, VmInput};
 use std::collections::BTreeMap;
 
@@ -20,8 +20,8 @@ fn test_raw_memory_roundtrip() {
 #[test]
 fn test_structured_abi_roundtrip() {
     let input = sample_input();
-    let bytes = serialize_abi(&input).unwrap();
-    let decoded: VmInput = deserialize_abi(&bytes).unwrap();
+    let bytes = serialize(&input).unwrap();
+    let decoded: VmInput = deserialize(&bytes).unwrap();
     let out = execution_core::execute::execute_vm(decoded);
     assert_eq!(out.updated_state.get("k").unwrap(), "v");
 }
@@ -29,7 +29,7 @@ fn test_structured_abi_roundtrip() {
 #[test]
 fn test_invalid_payload_rejected() {
     let bad = vec![0xff, 0x00, 0x13];
-    let decoded: anyhow::Result<VmInput> = deserialize_abi(&bad);
+    let decoded = deserialize::<VmInput>(&bad);
     assert!(decoded.is_err());
 }
 
@@ -44,15 +44,15 @@ fn test_large_payloads() {
         state,
         plan: ExecutionPlan { nodes: vec![] },
     };
-    let bytes = serialize_abi(&input).unwrap();
-    let decoded: VmInput = deserialize_abi(&bytes).unwrap();
+    let bytes = serialize(&input).unwrap();
+    let decoded: VmInput = deserialize(&bytes).unwrap();
     assert_eq!(decoded.state.len(), 5000);
 }
 
 #[test]
 fn test_serialization_stability() {
     let input = sample_input();
-    let a = serialize_abi(&input).unwrap();
-    let b = serialize_abi(&input).unwrap();
+    let a = serialize(&input).unwrap();
+    let b = serialize(&input).unwrap();
     assert_eq!(a, b);
 }

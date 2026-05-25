@@ -1,3 +1,4 @@
+use execution_core::world::materialization::EpochMaterializer;
 use execution_core::world::*;
 
 #[test]

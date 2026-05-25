@@ -1,5 +1,4 @@
 use execution_core::simulation::{
-    engine::{advance_simulation_tick, verify_simulation_tick},
     interaction::{
         propagate_interaction_event, resolve_multiplayer_interaction, verify_interaction_replay,
         InteractionEvent,
