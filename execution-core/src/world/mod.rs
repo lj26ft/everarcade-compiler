@@ -14,6 +14,7 @@ pub mod inventory;
 pub mod lanes;
 pub mod lifecycle;
 pub mod metrics;
+pub mod materialization;
 pub mod persistence;
 pub mod replay_compression;
 pub mod reports;
@@ -59,6 +60,7 @@ pub use lanes::{
     LaneMergePhase,
 };
 pub use lifecycle::EntityLifecycle;
+pub use materialization::*;
 pub use replay_compression::{
     CompressedEpochRange, ExecutionWitness, IncrementalReplayWindow, ReplayAnchor,
     ReplayCompressionWindow, ReplayCursor, ReplayDelta, ReplayMaterializationCursor,
