@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 
 use super::{
     continuity::{ContinuityCursor, ContinuitySegment, ContinuityWindow},
-    events::{EventSegment, EventStreamCursor, EventWindow, StreamingEventArchive},
+    events::{EventSegment, EventWindow, StreamingEventArchive},
     lanes::ExecutionLaneScheduler,
     replay_compression::{IncrementalReplayWindow, ReplayCursor, StreamingWitnessBundle},
 };

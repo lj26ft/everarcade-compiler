@@ -1,6 +1,6 @@
 use crate::hashing::sha256;
 
-use super::abi::{decode, decode_handle, encode, AbiMutationSet, CanonicalAbiEnvelope};
+use super::abi::{decode, decode_handle, AbiMutationSet};
 use super::checkpoints::ExecutionCheckpoint;
 use super::engine::{DeterministicExecutionConfig, DeterministicWasmEngine};
 use super::instance::instantiate;
