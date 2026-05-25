@@ -4,9 +4,7 @@ use std::{fs, path::PathBuf};
 
 use execution_core::federation::{
     node::FederationNodeId,
-    runtime::{
-        freeze_world, migrate_world, resume_world, WorldMigrationRequest,
-    },
+    runtime::{freeze_world, migrate_world, resume_world, WorldMigrationRequest},
 };
 
 fn fixture(name: &str) -> PathBuf {

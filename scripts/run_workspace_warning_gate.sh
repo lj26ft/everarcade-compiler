@@ -6,6 +6,7 @@ export RUSTFLAGS="-D warnings"
 CLEAN_BETWEEN_STAGES=0
 CHUNK_SIZE="${WORKSPACE_WARNING_GATE_CHUNK_SIZE:-6}"
 TARGET_DIR="${CARGO_TARGET_DIR:-target}"
+MODE="check"
 ARGS=()
 
 while (($#)); do
@@ -18,12 +19,25 @@ while (($#)); do
       CHUNK_SIZE="$2"
       shift 2
       ;;
+    --mode)
+      MODE="$2"
+      shift 2
+      ;;
     *)
       ARGS+=("$1")
       shift
       ;;
   esac
 done
+
+case "$MODE" in
+  check|no-run|test)
+    ;;
+  *)
+    printf '[workspace-warning-gate] ERROR invalid --mode %s (expected check|no-run|test)\n' "$MODE" >&2
+    exit 1
+    ;;
+esac
 
 print_disk_usage() {
   local label="$1"
@@ -59,7 +73,7 @@ run_stage() {
 
 mapfile -t PACKAGES < <(
   cargo metadata --format-version=1 --no-deps \
-  | python3 -c 'import json,sys; d=json.load(sys.stdin); r=d["resolve"]; ws=set(r["root"] for _ in [0] if r and r.get("root"));
+  | python3 -c 'import json,sys; d=json.load(sys.stdin)
 for p in d["packages"]:
   if p["id"] in d["workspace_members"]:
     print(p["name"])'
@@ -70,19 +84,38 @@ if [[ "${#PACKAGES[@]}" -eq 0 ]]; then
   exit 1
 fi
 
-run_stage workspace_check cargo check --workspace --all-targets "${ARGS[@]}"
-
 stage_index=1
 for ((i=0; i<${#PACKAGES[@]}; i+=CHUNK_SIZE)); do
   stage_packages=("${PACKAGES[@]:i:CHUNK_SIZE}")
-  cmd=(cargo test --no-run)
-  cmd+=("${ARGS[@]}")
-  for pkg in "${stage_packages[@]}"; do
-    cmd+=(-p "$pkg")
-  done
 
-  run_stage "segmented_test_compile_${stage_index}" "${cmd[@]}"
+  if [[ "$MODE" == "check" || "$MODE" == "no-run" || "$MODE" == "test" ]]; then
+    check_cmd=(cargo check --all-targets)
+    check_cmd+=("${ARGS[@]}")
+    for pkg in "${stage_packages[@]}"; do
+      check_cmd+=(-p "$pkg")
+    done
+    run_stage "segmented_check_${stage_index}" "${check_cmd[@]}"
+  fi
+
+  if [[ "$MODE" == "no-run" ]]; then
+    no_run_cmd=(cargo test --no-run)
+    no_run_cmd+=("${ARGS[@]}")
+    for pkg in "${stage_packages[@]}"; do
+      no_run_cmd+=(-p "$pkg")
+    done
+    run_stage "segmented_test_compile_${stage_index}" "${no_run_cmd[@]}"
+  fi
+
+  if [[ "$MODE" == "test" ]]; then
+    test_cmd=(cargo test)
+    test_cmd+=("${ARGS[@]}")
+    for pkg in "${stage_packages[@]}"; do
+      test_cmd+=(-p "$pkg")
+    done
+    run_stage "segmented_test_execute_${stage_index}" "${test_cmd[@]}"
+  fi
+
   ((stage_index++))
 done
 
-printf '[workspace-warning-gate] COMPLETE all stages\n'
+printf '[workspace-warning-gate] COMPLETE all stages (mode=%s)\n' "$MODE"
