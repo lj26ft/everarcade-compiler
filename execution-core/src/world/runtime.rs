@@ -1,3 +1,4 @@
+use crate::{hashing::hash_bytes, wasm::execution::ExecutionStatus};
 use serde::{Deserialize, Serialize};
 
 use super::{
@@ -44,6 +45,64 @@ pub struct IncrementalWorldRuntime {
     pub witnesses: StreamingWitnessBundle,
 }
 
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct RuntimeGovernancePolicy {
+    pub max_mutations_per_execution: u64,
+    pub max_mutation_bytes: u64,
+    pub max_events_per_execution: u64,
+    pub max_event_chunk_size: u64,
+    pub max_event_window_size: u64,
+    pub max_witness_chunk_size: u64,
+    pub max_witness_chain_depth: u64,
+    pub max_replay_window_depth: u64,
+    pub max_snapshot_chain_depth: u64,
+    pub max_partition_merge_inputs: u64,
+    pub max_validation_export_size: u64,
+}
+
+impl Default for RuntimeGovernancePolicy {
+    fn default() -> Self {
+        Self {
+            max_mutations_per_execution: 1024,
+            max_mutation_bytes: 64 * 1024,
+            max_events_per_execution: 1024,
+            max_event_chunk_size: 16 * 1024,
+            max_event_window_size: 1024,
+            max_witness_chunk_size: 16 * 1024,
+            max_witness_chain_depth: 2048,
+            max_replay_window_depth: 2048,
+            max_snapshot_chain_depth: 512,
+            max_partition_merge_inputs: 128,
+            max_validation_export_size: 128 * 1024,
+        }
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct GovernanceReceipt {
+    pub status: ExecutionStatus,
+    pub rejection_root: String,
+    pub quarantined: bool,
+}
+
+impl GovernanceReceipt {
+    fn accepted() -> Self {
+        Self {
+            status: ExecutionStatus::Success,
+            rejection_root: hash_bytes(b"governance:accepted"),
+            quarantined: false,
+        }
+    }
+
+    fn rejected(status: ExecutionStatus, reason: &str) -> Self {
+        Self {
+            status,
+            rejection_root: hash_bytes(reason.as_bytes()),
+            quarantined: true,
+        }
+    }
+}
+
 impl Default for IncrementalWorldRuntime {
     fn default() -> Self {
         Self {
@@ -60,6 +119,82 @@ impl Default for IncrementalWorldRuntime {
 }
 
 impl IncrementalWorldRuntime {
+    pub fn enforce_governance(
+        &self,
+        policy: &RuntimeGovernancePolicy,
+        mutation_count: u64,
+        mutation_bytes: u64,
+        event_count: u64,
+        event_chunk_size: u64,
+        witness_chunk_size: u64,
+        partition_merge_inputs: u64,
+        validation_export_size: u64,
+        capability_authorized: bool,
+        isolation_ok: bool,
+    ) -> GovernanceReceipt {
+        if !capability_authorized {
+            return GovernanceReceipt::rejected(
+                ExecutionStatus::CapabilityViolation,
+                "governance:capability_violation",
+            );
+        }
+        if !isolation_ok {
+            return GovernanceReceipt::rejected(
+                ExecutionStatus::IsolationViolation,
+                "governance:isolation_violation",
+            );
+        }
+        if mutation_count > policy.max_mutations_per_execution
+            || mutation_bytes > policy.max_mutation_bytes
+        {
+            return GovernanceReceipt::rejected(
+                ExecutionStatus::ResourceLimitExceeded,
+                "governance:mutation_overflow",
+            );
+        }
+        if event_count > policy.max_events_per_execution
+            || event_chunk_size > policy.max_event_chunk_size
+            || event_count > policy.max_event_window_size
+        {
+            return GovernanceReceipt::rejected(
+                ExecutionStatus::EventOverflow,
+                "governance:event_overflow",
+            );
+        }
+        if witness_chunk_size > policy.max_witness_chunk_size
+            || self.witnesses.chunks.len() as u64 > policy.max_witness_chain_depth
+        {
+            return GovernanceReceipt::rejected(
+                ExecutionStatus::WitnessOverflow,
+                "governance:witness_overflow",
+            );
+        }
+        if self.archive.segments.len() as u64 > policy.max_replay_window_depth {
+            return GovernanceReceipt::rejected(
+                ExecutionStatus::ReplayOverflow,
+                "governance:replay_overflow",
+            );
+        }
+        if self.continuity_cursor.segments.len() as u64 > policy.max_snapshot_chain_depth {
+            return GovernanceReceipt::rejected(
+                ExecutionStatus::SnapshotOverflow,
+                "governance:snapshot_overflow",
+            );
+        }
+        if partition_merge_inputs > policy.max_partition_merge_inputs {
+            return GovernanceReceipt::rejected(
+                ExecutionStatus::ResourceLimitExceeded,
+                "governance:partition_merge_overflow",
+            );
+        }
+        if validation_export_size > policy.max_validation_export_size {
+            return GovernanceReceipt::rejected(
+                ExecutionStatus::ResourceLimitExceeded,
+                "governance:validation_export_overflow",
+            );
+        }
+        GovernanceReceipt::accepted()
+    }
     pub fn advance(
         &mut self,
         tick: WorldRuntimeTick,
