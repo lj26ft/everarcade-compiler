@@ -48,11 +48,11 @@ fn test_stateful_contract_execution_commits_host_owned_mutation() {
     let wasm = module_returning(br#"{"mutations":[["counter",[49]]]}"#);
     let result =
         execute_contract(&wasm, request(b"inc"), HostOwnedState::default(), 1_000_000).unwrap();
+    assert_eq!(result.receipt.execution_status, ExecutionStatus::Success);
     assert_eq!(
-        result.receipt.execution_status,
-        ExecutionStatus::Success
+        result.next_state.data.get("counter").cloned(),
+        Some(b"1".to_vec())
     );
-    assert_eq!(result.next_state.data.get("counter").cloned(), Some(b"1".to_vec()));
 }
 
 #[test]
