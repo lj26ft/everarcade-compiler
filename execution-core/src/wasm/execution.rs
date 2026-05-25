@@ -27,6 +27,13 @@ pub enum ExecutionStatus {
     MemoryViolation,
     ModuleLoadFailed,
     ExecutionTrap,
+    CapabilityViolation,
+    ResourceLimitExceeded,
+    WitnessOverflow,
+    EventOverflow,
+    ReplayOverflow,
+    SnapshotOverflow,
+    IsolationViolation,
 }
 
 pub const GENESIS_CHECKPOINT_HASH: &str =
