@@ -10,6 +10,7 @@ pub mod events;
 pub mod evolution;
 pub mod inventory;
 pub mod lifecycle;
+pub mod materialization;
 pub mod persistence;
 pub mod replay_compression;
 pub mod restoration;
@@ -37,6 +38,7 @@ pub use events::{EventChunk, EventRoot, EventStream, ExecutionEvent};
 pub use evolution::EvolutionStage;
 pub use inventory::{AssetContinuityRecord, InventoryMutation};
 pub use lifecycle::EntityLifecycle;
+pub use materialization::*;
 pub use replay_compression::{
     CompressedEpochRange, ExecutionWitness, ReplayAnchor, ReplayCompressionWindow, ReplaySnapshot,
     ReplayWitness,
