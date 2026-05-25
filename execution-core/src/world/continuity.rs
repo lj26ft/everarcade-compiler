@@ -57,3 +57,21 @@ pub struct ContinuityWitness {
     pub world_id: String,
     pub chain_root: String,
 }
+
+#[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
+pub struct ContinuityCursor {
+    pub segments: Vec<ContinuitySegment>,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct ContinuityWindow {
+    pub start_tick: u64,
+    pub end_tick: u64,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct ContinuitySegment {
+    pub tick: u64,
+    pub window: ContinuityWindow,
+    pub event_root: String,
+}

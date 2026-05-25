@@ -23,9 +23,18 @@ fn sample_epoch(epoch_id: u64) -> ExecutionEpoch {
         WorldCheckpoint {
             tick: 1,
             continuity_root: WorldContinuityRoot("c1".into()),
-            lifecycle: LifecycleCheckpoint { tick: 1, entity_count: 1 },
-            ledger: EconomicLedgerCheckpoint { tick: 1, mutation_count: 1, ledger_root: "l1".into() },
-            scheduler: SchedulerCheckpoint { pending_tick_count: 0 },
+            lifecycle: LifecycleCheckpoint {
+                tick: 1,
+                entity_count: 1,
+            },
+            ledger: EconomicLedgerCheckpoint {
+                tick: 1,
+                mutation_count: 1,
+                ledger_root: "l1".into(),
+            },
+            scheduler: SchedulerCheckpoint {
+                pending_tick_count: 0,
+            },
         },
     )
     .unwrap()
