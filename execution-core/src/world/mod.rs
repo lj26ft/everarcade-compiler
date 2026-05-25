@@ -2,23 +2,28 @@ pub mod archival;
 pub mod checkpoint;
 pub mod civilization;
 pub mod continuity;
+pub mod continuity_validation;
 pub mod dag;
 pub mod diagnostics;
 pub mod economy;
 pub mod epochs;
+pub mod equivalence;
 pub mod events;
 pub mod evolution;
 pub mod inventory;
 pub mod lanes;
 pub mod lifecycle;
+pub mod metrics;
 pub mod materialization;
 pub mod persistence;
 pub mod replay_compression;
+pub mod reports;
 pub mod restoration;
 pub mod runtime;
 pub mod scheduler;
 pub mod simulation;
 pub mod snapshots;
+pub mod validation;
 
 pub use archival::CivilizationArchive;
 pub use checkpoint::{LifecycleCheckpoint, SchedulerCheckpoint, WorldCheckpoint};
@@ -26,6 +31,12 @@ pub use civilization::CivilizationEntity;
 pub use continuity::{
     ContinuityCursor, ContinuityDivergence, ContinuitySegment, ContinuityWindow,
     WorldContinuityRoot, WorldEpochChain, WorldLineage, WorldRestorationProof,
+};
+pub use continuity_validation::{
+    validate_checkpoint_lineage_integrity, validate_epoch_continuity_integrity,
+    validate_event_continuity_integrity, validate_replay_continuity_integrity,
+    validate_snapshot_continuity_integrity, validate_window_continuity_integrity,
+    validate_witness_continuity_integrity,
 };
 pub use dag::{
     ExecutionDependency, ExecutionEdge, ExecutionGraph, ExecutionNode, ExecutionPartition,
@@ -70,4 +81,24 @@ pub use snapshots::{
     DeterministicParallelExecutor, IncrementalSnapshot, ParallelMergeBarrier,
     ParallelReplayBoundary, ParallelWitnessBoundary, SnapshotDelta, SnapshotSegment,
     SnapshotSegmentManifest,
+};
+
+pub use equivalence::{
+    assert_epoch_equivalence, assert_lane_equivalence, assert_replay_equivalence,
+    assert_restoration_equivalence, assert_runtime_equivalence, assert_snapshot_equivalence,
+    assert_witness_equivalence,
+};
+pub use metrics::{
+    ContinuityMetrics, EpochMetrics, EventMetrics, ExecutionMetrics, LaneMetrics, ReplayMetrics,
+    RestorationMetrics, RuntimeMetrics, SnapshotMetrics, WitnessMetrics,
+};
+pub use reports::{
+    ContinuityValidationReport, EpochValidationReport, LaneValidationReport,
+    ReplayValidationReport, RuntimeValidationReport, SnapshotValidationReport,
+};
+pub use validation::{
+    runtime_validation_root, FederatedReplayAnchor, FederationValidationSurface,
+    RuntimeContinuityRoot, RuntimeEquivalenceRoot, RuntimeValidationRoot, ValidationAnchor,
+    ValidationArchive, ValidationArtifact, ValidationCursor, ValidationManifest,
+    ValidationProofBundle, ValidationWindow,
 };
