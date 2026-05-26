@@ -16,6 +16,7 @@ members = [
     "sdk/everarcade-governance-sdk",
     "sdk/client-bridge",
     "src-bin-everarcade",
+    "runtime/client",
 ]
 
 resolver = "2"

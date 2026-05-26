@@ -1,6 +1,8 @@
 use super::entities::Entity;
+use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
-#[derive(Debug, Clone, PartialEq)]
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct WorldState {
     pub tick: u64,
     pub entities: BTreeMap<u64, Entity>,
