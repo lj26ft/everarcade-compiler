@@ -54,6 +54,7 @@ pub mod reconciliation;
 pub mod render_bridge;
 pub mod replay;
 pub mod replay_runtime;
+pub mod runtime;
 pub mod runtime_commit;
 pub mod runtime_semantics;
 pub mod scheduler;
