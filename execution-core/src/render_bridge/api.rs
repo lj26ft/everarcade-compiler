@@ -35,3 +35,21 @@ pub struct GpuProjectionAnchor {
 pub struct GpuProjectionWitness {
     pub replay_root: String,
 }
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct GraphicsProjectionBoundary {
+    pub boundary_root: String,
+}
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct GraphicsReplayAnchor {
+    pub replay_root: String,
+}
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct GraphicsFrameWitness {
+    pub frame_root: String,
+}
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct GraphicsProjectionManifest {
+    pub projection_root: String,
+    pub frame_count: usize,
+}

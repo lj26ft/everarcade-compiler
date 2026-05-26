@@ -1,7 +1,14 @@
 mod console;
+mod event_view;
+mod inventory_view;
+mod playback;
 mod projection_service;
 mod projection_status;
+mod render_tick;
+mod render_validation;
+mod renderer;
 mod status;
+mod world_view;
 
 use console::{parse_command, ConsoleCommand};
 use execution_core::game_runtime::{
@@ -73,9 +80,10 @@ fn main() {
             &out.state_root,
             &out.event_root,
             &out.validation_root,
-            &serde_json::to_string(&inventory.ownership).unwrap(),
+            inventory.ownership.len(),
             0,
-            0
+            0,
+            "bootstrap-checkpoint"
         )
     );
 }
