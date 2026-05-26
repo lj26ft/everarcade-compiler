@@ -1,6 +1,9 @@
 mod console;
+mod projection_service;
+mod projection_status;
 mod status;
 
+use console::{parse_command, ConsoleCommand};
 use execution_core::game_runtime::{
     entities::Entity,
     input_runtime::{InputAction, RuntimeInput},
@@ -9,7 +12,6 @@ use execution_core::game_runtime::{
     world_state::WorldState,
 };
 use std::{collections::BTreeMap, fs, path::PathBuf};
-use console::{parse_command, ConsoleCommand};
 
 fn main() {
     let world_root = PathBuf::from("runtime/world");

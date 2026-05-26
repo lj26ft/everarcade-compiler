@@ -1,5 +1,10 @@
 use serde::{Deserialize, Serialize};
 
+pub mod api;
+pub mod projection_roots;
+pub mod stream;
+pub mod validation;
+
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct RenderBoundaryEvent {
     pub tick: u64,
@@ -19,6 +24,40 @@ pub struct RenderFrameEnvelope {
     pub event: RenderBoundaryEvent,
     pub world: RenderWorldState,
     pub replay: RenderReplayAnchor,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct ProjectedEntityFrame {
+    pub entity_id: u64,
+    pub x: i64,
+    pub y: i64,
+    pub entity_root: String,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct ProjectedInventoryFrame {
+    pub owner: String,
+    pub inventory_root: String,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct ProjectedEventFrame {
+    pub tick: u64,
+    pub event_root: String,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct ProjectedWorldFrame {
+    pub tick: u64,
+    pub world_root: String,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct ProjectedFrameState {
+    pub world: ProjectedWorldFrame,
+    pub entities: Vec<ProjectedEntityFrame>,
+    pub inventory: Vec<ProjectedInventoryFrame>,
+    pub events: Vec<ProjectedEventFrame>,
 }
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct RenderStateProjection {

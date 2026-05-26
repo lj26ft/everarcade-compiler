@@ -35,3 +35,15 @@ impl ReplayRecord {
             .collect()
     }
 }
+
+use crate::render_bridge::stream::{ProjectionStreamRuntime, ProjectionWindow};
+
+impl ReplayRecord {
+    pub fn materialize_projection_window(
+        &self,
+        start_tick: u64,
+        end_tick: u64,
+    ) -> Result<ProjectionWindow, String> {
+        ProjectionStreamRuntime::materialize_projection_window(self, start_tick, end_tick)
+    }
+}
