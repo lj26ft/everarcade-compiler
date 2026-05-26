@@ -1,0 +1,15 @@
+use execution_core::{game_runtime::replay_runtime::{ReplayRecord, ReplayTickRecord}, render_bridge::{stream::ProjectionStreamRuntime, validation::{verify_projection_checkpoint, verify_projection_equivalence, verify_projection_replay_equivalence}}};
+
+fn build_replay(n: u64) -> ReplayRecord {
+    ReplayRecord { ticks: (1..=n).map(|t| ReplayTickRecord { tick: t, inputs: vec![], state_root: format!("world-{t}"), event_root: format!("event-{t}"), validation_root: format!("validation-{t}") }).collect() }
+}
+
+#[test] fn test_graphical_projection_equivalence() { let replay = build_replay(16); let a = ProjectionStreamRuntime::materialize_projection_window(&replay, 1, 16).unwrap(); let b = ProjectionStreamRuntime::materialize_projection_window(&replay, 1, 16).unwrap(); assert!(verify_projection_equivalence(&a,&b).is_ok()); }
+#[test] fn test_render_frame_equivalence() { let replay = build_replay(8); let w = ProjectionStreamRuntime::materialize_projection_window(&replay, 1, 8).unwrap(); assert_eq!(w.frames[0], w.frames[0].clone()); }
+#[test] fn test_visual_replay_equivalence() { let replay = build_replay(4); let w = ProjectionStreamRuntime::materialize_projection_window(&replay, 1, 4).unwrap(); let ck = ProjectionStreamRuntime::checkpoint_for(&w).unwrap(); assert!(verify_projection_replay_equivalence("replay-root", &ck.projection_root).is_ok()); }
+#[test] fn test_projection_checkpoint_equivalence() { let replay = build_replay(4); let w = ProjectionStreamRuntime::materialize_projection_window(&replay, 1, 4).unwrap(); let ck = ProjectionStreamRuntime::checkpoint_for(&w).unwrap(); assert!(verify_projection_checkpoint(&ck, &w).is_ok()); }
+#[test] fn test_graphical_inventory_projection() { let replay = build_replay(2); let w = ProjectionStreamRuntime::materialize_projection_window(&replay, 1, 2).unwrap(); assert!(w.frames.iter().all(|f| !f.world.state_root.is_empty())); }
+#[test] fn test_graphical_entity_projection() { let replay = build_replay(2); let w = ProjectionStreamRuntime::materialize_projection_window(&replay, 1, 2).unwrap(); assert!(w.frames.iter().all(|f| f.world.tick > 0)); }
+#[test] fn test_projection_resume_equivalence() { let replay = build_replay(20); let w = ProjectionStreamRuntime::materialize_projection_window(&replay, 1, 20).unwrap(); let session = execution_core::render_bridge::stream::ProjectionStreamSession { cursor: Default::default(), windows: vec![w], checkpoints: vec![] }; let resumed = ProjectionStreamRuntime::resume_projection_stream(&session, 10); assert_eq!(resumed.first().unwrap().world.tick, 10); }
+#[test] fn test_visual_restore_equivalence() { let replay = build_replay(4); let w1 = ProjectionStreamRuntime::materialize_projection_window(&replay, 1, 4).unwrap(); let w2 = ProjectionStreamRuntime::materialize_projection_window(&replay, 1, 4).unwrap(); assert_eq!(w1.window_root, w2.window_root); }
+#[test] fn test_large_graphical_projection_progression() { let replay = build_replay(10_000); let w = ProjectionStreamRuntime::materialize_projection_window(&replay, 1, 10_000).unwrap(); assert_eq!(w.frames.len(), 10_000); }

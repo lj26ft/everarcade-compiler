@@ -53,3 +53,25 @@ pub struct GraphicsProjectionManifest {
     pub projection_root: String,
     pub frame_count: usize,
 }
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct GpuRendererTask {
+    pub id: String,
+}
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct GpuProjectionRenderer {
+    pub renderer_id: String,
+}
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct GpuFrameBatch {
+    pub frame_roots: Vec<String>,
+}
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct GpuVisualizationWitness {
+    pub validation_root: String,
+}
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct GpuProjectionManifest {
+    pub projection_root: String,
+    pub frame_count: usize,
+}
