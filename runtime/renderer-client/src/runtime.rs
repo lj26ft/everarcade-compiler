@@ -1,4 +1,5 @@
 use crate::{
+    persistence::{artifact::RenderProjectionArtifact, frame_store::ProjectionFrameStore, hash, replay::ProjectionReplayRuntime, session_store::ProjectionSessionStore},
     event_renderer::render_events, hud::render_hud, inventory_renderer::render_inventory,
     stream_transport::load_projection_window, world_renderer::render_world,
 };
@@ -30,7 +31,10 @@ pub struct ProjectionRenderSession {
     pub cursor: RenderProjectionCursor,
 }
 #[derive(Debug, Clone, Default)]
-pub struct RendererRuntime;
+pub struct RendererRuntime {
+    pub session_store: std::sync::Arc<std::sync::Mutex<ProjectionSessionStore>>,
+}
+
 
 impl RendererRuntime {
     pub fn run_local_projection_demo(&self) -> Result<ProjectionRenderSession, String> {
@@ -42,6 +46,25 @@ impl RendererRuntime {
             .iter()
             .map(|f| self.render_frame(f))
             .collect::<Vec<_>>();
+        let mut frame_store = ProjectionFrameStore::default();
+        let mut artifacts = Vec::new();
+        for (idx, frame) in window.frames.iter().enumerate() {
+            let artifact = RenderProjectionArtifact {
+                artifact_id: format!("{}-{}", "renderer-local", idx),
+                session_id: "renderer-local".into(),
+                frame_index: idx as u64,
+                projection_root: frame.world.state_root.clone(),
+                projection_hash: hash::stable_hash(&frame.world.state_root),
+                parent_projection_hash: idx.checked_sub(1).map(|i| hash::stable_hash(&format!("renderer-local-{i}"))),
+                event_hashes: vec![hash::stable_hash(&frame.event.root)],
+                timestamp: frame.world.tick,
+                frame_hash: String::new(),
+            }.with_deterministic_hash()?;
+            frame_store.persist_projection_frame(artifact.clone())?;
+            artifacts.push(artifact);
+        }
+        self.session_store.lock().map_err(|_| "session lock poisoned")?.persist_projection_session("renderer-local", artifacts.clone());
+        let _replay = ProjectionReplayRuntime::new(artifacts);
         Ok(ProjectionRenderSession {
             session_id: "renderer-local".into(),
             rendered_frames: visuals,
