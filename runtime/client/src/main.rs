@@ -29,7 +29,14 @@ fn main() {
     let mut world = WorldState::new();
     world.entities = BTreeMap::from([(
         1,
-        Entity { id: 1, x: 0, y: 0, authority: "player1".into(), runtime_lineage: "runtime-0".into(), world_continuity: "world-alpha".into() },
+        Entity {
+            id: 1,
+            x: 0,
+            y: 0,
+            authority: "player1".into(),
+            runtime_lineage: "runtime-0".into(),
+            world_continuity: "world-alpha".into(),
+        },
     )]);
     let mut inventory = InventoryState::default();
     let mut replay = ReplayRecord::default();
@@ -42,20 +49,44 @@ fn main() {
                     let out = step_runtime(world.clone(), vec![ri.clone()], inventory.clone());
                     replay.append_replay(ReplayTickRecord {
                         tick: out.world.tick,
-                        inputs: vec![RuntimeInput { tick: ri.tick, player_id: ri.player_id, action: ri.action }],
+                        inputs: vec![RuntimeInput {
+                            tick: ri.tick,
+                            player_id: ri.player_id,
+                            action: ri.action,
+                        }],
                         state_root: out.state_root.clone(),
                         event_root: out.event_root.clone(),
                         validation_root: out.validation_root.clone(),
                     });
                     world = out.world;
                     inventory = out.inventory;
-                    println!("tick={} root={} validation={}", world.tick, out.state_root, out.validation_root);
+                    println!(
+                        "tick={} root={} validation={}",
+                        world.tick, out.state_root, out.validation_root
+                    );
                 }
-                PlayerCommand::Status => println!("status: {}", status::render_status(world.tick, world.entities.len(), "n/a", "n/a", "n/a", inventory.ownership.len(), 0, replay.ticks.len(), "checkpoint-0")),
+                PlayerCommand::Status => println!(
+                    "status: {}",
+                    status::render_status(
+                        world.tick,
+                        world.entities.len(),
+                        "n/a",
+                        "n/a",
+                        "n/a",
+                        inventory.ownership.len(),
+                        0,
+                        replay.ticks.len(),
+                        "checkpoint-0"
+                    )
+                ),
                 _ => {}
             }
         }
     }
 
-    println!("interactive_runtime_ready session={} replay_ticks={}", input.session.session_id, replay.ticks.len());
+    println!(
+        "interactive_runtime_ready session={} replay_ticks={}",
+        input.session.session_id,
+        replay.ticks.len()
+    );
 }
