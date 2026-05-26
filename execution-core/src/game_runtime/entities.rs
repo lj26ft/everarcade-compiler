@@ -6,6 +6,8 @@ pub struct Entity {
     pub x: i64,
     pub y: i64,
     pub authority: String,
+    pub runtime_lineage: String,
+    pub world_continuity: String,
 }
 
 impl Entity {

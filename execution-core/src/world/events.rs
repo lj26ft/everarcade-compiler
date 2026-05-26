@@ -93,3 +93,12 @@ impl StreamingEventArchive {
         self.segments.sort_by_key(|s| s.segment_id);
     }
 }
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct ProjectedRuntimeEvent { pub tick: u64, pub event_root: String }
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct ProjectedWorldState { pub tick: u64, pub world_root: String }
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct ProjectedInventoryState { pub inventory_root: String }
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct ProjectedEntityState { pub entity_root: String }

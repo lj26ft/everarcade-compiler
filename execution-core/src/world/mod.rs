@@ -2,6 +2,7 @@ pub mod archival;
 pub mod checkpoint;
 pub mod civilization;
 pub mod continuity;
+pub mod continuity_runtime;
 pub mod continuity_validation;
 pub mod dag;
 pub mod diagnostics;
@@ -28,6 +29,11 @@ pub mod validation;
 pub use archival::CivilizationArchive;
 pub use checkpoint::{LifecycleCheckpoint, SchedulerCheckpoint, WorldCheckpoint};
 pub use civilization::CivilizationEntity;
+pub use continuity_runtime::{
+    verify_entity_equivalence, verify_inventory_equivalence, verify_replay_equivalence,
+    verify_restore_equivalence, verify_validation_root_chain, verify_world_continuity,
+};
+
 pub use continuity::{
     ContinuityCursor, ContinuityDivergence, ContinuitySegment, ContinuityWindow,
     WorldContinuityRoot, WorldEpochChain, WorldLineage, WorldRestorationProof,

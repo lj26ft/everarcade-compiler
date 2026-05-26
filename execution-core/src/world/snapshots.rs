@@ -45,3 +45,16 @@ pub struct ParallelWitnessBoundary {
 pub struct ParallelReplayBoundary {
     pub boundary_tick: u64,
 }
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct RuntimeSnapshot {
+    pub world_state_root: String,
+    pub entity_state_root: String,
+    pub inventory_state_root: String,
+    pub event_window_root: String,
+    pub replay_window_root: String,
+    pub validation_root: String,
+    pub continuity_root: String,
+    pub checkpoint_lineage_root: String,
+}
+impl RuntimeSnapshot { pub fn deterministic_hash(&self) -> Result<String,String>{ Ok(hash_bytes(&canonical_encode(self).map_err(|e|e.to_string())?)) } }

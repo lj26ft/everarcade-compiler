@@ -53,6 +53,7 @@ pub mod receipt_runtime;
 pub mod reconciliation;
 pub mod replay;
 pub mod replay_runtime;
+pub mod render_bridge;
 pub mod runtime_commit;
 pub mod runtime_semantics;
 pub mod scheduler;

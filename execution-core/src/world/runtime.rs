@@ -249,3 +249,12 @@ impl IncrementalWorldRuntime {
         }
     }
 }
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct WorldSessionIdentity { pub world_id: String, pub session_id: String }
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct RuntimeSession { pub identity: WorldSessionIdentity, pub started_tick: u64, pub last_tick: u64 }
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct RuntimeContinuityState { pub continuity_root: String, pub validation_root: String, pub replay_root: String }
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct PersistentWorldRuntime { pub session: RuntimeSession, pub continuity: RuntimeContinuityState }
