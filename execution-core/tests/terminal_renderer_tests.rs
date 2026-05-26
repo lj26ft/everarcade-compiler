@@ -17,7 +17,7 @@ fn mk_replay(frames: u64) -> ReplayRecord {
             inputs: vec![RuntimeInput {
                 tick,
                 player_id: "p1".into(),
-                action: InputAction::Tick,
+                action: InputAction::MoveRight,
             }],
             state_root: format!("state-{tick:05}"),
             event_root: format!("event-{tick:05}"),

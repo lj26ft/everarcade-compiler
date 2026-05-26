@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 mod console;
 mod event_view;
 mod inventory_view;
