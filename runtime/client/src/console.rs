@@ -6,6 +6,10 @@ pub enum ConsoleCommand {
     Load,
     Restore,
     Resume,
+    Rewind,
+    Step,
+    Pause,
+    Play,
     Replay,
     Verify,
     Checkpoint,
@@ -69,6 +73,18 @@ pub fn parse_command(line: &str) -> Option<ConsoleCommand> {
     }
     if trimmed == "resume_projection" {
         return Some(ConsoleCommand::ResumeProjection);
+    }
+    if trimmed == "play" {
+        return Some(ConsoleCommand::Play);
+    }
+    if trimmed == "pause" {
+        return Some(ConsoleCommand::Pause);
+    }
+    if trimmed == "step" {
+        return Some(ConsoleCommand::Step);
+    }
+    if trimmed == "rewind" {
+        return Some(ConsoleCommand::Rewind);
     }
     if trimmed == "quit" {
         return Some(ConsoleCommand::Quit);

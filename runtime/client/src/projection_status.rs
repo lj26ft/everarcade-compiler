@@ -7,6 +7,7 @@ pub fn render_projection_status(
     projection_replay_root: &str,
     window_count: usize,
     frame_count: usize,
+    replay_status: &str,
 ) -> String {
-    format!("projection tick={projection_tick} projection root={projection_root} frame root={frame_root} checkpoint root={checkpoint_root} projection replay root={projection_replay_root} window count={window_count} frame count={frame_count}")
+    format!("projection tick={projection_tick} projection root={projection_root} frame root={frame_root} checkpoint root={checkpoint_root} projection replay root={projection_replay_root} window count={window_count} frame count={frame_count} replay_status={replay_status}")
 }
