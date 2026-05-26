@@ -57,4 +57,10 @@ pub struct RuntimeSnapshot {
     pub continuity_root: String,
     pub checkpoint_lineage_root: String,
 }
-impl RuntimeSnapshot { pub fn deterministic_hash(&self) -> Result<String,String>{ Ok(hash_bytes(&canonical_encode(self).map_err(|e|e.to_string())?)) } }
+impl RuntimeSnapshot {
+    pub fn deterministic_hash(&self) -> Result<String, String> {
+        Ok(hash_bytes(
+            &canonical_encode(self).map_err(|e| e.to_string())?,
+        ))
+    }
+}
