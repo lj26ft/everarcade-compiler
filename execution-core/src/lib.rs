@@ -81,6 +81,11 @@ pub mod world_partition;
 pub mod world_scheduler;
 pub mod xahau_gateway;
 
+pub mod assets;
+pub mod game_runtime;
+pub mod gpu;
+pub mod protocol;
+pub mod xrpl;
 pub use everarcade_abi::{
     ExecutionNode, ExecutionPlan, ExecutionReceipt, State, StateChange, VmInput, VmOutput,
     ABI_VERSION,
