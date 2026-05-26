@@ -36,8 +36,19 @@ pub struct IncrementalRestorationReceipt {
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct RestoreValidationRoot(pub String);
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
-pub struct RuntimeRecoveryWindow { pub start_tick: u64, pub end_tick: u64 }
+pub struct RuntimeRecoveryWindow {
+    pub start_tick: u64,
+    pub end_tick: u64,
+}
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
-pub struct RestoredRuntimeState { pub world_id: String, pub continuity_root: String, pub validation_root: RestoreValidationRoot }
+pub struct RestoredRuntimeState {
+    pub world_id: String,
+    pub continuity_root: String,
+    pub validation_root: RestoreValidationRoot,
+}
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
-pub struct WorldRestoreReceipt { pub restored: RestoredRuntimeState, pub recovery_window: RuntimeRecoveryWindow, pub equivalent: bool }
+pub struct WorldRestoreReceipt {
+    pub restored: RestoredRuntimeState,
+    pub recovery_window: RuntimeRecoveryWindow,
+    pub equivalent: bool,
+}

@@ -17,8 +17,21 @@ pub struct ReplayRecord {
 }
 
 impl ReplayRecord {
-    pub fn append_replay(&mut self, tick: ReplayTickRecord) { self.ticks.push(tick); self.ticks.sort_by_key(|t| t.tick); }
-    pub fn load_replay(ticks: Vec<ReplayTickRecord>) -> Self { Self { ticks } }
-    pub fn verify_replay(&self) -> bool { self.ticks.windows(2).all(|w| w[0].tick <= w[1].tick) }
-    pub fn resume_replay(&self, from_tick: u64) -> Vec<ReplayTickRecord> { self.ticks.iter().filter(|t| t.tick >= from_tick).cloned().collect() }
+    pub fn append_replay(&mut self, tick: ReplayTickRecord) {
+        self.ticks.push(tick);
+        self.ticks.sort_by_key(|t| t.tick);
+    }
+    pub fn load_replay(ticks: Vec<ReplayTickRecord>) -> Self {
+        Self { ticks }
+    }
+    pub fn verify_replay(&self) -> bool {
+        self.ticks.windows(2).all(|w| w[0].tick <= w[1].tick)
+    }
+    pub fn resume_replay(&self, from_tick: u64) -> Vec<ReplayTickRecord> {
+        self.ticks
+            .iter()
+            .filter(|t| t.tick >= from_tick)
+            .cloned()
+            .collect()
+    }
 }

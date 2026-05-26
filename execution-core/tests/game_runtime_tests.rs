@@ -58,8 +58,8 @@ fn test_entity_authority_equivalence() {
         x: 0,
         y: 0,
         authority: "p1".into(),
-            runtime_lineage: "runtime-0".into(),
-            world_continuity: "world-alpha".into(),
+        runtime_lineage: "runtime-0".into(),
+        world_continuity: "world-alpha".into(),
     };
     assert!(execution_core::game_runtime::authority::authoritative(
         &e, "p1"
@@ -152,8 +152,8 @@ fn test_large_world_progression() {
                 x: 0,
                 y: 0,
                 authority: "p1".into(),
-            runtime_lineage: "runtime-0".into(),
-            world_continuity: "world-alpha".into(),
+                runtime_lineage: "runtime-0".into(),
+                world_continuity: "world-alpha".into(),
             },
         );
     }
