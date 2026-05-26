@@ -1,7 +1,11 @@
 use std::collections::HashSet;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-struct Artifact { frame_index: u64, hash: String, parent: Option<String> }
+struct Artifact {
+    frame_index: u64,
+    hash: String,
+    parent: Option<String>,
+}
 
 fn stable_hash(input: &str) -> String {
     use std::collections::hash_map::DefaultHasher;
@@ -45,7 +49,11 @@ fn test_projection_manifest_integrity() {
 
 #[test]
 fn test_projection_archive_restoration() {
-    let artifacts = vec![Artifact { frame_index: 0, hash: "h0".into(), parent: None }];
+    let artifacts = vec![Artifact {
+        frame_index: 0,
+        hash: "h0".into(),
+        parent: None,
+    }];
     let restored = artifacts.clone();
     assert_eq!(artifacts, restored);
 }

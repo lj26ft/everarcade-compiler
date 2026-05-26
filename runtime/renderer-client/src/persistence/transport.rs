@@ -35,8 +35,13 @@ impl ProjectionTransportIngestor {
         Ok(())
     }
 
-    pub fn continuity_for(previous: Option<&ProjectionTransportEnvelope>, payload_hash: &str) -> String {
-        let prev = previous.map(|p| p.continuity_hash.as_str()).unwrap_or("genesis");
+    pub fn continuity_for(
+        previous: Option<&ProjectionTransportEnvelope>,
+        payload_hash: &str,
+    ) -> String {
+        let prev = previous
+            .map(|p| p.continuity_hash.as_str())
+            .unwrap_or("genesis");
         hash::stable_hash(&format!("{prev}:{payload_hash}"))
     }
 }

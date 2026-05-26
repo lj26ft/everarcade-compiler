@@ -8,6 +8,9 @@ pub struct ReplayTransportSession {
 
 impl ReplayTransportSession {
     pub fn new(session_id: impl Into<String>) -> Self {
-        Self { session_id: session_id.into(), stream: ReplayTransportStream::default() }
+        Self {
+            session_id: session_id.into(),
+            stream: ReplayTransportStream::default(),
+        }
     }
 }

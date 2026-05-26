@@ -16,6 +16,13 @@ pub fn validate_manifest_integrity(manifest: &ProjectionArtifactManifest) -> Res
     Ok(())
 }
 
-pub fn validate_replay_equivalence(original: &[RenderProjectionArtifact], replayed: &[RenderProjectionArtifact]) -> Result<(), String> {
-    if original == replayed { Ok(()) } else { Err("replay mismatch".into()) }
+pub fn validate_replay_equivalence(
+    original: &[RenderProjectionArtifact],
+    replayed: &[RenderProjectionArtifact],
+) -> Result<(), String> {
+    if original == replayed {
+        Ok(())
+    } else {
+        Err("replay mismatch".into())
+    }
 }

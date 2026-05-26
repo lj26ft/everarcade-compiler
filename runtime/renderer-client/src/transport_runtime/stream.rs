@@ -23,7 +23,9 @@ impl ReplayTransportStream {
         if chunk.sequence != self.cursor.next_sequence {
             return Err("out_of_order_replay_chunk".to_string());
         }
-        if self.cursor.next_sequence > 0 && chunk.continuity.previous_hash != self.cursor.last_continuity_hash {
+        if self.cursor.next_sequence > 0
+            && chunk.continuity.previous_hash != self.cursor.last_continuity_hash
+        {
             return Err("invalid_continuity_chain".to_string());
         }
         self.cursor.last_continuity_hash = chunk.continuity.continuity_hash.clone();
