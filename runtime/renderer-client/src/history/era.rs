@@ -1,1 +1,3 @@
-pub use super::timeline::{HistoricalReplayEra, HistoricalReplayEraManifest, HistoricalReplayEraWindow};
+pub use super::timeline::{
+    HistoricalReplayEra, HistoricalReplayEraManifest, HistoricalReplayEraWindow,
+};

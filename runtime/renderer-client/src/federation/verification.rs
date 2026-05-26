@@ -16,4 +16,6 @@ pub struct ProjectionAnchorContinuityRoot {
     pub root: String,
 }
 
-pub fn replay_equivalent(source: &[String], observer: &[String]) -> bool { source == observer }
+pub fn replay_equivalent(source: &[String], observer: &[String]) -> bool {
+    source == observer
+}

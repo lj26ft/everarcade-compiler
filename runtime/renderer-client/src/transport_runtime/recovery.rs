@@ -16,6 +16,8 @@ pub struct ReplayResumeState {
 
 impl ReplayCatchupRuntime {
     pub fn resume_state(cursor: &ReplayTransportCursor) -> ReplayResumeState {
-        ReplayResumeState { cursor: cursor.clone() }
+        ReplayResumeState {
+            cursor: cursor.clone(),
+        }
     }
 }

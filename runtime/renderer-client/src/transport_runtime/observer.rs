@@ -23,16 +23,25 @@ pub struct ObserverReplayState {
 }
 
 impl ObserverReplayRuntime {
-    pub fn restore(observer_id: impl Into<String>, stream: &ReplayTransportStream) -> ObserverReplaySession {
+    pub fn restore(
+        observer_id: impl Into<String>,
+        stream: &ReplayTransportStream,
+    ) -> ObserverReplaySession {
         let observer_id = observer_id.into();
         let last_hash = stream.cursor.last_continuity_hash.clone();
         ObserverReplaySession {
             observer_id,
-            state: ObserverReplayState { applied_chunks: stream.accepted.len() as u64, last_continuity_hash: last_hash },
+            state: ObserverReplayState {
+                applied_chunks: stream.accepted.len() as u64,
+                last_continuity_hash: last_hash,
+            },
         }
     }
 
-    pub fn validate_equivalence(source: &ReplayTransportStream, observer: &ReplayTransportStream) -> bool {
+    pub fn validate_equivalence(
+        source: &ReplayTransportStream,
+        observer: &ReplayTransportStream,
+    ) -> bool {
         ReplayEquivalenceRuntime::compare_streams(source, observer).equivalent
     }
 }

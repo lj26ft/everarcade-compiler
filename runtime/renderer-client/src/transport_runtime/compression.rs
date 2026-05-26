@@ -18,11 +18,20 @@ pub struct ReplayCompressionManifest {
 impl ReplayCompressionRuntime {
     pub fn compress(sequence: u64, payload: &[u8]) -> ReplayCompressionChunk {
         let compressed_payload = payload.iter().rev().copied().collect::<Vec<_>>();
-        ReplayCompressionChunk { sequence, compressed_payload, original_hash: hash_bytes(payload) }
+        ReplayCompressionChunk {
+            sequence,
+            compressed_payload,
+            original_hash: hash_bytes(payload),
+        }
     }
 
     pub fn decompress(chunk: &ReplayCompressionChunk) -> Result<Vec<u8>, String> {
-        let restored = chunk.compressed_payload.iter().rev().copied().collect::<Vec<_>>();
+        let restored = chunk
+            .compressed_payload
+            .iter()
+            .rev()
+            .copied()
+            .collect::<Vec<_>>();
         if hash_bytes(&restored) != chunk.original_hash {
             return Err("compression_equivalence_mismatch".to_string());
         }

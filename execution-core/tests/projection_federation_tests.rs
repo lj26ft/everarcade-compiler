@@ -12,7 +12,14 @@ struct ProjectionFederationWindow {
 
 #[test]
 fn test_projection_federation_window_equivalence() {
-    let a = ProjectionFederationWindow { session_id: "s".into(), window_id: "w1".into(), start_frame: 0, end_frame: 9, continuity_root: "c".into(), artifact_root: "a".into() };
+    let a = ProjectionFederationWindow {
+        session_id: "s".into(),
+        window_id: "w1".into(),
+        start_frame: 0,
+        end_frame: 9,
+        continuity_root: "c".into(),
+        artifact_root: "a".into(),
+    };
     let b = a.clone();
     assert_eq!(a, b);
 }
@@ -20,7 +27,10 @@ fn test_projection_federation_window_equivalence() {
 #[test]
 fn test_projection_replay_stream_ordering() {
     let mut next = 0;
-    for seq in [0, 1, 2, 3] { assert_eq!(seq, next); next += 1; }
+    for seq in [0, 1, 2, 3] {
+        assert_eq!(seq, next);
+        next += 1;
+    }
 }
 
 #[test]
@@ -31,22 +41,34 @@ fn test_projection_replay_duplicate_rejection() {
 }
 
 #[test]
-fn test_projection_observer_replay_equivalence() { assert_eq!(vec![1, 2, 3], vec![1, 2, 3]); }
+fn test_projection_observer_replay_equivalence() {
+    assert_eq!(vec![1, 2, 3], vec![1, 2, 3]);
+}
 
 #[test]
-fn test_projection_shard_restoration() { assert_eq!((0, 9), (0, 9)); }
+fn test_projection_shard_restoration() {
+    assert_eq!((0, 9), (0, 9));
+}
 
 #[test]
-fn test_projection_stream_recovery() { assert!(3_u64 >= 2_u64); }
+fn test_projection_stream_recovery() {
+    assert!(3_u64 >= 2_u64);
+}
 
 #[test]
-fn test_projection_archive_distribution_equivalence() { assert_eq!("archive_root", "archive_root"); }
+fn test_projection_archive_distribution_equivalence() {
+    assert_eq!("archive_root", "archive_root");
+}
 
 #[test]
-fn test_projection_compression_equivalence() { assert_eq!("chunk_hash", "chunk_hash"); }
+fn test_projection_compression_equivalence() {
+    assert_eq!("chunk_hash", "chunk_hash");
+}
 
 #[test]
-fn test_projection_anchor_continuity() { assert_eq!("root_a", "root_a"); }
+fn test_projection_anchor_continuity() {
+    assert_eq!("root_a", "root_a");
+}
 
 #[test]
 fn test_projection_federation_non_authoritative() {
@@ -55,7 +77,9 @@ fn test_projection_federation_non_authoritative() {
 }
 
 #[test]
-fn test_projection_stream_corruption_detection() { assert_ne!("good", "tampered"); }
+fn test_projection_stream_corruption_detection() {
+    assert_ne!("good", "tampered");
+}
 
 #[test]
 fn test_projection_window_restoration() {

@@ -11,5 +11,7 @@ pub struct ProjectionFederationWindow {
 }
 
 impl ProjectionFederationWindow {
-    pub fn is_valid(&self) -> bool { self.start_frame <= self.end_frame }
+    pub fn is_valid(&self) -> bool {
+        self.start_frame <= self.end_frame
+    }
 }

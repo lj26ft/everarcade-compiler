@@ -4,7 +4,10 @@ use super::{chunk::ReplayChunk, session::ReplayTransportSession};
 pub struct ReplayTransportRuntime;
 
 impl ReplayTransportRuntime {
-    pub fn ingest_chunk(session: &mut ReplayTransportSession, chunk: ReplayChunk) -> Result<(), String> {
+    pub fn ingest_chunk(
+        session: &mut ReplayTransportSession,
+        chunk: ReplayChunk,
+    ) -> Result<(), String> {
         session.stream.ingest(chunk)
     }
 }
