@@ -12,32 +12,34 @@ pub struct SovereignReleaseVerification {
 }
 #[derive(Clone, Debug, Default)]
 pub struct SovereignReleaseRuntime;
-use super::{
-    ValidationCheckpointRuntime, ValidationDagExecution, ValidationDagRuntime,
-    ValidationReportManifest, ValidationReportRuntime,
-};
 
-#[derive(Clone, Debug, Default)]
-pub struct ValidationRuntime;
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct ValidationReplayRuntime;
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct ValidationReplaySession {
+    pub session_id: String,
+}
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct ValidationReplayCursor {
+    pub stage_index: usize,
+}
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct ValidationReplayRecovery {
+    pub restored: bool,
+}
 
-impl ValidationRuntime {
-    pub fn run(
-        &self,
-        dag: &ValidationDagRuntime,
-        checkpoints: &mut ValidationCheckpointRuntime,
-    ) -> Result<(ValidationDagExecution, ValidationReportManifest), String> {
-        let execution = dag.execute(checkpoints)?;
-        let stages: Vec<super::ValidationStageResult> = execution
-            .ordered_stages
-            .iter()
-            .map(|stage_id| super::ValidationStageResult {
-                stage_id: stage_id.clone(),
-                passed: true,
-            })
-            .collect();
-        let _summary = ValidationReportRuntime.summarize(&ValidationReportManifest {
-            stages: stages.clone(),
-        });
-        Ok((execution, ValidationReportManifest { stages }))
-    }
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct ReleaseCandidateRuntime;
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct ReleaseCandidateManifest {
+    pub artifact_ids: Vec<String>,
+}
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct ReleaseCandidateVerification {
+    pub deterministic: bool,
+    pub replay_equivalent: bool,
+}
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct ReleaseCandidateProof {
+    pub continuity_lineage: String,
 }
