@@ -3,7 +3,7 @@ use std::collections::BTreeMap;
 
 fn seed_world() -> WorldState {
     let mut w = WorldState::new();
-    w.entities = BTreeMap::from([(1, Entity { id: 1, x: 0, y: 0, authority: "player1".into() })]);
+    w.entities = BTreeMap::from([(1, Entity { id: 1, x: 0, y: 0, authority: "player1".into(), runtime_lineage: "runtime-0".into(), world_continuity: "world-alpha".into() })]);
     w
 }
 

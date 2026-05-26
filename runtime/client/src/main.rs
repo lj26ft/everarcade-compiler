@@ -8,7 +8,7 @@ fn main() {
     let world_root = PathBuf::from("runtime/world");
     let _ = fs::create_dir_all(world_root.join("snapshots"));
     let mut world = WorldState::new();
-    world.entities = BTreeMap::from([(1, Entity { id: 1, x: 0, y: 0, authority: "player1".into() })]);
+    world.entities = BTreeMap::from([(1, Entity { id: 1, x: 0, y: 0, authority: "player1".into(), runtime_lineage: "runtime-0".into(), world_continuity: "world-alpha".into() })]);
     let mut inventory = InventoryState::default();
 
     println!("runtime_boot: deterministic sovereign runtime started");
