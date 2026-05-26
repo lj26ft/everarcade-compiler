@@ -112,3 +112,16 @@ pub struct ProjectedInventoryState {
 pub struct ProjectedEntityState {
     pub entity_root: String,
 }
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct ProjectedFrameEvent {
+    pub frame_root: String,
+}
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct ProjectionReplayEvent {
+    pub replay_root: String,
+}
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct ProjectionCheckpointEvent {
+    pub checkpoint_root: String,
+}

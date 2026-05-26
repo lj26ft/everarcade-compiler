@@ -11,6 +11,12 @@ pub enum ConsoleCommand {
     Checkpoint,
     Inventory,
     Status,
+    Project,
+    Stream,
+    Frames,
+    ProjectionStatus,
+    VerifyProjection,
+    ResumeProjection,
     Quit,
 }
 
@@ -45,6 +51,24 @@ pub fn parse_command(line: &str) -> Option<ConsoleCommand> {
     }
     if trimmed == "status" {
         return Some(ConsoleCommand::Status);
+    }
+    if trimmed == "project" {
+        return Some(ConsoleCommand::Project);
+    }
+    if trimmed == "stream" {
+        return Some(ConsoleCommand::Stream);
+    }
+    if trimmed == "frames" {
+        return Some(ConsoleCommand::Frames);
+    }
+    if trimmed == "projection_status" {
+        return Some(ConsoleCommand::ProjectionStatus);
+    }
+    if trimmed == "verify_projection" {
+        return Some(ConsoleCommand::VerifyProjection);
+    }
+    if trimmed == "resume_projection" {
+        return Some(ConsoleCommand::ResumeProjection);
     }
     if trimmed == "quit" {
         return Some(ConsoleCommand::Quit);
