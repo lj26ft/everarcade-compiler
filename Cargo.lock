@@ -712,6 +712,7 @@ dependencies = [
  "execution-core",
  "serde",
  "serde_json",
+ "sha2",
 ]
 
 [[package]]
