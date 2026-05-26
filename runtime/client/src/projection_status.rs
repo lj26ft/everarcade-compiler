@@ -1,3 +1,4 @@
+#[allow(dead_code)]
 pub fn render_projection_status(
     projection_tick: u64,
     projection_root: &str,

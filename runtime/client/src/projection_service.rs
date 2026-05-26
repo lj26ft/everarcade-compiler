@@ -7,9 +7,11 @@ use execution_core::{
     },
 };
 
+#[allow(dead_code)]
 #[derive(Default)]
 pub struct RuntimeProjectionService;
 
+#[allow(dead_code)]
 impl RuntimeProjectionService {
     pub fn project(
         &self,
