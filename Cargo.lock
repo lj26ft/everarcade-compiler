@@ -706,6 +706,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "renderer-client"
+version = "0.1.0"
+dependencies = [
+ "execution-core",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "runtime-client"
 version = "0.1.0"
 dependencies = [

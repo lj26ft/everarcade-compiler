@@ -35,7 +35,12 @@ pub struct InteractiveInputLoop {
 
 impl InteractiveInputLoop {
     pub fn new(session_id: impl Into<String>) -> Self {
-        Self { session: RuntimeInputSession { session_id: session_id.into(), frames: Vec::new() } }
+        Self {
+            session: RuntimeInputSession {
+                session_id: session_id.into(),
+                frames: Vec::new(),
+            },
+        }
     }
 
     pub fn parse_line(&mut self, tick: u64, player: &str, line: &str) -> Option<InputFrame> {
@@ -49,7 +54,11 @@ impl InteractiveInputLoop {
                     "inventory" => InputAction::InventoryAction,
                     _ => return None,
                 };
-                PlayerCommand::Runtime(RuntimeInput { tick, player_id: player.to_string(), action })
+                PlayerCommand::Runtime(RuntimeInput {
+                    tick,
+                    player_id: player.to_string(),
+                    action,
+                })
             }
             ConsoleCommand::Save => PlayerCommand::Save,
             ConsoleCommand::Load => PlayerCommand::Load,
@@ -59,10 +68,18 @@ impl InteractiveInputLoop {
             ConsoleCommand::Step | ConsoleCommand::Tick => PlayerCommand::Step,
             ConsoleCommand::Status => PlayerCommand::Status,
             ConsoleCommand::Quit => PlayerCommand::Quit,
-            ConsoleCommand::Inventory => PlayerCommand::Runtime(RuntimeInput { tick, player_id: player.to_string(), action: InputAction::InventoryAction }),
+            ConsoleCommand::Inventory => PlayerCommand::Runtime(RuntimeInput {
+                tick,
+                player_id: player.to_string(),
+                action: InputAction::InventoryAction,
+            }),
             _ => return None,
         };
-        let frame = InputFrame { sequence: self.session.frames.len() as u64, tick, command };
+        let frame = InputFrame {
+            sequence: self.session.frames.len() as u64,
+            tick,
+            command,
+        };
         self.session.frames.push(frame.clone());
         Some(frame)
     }

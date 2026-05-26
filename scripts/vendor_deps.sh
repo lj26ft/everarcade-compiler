@@ -8,7 +8,8 @@ if [[ ! -f Cargo.lock ]]; then
   cargo generate-lockfile
 fi
 
-if [[ ! -d vendor ]]; then
+if [[ ! -d vendor ]] || [[ -z "$(find vendor -mindepth 1 -maxdepth 1 -print -quit 2>/dev/null)" ]]; then
+  rm -rf vendor
   tmp_cfg=".cargo/config.toml"
   cp "$tmp_cfg" "$tmp_cfg.bak" 2>/dev/null || true
   cat > "$tmp_cfg" <<'CFG'
