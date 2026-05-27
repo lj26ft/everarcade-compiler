@@ -82,7 +82,7 @@ impl HistoricalReplayRestorationRuntime {
     ) -> HistoricalReplayRestorationSession {
         HistoricalReplayRestorationSession {
             continuity_root: continuity_root.into(),
-            restored: cursor.frame >= 0,
+            restored: !continuity_root.is_empty() || cursor.frame == 0,
         }
     }
 }
