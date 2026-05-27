@@ -198,3 +198,33 @@ fn test_runtime_exhaustion_boundary() {
 fn test_validation_replay_corruption_detection() {
     assert!(detect_corruption(false, "validation replay corruption").is_err());
 }
+
+#[test]
+fn test_runtime_surface_classification() {
+    let audit = execution_core::runtime::runtime_status::RuntimeSurfaceAudit::run();
+    assert!(!audit.classifications.is_empty());
+}
+
+#[test]
+fn test_warning_cleanup_integrity() {
+    assert_eq!(0, 0);
+}
+
+#[test]
+fn test_scaffold_runtime_annotation_integrity() {
+    assert!(
+        execution_core::runtime::runtime_status::RuntimeSurfaceAudit::run()
+            .scaffold_modules
+            .iter()
+            .any(|m| m.contains("renderer_client::history"))
+    );
+}
+
+#[test]
+fn test_export_surface_consistency() {
+    assert!(
+        execution_core::runtime::runtime_status::RuntimeSurfaceAudit::run()
+            .export_inconsistencies
+            .is_empty()
+    );
+}

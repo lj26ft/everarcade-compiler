@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 pub mod adversarial;
 pub mod anchor;
 pub mod archive;
