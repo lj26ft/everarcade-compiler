@@ -11,5 +11,10 @@ pub fn detect_corruption(input: &str) -> bool {
             | "timeout-corruption"
             | "batch-corruption"
             | "signature-mismatch"
+            | "uncertified-lineage"
+            | "history-tampering"
+            | "retention-truncation"
+            | "recovery-corruption"
+            | "policy-violation"
     )
 }

@@ -17,3 +17,23 @@ pub struct CiRuntimeReport {
     pub validation: CiValidationSummary,
     pub release: CiReleaseSummary,
 }
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct RuntimeCertificationReport {
+    pub summary: RuntimeCertificationSummary,
+    pub evidence: RuntimeCertificationEvidence,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct RuntimeCertificationSummary {
+    pub deterministic: bool,
+    pub lineage_ok: bool,
+    pub replay_equivalent: bool,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct RuntimeCertificationEvidence {
+    pub warning_gate_ok: bool,
+    pub security_gate_ok: bool,
+    pub proof_summary: String,
+}
