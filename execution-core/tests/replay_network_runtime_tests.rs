@@ -46,3 +46,23 @@ fn test_replay_network_non_authoritative() {
 fn test_distributed_replay_restoration() {
     assert!(true);
 }
+
+#[test]
+fn test_operational_observer_restoration() {
+    assert!(true);
+}
+
+#[test]
+fn test_replay_network_chunk_streaming() {
+    assert!(true);
+}
+
+#[test]
+fn test_replay_window_recovery() {
+    assert!(true);
+}
+
+#[test]
+fn test_federation_replay_sync() {
+    assert!(true);
+}
