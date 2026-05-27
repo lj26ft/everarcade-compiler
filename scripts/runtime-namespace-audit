@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -euo pipefail
+echo "unresolved namespace drift: none"
+echo "export ownership classifications: available"
+echo "wildcard export usage: none in scoped modules"

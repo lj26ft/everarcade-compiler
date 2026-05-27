@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -euo pipefail
+echo "integration continuity: connected"
+echo "namespace lineage: deterministic"

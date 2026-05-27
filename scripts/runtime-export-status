@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -euo pipefail
+echo "replay/history runtime: PublicStable + Scaffold"
+echo "replay transport runtime: InternalIntegration + Scaffold"

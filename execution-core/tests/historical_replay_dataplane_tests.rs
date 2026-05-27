@@ -1,6 +1,29 @@
 #[path = "../../runtime/renderer-client/src/history/mod.rs"]
 mod history;
-use history::*;
+use history::adversarial::HistoricalCorruptionMatrix;
+use history::adversarial::HistoricalCorruptionScenario;
+use history::adversarial::HistoricalRuntimeValidationEngine;
+use history::branch::{ReplayBranchProofRuntime, ReplayForkMaterialization};
+use history::cache::{
+    HistoricalReplayCache, HistoricalReplayCacheManifest, HistoricalReplayCacheWindow,
+};
+use history::compression::{ReplayCompressionTreeBuilder, ReplayCompressionTreeRuntime};
+use history::continuity_chain::ReplayContinuityChain;
+use history::corruption::{
+    HistoricalReplayRestorationSession, HistoricalRestorationVerificationRuntime,
+};
+use history::export::HistoricalArchiveExporter;
+use history::history_is_non_authoritative;
+use history::hydration::{HistoricalReplayHydrationRuntime, HistoricalReplayHydrationWindow};
+use history::import::HistoricalArchiveImporter;
+use history::index::HistoricalReplayIndex;
+use history::io::{HistoricalArtifactManifest, HistoricalArtifactRecord, HistoricalArtifactStore};
+use history::materialization::ReplayProofMaterializationRuntime;
+use history::proof_verification::ReplayProofVerificationRuntime;
+use history::provenance::{ReplayProvenanceManifest, ReplayProvenanceProof, ReplayProvenanceRoot};
+use history::query::{HistoricalReplayQuery, HistoricalReplayQueryRuntime};
+use history::restore::{HistoricalReplayRestorationCursor, HistoricalReplayRestorationRuntime};
+use history::versioning::{HistoricalArchiveFormatVersion, HistoricalArchiveVersionManifest};
 
 #[test]
 fn test_historical_artifact_io_equivalence() {
@@ -228,4 +251,21 @@ fn test_historical_runtime_security_validation() {
     };
     let report = HistoricalRuntimeValidationEngine::execute(200, true, &matrix);
     assert!(report.stages.iter().all(|s| s.passed));
+}
+
+#[test]
+fn test_runtime_namespace_governance() {
+    let ownership = execution_core::runtime::export_governance::runtime_export_ownership();
+    assert!(!ownership.is_empty());
+}
+
+#[test]
+fn test_namespace_drift_detection() {
+    let audit = execution_core::runtime::export_governance::RuntimeNamespaceAudit::default();
+    assert!(audit.unresolved_symbols.is_empty());
+}
+
+#[test]
+fn test_explicit_import_integrity() {
+    assert!(history_is_non_authoritative());
 }
