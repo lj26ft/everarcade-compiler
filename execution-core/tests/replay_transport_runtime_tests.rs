@@ -9,7 +9,8 @@ use transport_runtime::chunk::{ReplayChunk, ReplayChunkContinuity};
 use transport_runtime::compression::{ReplayCompressionChunk, ReplayCompressionRuntime};
 use transport_runtime::equivalence::ReplayEquivalenceRuntime;
 use transport_runtime::observer::ObserverReplayRuntime;
-use transport_runtime::recovery::{ReplayCatchupRuntime, ReplayTransportCursor};
+use transport_runtime::recovery::ReplayCatchupRuntime;
+use transport_runtime::stream::ReplayTransportCursor;
 use transport_runtime::replay_transport_is_non_authoritative;
 use transport_runtime::stream::ReplayTransportStream;
 
@@ -147,4 +148,10 @@ fn test_runtime_surface_lineage() {
 fn test_integration_continuity() {
     let statuses = ["connected", "deterministic"];
     assert!(statuses.contains(&"connected"));
+}
+
+#[test]
+fn test_runtime_api_ownership() {
+    let ownership = execution_core::runtime::export_governance::runtime_api_ownership();
+    assert!(!ownership.is_empty());
 }

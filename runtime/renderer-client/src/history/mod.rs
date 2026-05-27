@@ -35,11 +35,20 @@ pub use anchor::{
 pub use archive::{CivilizationArchiveManifest, CivilizationArchiveRuntime};
 pub use branch::{ReplayBranch, ReplayForkProof, ReplayForkVerification};
 pub use compression::{ReplayCompressionNode, ReplayCompressionRoot, ReplayCompressionTree};
+pub use corruption::{HistoricalCorruptionMatrix, HistoricalCorruptionScenario};
 pub use era::{HistoricalReplayEra, HistoricalReplayEraManifest, HistoricalReplayEraWindow};
 pub use federation::HistoricalReplayFederationWindow;
 pub use index::HistoricalReplayIndex;
 pub use provenance::{ReplayProvenanceManifest, ReplayProvenanceProof, ReplayProvenanceRoot};
 pub use query::{HistoricalReplayQuery, HistoricalReplayQueryRuntime};
+pub use restore::{
+    HistoricalReplayHydrationRuntime, HistoricalReplayHydrationWindow,
+    HistoricalReplayRestorationSession, HistoricalRestorationVerificationRuntime,
+    ReplayBranchProofRuntime, ReplayCompressionTreeBuilder, ReplayCompressionTreeRuntime,
+    ReplayForkMaterialization,
+};
+pub use runtime_validation::HistoricalRuntimeValidationEngine;
+pub use storage::{HistoricalArtifactManifest, HistoricalArtifactRecord, HistoricalArtifactStore};
 pub use timeline::HistoricalReplayTimeline;
 
 // Scaffold / non-authoritative replay restoration surface.

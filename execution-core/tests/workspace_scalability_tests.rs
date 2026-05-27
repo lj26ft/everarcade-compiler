@@ -228,3 +228,12 @@ fn test_export_surface_consistency() {
             .is_empty()
     );
 }
+
+#[test]
+fn test_replay_runtime_public_surface() {
+    assert!(
+        execution_core::runtime::export_governance::runtime_export_ownership()
+            .iter()
+            .any(|entry| entry.export.category.contains("replay"))
+    );
+}

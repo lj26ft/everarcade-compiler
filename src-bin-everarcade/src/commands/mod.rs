@@ -30,11 +30,15 @@ pub fn dispatch(args: &[String]) -> Result<(), String> {
         "replay-world" => verify_replay_frame(),
         "inspect-simulation" => inspect_simulation(),
         "diagnostics" => diagnostics(),
+        "runtime-public-api-status" => runtime_public_api_status(),
+        "runtime-symbol-audit" => runtime_symbol_audit(),
+        "runtime-integration-closure" => runtime_integration_closure(),
+        "runtime-api-ownership" => runtime_api_ownership(),
         _ => Err(format!("unknown command: {cmd}")),
     }
 }
 pub fn print_help() {
-    println!("everarcade <install-game|list-games|inspect-game|run-game|start-game|asset-register|asset-build|asset-verify|start|init-game|build-game|package-game|run-local-federation|replay-world|inspect-simulation|runtime-snapshot|diagnostics>");
+    println!("everarcade <install-game|list-games|inspect-game|run-game|start-game|asset-register|asset-build|asset-verify|start|init-game|build-game|package-game|run-local-federation|replay-world|inspect-simulation|runtime-snapshot|diagnostics|runtime-public-api-status|runtime-symbol-audit|runtime-integration-closure|runtime-api-ownership>");
 }
 fn install_game(path: &str) -> Result<(), String> {
     let src = PathBuf::from(path);
@@ -198,4 +202,41 @@ mod tests {
     fn test_cli_diagnostics_stdout_json() {
         diagnostics().expect("diagnostics");
     }
+}
+
+fn runtime_public_api_status() -> Result<(), String> {
+    let apis = execution_core::runtime::export_governance::runtime_public_api();
+    let payload = serde_json::json!({"canonical_runtime_apis": apis, "scaffold_domains": ["renderer", "history", "federation"]});
+    println!(
+        "{}",
+        serde_json::to_string_pretty(&payload).map_err(|e| e.to_string())?
+    );
+    Ok(())
+}
+
+fn runtime_symbol_audit() -> Result<(), String> {
+    let audit = execution_core::runtime::export_governance::runtime_api_continuity_audit();
+    println!(
+        "{}",
+        serde_json::to_string_pretty(&audit).map_err(|e| e.to_string())?
+    );
+    Ok(())
+}
+
+fn runtime_integration_closure() -> Result<(), String> {
+    let ownership = execution_core::runtime::export_governance::runtime_export_ownership();
+    println!(
+        "{}",
+        serde_json::to_string_pretty(&ownership).map_err(|e| e.to_string())?
+    );
+    Ok(())
+}
+
+fn runtime_api_ownership() -> Result<(), String> {
+    let ownership = execution_core::runtime::export_governance::runtime_api_ownership();
+    println!(
+        "{}",
+        serde_json::to_string_pretty(&ownership).map_err(|e| e.to_string())?
+    );
+    Ok(())
 }
