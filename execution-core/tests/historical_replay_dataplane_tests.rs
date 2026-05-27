@@ -1,29 +1,27 @@
 #[path = "../../runtime/renderer-client/src/history/mod.rs"]
 mod history;
-use history::adversarial::HistoricalCorruptionMatrix;
-use history::adversarial::HistoricalCorruptionScenario;
-use history::adversarial::HistoricalRuntimeValidationEngine;
-use history::branch::{ReplayBranchProofRuntime, ReplayForkMaterialization};
 use history::cache::{
     HistoricalReplayCache, HistoricalReplayCacheManifest, HistoricalReplayCacheWindow,
 };
-use history::compression::{ReplayCompressionTreeBuilder, ReplayCompressionTreeRuntime};
 use history::continuity_chain::ReplayContinuityChain;
-use history::corruption::{
-    HistoricalReplayRestorationSession, HistoricalRestorationVerificationRuntime,
-};
 use history::export::HistoricalArchiveExporter;
 use history::history_is_non_authoritative;
-use history::hydration::{HistoricalReplayHydrationRuntime, HistoricalReplayHydrationWindow};
 use history::import::HistoricalArchiveImporter;
 use history::index::HistoricalReplayIndex;
-use history::io::{HistoricalArtifactManifest, HistoricalArtifactRecord, HistoricalArtifactStore};
 use history::materialization::ReplayProofMaterializationRuntime;
 use history::proof_verification::ReplayProofVerificationRuntime;
 use history::provenance::{ReplayProvenanceManifest, ReplayProvenanceProof, ReplayProvenanceRoot};
 use history::query::{HistoricalReplayQuery, HistoricalReplayQueryRuntime};
 use history::restore::{HistoricalReplayRestorationCursor, HistoricalReplayRestorationRuntime};
 use history::versioning::{HistoricalArchiveFormatVersion, HistoricalArchiveVersionManifest};
+use history::HistoricalCorruptionMatrix;
+use history::HistoricalCorruptionScenario;
+use history::HistoricalRuntimeValidationEngine;
+use history::{HistoricalArtifactManifest, HistoricalArtifactRecord, HistoricalArtifactStore};
+use history::{HistoricalReplayHydrationRuntime, HistoricalReplayHydrationWindow};
+use history::{HistoricalReplayRestorationSession, HistoricalRestorationVerificationRuntime};
+use history::{ReplayBranchProofRuntime, ReplayForkMaterialization};
+use history::{ReplayCompressionTreeBuilder, ReplayCompressionTreeRuntime};
 
 #[test]
 fn test_historical_artifact_io_equivalence() {
@@ -268,4 +266,16 @@ fn test_namespace_drift_detection() {
 #[test]
 fn test_explicit_import_integrity() {
     assert!(history_is_non_authoritative());
+}
+
+#[test]
+fn test_runtime_public_api_continuity() {
+    let apis = execution_core::runtime::export_governance::runtime_public_api();
+    assert!(!apis.is_empty());
+}
+
+#[test]
+fn test_runtime_symbol_lineage() {
+    let lineage = execution_core::runtime::export_governance::runtime_symbol_lineage();
+    assert!(lineage.iter().any(|s| s.symbol == "ValidationDagRuntime"));
 }

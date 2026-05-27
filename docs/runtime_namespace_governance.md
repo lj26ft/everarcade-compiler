@@ -1,6 +1,18 @@
 # Runtime Namespace Governance
 
-This document defines deterministic runtime namespace governance:
-- explicit module ownership for replay/history, transport, federation, validation, CI, and proof materialization runtimes;
-- explicit import discipline (no wildcard export dependency in runtime governance surfaces);
-- continuity-first replay namespace lineage to preserve reconstruction-only semantics.
+## Canonical Runtime APIs
+
+- `execution_core::runtime::validation::runtime::ValidationDagRuntime`
+- `execution_core::runtime::ci::runtime::CiExecutionHistoryRuntime`
+- `runtime::renderer_client::history::timeline::HistoricalReplayTimeline`
+
+## Ownership and Lineage
+
+Public runtime symbols are owned by the module that defines their concrete runtime struct/type.
+Alias-style module re-exports are disallowed; explicit symbol exports or glob exports from leaf modules are used instead.
+
+## Module Boundaries
+
+- Renderer/history/federation domains are scaffold-level, reconstruction-only runtime domains.
+- Validation and CI domains expose canonical runtime integration APIs.
+- Replay transport and history domains preserve non-authoritative renderer semantics.

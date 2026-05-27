@@ -103,3 +103,11 @@ fn test_ci_corruption_detection() {
 fn test_ci_non_authoritative() {
     assert!(!detect_corruption("renderer-readonly"));
 }
+
+#[test]
+fn test_integration_symbol_resolution() {
+    let lineage = execution_core::runtime::export_governance::runtime_symbol_lineage();
+    assert!(lineage
+        .iter()
+        .any(|l| l.symbol == "CiExecutionHistoryRuntime"));
+}

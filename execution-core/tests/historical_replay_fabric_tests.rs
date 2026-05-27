@@ -189,3 +189,17 @@ fn test_replay_symbol_resolution() {
         &ReplayProvenanceRoot { value: "v".into() },
     );
 }
+
+#[test]
+fn test_invalid_alias_export_detection() {
+    let audit = execution_core::runtime::export_governance::runtime_api_continuity_audit();
+    assert!(audit.invalid_alias_exports.is_empty());
+}
+
+#[test]
+fn test_canonical_import_integrity() {
+    let ownership = execution_core::runtime::export_governance::runtime_api_ownership();
+    assert!(ownership
+        .iter()
+        .any(|o| o.owner_module.contains("runtime::validation")));
+}
