@@ -1,6 +1,13 @@
 use std::collections::BTreeMap;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum RuntimeActivationStatus {
+    Scaffold,
+    Integrated,
+    Operational,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum RuntimeSurfaceStatus {
     Production,
     ActiveIntegration,
@@ -13,6 +20,7 @@ pub struct RuntimeSurfaceClassification {
     pub module: &'static str,
     pub status: RuntimeSurfaceStatus,
     pub reason: &'static str,
+    pub activation: RuntimeActivationStatus,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -31,26 +39,31 @@ impl RuntimeSurfaceAudit {
             RuntimeSurfaceClassification {
                 module: "execution_core::runtime::ci",
                 status: RuntimeSurfaceStatus::ActiveIntegration,
+                activation: RuntimeActivationStatus::Integrated,
                 reason: "certification/staging runtime validation",
             },
             RuntimeSurfaceClassification {
                 module: "execution_core::runtime::validation",
                 status: RuntimeSurfaceStatus::Production,
+                activation: RuntimeActivationStatus::Operational,
                 reason: "deterministic validation runtime",
             },
             RuntimeSurfaceClassification {
                 module: "renderer_client::history",
                 status: RuntimeSurfaceStatus::Scaffold,
+                activation: RuntimeActivationStatus::Scaffold,
                 reason: "non-authoritative replay/history scaffolding",
             },
             RuntimeSurfaceClassification {
                 module: "renderer_client::federation",
                 status: RuntimeSurfaceStatus::Scaffold,
+                activation: RuntimeActivationStatus::Scaffold,
                 reason: "future renderer federation integration",
             },
             RuntimeSurfaceClassification {
                 module: "renderer_client::transport_runtime",
                 status: RuntimeSurfaceStatus::Scaffold,
+                activation: RuntimeActivationStatus::Scaffold,
                 reason: "future renderer transport integration",
             },
         ];
