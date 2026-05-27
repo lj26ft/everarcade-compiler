@@ -1,4 +1,5 @@
 #![allow(dead_code)]
+
 pub mod adversarial;
 pub mod anchor;
 pub mod archive;
@@ -26,32 +27,23 @@ pub mod timeline;
 pub mod verification;
 pub mod versioning;
 
-pub use adversarial::*;
-pub use anchor::*;
-pub use archive::*;
-pub use branch::*;
-pub use cache::*;
-pub use compression::*;
-pub use continuity::*;
-pub use continuity_chain::*;
-pub use corruption::*;
-pub use era::*;
-pub use export::*;
-pub use federation::*;
-pub use hydration::*;
-pub use import::*;
-pub use index::*;
-pub use io::*;
-pub use materialization::*;
-pub use proof_verification::*;
-pub use provenance::*;
-pub use query::*;
-pub use restore::*;
-pub use runtime_validation::*;
-pub use storage::*;
-pub use timeline::*;
-pub use verification::*;
-pub use versioning::*;
+// Production + ActiveIntegration replay surface exports (deterministic integration contract).
+pub use adversarial::detect_corruption;
+pub use anchor::{
+    HistoricalReplayAnchor, HistoricalReplayAnchorRoot, HistoricalReplayAnchorWindow,
+};
+pub use archive::{CivilizationArchiveManifest, CivilizationArchiveRuntime};
+pub use branch::{ReplayBranch, ReplayForkProof, ReplayForkVerification};
+pub use compression::{ReplayCompressionNode, ReplayCompressionRoot, ReplayCompressionTree};
+pub use era::{HistoricalReplayEra, HistoricalReplayEraManifest, HistoricalReplayEraWindow};
+pub use federation::HistoricalReplayFederationWindow;
+pub use index::HistoricalReplayIndex;
+pub use provenance::{ReplayProvenanceManifest, ReplayProvenanceProof, ReplayProvenanceRoot};
+pub use query::{HistoricalReplayQuery, HistoricalReplayQueryRuntime};
+pub use timeline::HistoricalReplayTimeline;
+
+// Scaffold / non-authoritative replay restoration surface.
+pub use hydration::CivilizationObserverRuntime;
 
 pub fn history_is_non_authoritative() -> bool {
     true

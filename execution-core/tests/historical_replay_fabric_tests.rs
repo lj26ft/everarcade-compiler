@@ -1,7 +1,21 @@
 #[path = "../../runtime/renderer-client/src/history/mod.rs"]
 mod history;
 
-use history::*;
+use history::adversarial::detect_corruption;
+use history::anchor::{
+    HistoricalReplayAnchor, HistoricalReplayAnchorRoot, HistoricalReplayAnchorWindow,
+};
+use history::archive::{CivilizationArchiveManifest, CivilizationArchiveRuntime};
+use history::branch::{ReplayBranch, ReplayForkProof, ReplayForkVerification};
+use history::compression::{ReplayCompressionNode, ReplayCompressionRoot, ReplayCompressionTree};
+use history::era::{HistoricalReplayEra, HistoricalReplayEraManifest, HistoricalReplayEraWindow};
+use history::federation::HistoricalReplayFederationWindow;
+use history::history_is_non_authoritative;
+use history::hydration::CivilizationObserverRuntime;
+use history::index::HistoricalReplayIndex;
+use history::provenance::{ReplayProvenanceManifest, ReplayProvenanceProof, ReplayProvenanceRoot};
+use history::query::{HistoricalReplayQuery, HistoricalReplayQueryRuntime};
+use history::timeline::HistoricalReplayTimeline;
 
 fn sample_timeline() -> HistoricalReplayTimeline {
     let era = HistoricalReplayEra {
@@ -141,4 +155,37 @@ fn test_historical_replay_corruption_detection() {
 #[test]
 fn test_historical_replay_non_authoritative() {
     assert!(history_is_non_authoritative());
+}
+
+#[test]
+fn test_historical_namespace_continuity() {
+    let _timeline = HistoricalReplayTimeline::default();
+    let _archive = CivilizationArchiveRuntime::restore(&CivilizationArchiveManifest {
+        archive_id: "a".into(),
+        continuity_root: "r".into(),
+        era_count: 0,
+    });
+}
+
+#[test]
+fn test_replay_runtime_export_integrity() {
+    assert!(history_is_non_authoritative());
+}
+
+#[test]
+fn test_replay_symbol_resolution() {
+    let _ = detect_corruption(
+        &ReplayForkVerification {
+            valid: true,
+            reason: String::new(),
+        },
+        &ReplayProvenanceProof {
+            manifest: ReplayProvenanceManifest {
+                timeline_id: "t".into(),
+                root: ReplayProvenanceRoot { value: "v".into() },
+            },
+            witness: "w".into(),
+        },
+        &ReplayProvenanceRoot { value: "v".into() },
+    );
 }

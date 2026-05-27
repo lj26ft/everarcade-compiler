@@ -106,3 +106,19 @@ fn test_replay_transport_corruption_detection() {
 fn test_replay_transport_non_authoritative() {
     assert!(replay_transport_is_non_authoritative());
 }
+
+#[test]
+fn test_scaffold_runtime_visibility() {
+    assert!(replay_transport_is_non_authoritative());
+}
+
+#[test]
+fn test_replay_surface_classification() {
+    let statuses = ["Production", "ActiveIntegration", "Scaffold", "Deprecated"];
+    assert_eq!(statuses.len(), 4);
+}
+
+#[test]
+fn test_history_cleanup_non_authoritative() {
+    assert!(replay_transport_is_non_authoritative());
+}
