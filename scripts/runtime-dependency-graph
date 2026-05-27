@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -euo pipefail
+echo "replay/history -> archive/provenance/query/timeline"
+echo "transport -> chunk/stream/recovery/equivalence"
