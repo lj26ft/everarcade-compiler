@@ -34,11 +34,15 @@ pub fn dispatch(args: &[String]) -> Result<(), String> {
         "runtime-symbol-audit" => runtime_symbol_audit(),
         "runtime-integration-closure" => runtime_integration_closure(),
         "runtime-api-ownership" => runtime_api_ownership(),
+        "workspace-linkage-status" => workspace_linkage_status(),
+        "runtime-crate-audit" => runtime_crate_audit(),
+        "workspace-validation-status" => workspace_validation_status(),
+        "sovereign-workspace-closure" => sovereign_workspace_closure(),
         _ => Err(format!("unknown command: {cmd}")),
     }
 }
 pub fn print_help() {
-    println!("everarcade <install-game|list-games|inspect-game|run-game|start-game|asset-register|asset-build|asset-verify|start|init-game|build-game|package-game|run-local-federation|replay-world|inspect-simulation|runtime-snapshot|diagnostics|runtime-public-api-status|runtime-symbol-audit|runtime-integration-closure|runtime-api-ownership>");
+    println!("everarcade <install-game|list-games|inspect-game|run-game|start-game|asset-register|asset-build|asset-verify|start|init-game|build-game|package-game|run-local-federation|replay-world|inspect-simulation|runtime-snapshot|diagnostics|runtime-public-api-status|runtime-symbol-audit|runtime-integration-closure|runtime-api-ownership|workspace-linkage-status|runtime-crate-audit|workspace-validation-status|sovereign-workspace-closure>");
 }
 fn install_game(path: &str) -> Result<(), String> {
     let src = PathBuf::from(path);
@@ -239,4 +243,30 @@ fn runtime_api_ownership() -> Result<(), String> {
         serde_json::to_string_pretty(&ownership).map_err(|e| e.to_string())?
     );
     Ok(())
+}
+
+fn workspace_linkage_status() -> Result<(), String> {
+    runtime_integration_closure()
+}
+
+fn runtime_crate_audit() -> Result<(), String> {
+    let audit = execution_core::runtime::export_governance::workspace_integration_audit();
+    println!(
+        "{}",
+        serde_json::to_string_pretty(&audit).map_err(|e| e.to_string())?
+    );
+    Ok(())
+}
+
+fn workspace_validation_status() -> Result<(), String> {
+    let status = execution_core::runtime::export_governance::sovereign_workspace_closure();
+    println!(
+        "{}",
+        serde_json::to_string_pretty(&status).map_err(|e| e.to_string())?
+    );
+    Ok(())
+}
+
+fn sovereign_workspace_closure() -> Result<(), String> {
+    workspace_validation_status()
 }
