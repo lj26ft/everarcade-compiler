@@ -202,3 +202,15 @@ pub fn workspace_integration_audit() -> WorkspaceIntegrationAudit {
         sovereign_workspace_closure_report: sovereign_workspace_closure(),
     }
 }
+
+#[derive(Clone, Debug, Default, Eq, PartialEq, Serialize)]
+pub struct SovereignRuntimeNode;
+
+#[derive(Clone, Debug, Default, Eq, PartialEq, Serialize)]
+pub struct DistributedReplayService;
+
+#[derive(Clone, Debug, Default, Eq, PartialEq, Serialize)]
+pub struct ReplayTransportTopology;
+
+#[derive(Clone, Debug, Default, Eq, PartialEq, Serialize)]
+pub struct RuntimeOperationalClosure;

@@ -1,3 +1,4 @@
+#![allow(unused_imports)]
 #![allow(dead_code)]
 
 pub mod adversarial;
@@ -71,3 +72,17 @@ pub use self::observer_restoration::*;
 pub use self::observer_runtime::*;
 pub use self::observer_session::*;
 pub use self::observer_sync::*;
+pub mod observer_service;
+pub use self::observer_service::*;
+pub mod observer_client;
+pub use self::observer_client::*;
+pub mod observer_session_runtime;
+pub use self::observer_session_runtime::*;
+pub mod observer_window_runtime;
+pub use self::observer_window_runtime::*;
+pub mod observer_reconnect;
+pub use self::observer_reconnect::*;
+pub mod observer_recovery;
+pub use self::observer_recovery::*;
+pub mod observer_stream;
+pub use self::observer_stream::*;
