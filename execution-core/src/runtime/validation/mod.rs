@@ -28,7 +28,6 @@ pub use self::recovery::*;
 pub use self::report::*;
 pub use self::runtime::*;
 pub use self::runtime_stability::*;
-pub use self::stage::*;
 pub use self::storage::*;
 pub use self::stress::*;
 pub use self::window::*;
