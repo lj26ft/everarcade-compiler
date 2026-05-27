@@ -83,6 +83,18 @@ pub struct WorkspaceIntegrationAudit {
 }
 
 #[derive(Clone, Debug, Default, Eq, PartialEq, Serialize)]
+pub struct ReplayNetworkGovernance;
+
+#[derive(Clone, Debug, Default, Eq, PartialEq, Serialize)]
+pub struct ReplayPeerTopology;
+
+#[derive(Clone, Debug, Default, Eq, PartialEq, Serialize)]
+pub struct ReplayWindowContinuity;
+
+#[derive(Clone, Debug, Default, Eq, PartialEq, Serialize)]
+pub struct DistributedReplayEquivalence;
+
+#[derive(Clone, Debug, Default, Eq, PartialEq, Serialize)]
 pub struct RuntimeNamespaceAudit {
     pub unresolved_symbols: Vec<&'static str>,
     pub wildcard_export_modules: Vec<&'static str>,

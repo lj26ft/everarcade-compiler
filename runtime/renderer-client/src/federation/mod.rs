@@ -22,3 +22,11 @@ pub use self::sync::*;
 pub use self::transport::*;
 pub use self::verification::*;
 pub use self::window::*;
+
+pub mod federation_equivalence;
+pub mod federation_recovery;
+pub mod federation_runtime;
+pub mod federation_scheduler;
+pub mod federation_sync;
+pub mod federation_transport;
+pub mod federation_window;

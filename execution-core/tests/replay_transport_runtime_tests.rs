@@ -10,8 +10,8 @@ use transport_runtime::compression::{ReplayCompressionChunk, ReplayCompressionRu
 use transport_runtime::equivalence::ReplayEquivalenceRuntime;
 use transport_runtime::observer::ObserverReplayRuntime;
 use transport_runtime::recovery::ReplayCatchupRuntime;
-use transport_runtime::stream::ReplayTransportCursor;
 use transport_runtime::replay_transport_is_non_authoritative;
+use transport_runtime::stream::ReplayTransportCursor;
 use transport_runtime::stream::ReplayTransportStream;
 
 fn mk_chunk(sequence: u64, previous_hash: &str, continuity_hash: &str) -> ReplayChunk {

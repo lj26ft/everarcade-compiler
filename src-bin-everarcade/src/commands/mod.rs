@@ -38,11 +38,20 @@ pub fn dispatch(args: &[String]) -> Result<(), String> {
         "runtime-crate-audit" => runtime_crate_audit(),
         "workspace-validation-status" => workspace_validation_status(),
         "sovereign-workspace-closure" => sovereign_workspace_closure(),
+        "replay-network-status" => replay_network_status(),
+        "replay-peer-status" => replay_peer_status(),
+        "replay-window-sync" => replay_window_sync(),
+        "replay-stream-runtime" => replay_stream_runtime(),
+        "replay-observer-runtime" => replay_observer_runtime(),
+        "replay-federation-runtime" => replay_federation_runtime(),
+        "replay-catchup-runtime" => replay_catchup_runtime(),
+        "replay-recovery-runtime" => replay_recovery_runtime(),
+        "replay-transport-verify" => replay_transport_verify(),
         _ => Err(format!("unknown command: {cmd}")),
     }
 }
 pub fn print_help() {
-    println!("everarcade <install-game|list-games|inspect-game|run-game|start-game|asset-register|asset-build|asset-verify|start|init-game|build-game|package-game|run-local-federation|replay-world|inspect-simulation|runtime-snapshot|diagnostics|runtime-public-api-status|runtime-symbol-audit|runtime-integration-closure|runtime-api-ownership|workspace-linkage-status|runtime-crate-audit|workspace-validation-status|sovereign-workspace-closure>");
+    println!("everarcade <install-game|list-games|inspect-game|run-game|start-game|asset-register|asset-build|asset-verify|start|init-game|build-game|package-game|run-local-federation|replay-world|inspect-simulation|runtime-snapshot|diagnostics|runtime-public-api-status|runtime-symbol-audit|runtime-integration-closure|runtime-api-ownership|workspace-linkage-status|runtime-crate-audit|workspace-validation-status|sovereign-workspace-closure|replay-network-status|replay-peer-status|replay-window-sync|replay-stream-runtime|replay-observer-runtime|replay-federation-runtime|replay-catchup-runtime|replay-recovery-runtime|replay-transport-verify>");
 }
 fn install_game(path: &str) -> Result<(), String> {
     let src = PathBuf::from(path);
@@ -269,4 +278,51 @@ fn workspace_validation_status() -> Result<(), String> {
 
 fn sovereign_workspace_closure() -> Result<(), String> {
     workspace_validation_status()
+}
+
+fn replay_network_status() -> Result<(), String> {
+    let payload = serde_json::json!({"peers": 0, "windows": 0, "continuity": "append-only"});
+    println!(
+        "{}",
+        serde_json::to_string_pretty(&payload).map_err(|e| e.to_string())?
+    );
+    Ok(())
+}
+
+fn replay_peer_status() -> Result<(), String> {
+    let payload = serde_json::json!({"observer_peers": [], "equivalence": "deterministic", "recovery": "ready"});
+    println!(
+        "{}",
+        serde_json::to_string_pretty(&payload).map_err(|e| e.to_string())?
+    );
+    Ok(())
+}
+
+fn replay_window_sync() -> Result<(), String> {
+    println!("replay window sync: deterministic scaffold ready");
+    Ok(())
+}
+fn replay_stream_runtime() -> Result<(), String> {
+    println!("replay stream runtime: append-only scaffold ready");
+    Ok(())
+}
+fn replay_observer_runtime() -> Result<(), String> {
+    println!("replay observer runtime: non-authoritative scaffold ready");
+    Ok(())
+}
+fn replay_federation_runtime() -> Result<(), String> {
+    println!("replay federation runtime: continuity scaffold ready");
+    Ok(())
+}
+fn replay_catchup_runtime() -> Result<(), String> {
+    println!("replay catchup runtime: resumable scaffold ready");
+    Ok(())
+}
+fn replay_recovery_runtime() -> Result<(), String> {
+    println!("replay recovery runtime: restoration scaffold ready");
+    Ok(())
+}
+fn replay_transport_verify() -> Result<(), String> {
+    println!("replay transport verify: integrity scaffold ready");
+    Ok(())
 }
