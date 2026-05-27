@@ -129,6 +129,14 @@ Commands:
   governance-policy --world-root <path>
   governance-authority --world-root <path>
 
+  release-certification-status
+  release-lineage-status
+  ci-execution-replay-status
+  artifact-retention-status
+  operational-governance-status
+  release-integrity-status
+  sovereign-runtime-certification
+
 Examples:
   everarcade-host init --state ~/.everarcade
   everarcade-host generate-fixture --output /tmp/everarcade-package.bin
