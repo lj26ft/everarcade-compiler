@@ -214,3 +214,12 @@ pub struct ReplayTransportTopology;
 
 #[derive(Clone, Debug, Default, Eq, PartialEq, Serialize)]
 pub struct RuntimeOperationalClosure;
+
+#[derive(Clone, Debug, Default, Eq, PartialEq, Serialize)]
+pub struct OperationalReplayRuntime;
+
+#[derive(Clone, Debug, Default, Eq, PartialEq, Serialize)]
+pub struct DistributedReplayObserverRuntime;
+
+#[derive(Clone, Debug, Default, Eq, PartialEq, Serialize)]
+pub struct RuntimeOperationalContinuity;
