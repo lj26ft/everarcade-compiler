@@ -39,3 +39,10 @@ pub mod replay_index_store;
 pub mod retention;
 pub mod snapshot_store;
 pub mod storage_engine;
+
+pub mod archive_runtime;
+pub mod compaction_runtime;
+pub mod continuity_runtime;
+pub mod retention_runtime;
+pub mod snapshot_runtime;
+pub mod storage_runtime;

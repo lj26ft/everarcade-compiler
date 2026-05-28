@@ -223,3 +223,18 @@ pub struct DistributedReplayObserverRuntime;
 
 #[derive(Clone, Debug, Default, Eq, PartialEq, Serialize)]
 pub struct RuntimeOperationalContinuity;
+
+#[derive(Clone, Debug, Default, Eq, PartialEq, Serialize)]
+pub struct OperationalReplayNetworking;
+
+#[derive(Clone, Debug, Default, Eq, PartialEq, Serialize)]
+pub struct SovereignRuntimeDeployment;
+
+#[derive(Clone, Debug, Default, Eq, PartialEq, Serialize)]
+pub struct DistributedReplayTopology;
+
+#[derive(Clone, Debug, Default, Eq, PartialEq, Serialize)]
+pub struct RuntimeDeploymentContinuity;
+
+#[derive(Clone, Debug, Default, Eq, PartialEq, Serialize)]
+pub struct RuntimeOperationalActivation;

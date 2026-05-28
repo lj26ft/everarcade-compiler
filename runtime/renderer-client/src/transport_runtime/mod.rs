@@ -131,3 +131,6 @@ pub mod archive_scheduler;
 pub use self::archive_scheduler::*;
 pub mod archive_manifest_transport;
 pub use self::archive_manifest_transport::*;
+
+pub mod routing;
+pub mod streaming;
