@@ -114,3 +114,15 @@ pub mod live_observer;
 pub use self::live_observer::*;
 pub mod observer_cursor;
 pub use self::observer_cursor::*;
+
+pub mod observer_cache;
+pub use self::observer_cache::*;
+
+pub mod observer_partition;
+pub use self::observer_partition::*;
+
+pub mod observer_window_scheduler;
+pub use self::observer_window_scheduler::*;
+
+pub mod observer_scaling_validation;
+pub use self::observer_scaling_validation::*;
