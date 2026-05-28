@@ -1,0 +1,4 @@
+[runtime]
+authority = "deterministic-execution-only"
+renderer_authority = false
+replay_mode = "append-only"

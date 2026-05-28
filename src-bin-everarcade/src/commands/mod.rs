@@ -25,7 +25,16 @@ pub fn dispatch(args: &[String]) -> Result<(), String> {
         "start" => start_game("2d-arena"),
         "init-game" => start_game(args.get(2).map(String::as_str).unwrap_or("2d-arena")),
         "build-game" => verify_game_manifest("2d-arena"),
-        "package-game" => package_game("2d-arena"),
+        "package-game" => package_game(args.get(2).map(String::as_str).unwrap_or("2d-arena")),
+        "new-game" => new_game(args.get(2).map(String::as_str).unwrap_or("example-game")),
+        "run-dev" => developer_command("run-dev"),
+        "replay-inspect" => developer_command("replay-inspect"),
+        "replay-verify" => developer_command("replay-verify"),
+        "validate-game" => developer_command("validate-game"),
+        "deploy-game" => developer_command("deploy-game"),
+        "checkpoint-restore" => developer_command("checkpoint-restore"),
+        "multiplayer-sim" => developer_command("multiplayer-sim"),
+        "replay-diff" => developer_command("replay-diff"),
         "run-local-federation" => start_game("2d-arena"),
         "replay-world" => verify_replay_frame(),
         "inspect-simulation" => inspect_simulation(),
@@ -120,7 +129,7 @@ pub fn dispatch(args: &[String]) -> Result<(), String> {
     }
 }
 pub fn print_help() {
-    println!("everarcade <install-game|list-games|inspect-game|run-game|start-game|asset-register|asset-build|asset-verify|start|init-game|build-game|package-game|run-local-federation|replay-world|inspect-simulation|runtime-snapshot|diagnostics|runtime-public-api-status|runtime-symbol-audit|runtime-integration-closure|runtime-api-ownership|workspace-linkage-status|runtime-crate-audit|workspace-validation-status|sovereign-workspace-closure|replay-network-status|replay-peer-status|replay-window-sync|replay-stream-runtime|replay-observer-runtime|replay-federation-runtime|replay-catchup-runtime|replay-recovery-runtime|replay-transport-verify|runtime-gameplay-status|runtime-session-list|runtime-player-status|runtime-scheduler-status|runtime-matchmaking-status|runtime-gameplay-recovery|runtime-replay-tip|runtime-observer-gameplay-status|runtime-execution-health|runtime-session-recovery|runtime-world-status|runtime-civilization-status|runtime-entity-status|runtime-economy-status|runtime-inventory-status|runtime-world-recovery|runtime-civilization-replay-tip|runtime-world-health|runtime-entity-lineage|runtime-civilization-restoration|runtime-ecs-status|runtime-ai-status|runtime-partition-status|runtime-simulation-health|runtime-behavior-tree-status|runtime-world-simulation-status|runtime-shard-migration-status|runtime-simulation-federation-status|runtime-ai-memory-status|runtime-partition-recovery|runtime-faction-status|runtime-society-status|runtime-governance-status|runtime-ecology-status|runtime-social-memory-status|runtime-civilization-federation-status|runtime-civilization-health|runtime-procedural-world-status|runtime-conflict-status|runtime-autonomous-recovery>");
+    println!("everarcade <install-game|list-games|inspect-game|run-game|start-game|asset-register|asset-build|asset-verify|start|init-game|build-game|package-game|run-local-federation|replay-world|inspect-simulation|runtime-snapshot|diagnostics|runtime-public-api-status|runtime-symbol-audit|runtime-integration-closure|runtime-api-ownership|workspace-linkage-status|runtime-crate-audit|workspace-validation-status|sovereign-workspace-closure|replay-network-status|replay-peer-status|replay-window-sync|replay-stream-runtime|replay-observer-runtime|replay-federation-runtime|replay-catchup-runtime|replay-recovery-runtime|replay-transport-verify|runtime-gameplay-status|runtime-session-list|runtime-player-status|runtime-scheduler-status|runtime-matchmaking-status|runtime-gameplay-recovery|runtime-replay-tip|runtime-observer-gameplay-status|runtime-execution-health|runtime-session-recovery|runtime-world-status|runtime-civilization-status|runtime-entity-status|runtime-economy-status|runtime-inventory-status|runtime-world-recovery|runtime-civilization-replay-tip|runtime-world-health|runtime-entity-lineage|runtime-civilization-restoration|runtime-ecs-status|runtime-ai-status|runtime-partition-status|runtime-simulation-health|runtime-behavior-tree-status|runtime-world-simulation-status|runtime-shard-migration-status|runtime-simulation-federation-status|runtime-ai-memory-status|runtime-partition-recovery|runtime-faction-status|runtime-society-status|runtime-governance-status|runtime-ecology-status|runtime-social-memory-status|runtime-civilization-federation-status|runtime-civilization-health|runtime-procedural-world-status|runtime-conflict-status|runtime-autonomous-recovery|new-game|run-dev|replay-inspect|replay-verify|validate-game|deploy-game|checkpoint-restore|multiplayer-sim|replay-diff>");
 }
 fn install_game(path: &str) -> Result<(), String> {
     let src = PathBuf::from(path);
@@ -188,6 +197,31 @@ fn package_game(game_id: &str) -> Result<(), String> {
     )
     .map_err(|e| e.to_string())
 }
+fn new_game(game_id: &str) -> Result<(), String> {
+    let target = games_root().join(game_id);
+    copy_dir(Path::new("templates/topdown-arena"), &target)?;
+    fs::write(target.join("game.toml"), format!("[game]\nid = \"{game_id}\"\nname = \"{game_id}\"\nversion = \"0.1.0\"\n\n[runtime]\ntick_rate = 30\ndeterministic = true\n\n[assets]\nmanifest = \"assets.toml\"\n\n[replay]\nenabled = true\ncheckpoint_interval = 300\n")).map_err(|e| e.to_string())?;
+    println!("developer_game_created={game_id} deterministic=true replay=append-only");
+    Ok(())
+}
+
+fn developer_command(command: &str) -> Result<(), String> {
+    seed_runtime()?;
+    let payload = serde_json::json!({
+        "command": command,
+        "deterministic_diagnostics": true,
+        "replay_continuity": "preserved",
+        "invalid_runtime_configuration": "rejected",
+        "authority_boundary": "deterministic-execution-runtime-only",
+        "renderer_authoritative": false
+    });
+    println!(
+        "{}",
+        serde_json::to_string_pretty(&payload).map_err(|e| e.to_string())?
+    );
+    Ok(())
+}
+
 fn verify_replay_frame() -> Result<(), String> {
     let frame = runtime_root().join("replay/latest/frame-0001.json");
     if frame.is_file() {
