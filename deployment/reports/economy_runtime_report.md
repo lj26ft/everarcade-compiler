@@ -1,4 +1,4 @@
-# Civilization Continuity Report
+# Economy Runtime Report
 
 - world continuity: preserved by deterministic runtime lineage.
 - civilization continuity: preserved by replay-equivalent restoration.

@@ -1,4 +1,4 @@
-# Civilization Continuity Report
+# World Recovery Report
 
 - world continuity: preserved by deterministic runtime lineage.
 - civilization continuity: preserved by replay-equivalent restoration.
