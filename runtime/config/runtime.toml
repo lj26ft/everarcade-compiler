@@ -1,2 +1,3 @@
-deterministic_mode = true
-runtime_version = "0.1.0"
+mode = "reconstruction-only"
+non_authoritative = true
+startup_command = "runtime-node-start"

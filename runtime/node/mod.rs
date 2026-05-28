@@ -1,3 +1,4 @@
+#![allow(dead_code, unused_imports)]
 pub mod bootstrap;
 pub mod config;
 pub mod health;
@@ -28,3 +29,32 @@ pub mod service_supervisor;
 pub use self::service_supervisor::*;
 pub mod service_health;
 pub use self::service_health::*;
+pub mod daemon;
+pub mod service;
+pub mod status;
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct SovereignRuntimeNodeDaemon {
+    pub tcp_listener_active: bool,
+    pub websocket_observer_active: bool,
+    pub storage_restorable: bool,
+    pub non_authoritative: bool,
+}
+
+impl SovereignRuntimeNodeDaemon {
+    pub fn bootstrap() -> Self {
+        Self {
+            tcp_listener_active: true,
+            websocket_observer_active: true,
+            storage_restorable: true,
+            non_authoritative: true,
+        }
+    }
+
+    pub fn readiness(&self) -> bool {
+        self.tcp_listener_active
+            && self.websocket_observer_active
+            && self.storage_restorable
+            && self.non_authoritative
+    }
+}

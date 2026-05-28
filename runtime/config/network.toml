@@ -1,1 +1,3 @@
-# operational runtime config
+tcp_replay_port = 43171
+websocket_observer_port = 43172
+replay_only = true
