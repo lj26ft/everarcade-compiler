@@ -11,3 +11,7 @@ everarcade-economy-sdk = { path = "../everarcade-economy-sdk" }
 everarcade-governance-sdk = { path = "../everarcade-governance-sdk" }
 sha2 = "0.10"
 hex = "0.4"
+
+[[test]]
+name = "sdk_runtime_tests"
+path = "../tests/sdk_runtime_tests.rs"

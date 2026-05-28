@@ -1,0 +1,7 @@
+[package]
+name = "example-persistent-world"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+everarcade-sdk = { path = "../../sdk/everarcade-sdk" }

@@ -1,4 +1,4 @@
-# SDK deployment validation Report
+# Multiplayer SDK validation Report
 
 - deterministic_logs: true
 - replay_continuity: preserved

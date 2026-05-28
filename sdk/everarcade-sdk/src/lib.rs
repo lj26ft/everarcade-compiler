@@ -1,4 +1,12 @@
+pub mod error;
+pub mod game;
+pub mod input;
+pub mod replay;
 pub mod replay_tooling;
+pub mod runtime;
+pub mod session;
+pub mod state;
+pub mod validation;
 use sha2::{Digest, Sha256};
 use std::{fs, path::Path};
 

@@ -1,0 +1,15 @@
+[game]
+id = "persistent-world"
+name = "Persistent World"
+version = "0.1.0"
+
+[runtime]
+tick_rate = 30
+deterministic = true
+
+[assets]
+manifest = "assets.toml"
+
+[replay]
+enabled = true
+checkpoint_interval = 300
