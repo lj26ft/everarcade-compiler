@@ -46,3 +46,8 @@ pub mod continuity_runtime;
 pub mod retention_runtime;
 pub mod snapshot_runtime;
 pub mod storage_runtime;
+
+pub mod checkpoint_restoration;
+
+pub mod continuity_restoration;
+pub use self::checkpoint_restoration::*;
