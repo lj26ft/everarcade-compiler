@@ -171,5 +171,14 @@ pub mod xrpl_settlement;
 
 pub mod dag_loader;
 
+pub mod autonomous_world_recovery;
+pub mod civilization_interaction;
+pub mod civilization_scheduler;
 #[cfg(test)]
 mod diagnostics_tests;
+pub mod ecology_runtime;
+pub mod faction_runtime;
+pub mod governance_runtime;
+pub mod procedural_world;
+pub mod social_memory;
+pub mod society_runtime;

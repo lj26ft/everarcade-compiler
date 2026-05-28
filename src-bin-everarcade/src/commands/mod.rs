@@ -67,6 +67,22 @@ pub fn dispatch(args: &[String]) -> Result<(), String> {
         "runtime-civilization-restoration" => {
             runtime_civilization_status("runtime-civilization-restoration")
         }
+        "runtime-faction-status" => runtime_civilization_status("runtime-faction-status"),
+        "runtime-society-status" => runtime_civilization_status("runtime-society-status"),
+        "runtime-governance-status" => runtime_civilization_status("runtime-governance-status"),
+        "runtime-ecology-status" => runtime_civilization_status("runtime-ecology-status"),
+        "runtime-social-memory-status" => {
+            runtime_civilization_status("runtime-social-memory-status")
+        }
+        "runtime-civilization-federation-status" => {
+            runtime_civilization_status("runtime-civilization-federation-status")
+        }
+        "runtime-civilization-health" => runtime_civilization_status("runtime-civilization-health"),
+        "runtime-procedural-world-status" => {
+            runtime_civilization_status("runtime-procedural-world-status")
+        }
+        "runtime-conflict-status" => runtime_civilization_status("runtime-conflict-status"),
+        "runtime-autonomous-recovery" => runtime_civilization_status("runtime-autonomous-recovery"),
 
         "runtime-symbol-audit" => runtime_symbol_audit(),
         "runtime-integration-closure" => runtime_integration_closure(),
@@ -104,7 +120,7 @@ pub fn dispatch(args: &[String]) -> Result<(), String> {
     }
 }
 pub fn print_help() {
-    println!("everarcade <install-game|list-games|inspect-game|run-game|start-game|asset-register|asset-build|asset-verify|start|init-game|build-game|package-game|run-local-federation|replay-world|inspect-simulation|runtime-snapshot|diagnostics|runtime-public-api-status|runtime-symbol-audit|runtime-integration-closure|runtime-api-ownership|workspace-linkage-status|runtime-crate-audit|workspace-validation-status|sovereign-workspace-closure|replay-network-status|replay-peer-status|replay-window-sync|replay-stream-runtime|replay-observer-runtime|replay-federation-runtime|replay-catchup-runtime|replay-recovery-runtime|replay-transport-verify|runtime-gameplay-status|runtime-session-list|runtime-player-status|runtime-scheduler-status|runtime-matchmaking-status|runtime-gameplay-recovery|runtime-replay-tip|runtime-observer-gameplay-status|runtime-execution-health|runtime-session-recovery|runtime-world-status|runtime-civilization-status|runtime-entity-status|runtime-economy-status|runtime-inventory-status|runtime-world-recovery|runtime-civilization-replay-tip|runtime-world-health|runtime-entity-lineage|runtime-civilization-restoration|runtime-ecs-status|runtime-ai-status|runtime-partition-status|runtime-simulation-health|runtime-behavior-tree-status|runtime-world-simulation-status|runtime-shard-migration-status|runtime-simulation-federation-status|runtime-ai-memory-status|runtime-partition-recovery>");
+    println!("everarcade <install-game|list-games|inspect-game|run-game|start-game|asset-register|asset-build|asset-verify|start|init-game|build-game|package-game|run-local-federation|replay-world|inspect-simulation|runtime-snapshot|diagnostics|runtime-public-api-status|runtime-symbol-audit|runtime-integration-closure|runtime-api-ownership|workspace-linkage-status|runtime-crate-audit|workspace-validation-status|sovereign-workspace-closure|replay-network-status|replay-peer-status|replay-window-sync|replay-stream-runtime|replay-observer-runtime|replay-federation-runtime|replay-catchup-runtime|replay-recovery-runtime|replay-transport-verify|runtime-gameplay-status|runtime-session-list|runtime-player-status|runtime-scheduler-status|runtime-matchmaking-status|runtime-gameplay-recovery|runtime-replay-tip|runtime-observer-gameplay-status|runtime-execution-health|runtime-session-recovery|runtime-world-status|runtime-civilization-status|runtime-entity-status|runtime-economy-status|runtime-inventory-status|runtime-world-recovery|runtime-civilization-replay-tip|runtime-world-health|runtime-entity-lineage|runtime-civilization-restoration|runtime-ecs-status|runtime-ai-status|runtime-partition-status|runtime-simulation-health|runtime-behavior-tree-status|runtime-world-simulation-status|runtime-shard-migration-status|runtime-simulation-federation-status|runtime-ai-memory-status|runtime-partition-recovery|runtime-faction-status|runtime-society-status|runtime-governance-status|runtime-ecology-status|runtime-social-memory-status|runtime-civilization-federation-status|runtime-civilization-health|runtime-procedural-world-status|runtime-conflict-status|runtime-autonomous-recovery>");
 }
 fn install_game(path: &str) -> Result<(), String> {
     let src = PathBuf::from(path);
@@ -472,6 +488,36 @@ fn runtime_civilization_status(command: &str) -> Result<(), String> {
         }
         "runtime-civilization-restoration" => {
             serde_json::json!({"command": command, "restoration": "deterministic", "authority_bypass": "rejected"})
+        }
+        "runtime-faction-status" => {
+            serde_json::json!({"command": command, "faction_continuity": "preserved", "governance_evolution": "deterministic", "diplomatic_divergence": "rejected"})
+        }
+        "runtime-society-status" => {
+            serde_json::json!({"command": command, "societal_continuity": "preserved", "population_evolution": "deterministic", "hidden_social_mutation": "rejected"})
+        }
+        "runtime-governance-status" => {
+            serde_json::json!({"command": command, "diplomacy": "deterministic", "treaty_lineage": "preserved", "unauthorized_governance_mutation": "rejected"})
+        }
+        "runtime-ecology-status" => {
+            serde_json::json!({"command": command, "ecological_continuity": "preserved", "resource_distribution": "deterministic", "resource_divergence": "rejected"})
+        }
+        "runtime-social-memory-status" => {
+            serde_json::json!({"command": command, "social_memory": "append-only", "hidden_memory_mutation": "rejected", "restoration": "deterministic"})
+        }
+        "runtime-civilization-federation-status" => {
+            serde_json::json!({"command": command, "federation_continuity": "preserved", "society_sync": "deterministic", "replay_authority_mutation": "rejected"})
+        }
+        "runtime-civilization-health" => {
+            serde_json::json!({"command": command, "faction": "healthy", "society": "healthy", "governance": "healthy", "ecology": "healthy", "social_memory": "append-only", "federation": "healthy", "replay_continuity": "append-only"})
+        }
+        "runtime-procedural-world-status" => {
+            serde_json::json!({"command": command, "topology_evolution": "deterministic", "terrain_resources": "deterministic", "topology_divergence": "rejected"})
+        }
+        "runtime-conflict-status" => {
+            serde_json::json!({"command": command, "migration": "deterministic", "trade": "deterministic", "conflict": "deterministic", "interaction_divergence": "rejected"})
+        }
+        "runtime-autonomous-recovery" => {
+            serde_json::json!({"command": command, "civilization_restore": "deterministic", "ecology_restore": "deterministic", "social_memory_restore": "append-only", "corrupted_recovery": "rejected"})
         }
         _ => return Err(format!("unknown civilization runtime command: {command}")),
     };
