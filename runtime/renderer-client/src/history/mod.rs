@@ -86,3 +86,7 @@ pub mod observer_recovery;
 pub use self::observer_recovery::*;
 pub mod observer_stream;
 pub use self::observer_stream::*;
+
+pub mod observer_server;
+pub mod observer_validation;
+pub use self::observer_validation::*;
