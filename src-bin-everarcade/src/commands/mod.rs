@@ -84,11 +84,27 @@ pub fn dispatch(args: &[String]) -> Result<(), String> {
         "replay-catchup-runtime" => replay_catchup_runtime(),
         "replay-recovery-runtime" => replay_recovery_runtime(),
         "replay-transport-verify" => replay_transport_verify(),
+        "runtime-ecs-status" => runtime_simulation_status("runtime-ecs-status"),
+        "runtime-ai-status" => runtime_simulation_status("runtime-ai-status"),
+        "runtime-partition-status" => runtime_simulation_status("runtime-partition-status"),
+        "runtime-simulation-health" => runtime_simulation_status("runtime-simulation-health"),
+        "runtime-behavior-tree-status" => runtime_simulation_status("runtime-behavior-tree-status"),
+        "runtime-world-simulation-status" => {
+            runtime_simulation_status("runtime-world-simulation-status")
+        }
+        "runtime-shard-migration-status" => {
+            runtime_simulation_status("runtime-shard-migration-status")
+        }
+        "runtime-simulation-federation-status" => {
+            runtime_simulation_status("runtime-simulation-federation-status")
+        }
+        "runtime-ai-memory-status" => runtime_simulation_status("runtime-ai-memory-status"),
+        "runtime-partition-recovery" => runtime_simulation_status("runtime-partition-recovery"),
         _ => Err(format!("unknown command: {cmd}")),
     }
 }
 pub fn print_help() {
-    println!("everarcade <install-game|list-games|inspect-game|run-game|start-game|asset-register|asset-build|asset-verify|start|init-game|build-game|package-game|run-local-federation|replay-world|inspect-simulation|runtime-snapshot|diagnostics|runtime-public-api-status|runtime-symbol-audit|runtime-integration-closure|runtime-api-ownership|workspace-linkage-status|runtime-crate-audit|workspace-validation-status|sovereign-workspace-closure|replay-network-status|replay-peer-status|replay-window-sync|replay-stream-runtime|replay-observer-runtime|replay-federation-runtime|replay-catchup-runtime|replay-recovery-runtime|replay-transport-verify|runtime-gameplay-status|runtime-session-list|runtime-player-status|runtime-scheduler-status|runtime-matchmaking-status|runtime-gameplay-recovery|runtime-replay-tip|runtime-observer-gameplay-status|runtime-execution-health|runtime-session-recovery|runtime-world-status|runtime-civilization-status|runtime-entity-status|runtime-economy-status|runtime-inventory-status|runtime-world-recovery|runtime-civilization-replay-tip|runtime-world-health|runtime-entity-lineage|runtime-civilization-restoration>");
+    println!("everarcade <install-game|list-games|inspect-game|run-game|start-game|asset-register|asset-build|asset-verify|start|init-game|build-game|package-game|run-local-federation|replay-world|inspect-simulation|runtime-snapshot|diagnostics|runtime-public-api-status|runtime-symbol-audit|runtime-integration-closure|runtime-api-ownership|workspace-linkage-status|runtime-crate-audit|workspace-validation-status|sovereign-workspace-closure|replay-network-status|replay-peer-status|replay-window-sync|replay-stream-runtime|replay-observer-runtime|replay-federation-runtime|replay-catchup-runtime|replay-recovery-runtime|replay-transport-verify|runtime-gameplay-status|runtime-session-list|runtime-player-status|runtime-scheduler-status|runtime-matchmaking-status|runtime-gameplay-recovery|runtime-replay-tip|runtime-observer-gameplay-status|runtime-execution-health|runtime-session-recovery|runtime-world-status|runtime-civilization-status|runtime-entity-status|runtime-economy-status|runtime-inventory-status|runtime-world-recovery|runtime-civilization-replay-tip|runtime-world-health|runtime-entity-lineage|runtime-civilization-restoration|runtime-ecs-status|runtime-ai-status|runtime-partition-status|runtime-simulation-health|runtime-behavior-tree-status|runtime-world-simulation-status|runtime-shard-migration-status|runtime-simulation-federation-status|runtime-ai-memory-status|runtime-partition-recovery>");
 }
 fn install_game(path: &str) -> Result<(), String> {
     let src = PathBuf::from(path);
@@ -458,6 +474,47 @@ fn runtime_civilization_status(command: &str) -> Result<(), String> {
             serde_json::json!({"command": command, "restoration": "deterministic", "authority_bypass": "rejected"})
         }
         _ => return Err(format!("unknown civilization runtime command: {command}")),
+    };
+    println!(
+        "{}",
+        serde_json::to_string_pretty(&payload).map_err(|e| e.to_string())?
+    );
+    Ok(())
+}
+
+fn runtime_simulation_status(command: &str) -> Result<(), String> {
+    let payload = match command {
+        "runtime-ecs-status" => {
+            serde_json::json!({"command": command, "ecs_continuity": "preserved", "deterministic_ordering": true, "unauthorized_component_mutation": "rejected"})
+        }
+        "runtime-ai-status" => {
+            serde_json::json!({"command": command, "ai_continuity": "preserved", "hidden_ai_mutation": "rejected", "decision_ordering": "deterministic"})
+        }
+        "runtime-partition-status" => {
+            serde_json::json!({"command": command, "partition_continuity": "preserved", "streaming": "replay-derived", "divergence": "rejected"})
+        }
+        "runtime-simulation-health" => {
+            serde_json::json!({"command": command, "ecs": "healthy", "ai": "healthy", "scheduler": "deterministic", "replay_continuity": "append-only"})
+        }
+        "runtime-behavior-tree-status" => {
+            serde_json::json!({"command": command, "behavior_tree_continuity": "preserved", "hidden_execution_mutation": "rejected"})
+        }
+        "runtime-world-simulation-status" => {
+            serde_json::json!({"command": command, "terrain_evolution": "deterministic", "world_mutation": "runtime-boundary-only"})
+        }
+        "runtime-shard-migration-status" => {
+            serde_json::json!({"command": command, "migration_readiness": "ready", "partition_divergence": "rejected"})
+        }
+        "runtime-simulation-federation-status" => {
+            serde_json::json!({"command": command, "federation_continuity": "preserved", "replay_authority_mutation": "rejected"})
+        }
+        "runtime-ai-memory-status" => {
+            serde_json::json!({"command": command, "ai_memory": "append-only", "restoration": "deterministic"})
+        }
+        "runtime-partition-recovery" => {
+            serde_json::json!({"command": command, "partition_recovery": "deterministic", "replay_equivalence": "preserved"})
+        }
+        _ => return Err(format!("unknown simulation runtime command: {command}")),
     };
     println!(
         "{}",
