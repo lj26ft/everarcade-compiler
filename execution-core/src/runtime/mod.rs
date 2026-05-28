@@ -18,3 +18,5 @@ pub mod session_validation_runtime;
 pub mod storage_validation_runtime;
 pub mod transport_validation;
 pub mod transport_validation_runtime;
+
+pub mod orchestration_scaling;

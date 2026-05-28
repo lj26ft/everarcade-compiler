@@ -180,3 +180,6 @@ pub mod resume;
 pub use self::resume::*;
 pub mod replay_cursor;
 pub use self::replay_cursor::*;
+
+pub mod quic;
+pub use self::quic::*;
