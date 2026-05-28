@@ -35,7 +35,7 @@ if ! cargo metadata --offline --locked >/tmp/runtime_vendor_metadata.json 2>/tmp
   cat /tmp/runtime_vendor_err.log >&2
   exit 1
 fi
-vendor_hash="$(tar -cf - vendor 2>/dev/null | sha256sum | awk '{print $1}')"
+vendor_hash="$(find vendor -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum | awk '{print $1}')"
 cat > deployment/reports/vendor_validation_report.md <<RPT
 # Vendor Validation Report
 - cargo_metadata: ok

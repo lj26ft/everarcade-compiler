@@ -317,3 +317,18 @@ impl Default for RuntimeDeploymentRecovery {
         }
     }
 }
+
+#[derive(Clone, Debug, Default, Eq, PartialEq, Serialize)]
+pub struct RuntimeNodeService;
+
+#[derive(Clone, Debug, Default, Eq, PartialEq, Serialize)]
+pub struct ReplayStorageEngine;
+
+#[derive(Clone, Debug, Default, Eq, PartialEq, Serialize)]
+pub struct LiveTransportBoundary;
+
+#[derive(Clone, Debug, Default, Eq, PartialEq, Serialize)]
+pub struct RuntimeServiceRecovery;
+
+#[derive(Clone, Debug, Default, Eq, PartialEq, Serialize)]
+pub struct ReplayServiceContinuity;
