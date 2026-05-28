@@ -1,1 +1,2 @@
-# operational runtime config
+observer_mode = "replay-hydration-only"
+allow_authority_mutation = false

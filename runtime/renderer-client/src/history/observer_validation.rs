@@ -6,3 +6,11 @@ impl ObserverValidation {
         true
     }
 }
+
+pub fn reject_observer_authority_mutation(reconstruction_only: bool) -> Result<(), String> {
+    if reconstruction_only {
+        Ok(())
+    } else {
+        Err("observer_mutation_rejected".into())
+    }
+}

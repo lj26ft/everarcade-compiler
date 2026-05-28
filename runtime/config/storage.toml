@@ -1,2 +1,3 @@
-storage_ceiling_mb = 2048
-journal_retention = 4096
+layout = "append-only-replay"
+checkpoint_on_shutdown = true
+restore_on_startup = true

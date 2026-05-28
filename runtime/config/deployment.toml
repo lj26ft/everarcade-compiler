@@ -1,2 +1,3 @@
-enabled = true
-mode = "scaffold"
+target = "small-linux-vm"
+package = "everarcade-sovereign-runtime"
+health_check = "runtime-health-check"
