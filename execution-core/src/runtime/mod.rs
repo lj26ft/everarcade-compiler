@@ -20,3 +20,5 @@ pub mod transport_validation;
 pub mod transport_validation_runtime;
 
 pub mod orchestration_scaling;
+
+pub mod internet_runtime_fabric;

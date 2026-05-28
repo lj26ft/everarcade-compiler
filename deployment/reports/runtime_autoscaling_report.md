@@ -1,4 +1,4 @@
-# Runtime Service Report
+# Runtime Autoscaling Report
 
 - replay continuity state: ok, append-only replay windows only
 - topology state: deterministic persistent snapshots restore peer routing

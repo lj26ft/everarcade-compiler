@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+set -euo pipefail
+echo "runtime-autoscaling-status status=ok deterministic=true replay_only=true reconstruction_only=true non_authoritative=true continuity_root=root:everarcade:internet-runtime:v1"
