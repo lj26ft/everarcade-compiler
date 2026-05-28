@@ -51,3 +51,15 @@ pub mod checkpoint_restoration;
 
 pub mod continuity_restoration;
 pub use self::checkpoint_restoration::*;
+pub mod storage_checkpoint;
+pub use self::storage_checkpoint::*;
+pub mod storage_archive;
+pub use self::storage_archive::*;
+pub mod storage_manifest;
+pub use self::storage_manifest::*;
+pub mod storage_restoration;
+pub use self::storage_restoration::*;
+pub mod storage_compaction;
+pub use self::storage_compaction::*;
+pub mod storage_validation;
+pub use self::storage_validation::*;

@@ -104,3 +104,18 @@ impl RuntimeSurfaceAudit {
         counts
     }
 }
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct RuntimeNodeService;
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ReplayStorageEngine;
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct LiveTransportBoundary;
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct RuntimeServiceRecovery;
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ReplayServiceContinuity;
