@@ -1,7 +1,10 @@
+pub mod ai_memory;
+pub mod ai_runtime;
 pub mod amendment;
 pub mod api;
 pub mod arbitration;
 pub mod authority;
+pub mod behavior_tree;
 pub mod budget;
 pub mod canonical;
 pub mod capability;
@@ -20,6 +23,7 @@ pub mod divergence;
 pub mod domain;
 pub mod economics;
 pub mod economy;
+pub mod ecs;
 pub mod entity;
 pub mod envelope;
 pub mod epoch;
@@ -64,9 +68,11 @@ pub mod security;
 pub mod session;
 pub mod settlement;
 pub mod simulation;
+pub mod simulation_scheduler;
 pub mod state;
 pub mod state_diff;
 pub mod state_engine;
+pub mod world_simulation;
 
 pub mod state_root;
 

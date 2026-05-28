@@ -17,3 +17,8 @@ pub use migration::MigrationRecord;
 pub use ownership::RegionOwnership;
 pub use partition::WorldPartition;
 pub use region::RegionState;
+pub mod recovery;
+pub mod runtime;
+pub mod streaming;
+pub mod validation;
+pub use runtime::{WorldPartitionError, WorldPartitionRuntime};
