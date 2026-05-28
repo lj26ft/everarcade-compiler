@@ -70,7 +70,12 @@ pub mod state_engine;
 
 pub mod state_root;
 
+pub mod economy_runtime;
+pub mod entity_runtime;
+pub mod entity_scheduler;
+pub mod inventory_runtime;
 pub mod journal;
+pub mod persistent_multiplayer;
 pub mod receipt_canonical;
 pub mod sync;
 pub mod tenancy;
@@ -82,6 +87,9 @@ pub mod wasm;
 pub mod wasm_abi;
 pub mod world;
 pub mod world_partition;
+pub mod world_persistence;
+pub mod world_recovery;
+pub mod world_runtime;
 pub mod world_scheduler;
 pub mod xahau_gateway;
 
