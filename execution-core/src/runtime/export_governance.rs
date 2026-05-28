@@ -332,3 +332,18 @@ pub struct RuntimeServiceRecovery;
 
 #[derive(Clone, Debug, Default, Eq, PartialEq, Serialize)]
 pub struct ReplayServiceContinuity;
+
+#[derive(Clone, Debug, Default, Eq, PartialEq, Serialize)]
+pub struct DistributedReplayFederation;
+
+#[derive(Clone, Debug, Default, Eq, PartialEq, Serialize)]
+pub struct RuntimePeerTopology;
+
+#[derive(Clone, Debug, Default, Eq, PartialEq, Serialize)]
+pub struct ReplayFederationRecovery;
+
+#[derive(Clone, Debug, Default, Eq, PartialEq, Serialize)]
+pub struct ReplayStreamPropagation;
+
+#[derive(Clone, Debug, Default, Eq, PartialEq, Serialize)]
+pub struct RuntimeFederationContinuity;

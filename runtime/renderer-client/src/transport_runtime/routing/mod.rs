@@ -1,7 +1,10 @@
+pub mod checkpoint_router;
 pub mod chunk_router;
 pub mod observer_router;
+pub mod peer_router;
 pub mod recovery_router;
 pub mod router;
 pub mod runtime;
 pub mod topology_router;
+pub mod validation;
 pub mod window_router;

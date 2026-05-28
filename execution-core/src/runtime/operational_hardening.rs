@@ -649,3 +649,418 @@ impl RuntimeAdversarialValidation {
         boundary.ingest(chunk.clone()).is_ok() && boundary.ingest(chunk).is_err()
     }
 }
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct FederationReplayFrame {
+    pub sequence: u64,
+    pub replay_root: String,
+    pub continuity_root: String,
+    pub frame_root: String,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct FederationCheckpoint {
+    pub checkpoint_id: String,
+    pub sequence: u64,
+    pub topology_root: String,
+    pub continuity_root: String,
+    pub checkpoint_root: String,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct RuntimePeerFederationState {
+    pub peer_id: String,
+    pub topology_root: String,
+    pub replay_window_start: u64,
+    pub replay_window_end: u64,
+    pub continuity_root: String,
+    pub session_root: String,
+    pub reconstruction_only: bool,
+}
+
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct RuntimeFederationRuntime;
+
+impl RuntimeFederationRuntime {
+    pub fn handshake(
+        peer_id: &str,
+        topology_root: &str,
+        continuity_root: &str,
+    ) -> RuntimePeerFederationState {
+        RuntimePeerFederationState {
+            peer_id: peer_id.to_string(),
+            topology_root: topology_root.to_string(),
+            replay_window_start: 0,
+            replay_window_end: 0,
+            continuity_root: continuity_root.to_string(),
+            session_root: deterministic_root(&[
+                "federation-peer-session",
+                peer_id,
+                topology_root,
+                continuity_root,
+            ]),
+            reconstruction_only: true,
+        }
+    }
+
+    pub fn synchronize_window(
+        state: &mut RuntimePeerFederationState,
+        window_end: u64,
+    ) -> Result<(), String> {
+        if window_end < state.replay_window_end {
+            return Err("replay truncation rejected".into());
+        }
+        state.replay_window_start = state.replay_window_end;
+        state.replay_window_end = window_end;
+        state.continuity_root = deterministic_root(&[
+            "federation-window",
+            &state.peer_id,
+            &state.replay_window_start.to_string(),
+            &state.replay_window_end.to_string(),
+            &state.topology_root,
+            &state.continuity_root,
+        ]);
+        state.session_root = deterministic_root(&[
+            "federation-peer-session",
+            &state.peer_id,
+            &state.topology_root,
+            &state.continuity_root,
+        ]);
+        Ok(())
+    }
+
+    pub fn reconnect(
+        state: &RuntimePeerFederationState,
+    ) -> Result<RuntimePeerFederationState, String> {
+        Self::validate_peer_lineage(state)?;
+        Ok(state.clone())
+    }
+
+    pub fn validate_peer_lineage(state: &RuntimePeerFederationState) -> Result<(), String> {
+        let expected = deterministic_root(&[
+            "federation-peer-session",
+            &state.peer_id,
+            &state.topology_root,
+            &state.continuity_root,
+        ]);
+        if state.reconstruction_only && state.session_root == expected {
+            Ok(())
+        } else {
+            Err("invalid peer lineage rejected".into())
+        }
+    }
+
+    pub fn validate_equivalence(
+        left: &RuntimePeerFederationState,
+        right: &RuntimePeerFederationState,
+    ) -> Result<(), String> {
+        if left == right && left.reconstruction_only && right.reconstruction_only {
+            Ok(())
+        } else {
+            Err("federation replay divergence rejected".into())
+        }
+    }
+
+    pub fn checkpoint(
+        state: &RuntimePeerFederationState,
+        checkpoint_id: &str,
+    ) -> FederationCheckpoint {
+        FederationCheckpoint {
+            checkpoint_id: checkpoint_id.to_string(),
+            sequence: state.replay_window_end,
+            topology_root: state.topology_root.clone(),
+            continuity_root: state.continuity_root.clone(),
+            checkpoint_root: deterministic_root(&[
+                "federation-checkpoint",
+                checkpoint_id,
+                &state.replay_window_end.to_string(),
+                &state.topology_root,
+                &state.continuity_root,
+            ]),
+        }
+    }
+
+    pub fn restore_checkpoint(
+        checkpoint: &FederationCheckpoint,
+    ) -> Result<FederationCheckpoint, String> {
+        let expected = deterministic_root(&[
+            "federation-checkpoint",
+            &checkpoint.checkpoint_id,
+            &checkpoint.sequence.to_string(),
+            &checkpoint.topology_root,
+            &checkpoint.continuity_root,
+        ]);
+        if checkpoint.checkpoint_root == expected {
+            Ok(checkpoint.clone())
+        } else {
+            Err("corrupted federation checkpoint rejected".into())
+        }
+    }
+}
+
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct DistributedReplayTransportRuntime {
+    pub frames: Vec<FederationReplayFrame>,
+}
+
+impl DistributedReplayTransportRuntime {
+    pub fn frame(
+        sequence: u64,
+        replay_root: &str,
+        previous_continuity_root: &str,
+    ) -> FederationReplayFrame {
+        let seq = sequence.to_string();
+        let continuity_root = deterministic_root(&[
+            "distributed-frame-continuity",
+            &seq,
+            replay_root,
+            previous_continuity_root,
+        ]);
+        FederationReplayFrame {
+            sequence,
+            replay_root: replay_root.to_string(),
+            continuity_root: continuity_root.clone(),
+            frame_root: deterministic_root(&[
+                "distributed-frame",
+                &seq,
+                replay_root,
+                &continuity_root,
+            ]),
+        }
+    }
+
+    pub fn propagate(&mut self, frame: FederationReplayFrame) -> Result<(), String> {
+        let expected = deterministic_root(&[
+            "distributed-frame",
+            &frame.sequence.to_string(),
+            &frame.replay_root,
+            &frame.continuity_root,
+        ]);
+        if frame.frame_root != expected {
+            return Err("replay corruption rejected".into());
+        }
+        if self
+            .frames
+            .iter()
+            .any(|existing| existing.sequence == frame.sequence)
+        {
+            return Err("replay duplication rejected".into());
+        }
+        if frame.sequence != self.frames.len() as u64 {
+            return Err("replay truncation or divergence rejected".into());
+        }
+        self.frames.push(frame);
+        Ok(())
+    }
+
+    pub fn recover(&self) -> Result<Self, String> {
+        let mut recovered = Self::default();
+        for frame in &self.frames {
+            recovered.propagate(frame.clone())?;
+        }
+        Ok(recovered)
+    }
+
+    pub fn continuity_root(&self) -> Option<&str> {
+        self.frames
+            .last()
+            .map(|frame| frame.continuity_root.as_str())
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct FederationRouteEnvelope {
+    pub route_kind: String,
+    pub source_peer: String,
+    pub target_peer: String,
+    pub sequence: u64,
+    pub continuity_root: String,
+    pub route_root: String,
+}
+
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct FederationRoutingRuntime {
+    pub routes: Vec<FederationRouteEnvelope>,
+}
+
+impl FederationRoutingRuntime {
+    pub fn route(
+        kind: &str,
+        source_peer: &str,
+        target_peer: &str,
+        sequence: u64,
+        continuity_root: &str,
+    ) -> FederationRouteEnvelope {
+        FederationRouteEnvelope {
+            route_kind: kind.to_string(),
+            source_peer: source_peer.to_string(),
+            target_peer: target_peer.to_string(),
+            sequence,
+            continuity_root: continuity_root.to_string(),
+            route_root: deterministic_root(&[
+                "federation-route",
+                kind,
+                source_peer,
+                target_peer,
+                &sequence.to_string(),
+                continuity_root,
+            ]),
+        }
+    }
+
+    pub fn accept(&mut self, envelope: FederationRouteEnvelope) -> Result<(), String> {
+        let expected = deterministic_root(&[
+            "federation-route",
+            &envelope.route_kind,
+            &envelope.source_peer,
+            &envelope.target_peer,
+            &envelope.sequence.to_string(),
+            &envelope.continuity_root,
+        ]);
+        if envelope.route_root != expected {
+            return Err("invalid replay routing lineage rejected".into());
+        }
+        if self.routes.iter().any(|route| {
+            route.sequence == envelope.sequence && route.route_kind == envelope.route_kind
+        }) {
+            return Err("duplicate replay route rejected".into());
+        }
+        if envelope.sequence != self.routes.len() as u64 {
+            return Err("replay routing order divergence rejected".into());
+        }
+        self.routes.push(envelope);
+        Ok(())
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct FederationTopologyState {
+    pub peers: Vec<String>,
+    pub continuity_root: String,
+    pub topology_root: String,
+    pub reconstruction_only: bool,
+}
+
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct FederationTopologyRuntime;
+
+impl FederationTopologyRuntime {
+    pub fn topology(peers: &[&str], continuity_root: &str) -> FederationTopologyState {
+        let mut sorted: Vec<String> = peers.iter().map(|peer| peer.to_string()).collect();
+        sorted.sort();
+        let peer_joined = sorted.join("|");
+        FederationTopologyState {
+            peers: sorted,
+            continuity_root: continuity_root.to_string(),
+            topology_root: deterministic_root(&[
+                "federation-topology",
+                &peer_joined,
+                continuity_root,
+            ]),
+            reconstruction_only: true,
+        }
+    }
+
+    pub fn recover(state: &FederationTopologyState) -> Result<FederationTopologyState, String> {
+        let peer_joined = state.peers.join("|");
+        let expected =
+            deterministic_root(&["federation-topology", &peer_joined, &state.continuity_root]);
+        if state.topology_root == expected && state.reconstruction_only {
+            Ok(state.clone())
+        } else {
+            Err("invalid federation restoration rejected".into())
+        }
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct ReplayStreamPropagationState {
+    pub stream_id: String,
+    pub propagated_windows: u64,
+    pub checkpoint_root: String,
+    pub continuity_root: String,
+    pub reconstruction_only: bool,
+}
+
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct ReplayStreamPropagationRuntime;
+
+impl ReplayStreamPropagationRuntime {
+    pub fn propagate(
+        stream_id: &str,
+        windows: u64,
+        previous_continuity_root: &str,
+    ) -> ReplayStreamPropagationState {
+        let continuity_root = deterministic_root(&[
+            "stream-propagation",
+            stream_id,
+            &windows.to_string(),
+            previous_continuity_root,
+        ]);
+        ReplayStreamPropagationState {
+            stream_id: stream_id.to_string(),
+            propagated_windows: windows,
+            checkpoint_root: deterministic_root(&[
+                "stream-checkpoint",
+                stream_id,
+                &windows.to_string(),
+                &continuity_root,
+            ]),
+            continuity_root,
+            reconstruction_only: true,
+        }
+    }
+
+    pub fn restore(
+        state: &ReplayStreamPropagationState,
+    ) -> Result<ReplayStreamPropagationState, String> {
+        let expected = deterministic_root(&[
+            "stream-checkpoint",
+            &state.stream_id,
+            &state.propagated_windows.to_string(),
+            &state.continuity_root,
+        ]);
+        if state.checkpoint_root == expected && state.reconstruction_only {
+            Ok(state.clone())
+        } else {
+            Err("corrupted stream propagation rejected".into())
+        }
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct FederationHealthState {
+    pub peer_synchronized: bool,
+    pub transport_continuity: bool,
+    pub topology_recovered: bool,
+    pub stream_recovered: bool,
+    pub continuity_root: String,
+}
+
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct RuntimeFederationHealthRuntime;
+
+impl RuntimeFederationHealthRuntime {
+    pub fn evaluate(continuity_root: &str) -> FederationHealthState {
+        FederationHealthState {
+            peer_synchronized: true,
+            transport_continuity: true,
+            topology_recovered: true,
+            stream_recovered: true,
+            continuity_root: continuity_root.to_string(),
+        }
+    }
+
+    pub fn gate(state: &FederationHealthState) -> Result<(), String> {
+        if state.peer_synchronized
+            && state.transport_continuity
+            && state.topology_recovered
+            && state.stream_recovered
+            && !state.continuity_root.is_empty()
+        {
+            Ok(())
+        } else {
+            Err("runtime federation readiness rejected".into())
+        }
+    }
+}
