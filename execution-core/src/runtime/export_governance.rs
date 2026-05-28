@@ -238,3 +238,82 @@ pub struct RuntimeDeploymentContinuity;
 
 #[derive(Clone, Debug, Default, Eq, PartialEq, Serialize)]
 pub struct RuntimeOperationalActivation;
+
+#[derive(Clone, Debug, Eq, PartialEq, Serialize)]
+pub struct RuntimeActivationState {
+    pub replay_restoration_ready: bool,
+    pub health_gate_ready: bool,
+    pub renderer_non_authoritative: bool,
+}
+
+impl Default for RuntimeActivationState {
+    fn default() -> Self {
+        Self {
+            replay_restoration_ready: true,
+            health_gate_ready: true,
+            renderer_non_authoritative: true,
+        }
+    }
+}
+
+#[derive(Clone, Debug, Eq, PartialEq, Serialize)]
+pub struct RuntimeRecoveryLifecycle {
+    pub deterministic_equivalence: bool,
+    pub peer_reconnect_recovery: bool,
+    pub daemon_restart_continuity: bool,
+    pub corruption_detection_enabled: bool,
+}
+
+impl Default for RuntimeRecoveryLifecycle {
+    fn default() -> Self {
+        Self {
+            deterministic_equivalence: true,
+            peer_reconnect_recovery: true,
+            daemon_restart_continuity: true,
+            corruption_detection_enabled: true,
+        }
+    }
+}
+
+#[derive(Clone, Debug, Eq, PartialEq, Serialize)]
+pub struct SovereignRuntimeBootstrap {
+    pub deterministic_restoration: bool,
+    pub snapshot_restoration: bool,
+}
+
+impl Default for SovereignRuntimeBootstrap {
+    fn default() -> Self {
+        Self {
+            deterministic_restoration: true,
+            snapshot_restoration: true,
+        }
+    }
+}
+
+#[derive(Clone, Debug, Eq, PartialEq, Serialize)]
+pub struct ReplaySessionLifecycle {
+    pub checkpoint_equivalence: bool,
+    pub divergence_detection_enabled: bool,
+}
+
+impl Default for ReplaySessionLifecycle {
+    fn default() -> Self {
+        Self {
+            checkpoint_equivalence: true,
+            divergence_detection_enabled: true,
+        }
+    }
+}
+
+#[derive(Clone, Debug, Eq, PartialEq, Serialize)]
+pub struct RuntimeDeploymentRecovery {
+    pub deployment_continuity_restored: bool,
+}
+
+impl Default for RuntimeDeploymentRecovery {
+    fn default() -> Self {
+        Self {
+            deployment_continuity_restored: true,
+        }
+    }
+}

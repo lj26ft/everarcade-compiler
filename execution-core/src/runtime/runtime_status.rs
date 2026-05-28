@@ -49,6 +49,12 @@ impl RuntimeSurfaceAudit {
                 reason: "deterministic validation runtime",
             },
             RuntimeSurfaceClassification {
+                module: "execution_core::runtime::activation",
+                status: RuntimeSurfaceStatus::ActiveIntegration,
+                activation: RuntimeActivationStatus::Integrated,
+                reason: "sovereign deterministic runtime activation lifecycle",
+            },
+            RuntimeSurfaceClassification {
                 module: "renderer_client::history",
                 status: RuntimeSurfaceStatus::Scaffold,
                 activation: RuntimeActivationStatus::Scaffold,
