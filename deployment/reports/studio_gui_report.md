@@ -1,4 +1,4 @@
-# Replay UI Report
+# Studio GUI Report
 
 ## GUI readiness
 
