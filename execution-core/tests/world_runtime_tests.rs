@@ -157,3 +157,155 @@ fn test_observer_world_hydration() {
     let hydrated = format!("observer-world:hydrated:{}", recovery.replay_tip);
     assert_eq!(hydrated, "observer-world:hydrated:replay-tip");
 }
+
+#[test]
+fn test_persistent_world_equivalence() {
+    use execution_core::live_world_ops::{LiveUpdatePlan, LiveWorldPlatform, WorldLifecycleState};
+
+    let mut platform = LiveWorldPlatform::create("atlas-live");
+    platform.boot().unwrap();
+    assert_eq!(platform.lifecycle, WorldLifecycleState::Booted);
+    platform.tick("input:harvest").unwrap();
+    platform.shutdown().unwrap();
+    platform.restart().unwrap();
+
+    let mut mirror = LiveWorldPlatform::create("atlas-live");
+    mirror.boot().unwrap();
+    mirror.tick("input:harvest").unwrap();
+    let plan = LiveUpdatePlan::new(1, 2, &platform.world_runtime.world);
+    assert!(plan.validate());
+    assert_eq!(platform.world_runtime.world, mirror.world_runtime.world);
+}
+
+#[test]
+fn test_multiplayer_session_equivalence() {
+    use execution_core::live_world_ops::LiveWorldPlatform;
+
+    let mut a = LiveWorldPlatform::create("coop");
+    let mut b = LiveWorldPlatform::create("coop");
+    assert_eq!(a.host().unwrap(), b.host().unwrap());
+    assert_eq!(a.join("player-a").unwrap(), b.join("player-a").unwrap());
+    assert_eq!(a.join("player-b").unwrap(), b.join("player-b").unwrap());
+    assert_eq!(a.multiplayer, b.multiplayer);
+}
+
+#[test]
+fn test_session_continuity() {
+    use execution_core::live_world_ops::{validate_session, LiveWorldPlatform};
+
+    let mut platform = LiveWorldPlatform::create("session-world");
+    platform.host().unwrap();
+    let session = platform.join("alice").unwrap();
+    assert!(validate_session(&session));
+    assert_eq!(session.restore().unwrap(), session);
+}
+
+#[test]
+fn test_world_recovery_equivalence() {
+    use execution_core::live_world_ops::{LiveWorldPlatform, WorldLifecycleState};
+
+    let mut platform = LiveWorldPlatform::create("recoverable");
+    platform.host().unwrap();
+    platform.tick("input:one").unwrap();
+    let before = platform.world_runtime.world.clone();
+    platform.persist_current_checkpoint().unwrap();
+    platform.recover_from_latest().unwrap();
+    assert_eq!(platform.lifecycle, WorldLifecycleState::Hosted);
+    assert_eq!(platform.world_runtime.world, before);
+}
+
+#[test]
+fn test_world_upgrade_equivalence() {
+    use execution_core::live_world_ops::{LiveUpdatePlan, LiveWorldPlatform};
+
+    let mut platform = LiveWorldPlatform::create("upgradeable");
+    platform.host().unwrap();
+    let plan = LiveUpdatePlan::new(7, 8, &platform.world_runtime.world);
+    platform.migrate(&plan).unwrap();
+    assert!(platform
+        .world_runtime
+        .world
+        .replay_tip
+        .contains(&plan.migration_root));
+    assert!(plan.validate());
+}
+
+#[test]
+fn test_runtime_monitoring_equivalence() {
+    use execution_core::live_world_ops::LiveWorldPlatform;
+
+    let mut platform = LiveWorldPlatform::create("monitored");
+    platform.host().unwrap();
+    platform.join("operator").unwrap();
+    platform.deploy("monitored-game", 1).unwrap();
+    let dashboard = platform.dashboard();
+    assert_eq!(dashboard.online_players, 1);
+    assert!(dashboard.validate(&platform.world_runtime.world));
+    assert_eq!(dashboard.deployment_health, "live");
+}
+
+#[test]
+fn test_deployment_automation_equivalence() {
+    use execution_core::live_world_ops::LiveWorldPlatform;
+
+    let mut a = LiveWorldPlatform::create("deployable");
+    let mut b = LiveWorldPlatform::create("deployable");
+    a.host().unwrap();
+    b.host().unwrap();
+    let deployed_a = a.deploy("published-game", 3).unwrap();
+    let deployed_b = b.deploy("published-game", 3).unwrap();
+    assert_eq!(deployed_a, deployed_b);
+    assert_eq!(deployed_a.status, "live");
+    assert!(deployed_a.verified_root.ends_with(":live"));
+}
+
+#[test]
+fn test_live_world_operations() {
+    use execution_core::live_world_ops::{AdminAction, LiveWorldPlatform};
+
+    let mut platform = LiveWorldPlatform::create("operated");
+    platform.host().unwrap();
+    platform.join("moderator").unwrap();
+    let receipt = platform
+        .apply_admin_action(AdminAction::UpdateWorldSetting {
+            key: "motd".into(),
+            value: "hello".into(),
+        })
+        .unwrap();
+    assert!(receipt.action_root.contains("admin:setting"));
+    assert_eq!(platform.admin_log.len(), 1);
+    assert!(platform.dashboard().validate(&platform.world_runtime.world));
+}
+
+#[test]
+fn test_replay_safe_multiplayer() {
+    use execution_core::{
+        live_world_ops::LiveWorldPlatform,
+        persistent_multiplayer::validation::reject_replay_authority_mutation,
+        world_persistence::validation::reject_non_append_only,
+    };
+
+    let mut platform = LiveWorldPlatform::create("replay-safe");
+    platform.host().unwrap();
+    platform.join("peer-a").unwrap();
+    let old_len = platform.persistence.archive.entries.len();
+    platform.tick("input:deterministic").unwrap();
+    assert!(reject_non_append_only(old_len, platform.persistence.archive.entries.len()).is_ok());
+    assert!(reject_replay_authority_mutation(true).is_err());
+}
+
+#[test]
+fn test_marketplace_runtime_integration() {
+    use execution_core::live_world_ops::LiveWorldPlatform;
+
+    let mut platform = LiveWorldPlatform::create("market-world");
+    platform.host().unwrap();
+    platform.deploy("market-game", 1).unwrap();
+    let listing = platform
+        .marketplace_listing("creator:ada", "persistent-world")
+        .unwrap();
+    assert_eq!(listing.published_game, "market-game");
+    assert_eq!(listing.live_world, "market-world");
+    assert_eq!(listing.creator_profile, "creator:ada");
+    assert_eq!(listing.template, "persistent-world");
+}
