@@ -397,4 +397,104 @@ mod tests {
         }
         assert!(app.request_authority_mutation(true).is_err());
     }
+
+    #[test]
+    fn test_creator_pipeline_equivalence() {
+        let app = StudioGuiApp::new();
+        for step in [
+            "Install Studio",
+            "Create Project",
+            "Choose Template",
+            "Create Gameplay",
+            "Build World",
+            "Run Multiplayer",
+            "Publish",
+            "Players Join",
+        ] {
+            assert!(app.workflow.steps.contains(&step));
+        }
+        assert!(app.gui_readiness());
+    }
+
+    #[test]
+    fn test_template_generation_equivalence() {
+        let templates = world_authoring::template_catalog();
+        assert_eq!(templates.len(), 8);
+        assert!(templates.iter().all(|template| template.runnable));
+        assert_eq!(templates, world_authoring::template_catalog());
+    }
+
+    #[test]
+    fn test_play_mode_equivalence() {
+        let app = StudioGuiApp::new();
+        for mode in [
+            "single player",
+            "multiplayer",
+            "persistent world",
+            "replay mode",
+        ] {
+            assert!(app.workflow.play_modes.contains(&mode));
+        }
+    }
+
+    #[test]
+    fn test_multiplayer_creation_equivalence() {
+        let app = StudioGuiApp::new();
+        assert!(app.workflow.steps.contains(&"Run Multiplayer"));
+        assert!(app.multiplayer.no_networking_setup);
+        assert!(app.multiplayer.actions.contains(&"Host World"));
+    }
+
+    #[test]
+    fn test_package_generation_equivalence() {
+        let app = StudioGuiApp::new();
+        for artifact in [
+            "game package",
+            "runtime package",
+            "world package",
+            "asset package",
+            "deployment package",
+        ] {
+            assert!(app.workflow.package_artifacts.contains(&artifact));
+        }
+    }
+
+    #[test]
+    fn test_publish_workflow_equivalence() {
+        let mut world = world_authoring::WorldAuthoringState::sample();
+        assert_eq!(world.publish_game().unwrap(), "Game Live");
+        assert!(world.publish.infrastructure_hidden);
+    }
+
+    #[test]
+    fn test_protocol_readiness() {
+        let app = StudioGuiApp::new();
+        for report in [
+            "protocol readiness",
+            "creator readiness",
+            "deployment readiness",
+            "ecosystem readiness",
+        ] {
+            assert!(app.workflow.readiness_reports.contains(&report));
+        }
+    }
+
+    #[test]
+    fn test_creator_readiness() {
+        let app = StudioGuiApp::new();
+        assert!(app.gui_readiness());
+        assert!(app.workflow.metrics_opt_in_local_only);
+        assert!(app.workflow.single_validation_action);
+    }
+
+    #[test]
+    fn test_replay_safe_pipeline() {
+        let app = StudioGuiApp::new();
+        assert!(app
+            .workflow
+            .validation_checks
+            .contains(&"replay validation"));
+        assert!(app.replay.request_replay_mutation(true).is_err());
+        assert!(app.request_authority_mutation(true).is_err());
+    }
 }

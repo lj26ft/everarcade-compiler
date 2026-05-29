@@ -72,12 +72,14 @@ impl CreatorWorkflowSurface {
         ];
         let drag_drop_targets = vec!["world", "hierarchy", "packages", "entities"];
         let templates = vec![
-            "Top Down Arena",
-            "RPG World",
-            "Civilization World",
-            "Persistent Sandbox",
-            "Cooperative Dungeon",
-            "RTS Prototype",
+            "Arena",
+            "Action RPG",
+            "Civilization",
+            "RTS",
+            "Survival",
+            "Sandbox",
+            "Dungeon Crawler",
+            "MMO Prototype",
         ];
         let local_runtime_launches = vec!["runtime", "replay", "simulation", "diagnostics"];
         let publish_pipeline = vec!["Validate", "Package", "Sign", "Deploy", "Verify", "Publish"];
@@ -218,7 +220,7 @@ pub fn asset_dragdrop_equivalence() -> bool {
 
 pub fn template_creation_equivalence() -> bool {
     let surface = CreatorWorkflowSurface::sample();
-    surface.templates.len() == 6 && surface.templates == CreatorWorkflowSurface::sample().templates
+    surface.templates.len() == 8 && surface.templates == CreatorWorkflowSurface::sample().templates
 }
 
 pub fn local_runtime_launch() -> bool {
