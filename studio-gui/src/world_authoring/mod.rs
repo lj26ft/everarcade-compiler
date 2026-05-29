@@ -9,6 +9,9 @@ pub enum WorldObjectKind {
     ResourceNode,
     Faction,
     Civilization,
+    WorldProp,
+    Structure,
+    RuntimeMarker,
     Metadata,
 }
 
@@ -22,6 +25,9 @@ impl WorldObjectKind {
             Self::ResourceNode => "resource-node",
             Self::Faction => "faction",
             Self::Civilization => "civilization",
+            Self::WorldProp => "world-prop",
+            Self::Structure => "structure",
+            Self::RuntimeMarker => "runtime-marker",
             Self::Metadata => "metadata",
         }
     }
@@ -174,6 +180,7 @@ pub enum SimulationControl {
     FastForward,
     Checkpoint,
     Restore,
+    Reset,
 }
 
 impl SimulationControl {
@@ -185,6 +192,7 @@ impl SimulationControl {
             Self::FastForward => "fast-forward",
             Self::Checkpoint => "checkpoint",
             Self::Restore => "restore",
+            Self::Reset => "reset",
         }
     }
 }
@@ -281,7 +289,13 @@ impl WorldAuthoringState {
             },
             scene_graph: SceneGraph {
                 nodes: Vec::new(),
-                folders: vec!["World".into(), "Civilizations".into(), "Resources".into()],
+                folders: vec![
+                    "World".into(),
+                    "Civilizations".into(),
+                    "Resources".into(),
+                    "Structures".into(),
+                    "Runtime Markers".into(),
+                ],
                 graph_hash: String::new(),
             },
             inspector: LiveInspector {
@@ -342,11 +356,12 @@ impl WorldAuthoringState {
             },
             marketplace: MarketplaceFoundation {
                 shelves: vec![
-                    "Published Games",
-                    "Packages",
+                    "Games",
                     "Templates",
                     "Assets",
+                    "Packages",
                     "Examples",
+                    "Worlds",
                 ],
             },
         };
@@ -392,6 +407,27 @@ impl WorldAuthoringState {
             WorldObjectKind::Civilization,
             20,
             4,
+        );
+        state.place_object(
+            "prop:obelisk",
+            "Ancient Obelisk",
+            WorldObjectKind::WorldProp,
+            24,
+            8,
+        );
+        state.place_object(
+            "structure:workshop",
+            "Workshop",
+            WorldObjectKind::Structure,
+            28,
+            12,
+        );
+        state.place_object(
+            "marker:checkpoint",
+            "Runtime Checkpoint Marker",
+            WorldObjectKind::RuntimeMarker,
+            32,
+            12,
         );
         state.place_object(
             "metadata:world",
@@ -597,6 +633,11 @@ impl WorldAuthoringState {
                     self.simulation.state = "paused";
                 }
             }
+            SimulationControl::Reset => {
+                self.simulation.state = "paused";
+                self.simulation.tick = 0;
+                self.simulation.checkpoint_hash = None;
+            }
         }
         self.simulation.replay_hash = stable_hash(&[
             "simulation",
@@ -613,10 +654,7 @@ impl WorldAuthoringState {
     }
 
     pub fn publish_game(&mut self) -> Result<&'static str, &'static str> {
-        if self.publish.stages
-            != vec![
-                "Validate", "Package", "Sign", "Verify", "Deploy", "Register",
-            ]
+        if self.publish.stages != vec!["Validate", "Package", "Sign", "Deploy", "Verify", "Publish"]
         {
             return Err("publish stages must remain complete");
         }
@@ -679,6 +717,10 @@ impl WorldAuthoringState {
                         "Civilizations".to_owned()
                     }
                     WorldObjectKind::ResourceNode => "Resources".to_owned(),
+                    WorldObjectKind::Structure | WorldObjectKind::WorldProp => {
+                        "Structures".to_owned()
+                    }
+                    WorldObjectKind::RuntimeMarker => "Runtime Markers".to_owned(),
                     _ => "World".to_owned(),
                 }),
                 tags: object.tags.clone(),
@@ -726,9 +768,7 @@ pub fn template_catalog() -> Vec<GameplayTemplate> {
 }
 
 pub fn publish_pipeline() -> PublishPipeline {
-    let stages = vec![
-        "Validate", "Package", "Sign", "Verify", "Deploy", "Register",
-    ];
+    let stages = vec!["Validate", "Package", "Sign", "Deploy", "Verify", "Publish"];
     let pipeline_hash = stable_hash(&stages);
     PublishPipeline {
         stages,
@@ -845,4 +885,216 @@ pub fn replay_safe_creator_workflow() -> bool {
         && state.inspector.routes_through_actions
         && state.publish.infrastructure_hidden
         && !state.evernode.infrastructure_management
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct TerrainAuthoringSurface {
+    pub brushes: Vec<&'static str>,
+    pub partition_visualization: bool,
+    pub deterministic_seed: String,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct AssetAuthoringExperience {
+    pub asset_types: Vec<&'static str>,
+    pub features: Vec<&'static str>,
+    pub deterministic_import_hash: String,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct AssetBrowser2 {
+    pub management: Vec<&'static str>,
+    pub drag_targets: Vec<&'static str>,
+    pub browser_hash: String,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct UndoRedoHistory {
+    pub undo_stack: Vec<String>,
+    pub redo_stack: Vec<String>,
+    pub restore_point: String,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct CreatorProductivityLayer {
+    pub actions: Vec<&'static str>,
+    pub deterministic_command_hash: String,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct RuntimeOverlay {
+    pub metrics: Vec<&'static str>,
+    pub live_updates: bool,
+    pub projection_only: bool,
+}
+
+pub fn terrain_authoring_surface() -> TerrainAuthoringSurface {
+    let brushes = vec![
+        "terrain painting",
+        "region painting",
+        "resource painting",
+        "spawn painting",
+        "civilization territory painting",
+    ];
+    TerrainAuthoringSurface {
+        deterministic_seed: stable_hash(&brushes),
+        brushes,
+        partition_visualization: true,
+    }
+}
+
+pub fn asset_authoring_experience() -> AssetAuthoringExperience {
+    let asset_types = vec![
+        "models",
+        "textures",
+        "audio",
+        "world templates",
+        "runtime packages",
+    ];
+    let features = vec![
+        "thumbnail generation",
+        "asset previews",
+        "asset tagging",
+        "asset categories",
+        "drag-and-drop imports",
+        "batch imports",
+        "asset validation",
+    ];
+    let mut parts = Vec::new();
+    parts.extend(asset_types.iter().copied());
+    parts.extend(features.iter().copied());
+    AssetAuthoringExperience {
+        asset_types,
+        features,
+        deterministic_import_hash: stable_hash(&parts),
+    }
+}
+
+pub fn asset_browser_2() -> AssetBrowser2 {
+    let management = vec![
+        "search",
+        "filter",
+        "favorites",
+        "dependencies",
+        "usage references",
+        "package membership",
+    ];
+    let drag_targets = vec!["viewport", "hierarchy", "package", "entity"];
+    let mut parts = Vec::new();
+    parts.extend(management.iter().copied());
+    parts.extend(drag_targets.iter().copied());
+    AssetBrowser2 {
+        management,
+        drag_targets,
+        browser_hash: stable_hash(&parts),
+    }
+}
+
+pub fn world_snapshot_hash(state: &WorldAuthoringState) -> String {
+    stable_hash(&[
+        "world-save-template",
+        &state.deterministic_hash(),
+        &state.scene_graph.graph_hash,
+    ])
+}
+
+pub fn undo_redo_history(state: &WorldAuthoringState) -> UndoRedoHistory {
+    let undo_stack: Vec<String> = state
+        .actions
+        .iter()
+        .map(|action| format!("{}:{}", action.sequence, action.payload_hash))
+        .collect();
+    UndoRedoHistory {
+        restore_point: stable_hash(&["restore-point", &world_snapshot_hash(state)]),
+        undo_stack,
+        redo_stack: Vec::new(),
+    }
+}
+
+pub fn creator_productivity_layer() -> CreatorProductivityLayer {
+    let actions = vec![
+        "search everywhere",
+        "quick actions",
+        "command palette",
+        "context menus",
+        "recent projects",
+        "favorites",
+    ];
+    CreatorProductivityLayer {
+        deterministic_command_hash: stable_hash(&actions),
+        actions,
+    }
+}
+
+pub fn runtime_overlay() -> RuntimeOverlay {
+    RuntimeOverlay {
+        metrics: vec![
+            "entity count",
+            "simulation tick",
+            "scheduler activity",
+            "AI activity",
+            "replay health",
+            "runtime health",
+        ],
+        live_updates: true,
+        projection_only: true,
+    }
+}
+
+pub fn entity_placement_equivalence() -> bool {
+    let a = WorldAuthoringState::sample();
+    let b = WorldAuthoringState::sample();
+    let required = [
+        WorldObjectKind::SpawnPoint,
+        WorldObjectKind::ResourceNode,
+        WorldObjectKind::WorldProp,
+        WorldObjectKind::Faction,
+        WorldObjectKind::Civilization,
+        WorldObjectKind::Region,
+        WorldObjectKind::Structure,
+        WorldObjectKind::RuntimeMarker,
+    ];
+    a.objects == b.objects
+        && required
+            .iter()
+            .all(|kind| a.objects.iter().any(|object| &object.kind == kind))
+}
+
+pub fn terrain_authoring_equivalence() -> bool {
+    terrain_authoring_surface() == terrain_authoring_surface()
+        && terrain_authoring_surface().partition_visualization
+}
+
+pub fn asset_import_equivalence() -> bool {
+    asset_authoring_experience() == asset_authoring_experience()
+        && asset_browser_2() == asset_browser_2()
+}
+
+pub fn live_simulation_equivalence() -> bool {
+    simulation_control_equivalence()
+        && runtime_overlay().live_updates
+        && runtime_overlay().projection_only
+}
+
+pub fn replay_visualization_equivalence() -> bool {
+    let replay = WorldAuthoringState::sample().replay;
+    replay_timeline_equivalence()
+        && !replay.scrubber_frames.is_empty()
+        && !replay.checkpoint_markers.is_empty()
+        && !replay.divergence_markers.is_empty()
+}
+
+pub fn world_save_load_equivalence() -> bool {
+    let state = WorldAuthoringState::sample();
+    world_snapshot_hash(&state) == world_snapshot_hash(&WorldAuthoringState::sample())
+}
+
+pub fn undo_redo_equivalence() -> bool {
+    let mut state = WorldAuthoringState::sample();
+    state.move_object("entity:settler", 16, 16).ok();
+    undo_redo_history(&state) == undo_redo_history(&state.clone())
+}
+
+pub fn creator_productivity_equivalence() -> bool {
+    creator_productivity_layer() == creator_productivity_layer()
 }

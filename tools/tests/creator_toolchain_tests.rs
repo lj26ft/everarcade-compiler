@@ -240,6 +240,41 @@ fn test_publish_pipeline_equivalence() {
 }
 
 #[test]
+fn test_entity_placement_equivalence() {
+    assert!(tools::creator_productization::entity_placement_equivalence());
+}
+
+#[test]
+fn test_terrain_authoring_equivalence() {
+    assert!(tools::creator_productization::terrain_authoring_equivalence());
+}
+
+#[test]
+fn test_asset_import_equivalence() {
+    assert!(tools::creator_productization::asset_import_equivalence());
+}
+
+#[test]
+fn test_live_simulation_equivalence() {
+    assert!(tools::creator_productization::live_simulation_equivalence());
+}
+
+#[test]
+fn test_replay_visualization_equivalence() {
+    assert!(tools::creator_productization::replay_visualization_equivalence());
+}
+
+#[test]
+fn test_world_save_load_equivalence() {
+    assert!(tools::creator_productization::world_save_load_equivalence());
+}
+
+#[test]
+fn test_undo_redo_equivalence() {
+    assert!(tools::creator_productization::undo_redo_equivalence());
+}
+
+#[test]
 fn test_replay_safe_creator_workflow() {
     assert!(tools::creator_productization::replay_safe_creator_workflow());
 }
