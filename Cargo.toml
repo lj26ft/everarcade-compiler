@@ -18,6 +18,8 @@ members = [
     "src-bin-everarcade",
     "runtime/client",
     "runtime/renderer-client",
+    "tools",
+    "runtime/content-registry",
 ]
 
 resolver = "2"

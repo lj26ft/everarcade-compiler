@@ -1,0 +1,13 @@
+[package]
+name = "content-registry"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "content_registry"
+path = "src/lib.rs"
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+sha2 = "0.10"
+hex = "0.4"

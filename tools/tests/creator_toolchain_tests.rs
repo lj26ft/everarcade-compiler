@@ -1,0 +1,120 @@
+use tools::{
+    asset_pipeline, content_packager, creator_dashboard, ecs_editor, editor, entity_inspector,
+    hot_reload, replay_visualizer, simulation_debugger,
+};
+
+const FRAMES: &[&str] = &["tick=1,state=a", "tick=2,state=b", "tick=3,state=c"];
+const COMPONENTS: &[&str] = &["ai", "position", "velocity"];
+
+#[test]
+fn test_editor_replay_equivalence() {
+    assert!(editor::validation::editor_replay_equivalence(FRAMES));
+    assert!(editor::runtime::request_authority_bypass(false).is_ok());
+    assert!(editor::runtime::request_authority_bypass(true).is_err());
+}
+
+#[test]
+fn test_ecs_authoring_equivalence() {
+    assert!(ecs_editor::validation::ecs_authoring_equivalence(
+        COMPONENTS
+    ));
+    assert!(ecs_editor::system::reject_nondeterministic_order(&[
+        "ai",
+        "physics",
+        "render-projection"
+    ])
+    .is_ok());
+    assert!(ecs_editor::system::reject_nondeterministic_order(&["physics", "ai"]).is_err());
+}
+
+#[test]
+fn test_replay_visualizer_equivalence() {
+    assert!(replay_visualizer::session::replay_visualizer_equivalence(
+        FRAMES
+    ));
+    assert!(replay_visualizer::session::request_replay_mutation(true).is_err());
+}
+
+#[test]
+fn test_asset_pipeline_hash_equivalence() {
+    assert!(asset_pipeline::validation::asset_pipeline_hash_equivalence(
+        "hero",
+        b"pixel-data"
+    ));
+    assert!(asset_pipeline::validation::validate_asset_compatibility("image").is_ok());
+    assert!(asset_pipeline::validation::validate_asset_compatibility("wall-clock-plugin").is_err());
+}
+
+#[test]
+fn test_hot_reload_restoration() {
+    assert!(hot_reload::validation::hot_reload_restoration(
+        "state-root-1"
+    ));
+    assert!(hot_reload::validation::reject_invalid_reload(true).is_err());
+}
+
+#[test]
+fn test_entity_inspector_replay_safety() {
+    assert!(entity_inspector::validation::entity_inspector_replay_safety("entity-1", COMPONENTS));
+    assert!(entity_inspector::validation::request_authority_bypass(true).is_err());
+}
+
+#[test]
+fn test_simulation_debugger_equivalence() {
+    assert!(simulation_debugger::validation::simulation_debugger_equivalence(FRAMES));
+    assert!(simulation_debugger::validation::request_authority_mutation(true).is_err());
+}
+
+#[test]
+fn test_content_package_hash_equivalence() {
+    assert!(
+        content_packager::validation::content_package_hash_equivalence(
+            "arena",
+            &["asset-a", "asset-b"]
+        )
+    );
+    assert!(content_packager::runtime::validate_runtime_compatibility("everarcade-0.1").is_ok());
+    assert!(content_packager::runtime::validate_runtime_compatibility("foreign-runtime").is_err());
+}
+
+#[test]
+fn test_content_registry_continuity() {
+    assert!(content_registry::validation::content_registry_continuity(
+        "arena", "hash-a"
+    ));
+    assert!(content_registry::validation::reject_invalid_package_mutation(true).is_err());
+}
+
+#[test]
+fn test_creator_dashboard_equivalence() {
+    assert!(creator_dashboard::validation::creator_dashboard_equivalence("project-1"));
+    assert!(creator_dashboard::validation::reject_invalid_package_mutation(true).is_err());
+}
+
+#[test]
+fn test_authority_mutation_rejection() {
+    assert!(tools::reject_authority_bypass(true).is_err());
+    assert!(tools::reject_replay_mutation(true).is_err());
+}
+
+#[test]
+fn test_replay_safe_creator_surfaces() {
+    for diagnostic in [
+        editor::validation::validate_editor_surface(),
+        ecs_editor::validation::validate_ecs_authoring(),
+        replay_visualizer::session::replay_visualizer_diagnostic(),
+        hot_reload::validation::validate_hot_reload("checkpoint-a"),
+        entity_inspector::validation::validate_entity_inspector(),
+        simulation_debugger::validation::validate_simulation_debugger(),
+        creator_dashboard::validation::validate_creator_dashboard(),
+        content_packager::validation::validate_content_packaging(),
+    ] {
+        assert!(diagnostic.deterministic);
+        assert_eq!(diagnostic.replay_continuity, "preserved");
+        assert!(!diagnostic.renderer_authoritative);
+        assert_eq!(
+            diagnostic.authority_boundary,
+            "deterministic-execution-runtime-only"
+        );
+    }
+}

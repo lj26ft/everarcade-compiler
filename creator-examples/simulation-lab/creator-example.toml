@@ -1,0 +1,11 @@
+[example]
+id = "simulation-lab"
+deterministic = true
+replay_safe = true
+offline_compile = true
+
+[tooling]
+visual_editor = true
+ecs_authoring = true
+content_packaging = true
+validation = "creator-toolchain"
