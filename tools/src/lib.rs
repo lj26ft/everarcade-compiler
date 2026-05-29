@@ -50,6 +50,7 @@ pub fn reject_replay_mutation(requested: bool) -> Result<(), &'static str> {
 }
 
 pub mod creator_productization;
+pub mod vertical_slice_certification;
 
 pub mod editor {
     pub mod runtime {
