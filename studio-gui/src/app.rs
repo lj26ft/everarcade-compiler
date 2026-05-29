@@ -5,6 +5,7 @@ use crate::{
     viewport::{self, RuntimeProjection, ViewportState},
     window::StudioWindow,
     workspace::{self, StudioWorkspace},
+    world_authoring::{self, WorldAuthoringState},
 };
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -78,6 +79,7 @@ pub struct StudioGuiApp {
     pub publishing: PublishingPanel,
     pub deployment: DeploymentPanel,
     pub workflow: CreatorWorkflow,
+    pub world_authoring: WorldAuthoringState,
     pub deterministic_runtime_authority: bool,
 }
 
@@ -174,6 +176,7 @@ impl StudioGuiApp {
                 actions: vec!["deploy", "validate", "restore", "rollback"],
             },
             workflow: creator_workflow(),
+            world_authoring: WorldAuthoringState::sample(),
             deterministic_runtime_authority: true,
             viewport_projection,
         }
@@ -224,6 +227,7 @@ impl StudioGuiApp {
             && !self.workspace.projects.is_empty()
             && !self.workspace.runtime_sessions.is_empty()
             && self.deterministic_runtime_authority
+            && world_authoring::replay_safe_creator_workflow()
     }
 }
 
@@ -250,6 +254,14 @@ impl eframe::App for StudioGuiApp {
                 self.viewport_projection.projection_hash
             ));
             ui.label("Renderer is projection-only and non-authoritative.");
+            ui.label(format!(
+                "World objects: {}",
+                self.world_authoring.objects.len()
+            ));
+            ui.label(format!(
+                "Publish result: {}",
+                self.world_authoring.publish.result
+            ));
         });
         egui::TopBottomPanel::bottom("timeline").show(ctx, |ui| {
             ui.heading("Replay / Assets / Console");
@@ -271,7 +283,9 @@ pub fn creator_workflow() -> CreatorWorkflow {
         "Inspect Replay",
         "Inspect Runtime",
         "Package Content",
-        "Deploy Runtime",
+        "Run Locally",
+        "Publish Game",
+        "Game Live On EverNode",
     ];
     let workflow_hash = stable_hash(&steps);
     CreatorWorkflow {

@@ -188,3 +188,58 @@ fn test_replay_safe_studio_surfaces() {
     assert!(studio::runtime::request_authority_bypass(true).is_err());
     assert!(inspector::runtime::request_direct_mutation(true).is_err());
 }
+
+#[test]
+fn test_world_authoring_equivalence() {
+    assert!(tools::creator_productization::world_authoring_equivalence());
+}
+
+#[test]
+fn test_gizmo_equivalence() {
+    assert!(tools::creator_productization::gizmo_equivalence());
+}
+
+#[test]
+fn test_scene_graph_equivalence() {
+    assert!(tools::creator_productization::scene_graph_equivalence());
+}
+
+#[test]
+fn test_live_edit_equivalence() {
+    assert!(tools::creator_productization::live_edit_equivalence());
+}
+
+#[test]
+fn test_simulation_control_equivalence() {
+    assert!(tools::creator_productization::simulation_control_equivalence());
+}
+
+#[test]
+fn test_visual_replay_timeline_equivalence() {
+    assert!(tools::creator_productization::replay_timeline_equivalence());
+}
+
+#[test]
+fn test_asset_dragdrop_equivalence() {
+    assert!(tools::creator_productization::asset_dragdrop_equivalence());
+}
+
+#[test]
+fn test_template_creation_equivalence() {
+    assert!(tools::creator_productization::template_creation_equivalence());
+}
+
+#[test]
+fn test_local_runtime_launch() {
+    assert!(tools::creator_productization::local_runtime_launch());
+}
+
+#[test]
+fn test_publish_pipeline_equivalence() {
+    assert!(tools::creator_productization::publish_pipeline_equivalence());
+}
+
+#[test]
+fn test_replay_safe_creator_workflow() {
+    assert!(tools::creator_productization::replay_safe_creator_workflow());
+}

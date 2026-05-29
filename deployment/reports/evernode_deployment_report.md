@@ -1,8 +1,9 @@
-# evernode deployment report
+# EverNode Deployment Report
 
-- Transport status: operational scaffold with loopback deterministic validation.
-- Replay continuity status: continuity roots preserved and divergent roots rejected.
-- Reconnect status: cursor/checkpoint resume modeled as replay-only catch-up.
-- Observer status: non-authoritative replay hydration only.
-- Health-check status: readiness gates require network, storage, recovery, observer, and non-authoritative mode.
-- Deployment readiness status: EverNode-oriented append-only replay storage and stdout diagnostics.
+## Coverage
+- Runtime size, node requirements, validation, confirmation, and deployment status are Studio wizard fields.
+- Publish confirmation maps to Validate, Package, Sign, Verify, Deploy, and Register.
+- The workflow is creator-facing and avoids manual federation or replay topology configuration.
+
+## Result
+A successful publish produces Game Live on EverNode.
