@@ -20,6 +20,7 @@ members = [
     "runtime/renderer-client",
     "tools",
     "runtime/content-registry",
+    "studio-gui",
 ]
 
 resolver = "2"

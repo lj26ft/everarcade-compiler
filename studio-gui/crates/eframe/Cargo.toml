@@ -1,0 +1,10 @@
+[package]
+name = "eframe"
+version = "0.0.1"
+edition = "2021"
+
+[dependencies]
+egui = { path = "../egui" }
+
+[lib]
+path = "src/lib.rs"
