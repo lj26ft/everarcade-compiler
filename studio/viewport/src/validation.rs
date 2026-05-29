@@ -1,0 +1,3 @@
+use crate::viewport::{camera, render, runtime, selection};
+pub fn validate_viewport() -> crate::CreatorDiagnostic { crate::diagnostic("viewport", &["projection-only", "camera", "selection", "replay-playback"] ) }
+pub fn viewport_projection_integrity() -> bool { let p = runtime::project_runtime_state("state", 7); let c = camera::camera_projection("main", 0, 0, 1); let r = render::render_projection(&p.projection_hash, &c); let s = selection::select_entity(&p.projection_hash, "e1"); !p.authority_mutation && !render::renderer_is_authoritative() && r == render::render_projection(&p.projection_hash, &c) && s == selection::select_entity(&p.projection_hash, "e1") }

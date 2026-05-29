@@ -1,0 +1,1 @@
+pub fn hierarchy_tree(world_id: &str, nodes: &[&str]) -> String { let mut sorted = nodes.to_vec(); sorted.sort(); let mut parts = vec!["hierarchy", world_id]; parts.extend(sorted); crate::stable_hash(&parts) }

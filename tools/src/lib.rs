@@ -213,3 +213,183 @@ pub mod content_packager {
         include!("../content-packager/src/validation.rs");
     }
 }
+
+pub mod studio {
+    pub mod app {
+        include!("../../studio/src/app.rs");
+    }
+    pub mod project {
+        include!("../../studio/src/project.rs");
+    }
+    pub mod workspace {
+        include!("../../studio/src/workspace.rs");
+    }
+    pub mod session {
+        include!("../../studio/src/session.rs");
+    }
+    pub mod runtime {
+        include!("../../studio/src/runtime.rs");
+    }
+    pub mod validation {
+        include!("../../studio/src/validation.rs");
+    }
+}
+
+pub mod world_builder {
+    pub mod world {
+        include!("../../studio/world-builder/src/world.rs");
+    }
+    pub mod terrain {
+        include!("../../studio/world-builder/src/terrain.rs");
+    }
+    pub mod placement {
+        include!("../../studio/world-builder/src/placement.rs");
+    }
+    pub mod validation {
+        include!("../../studio/world-builder/src/validation.rs");
+    }
+}
+
+pub mod viewport {
+    pub mod runtime {
+        include!("../../studio/viewport/src/runtime.rs");
+    }
+    pub mod camera {
+        include!("../../studio/viewport/src/camera.rs");
+    }
+    pub mod render {
+        include!("../../studio/viewport/src/render.rs");
+    }
+    pub mod selection {
+        include!("../../studio/viewport/src/selection.rs");
+    }
+    pub mod validation {
+        include!("../../studio/viewport/src/validation.rs");
+    }
+}
+
+pub mod hierarchy {
+    pub mod tree {
+        include!("../../studio/hierarchy/src/tree.rs");
+    }
+    pub mod entity {
+        include!("../../studio/hierarchy/src/entity.rs");
+    }
+    pub mod world {
+        include!("../../studio/hierarchy/src/world.rs");
+    }
+    pub mod validation {
+        include!("../../studio/hierarchy/src/validation.rs");
+    }
+}
+
+pub mod inspector {
+    pub mod entity {
+        include!("../../studio/inspector/src/entity.rs");
+    }
+    pub mod component {
+        include!("../../studio/inspector/src/component.rs");
+    }
+    pub mod runtime {
+        include!("../../studio/inspector/src/runtime.rs");
+    }
+    pub mod validation {
+        include!("../../studio/inspector/src/validation.rs");
+    }
+}
+
+pub mod assets {
+    pub mod browser {
+        include!("../../studio/assets/src/browser.rs");
+    }
+    pub mod import {
+        include!("../../studio/assets/src/import.rs");
+    }
+    pub mod catalog {
+        include!("../../studio/assets/src/catalog.rs");
+    }
+    pub mod validation {
+        include!("../../studio/assets/src/validation.rs");
+    }
+}
+
+pub mod replay {
+    pub mod timeline {
+        include!("../../studio/replay/src/timeline.rs");
+    }
+    pub mod checkpoint {
+        include!("../../studio/replay/src/checkpoint.rs");
+    }
+    pub mod divergence {
+        include!("../../studio/replay/src/divergence.rs");
+    }
+    pub mod playback {
+        include!("../../studio/replay/src/playback.rs");
+    }
+    pub mod validation {
+        include!("../../studio/replay/src/validation.rs");
+    }
+}
+
+pub mod simulation {
+    pub mod ecs {
+        include!("../../studio/simulation/src/ecs.rs");
+    }
+    pub mod ai {
+        include!("../../studio/simulation/src/ai.rs");
+    }
+    pub mod scheduler {
+        include!("../../studio/simulation/src/scheduler.rs");
+    }
+    pub mod partition {
+        include!("../../studio/simulation/src/partition.rs");
+    }
+    pub mod validation {
+        include!("../../studio/simulation/src/validation.rs");
+    }
+}
+
+pub mod diagnostics {
+    pub mod runtime {
+        include!("../../studio/diagnostics/src/runtime.rs");
+    }
+    pub mod health {
+        include!("../../studio/diagnostics/src/health.rs");
+    }
+    pub mod replay {
+        include!("../../studio/diagnostics/src/replay.rs");
+    }
+    pub mod validation {
+        include!("../../studio/diagnostics/src/validation.rs");
+    }
+}
+
+pub mod publishing {
+    pub mod package {
+        include!("../../studio/publishing/src/package.rs");
+    }
+    pub mod preview {
+        include!("../../studio/publishing/src/preview.rs");
+    }
+    pub mod signing {
+        include!("../../studio/publishing/src/signing.rs");
+    }
+    pub mod validation {
+        include!("../../studio/publishing/src/validation.rs");
+    }
+}
+
+pub mod deployment {
+    pub mod runtime {
+        include!("../../studio/deployment/src/runtime.rs");
+    }
+    pub mod node {
+        include!("../../studio/deployment/src/node.rs");
+    }
+    pub mod federation {
+        include!("../../studio/deployment/src/federation.rs");
+    }
+    pub mod validation {
+        include!("../../studio/deployment/src/validation.rs");
+    }
+}
