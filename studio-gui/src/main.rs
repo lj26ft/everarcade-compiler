@@ -7,6 +7,7 @@ mod theme;
 mod viewport;
 mod window;
 mod workspace;
+mod world_authoring;
 
 use app::StudioGuiApp;
 
@@ -137,6 +138,71 @@ mod tests {
         let app = StudioGuiApp::new();
         assert!(app.request_authority_mutation(true).is_err());
         assert!(viewport::reject_authority_mutation(true).is_err());
+    }
+
+    #[test]
+    fn test_world_authoring_equivalence() {
+        assert!(world_authoring::world_authoring_equivalence());
+        let mut world = world_authoring::WorldAuthoringState::sample();
+        world.move_object("entity:settler", 9, 9).unwrap();
+        world
+            .duplicate_object("entity:settler", "entity:settler-copy")
+            .unwrap();
+        world.delete_object("entity:settler-copy").unwrap();
+        assert!(world
+            .objects
+            .iter()
+            .any(|object| object.id == "entity:settler"));
+    }
+
+    #[test]
+    fn test_gizmo_equivalence() {
+        assert!(world_authoring::gizmo_equivalence());
+    }
+
+    #[test]
+    fn test_scene_graph_equivalence() {
+        assert!(world_authoring::scene_graph_equivalence());
+    }
+
+    #[test]
+    fn test_live_edit_equivalence() {
+        assert!(world_authoring::live_edit_equivalence());
+    }
+
+    #[test]
+    fn test_simulation_control_equivalence() {
+        assert!(world_authoring::simulation_control_equivalence());
+    }
+
+    #[test]
+    fn test_replay_timeline_equivalence() {
+        assert!(world_authoring::replay_timeline_equivalence());
+    }
+
+    #[test]
+    fn test_asset_dragdrop_equivalence() {
+        assert!(world_authoring::asset_dragdrop_equivalence());
+    }
+
+    #[test]
+    fn test_template_creation_equivalence() {
+        assert!(world_authoring::template_creation_equivalence());
+    }
+
+    #[test]
+    fn test_local_runtime_launch() {
+        assert!(world_authoring::local_runtime_launch());
+    }
+
+    #[test]
+    fn test_publish_pipeline_equivalence() {
+        assert!(world_authoring::publish_pipeline_equivalence());
+    }
+
+    #[test]
+    fn test_replay_safe_creator_workflow() {
+        assert!(world_authoring::replay_safe_creator_workflow());
     }
 
     #[test]
