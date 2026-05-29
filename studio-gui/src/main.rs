@@ -1,9 +1,13 @@
 #![allow(dead_code)]
 
 mod app;
+mod assets;
+mod component_editor;
+mod editing_engine;
 mod interactive_viewport;
 mod layout;
 mod replay;
+mod terrain;
 mod theme;
 mod viewport;
 mod window;
@@ -36,6 +40,56 @@ fn main() -> Result<(), eframe::Error> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_interactive_editing_equivalence() {
+        assert!(editing_engine::validation::interactive_editing_equivalence());
+    }
+
+    #[test]
+    fn test_terrain_sculpting_equivalence() {
+        assert!(terrain::terrain_sculpting_equivalence());
+    }
+
+    #[test]
+    fn test_region_painting_equivalence() {
+        assert!(terrain::region_painting_equivalence());
+    }
+
+    #[test]
+    fn test_entity_dragdrop_equivalence() {
+        assert!(world_authoring::asset_dragdrop_equivalence());
+        assert!(world_authoring::entity_placement_equivalence());
+    }
+
+    #[test]
+    fn test_component_editing_equivalence() {
+        assert!(component_editor::component_editing_equivalence());
+    }
+
+    #[test]
+    fn test_asset_preview_equivalence() {
+        assert!(assets::previews::asset_preview_equivalence());
+    }
+
+    #[test]
+    fn test_live_playmode_equivalence() {
+        assert!(world_authoring::simulation_control_equivalence());
+        assert!(world_authoring::local_runtime_launch());
+    }
+
+    #[test]
+    fn test_creator_production_workflow() {
+        let app = StudioGuiApp::new();
+        assert!(app.workflow.visual_only);
+        assert!(app.gui_readiness());
+        assert!(world_authoring::publish_pipeline_equivalence());
+    }
+
+    #[test]
+    fn test_replay_safe_editor_behavior() {
+        assert!(editing_engine::validation::replay_safe_editor_behavior());
+    }
 
     #[test]
     fn test_workspace_layout_equivalence() {
@@ -241,6 +295,7 @@ mod tests {
     #[test]
     fn test_undo_redo_equivalence() {
         assert!(world_authoring::undo_redo_equivalence());
+        assert!(editing_engine::validation::undo_redo_equivalence());
     }
 
     #[test]
