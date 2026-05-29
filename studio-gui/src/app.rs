@@ -51,6 +51,25 @@ pub struct PublishingPanel {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
+pub struct CommandPalettePanel {
+    pub features: Vec<&'static str>,
+    pub recent_actions: Vec<&'static str>,
+    pub favorites: Vec<&'static str>,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct LiveSimulationOverlay {
+    pub metrics: Vec<&'static str>,
+    pub updates_live: bool,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct SaveLoadPanel {
+    pub operations: Vec<&'static str>,
+    pub deterministic_serialization: bool,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct DeploymentPanel {
     pub surfaces: Vec<&'static str>,
     pub actions: Vec<&'static str>,
@@ -77,6 +96,9 @@ pub struct StudioGuiApp {
     pub simulation: SimulationPanel,
     pub diagnostics: DiagnosticsPanel,
     pub publishing: PublishingPanel,
+    pub command_palette: CommandPalettePanel,
+    pub live_overlay: LiveSimulationOverlay,
+    pub save_load: SaveLoadPanel,
     pub deployment: DeploymentPanel,
     pub workflow: CreatorWorkflow,
     pub world_authoring: WorldAuthoringState,
@@ -157,13 +179,51 @@ impl StudioGuiApp {
             },
             publishing: PublishingPanel {
                 capabilities: vec![
+                    "single publish action",
                     "package preview",
                     "dependency inspection",
                     "manifest inspection",
                     "signing",
                     "package generation",
                     "package verification",
+                    "deployment history",
+                    "deployment rollback",
+                    "deployment verification",
                 ],
+            },
+            command_palette: CommandPalettePanel {
+                features: vec![
+                    "quick search",
+                    "command palette",
+                    "recent actions",
+                    "favorites",
+                    "workspace navigation",
+                ],
+                recent_actions: vec!["paint terrain", "place entity", "run simulation"],
+                favorites: vec!["Publish Game", "Restore Checkpoint"],
+            },
+            live_overlay: LiveSimulationOverlay {
+                metrics: vec![
+                    "entity count",
+                    "partition count",
+                    "simulation tick",
+                    "AI activity",
+                    "scheduler activity",
+                    "runtime health",
+                    "replay health",
+                ],
+                updates_live: true,
+            },
+            save_load: SaveLoadPanel {
+                operations: vec![
+                    "save project",
+                    "save world",
+                    "save template",
+                    "load world",
+                    "clone world",
+                    "restore checkpoint",
+                ],
+                deterministic_serialization: true,
             },
             deployment: DeploymentPanel {
                 surfaces: vec![
@@ -227,6 +287,12 @@ impl StudioGuiApp {
             && !self.workspace.projects.is_empty()
             && !self.workspace.runtime_sessions.is_empty()
             && self.deterministic_runtime_authority
+            && self
+                .command_palette
+                .features
+                .contains(&"workspace navigation")
+            && self.live_overlay.updates_live
+            && self.save_load.deterministic_serialization
             && world_authoring::replay_safe_creator_workflow()
     }
 }
