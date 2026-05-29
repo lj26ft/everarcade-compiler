@@ -1,6 +1,7 @@
 use tools::{
-    asset_pipeline, content_packager, creator_dashboard, ecs_editor, editor, entity_inspector,
-    hot_reload, replay_visualizer, simulation_debugger,
+    asset_pipeline, assets, content_packager, creator_dashboard, deployment, diagnostics,
+    ecs_editor, editor, entity_inspector, hierarchy, hot_reload, inspector, publishing, replay,
+    replay_visualizer, simulation, simulation_debugger, studio, viewport, world_builder,
 };
 
 const FRAMES: &[&str] = &["tick=1,state=a", "tick=2,state=b", "tick=3,state=c"];
@@ -117,4 +118,73 @@ fn test_replay_safe_creator_surfaces() {
             "deterministic-execution-runtime-only"
         );
     }
+}
+
+#[test]
+fn test_world_builder_equivalence() {
+    assert!(world_builder::validation::world_builder_equivalence());
+    assert!(world_builder::placement::reject_hidden_state_mutation(true).is_err());
+}
+
+#[test]
+fn test_asset_pipeline_equivalence() {
+    assert!(assets::validation::asset_pipeline_equivalence());
+}
+
+#[test]
+fn test_viewport_projection_integrity() {
+    assert!(viewport::validation::viewport_projection_integrity());
+}
+
+#[test]
+fn test_replay_timeline_equivalence() {
+    assert!(replay::validation::replay_timeline_equivalence(FRAMES));
+}
+
+#[test]
+fn test_simulation_visualizer_equivalence() {
+    assert!(simulation::validation::simulation_visualizer_equivalence());
+}
+
+#[test]
+fn test_package_hash_equivalence() {
+    assert!(publishing::validation::package_hash_equivalence());
+}
+
+#[test]
+fn test_deployment_continuity() {
+    assert!(deployment::validation::deployment_continuity());
+}
+
+#[test]
+fn test_creator_workflow_equivalence() {
+    assert!(studio::validation::studio_launches());
+    assert!(studio::validation::studio_workflow_equivalence("project-1"));
+}
+
+#[test]
+fn test_replay_safe_studio_surfaces() {
+    for diagnostic in [
+        studio::validation::validate_studio_surface(),
+        world_builder::validation::validate_world_builder(),
+        viewport::validation::validate_viewport(),
+        hierarchy::validation::validate_hierarchy(),
+        inspector::validation::validate_inspector(),
+        assets::validation::validate_asset_browser(),
+        replay::validation::validate_replay_ui(),
+        simulation::validation::validate_simulation_visualizer(),
+        diagnostics::validation::validate_diagnostics(),
+        publishing::validation::validate_publishing(),
+        deployment::validation::validate_deployment_ux(),
+    ] {
+        assert!(diagnostic.deterministic);
+        assert_eq!(diagnostic.replay_continuity, "preserved");
+        assert!(!diagnostic.renderer_authoritative);
+        assert_eq!(
+            diagnostic.authority_boundary,
+            "deterministic-execution-runtime-only"
+        );
+    }
+    assert!(studio::runtime::request_authority_bypass(true).is_err());
+    assert!(inspector::runtime::request_direct_mutation(true).is_err());
 }

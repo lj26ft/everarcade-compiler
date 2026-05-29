@@ -1,0 +1,3 @@
+use crate::world_builder::{placement::{self, Placement}, terrain, world};
+pub fn validate_world_builder() -> crate::CreatorDiagnostic { crate::diagnostic("visual-world-builder", &["terrain", "placements", "civilizations", "runtime-params"] ) }
+pub fn world_builder_equivalence() -> bool { let t = terrain::terrain_manifest("seed", &["grass", "stone"]); let ps = [Placement{entity_id:"e1".into(), archetype:"settler".into(), x:1, y:2}]; let p = placement::placement_manifest(&ps); world::create_world("w", &t, &p, &["tick=deterministic"]) == world::create_world("w", &t, &p, &["tick=deterministic"]) }

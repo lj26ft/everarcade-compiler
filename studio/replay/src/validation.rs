@@ -1,0 +1,3 @@
+use crate::replay::{checkpoint, divergence, playback, timeline};
+pub fn validate_replay_ui() -> crate::CreatorDiagnostic { crate::diagnostic("replay-timeline-ui", &["timeline", "checkpoint", "continuity-root", "divergence"] ) }
+pub fn replay_timeline_equivalence(frames: &[&str]) -> bool { timeline::scrub_timeline(frames, 1) == timeline::scrub_timeline(frames, 1) && checkpoint::inspect_checkpoint("root") == checkpoint::inspect_checkpoint("root") && divergence::visualize_divergence("a", "b") == divergence::visualize_divergence("a", "b") && playback::playback_hash(frames) == playback::playback_hash(frames) && playback::request_replay_mutation(true).is_err() }

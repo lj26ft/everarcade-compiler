@@ -1,0 +1,3 @@
+use crate::simulation::{ai, ecs, partition, scheduler};
+pub fn validate_simulation_visualizer() -> crate::CreatorDiagnostic { crate::diagnostic("simulation-visualizer", &["ecs", "ai", "scheduler", "partition", "health"] ) }
+pub fn simulation_visualizer_equivalence() -> bool { ecs::ecs_execution_order(&["input", "ai", "physics"]) == ecs::ecs_execution_order(&["input", "ai", "physics"]) && ai::ai_execution("agent", 1) == ai::ai_execution("agent", 1) && scheduler::scheduler_order(&["a", "b"]) == scheduler::scheduler_order(&["a", "b"]) && partition::partition_activity("p", "root") == partition::partition_activity("p", "root") }

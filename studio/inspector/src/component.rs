@@ -1,0 +1,1 @@
+pub fn inspect_components(entity_id: &str, components: &[&str]) -> String { let mut sorted = components.to_vec(); sorted.sort(); let mut parts = vec!["inspect-components", entity_id]; parts.extend(sorted); crate::stable_hash(&parts) }
