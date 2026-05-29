@@ -3,4 +3,4 @@
 - cargo_lock: present
 - cargo_config: .cargo/config.toml
 - vendor_dir: vendor
-- vendor_hash: fdb087531ca9b9e086690c27f75cb8357ac415b4f388aacde7c69d707e73cf5c
+- vendor_hash: bbcdd99d1de1a0c0f5c331c80064ba47ba9f7bf12632e7c13073dfb5610b7b68
