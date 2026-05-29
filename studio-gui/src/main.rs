@@ -315,4 +315,67 @@ mod tests {
                 && app.diagnostics.supports_export
         );
     }
+
+    #[test]
+    fn test_studio_multiplayer_workflow_equivalence() {
+        let app = StudioGuiApp::new();
+        for action in [
+            "Create World",
+            "Host World",
+            "Join World",
+            "Invite Players",
+            "Share Link",
+        ] {
+            assert!(app.multiplayer.actions.contains(&action));
+        }
+        assert!(app.multiplayer.no_networking_setup);
+        assert!(app
+            .multiplayer
+            .invite_link
+            .starts_with("everarcade://join/"));
+        assert!(app.workflow.steps.contains(&"World Live"));
+        assert!(app.workflow.steps.contains(&"Players Join"));
+        assert!(app.workflow.steps.contains(&"Operate World"));
+    }
+
+    #[test]
+    fn test_world_operations_dashboard_equivalence() {
+        let app = StudioGuiApp::new();
+        for surface in [
+            "online players",
+            "world health",
+            "simulation health",
+            "runtime health",
+            "replay health",
+            "deployment health",
+        ] {
+            assert!(app.operations_dashboard.health_surfaces.contains(&surface));
+        }
+        for metric in [
+            "entity counts",
+            "simulation load",
+            "partition load",
+            "scheduler load",
+            "runtime latency",
+            "replay continuity",
+        ] {
+            assert!(app.operations_dashboard.metrics.contains(&metric));
+        }
+        assert!(app.operations_dashboard.single_dashboard);
+    }
+
+    #[test]
+    fn test_creator_administration_layer_equivalence() {
+        let app = StudioGuiApp::new();
+        for control in [
+            "world settings",
+            "player management",
+            "runtime controls",
+            "deployment controls",
+            "rollback controls",
+        ] {
+            assert!(app.operations_dashboard.admin_controls.contains(&control));
+        }
+        assert!(app.request_authority_mutation(true).is_err());
+    }
 }

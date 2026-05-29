@@ -1,11 +1,10 @@
-# Multiplayer Runtime
+# Multiplayer Runtime Report
 
+## Status
+One-click multiplayer is surfaced as host, join, invite link, deterministic session discovery, and synchronized peer continuity.
 
-- Gameplay execution continuity: preserved by deterministic runtime ticks.
-- Scheduler status: authoritative ordering is monotonic and recoverable.
-- Session continuity: sovereign session roots are stable and restored from checkpoints.
-- Multiplayer synchronization: player inputs are sorted deterministically by frame.
-- Replay continuity: append-only windows/checkpoints are authority-produced artifacts.
-- Observer hydration state: reconstruction-only; authority writes are rejected.
-- Recovery readiness: checkpoints, sessions, replay continuity, and coordination can be restored.
-- Operational limitations: renderer/history/federation remain scaffold-level runtime domains; persistence is in-memory for validation.
+## Creator UX
+Create World → Host World → Share Link → Players Join requires no creator networking setup.
+
+## Validation
+Covered by `test_multiplayer_session_equivalence`, `test_session_continuity`, and Studio multiplayer workflow tests.

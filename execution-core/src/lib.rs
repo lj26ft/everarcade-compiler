@@ -41,6 +41,7 @@ pub mod interpretation;
 pub mod jurisprudence;
 pub mod leases;
 pub mod lineage;
+pub mod live_world_ops;
 pub mod merkle;
 pub mod migration;
 pub mod multiplayer;

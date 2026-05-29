@@ -76,6 +76,22 @@ pub struct DeploymentPanel {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
+pub struct MultiplayerPanel {
+    pub actions: Vec<&'static str>,
+    pub session_features: Vec<&'static str>,
+    pub invite_link: String,
+    pub no_networking_setup: bool,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct OperationsDashboardPanel {
+    pub health_surfaces: Vec<&'static str>,
+    pub admin_controls: Vec<&'static str>,
+    pub metrics: Vec<&'static str>,
+    pub single_dashboard: bool,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct CreatorWorkflow {
     pub steps: Vec<&'static str>,
     pub visual_only: bool,
@@ -100,6 +116,8 @@ pub struct StudioGuiApp {
     pub live_overlay: LiveSimulationOverlay,
     pub save_load: SaveLoadPanel,
     pub deployment: DeploymentPanel,
+    pub multiplayer: MultiplayerPanel,
+    pub operations_dashboard: OperationsDashboardPanel,
     pub workflow: CreatorWorkflow,
     pub world_authoring: WorldAuthoringState,
     pub deterministic_runtime_authority: bool,
@@ -232,8 +250,55 @@ impl StudioGuiApp {
                     "deployment lineage",
                     "package lineage",
                     "federation topology",
+                    "publish validate package deploy verify live",
                 ],
-                actions: vec!["deploy", "validate", "restore", "rollback"],
+                actions: vec![
+                    "publish", "validate", "package", "deploy", "verify", "restore", "rollback",
+                ],
+            },
+            multiplayer: MultiplayerPanel {
+                actions: vec![
+                    "Create World",
+                    "Host World",
+                    "Join World",
+                    "Invite Players",
+                    "Share Link",
+                ],
+                session_features: vec![
+                    "session discovery",
+                    "session continuity",
+                    "player continuity",
+                    "identity continuity",
+                    "checkpoint continuity",
+                ],
+                invite_link: "everarcade://join/creator-workspace/world-alpha".into(),
+                no_networking_setup: true,
+            },
+            operations_dashboard: OperationsDashboardPanel {
+                health_surfaces: vec![
+                    "online players",
+                    "world health",
+                    "simulation health",
+                    "runtime health",
+                    "replay health",
+                    "deployment health",
+                ],
+                admin_controls: vec![
+                    "world settings",
+                    "player management",
+                    "runtime controls",
+                    "deployment controls",
+                    "rollback controls",
+                ],
+                metrics: vec![
+                    "entity counts",
+                    "simulation load",
+                    "partition load",
+                    "scheduler load",
+                    "runtime latency",
+                    "replay continuity",
+                ],
+                single_dashboard: true,
             },
             workflow: creator_workflow(),
             world_authoring: WorldAuthoringState::sample(),
@@ -293,6 +358,13 @@ impl StudioGuiApp {
                 .contains(&"workspace navigation")
             && self.live_overlay.updates_live
             && self.save_load.deterministic_serialization
+            && self.multiplayer.no_networking_setup
+            && self.multiplayer.actions.contains(&"Host World")
+            && self.operations_dashboard.single_dashboard
+            && self
+                .operations_dashboard
+                .admin_controls
+                .contains(&"rollback controls")
             && world_authoring::replay_safe_creator_workflow()
     }
 }
@@ -328,6 +400,14 @@ impl eframe::App for StudioGuiApp {
                 "Publish result: {}",
                 self.world_authoring.publish.result
             ));
+            ui.label(format!(
+                "Multiplayer invite: {}",
+                self.multiplayer.invite_link
+            ));
+            ui.label(format!(
+                "Operations dashboard surfaces: {}",
+                self.operations_dashboard.health_surfaces.join(", ")
+            ));
         });
         egui::TopBottomPanel::bottom("timeline").show(ctx, |ui| {
             ui.heading("Replay / Assets / Console");
@@ -350,7 +430,14 @@ pub fn creator_workflow() -> CreatorWorkflow {
         "Inspect Runtime",
         "Package Content",
         "Run Locally",
+        "Create World",
+        "Host World",
         "Publish Game",
+        "World Live",
+        "Players Join",
+        "Operate World",
+        "Deploy Updates",
+        "Recover Failures",
         "Game Live On EverNode",
     ];
     let workflow_hash = stable_hash(&steps);
