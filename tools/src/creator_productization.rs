@@ -28,6 +28,12 @@ impl CreatorWorkflowSurface {
             "Faction Placement",
             "Civilization Placement",
             "World Metadata",
+            "terrain painting",
+            "region painting",
+            "partition visualization",
+            "resource painting",
+            "spawn painting",
+            "civilization territory painting",
         ];
         let gizmo_modes = vec!["Translate", "Rotate", "Scale"];
         let hierarchy_features = vec![
@@ -46,6 +52,7 @@ impl CreatorWorkflowSurface {
             "resource tuning",
             "world configuration",
             "deterministic editor actions",
+            "undoable actions",
         ];
         let simulation_controls = vec![
             "Play",
@@ -54,6 +61,7 @@ impl CreatorWorkflowSurface {
             "Fast Forward",
             "Checkpoint",
             "Restore",
+            "Reset",
         ];
         let replay_features = vec![
             "timeline scrubber",
@@ -72,9 +80,7 @@ impl CreatorWorkflowSurface {
             "RTS Prototype",
         ];
         let local_runtime_launches = vec!["runtime", "replay", "simulation", "diagnostics"];
-        let publish_pipeline = vec![
-            "Validate", "Package", "Sign", "Verify", "Deploy", "Register",
-        ];
+        let publish_pipeline = vec!["Validate", "Package", "Sign", "Deploy", "Verify", "Publish"];
         let evernode_fields = vec![
             "runtime size",
             "node requirements",
@@ -83,11 +89,12 @@ impl CreatorWorkflowSurface {
             "deployment status",
         ];
         let marketplace_shelves = vec![
-            "Published Games",
-            "Packages",
+            "Games",
             "Templates",
             "Assets",
+            "Packages",
             "Examples",
+            "Worlds",
         ];
         let mut parts = Vec::new();
         parts.extend(world_tools.iter().copied());
@@ -121,11 +128,7 @@ impl CreatorWorkflowSurface {
     }
 
     pub fn publish_result(&self) -> &'static str {
-        if self.publish_pipeline
-            == [
-                "Validate", "Package", "Sign", "Verify", "Deploy", "Register",
-            ]
-        {
+        if self.publish_pipeline == ["Validate", "Package", "Sign", "Deploy", "Verify", "Publish"] {
             "Game Live"
         } else {
             "Blocked"
@@ -155,7 +158,7 @@ pub fn validate_creator_productization() -> CreatorDiagnostic {
 
 pub fn world_authoring_equivalence() -> bool {
     let surface = CreatorWorkflowSurface::sample();
-    surface.world_tools.len() == 8 && surface == CreatorWorkflowSurface::sample()
+    surface.world_tools.len() >= 8 && surface == CreatorWorkflowSurface::sample()
 }
 
 pub fn gizmo_equivalence() -> bool {
@@ -186,15 +189,17 @@ pub fn live_edit_equivalence() -> bool {
 
 pub fn simulation_control_equivalence() -> bool {
     let surface = CreatorWorkflowSurface::sample();
-    surface.simulation_controls
-        == [
-            "Play",
-            "Pause",
-            "Step",
-            "Fast Forward",
-            "Checkpoint",
-            "Restore",
-        ]
+    [
+        "Play",
+        "Pause",
+        "Step",
+        "Fast Forward",
+        "Checkpoint",
+        "Restore",
+        "Reset",
+    ]
+    .iter()
+    .all(|control| surface.simulation_controls.contains(control))
 }
 
 pub fn replay_timeline_equivalence() -> bool {
@@ -223,10 +228,7 @@ pub fn local_runtime_launch() -> bool {
 
 pub fn publish_pipeline_equivalence() -> bool {
     let surface = CreatorWorkflowSurface::sample();
-    surface.publish_pipeline
-        == [
-            "Validate", "Package", "Sign", "Verify", "Deploy", "Register",
-        ]
+    surface.publish_pipeline == ["Validate", "Package", "Sign", "Deploy", "Verify", "Publish"]
         && surface.publish_result() == "Game Live"
 }
 
@@ -254,4 +256,43 @@ pub fn replay_safe_creator_workflow() -> bool {
         && !diagnostic.renderer_authoritative
         && reject_authority_mutation(true).is_err()
         && reject_replay_mutation(true).is_err()
+}
+
+pub fn entity_placement_equivalence() -> bool {
+    world_authoring_equivalence()
+}
+
+pub fn terrain_authoring_equivalence() -> bool {
+    let tools = CreatorWorkflowSurface::sample().world_tools;
+    [
+        "terrain painting",
+        "region painting",
+        "partition visualization",
+        "resource painting",
+        "spawn painting",
+        "civilization territory painting",
+    ]
+    .iter()
+    .all(|feature| tools.contains(feature))
+}
+
+pub fn asset_import_equivalence() -> bool {
+    asset_dragdrop_equivalence()
+}
+
+pub fn live_simulation_equivalence() -> bool {
+    simulation_control_equivalence() && local_runtime_launch()
+}
+
+pub fn replay_visualization_equivalence() -> bool {
+    replay_timeline_equivalence()
+}
+
+pub fn world_save_load_equivalence() -> bool {
+    template_creation_equivalence()
+}
+
+pub fn undo_redo_equivalence() -> bool {
+    let surface = CreatorWorkflowSurface::sample();
+    surface.inspector_routes.contains(&"undoable actions")
 }

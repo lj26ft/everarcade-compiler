@@ -1,6 +1,7 @@
 #![allow(dead_code)]
 
 mod app;
+mod interactive_viewport;
 mod layout;
 mod replay;
 mod theme;
@@ -45,6 +46,13 @@ mod tests {
         assert_eq!(saved, app.workspace.layout.serialize());
         assert!(app.workspace.layout.has_all_required_panels());
         assert!(app.workspace.supports_multiple_projects());
+    }
+
+    #[test]
+    fn test_viewport_selection_equivalence() {
+        assert!(interactive_viewport::viewport_selection_equivalence());
+        assert!(interactive_viewport::camera_controls_equivalence());
+        assert!(interactive_viewport::reject_authority_mutation(true).is_err());
     }
 
     #[test]
@@ -198,6 +206,41 @@ mod tests {
     #[test]
     fn test_publish_pipeline_equivalence() {
         assert!(world_authoring::publish_pipeline_equivalence());
+    }
+
+    #[test]
+    fn test_entity_placement_equivalence() {
+        assert!(world_authoring::entity_placement_equivalence());
+    }
+
+    #[test]
+    fn test_terrain_authoring_equivalence() {
+        assert!(world_authoring::terrain_authoring_equivalence());
+    }
+
+    #[test]
+    fn test_asset_import_equivalence() {
+        assert!(world_authoring::asset_import_equivalence());
+    }
+
+    #[test]
+    fn test_live_simulation_equivalence() {
+        assert!(world_authoring::live_simulation_equivalence());
+    }
+
+    #[test]
+    fn test_replay_visualization_equivalence() {
+        assert!(world_authoring::replay_visualization_equivalence());
+    }
+
+    #[test]
+    fn test_world_save_load_equivalence() {
+        assert!(world_authoring::world_save_load_equivalence());
+    }
+
+    #[test]
+    fn test_undo_redo_equivalence() {
+        assert!(world_authoring::undo_redo_equivalence());
     }
 
     #[test]

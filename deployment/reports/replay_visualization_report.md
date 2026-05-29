@@ -1,9 +1,8 @@
-# World Authoring Report
+# Replay Visualization Report
 
 ## Creator workflow readiness
-- World save/load uses deterministic snapshot hashes for save, load, clone, export template, import template, and share template workflows.
-- Terrain and region authoring includes terrain, region, resource, spawn, civilization territory painting, and partition visualization.
-- Undo/redo keeps deterministic stacks, batch action lineage, and restore points.
+- Replay history is represented by scrubber frames, event markers, checkpoint markers, continuity visualization, playback state, and divergence indicators.
+- Replay UI remains a read-only visual navigator over append-only replay data.
 
 ## Publish readiness
 - Creator-facing flows favor single-action validation and deterministic packaging before any deployment-visible state changes.

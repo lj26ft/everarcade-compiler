@@ -1,9 +1,9 @@
-# World Authoring Report
+# Live Simulation Report
 
 ## Creator workflow readiness
-- World save/load uses deterministic snapshot hashes for save, load, clone, export template, import template, and share template workflows.
-- Terrain and region authoring includes terrain, region, resource, spawn, civilization territory painting, and partition visualization.
-- Undo/redo keeps deterministic stacks, batch action lineage, and restore points.
+- Play-In-Studio exposes Play, Pause, Step, Fast Forward, Checkpoint, Restore, and Reset.
+- Runtime overlay tracks entity count, simulation tick, scheduler activity, AI activity, replay health, and runtime health.
+- Simulation remains deterministic, replay-safe, and runtime-authoritative.
 
 ## Publish readiness
 - Creator-facing flows favor single-action validation and deterministic packaging before any deployment-visible state changes.

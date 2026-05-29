@@ -1,9 +1,8 @@
-# World Authoring Report
+# Creator Productivity Report
 
 ## Creator workflow readiness
-- World save/load uses deterministic snapshot hashes for save, load, clone, export template, import template, and share template workflows.
-- Terrain and region authoring includes terrain, region, resource, spawn, civilization territory painting, and partition visualization.
-- Undo/redo keeps deterministic stacks, batch action lineage, and restore points.
+- Productivity layer includes search everywhere, quick actions, command palette, context menus, recent projects, and favorites.
+- Marketplace shelves include Games, Templates, Assets, Packages, Examples, and Worlds with browse, search, install, preview, favorite, and publish readiness.
 
 ## Publish readiness
 - Creator-facing flows favor single-action validation and deterministic packaging before any deployment-visible state changes.

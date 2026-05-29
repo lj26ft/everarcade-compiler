@@ -1,9 +1,9 @@
-# World Authoring Report
+# Asset Authoring Report
 
 ## Creator workflow readiness
-- World save/load uses deterministic snapshot hashes for save, load, clone, export template, import template, and share template workflows.
-- Terrain and region authoring includes terrain, region, resource, spawn, civilization territory painting, and partition visualization.
-- Undo/redo keeps deterministic stacks, batch action lineage, and restore points.
+- Asset authoring covers thumbnails, previews, tags, categories, drag-and-drop imports, batch imports, and validation.
+- Asset Browser 2.0 tracks search, filtering, favorites, dependencies, usage references, and package membership.
+- Supported asset types are models, textures, audio, world templates, and runtime packages.
 
 ## Publish readiness
 - Creator-facing flows favor single-action validation and deterministic packaging before any deployment-visible state changes.

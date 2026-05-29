@@ -1,9 +1,8 @@
-# World Authoring Report
+# Publish Experience Report
 
 ## Creator workflow readiness
-- World save/load uses deterministic snapshot hashes for save, load, clone, export template, import template, and share template workflows.
-- Terrain and region authoring includes terrain, region, resource, spawn, civilization territory painting, and partition visualization.
-- Undo/redo keeps deterministic stacks, batch action lineage, and restore points.
+- EverNode publish is represented as Validate, Package, Sign, Deploy, Verify, and Publish behind a single creator workflow.
+- Deployment progress, history, and rollback visibility are surfaced while infrastructure operation remains hidden.
 
 ## Publish readiness
 - Creator-facing flows favor single-action validation and deterministic packaging before any deployment-visible state changes.

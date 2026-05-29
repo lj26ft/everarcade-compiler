@@ -1,9 +1,9 @@
-# World Authoring Report
+# Visual Editing Report
 
 ## Creator workflow readiness
-- World save/load uses deterministic snapshot hashes for save, load, clone, export template, import template, and share template workflows.
-- Terrain and region authoring includes terrain, region, resource, spawn, civilization territory painting, and partition visualization.
-- Undo/redo keeps deterministic stacks, batch action lineage, and restore points.
+- Interactive viewport uses projection-only picking, hover, highlighting, marquee selection, orbit, pan, zoom, and focus-selected controls.
+- Entity placement covers player spawns, resource nodes, props, factions, civilizations, regions, structures, and runtime markers.
+- Transform gizmo supports translate, rotate, scale, grid snapping, multi-edit, and deterministic undoable actions.
 
 ## Publish readiness
 - Creator-facing flows favor single-action validation and deterministic packaging before any deployment-visible state changes.
