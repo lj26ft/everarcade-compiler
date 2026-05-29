@@ -4,6 +4,7 @@ mod app;
 mod assets;
 mod component_editor;
 mod editing_engine;
+mod gameplay_authoring;
 mod interactive_viewport;
 mod layout;
 mod replay;
@@ -301,6 +302,24 @@ mod tests {
     #[test]
     fn test_replay_safe_creator_workflow() {
         assert!(world_authoring::replay_safe_creator_workflow());
+    }
+
+    #[test]
+    fn test_gameplay_authoring_framework_equivalence() {
+        let app = StudioGuiApp::new();
+        assert!(gameplay_authoring::visual_logic_equivalence());
+        assert!(gameplay_authoring::gameplay_event_framework_equivalence());
+        assert!(gameplay_authoring::creator_content_systems_complete());
+        assert!(gameplay_authoring::end_to_end_creator_flow_equivalence());
+        assert!(app
+            .gameplay_authoring
+            .can_create_gameplay_without_infrastructure_code());
+        assert!(app.workflow.steps.contains(&"Create Gameplay"));
+        assert!(app.workflow.steps.contains(&"Create UI"));
+        assert!(app.workflow.steps.contains(&"Create Quests"));
+        assert!(app.workflow.steps.contains(&"Run Multiplayer"));
+        assert!(app.workflow.steps.contains(&"Publish"));
+        assert!(app.workflow.steps.contains(&"Players Join"));
     }
 
     #[test]

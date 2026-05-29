@@ -1,4 +1,5 @@
 use crate::{
+    gameplay_authoring::GameplayAuthoringState,
     replay::ReplayTimeline,
     stable_hash,
     theme::StudioTheme,
@@ -118,6 +119,7 @@ pub struct StudioGuiApp {
     pub deployment: DeploymentPanel,
     pub multiplayer: MultiplayerPanel,
     pub operations_dashboard: OperationsDashboardPanel,
+    pub gameplay_authoring: GameplayAuthoringState,
     pub workflow: CreatorWorkflow,
     pub world_authoring: WorldAuthoringState,
     pub deterministic_runtime_authority: bool,
@@ -301,6 +303,7 @@ impl StudioGuiApp {
                 single_dashboard: true,
             },
             workflow: creator_workflow(),
+            gameplay_authoring: GameplayAuthoringState::sample(),
             world_authoring: WorldAuthoringState::sample(),
             deterministic_runtime_authority: true,
             viewport_projection,
@@ -362,6 +365,9 @@ impl StudioGuiApp {
             && self.multiplayer.actions.contains(&"Host World")
             && self.operations_dashboard.single_dashboard
             && self
+                .gameplay_authoring
+                .can_create_gameplay_without_infrastructure_code()
+            && self
                 .operations_dashboard
                 .admin_controls
                 .contains(&"rollback controls")
@@ -408,6 +414,10 @@ impl eframe::App for StudioGuiApp {
                 "Operations dashboard surfaces: {}",
                 self.operations_dashboard.health_surfaces.join(", ")
             ));
+            ui.label(format!(
+                "Gameplay templates: {}",
+                self.gameplay_authoring.templates.templates.join(", ")
+            ));
         });
         egui::TopBottomPanel::bottom("timeline").show(ctx, |ui| {
             ui.heading("Replay / Assets / Console");
@@ -425,6 +435,9 @@ pub fn creator_workflow() -> CreatorWorkflow {
         "Import Assets",
         "Build World",
         "Place Entities",
+        "Create Gameplay",
+        "Create UI",
+        "Create Quests",
         "Run Simulation",
         "Inspect Replay",
         "Inspect Runtime",
@@ -432,7 +445,9 @@ pub fn creator_workflow() -> CreatorWorkflow {
         "Run Locally",
         "Create World",
         "Host World",
+        "Run Multiplayer",
         "Publish Game",
+        "Publish",
         "World Live",
         "Players Join",
         "Operate World",
