@@ -96,6 +96,12 @@ pub struct OperationsDashboardPanel {
 pub struct CreatorWorkflow {
     pub steps: Vec<&'static str>,
     pub visual_only: bool,
+    pub play_modes: Vec<&'static str>,
+    pub validation_checks: Vec<&'static str>,
+    pub package_artifacts: Vec<&'static str>,
+    pub readiness_reports: Vec<&'static str>,
+    pub metrics_opt_in_local_only: bool,
+    pub single_validation_action: bool,
     pub workflow_hash: String,
 }
 
@@ -431,7 +437,11 @@ impl eframe::App for StudioGuiApp {
 
 pub fn creator_workflow() -> CreatorWorkflow {
     let steps = vec![
+        "Install Studio",
         "Create Project",
+        "Choose Template",
+        "Generate Game",
+        "Press Play",
         "Import Assets",
         "Build World",
         "Place Entities",
@@ -448,6 +458,8 @@ pub fn creator_workflow() -> CreatorWorkflow {
         "Run Multiplayer",
         "Publish Game",
         "Publish",
+        "Deploy",
+        "Live",
         "World Live",
         "Players Join",
         "Operate World",
@@ -455,10 +467,48 @@ pub fn creator_workflow() -> CreatorWorkflow {
         "Recover Failures",
         "Game Live On EverNode",
     ];
-    let workflow_hash = stable_hash(&steps);
+    let play_modes = vec![
+        "single player",
+        "multiplayer",
+        "persistent world",
+        "replay mode",
+    ];
+    let validation_checks = vec![
+        "asset validation",
+        "world validation",
+        "gameplay validation",
+        "replay validation",
+        "multiplayer validation",
+        "publish validation",
+    ];
+    let package_artifacts = vec![
+        "game package",
+        "runtime package",
+        "world package",
+        "asset package",
+        "deployment package",
+    ];
+    let readiness_reports = vec![
+        "protocol readiness",
+        "creator readiness",
+        "deployment readiness",
+        "ecosystem readiness",
+    ];
+    let mut hash_parts = steps.clone();
+    hash_parts.extend(play_modes.iter().copied());
+    hash_parts.extend(validation_checks.iter().copied());
+    hash_parts.extend(package_artifacts.iter().copied());
+    hash_parts.extend(readiness_reports.iter().copied());
+    let workflow_hash = stable_hash(&hash_parts);
     CreatorWorkflow {
         steps,
         visual_only: true,
+        play_modes,
+        validation_checks,
+        package_artifacts,
+        readiness_reports,
+        metrics_opt_in_local_only: true,
+        single_validation_action: true,
         workflow_hash,
     }
 }

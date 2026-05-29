@@ -278,3 +278,48 @@ fn test_undo_redo_equivalence() {
 fn test_replay_safe_creator_workflow() {
     assert!(tools::creator_productization::replay_safe_creator_workflow());
 }
+
+#[test]
+fn test_creator_pipeline_equivalence() {
+    assert!(tools::creator_pipeline::creator_pipeline_equivalence());
+}
+
+#[test]
+fn test_template_generation_equivalence() {
+    assert!(tools::creator_pipeline::template_generation_equivalence());
+}
+
+#[test]
+fn test_play_mode_equivalence() {
+    assert!(tools::creator_pipeline::play_mode_equivalence());
+}
+
+#[test]
+fn test_multiplayer_creation_equivalence() {
+    assert!(tools::creator_pipeline::multiplayer_creation_equivalence());
+}
+
+#[test]
+fn test_package_generation_equivalence() {
+    assert!(tools::creator_pipeline::package_generation_equivalence());
+}
+
+#[test]
+fn test_publish_workflow_equivalence() {
+    assert!(tools::creator_pipeline::publish_workflow_equivalence());
+}
+
+#[test]
+fn test_protocol_readiness() {
+    assert!(tools::creator_pipeline::protocol_readiness_equivalence());
+}
+
+#[test]
+fn test_creator_readiness() {
+    assert!(tools::creator_pipeline::creator_readiness_equivalence());
+}
+
+#[test]
+fn test_replay_safe_pipeline() {
+    assert!(tools::creator_pipeline::replay_safe_pipeline());
+}

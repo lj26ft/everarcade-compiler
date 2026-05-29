@@ -751,12 +751,14 @@ impl WorldAuthoringState {
 
 pub fn template_catalog() -> Vec<GameplayTemplate> {
     [
-        "Top Down Arena",
-        "RPG World",
-        "Civilization World",
-        "Persistent Sandbox",
-        "Cooperative Dungeon",
-        "RTS Prototype",
+        "Arena",
+        "Action RPG",
+        "Civilization",
+        "RTS",
+        "Survival",
+        "Sandbox",
+        "Dungeon Crawler",
+        "MMO Prototype",
     ]
     .into_iter()
     .map(|name| GameplayTemplate {
@@ -856,7 +858,7 @@ pub fn asset_dragdrop_equivalence() -> bool {
 
 pub fn template_creation_equivalence() -> bool {
     let templates = template_catalog();
-    templates.len() == 6
+    templates.len() == 8
         && templates.iter().all(|template| template.runnable)
         && templates == template_catalog()
 }
