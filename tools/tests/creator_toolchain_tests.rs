@@ -280,6 +280,20 @@ fn test_replay_safe_creator_workflow() {
 }
 
 #[test]
+fn test_vertical_slice_certification_approves_v0_1() {
+    let certification = tools::vertical_slice_certification::VerticalSliceCertification::sample();
+    assert!(certification.v0_1_approved());
+    assert!(tools::vertical_slice_certification::validate_vertical_slice_certification());
+}
+
+#[test]
+fn test_vertical_slice_package_reproducibility() {
+    assert!(tools::vertical_slice_certification::validate_package_reproducibility());
+}
+
+#[test]
+fn test_vertical_slice_new_developer_success_metric() {
+    assert!(tools::vertical_slice_certification::validate_new_developer_success_metric());
 fn test_creator_pipeline_equivalence() {
     assert!(tools::creator_pipeline::creator_pipeline_equivalence());
 }
