@@ -1,0 +1,8 @@
+[package]
+name = "rustrigs"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+contract-api = { path = "../contract-api" }
+serde = { version = "1", features = ["derive"] }

@@ -80,6 +80,11 @@ mod tests {
     }
 
     #[test]
+    fn test_rustrig_browser_and_composition() {
+        assert!(gameplay_authoring::rustrig_visual_logic_integration());
+    }
+
+    #[test]
     fn test_creator_production_workflow() {
         let app = StudioGuiApp::new();
         assert!(app.workflow.visual_only);

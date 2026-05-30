@@ -397,3 +397,45 @@ pub mod deployment {
         include!("../../studio/deployment/src/validation.rs");
     }
 }
+
+pub mod rustrig_marketplace {
+    use serde::{Deserialize, Serialize};
+
+    #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+    pub struct RustrigPackageMetadata {
+        pub version: String,
+        pub hash: String,
+        pub author: String,
+        pub dependencies: Vec<String>,
+        pub record_types: Vec<String>,
+    }
+
+    #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+    pub enum RustrigMarketplaceArtifact {
+        Package(RustrigPackageMetadata),
+        Bundle(Vec<RustrigPackageMetadata>),
+        Template(RustrigPackageMetadata),
+    }
+
+    pub fn sample_package() -> RustrigMarketplaceArtifact {
+        RustrigMarketplaceArtifact::Package(RustrigPackageMetadata {
+            version: "1.0.0".into(),
+            hash: crate::stable_hash(&["rustrig", "package", "v1"]),
+            author: "everarcade".into(),
+            dependencies: vec!["contract-api".into()],
+            record_types: vec!["CombatRecord".into(), "InventoryRecord".into()],
+        })
+    }
+
+    pub fn marketplace_ready() -> bool {
+        match sample_package() {
+            RustrigMarketplaceArtifact::Package(metadata) => {
+                !metadata.version.is_empty()
+                    && !metadata.hash.is_empty()
+                    && !metadata.author.is_empty()
+                    && !metadata.record_types.is_empty()
+            }
+            _ => false,
+        }
+    }
+}

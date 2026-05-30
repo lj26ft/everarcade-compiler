@@ -400,6 +400,7 @@ dependencies = [
  "everarcade-abi",
  "hex",
  "increment-contract",
+ "rustrigs",
  "serde",
  "serde_json",
  "set-contract",
@@ -775,6 +776,14 @@ dependencies = [
  "libc",
  "linux-raw-sys 0.12.1",
  "windows-sys 0.61.2",
+]
+
+[[package]]
+name = "rustrigs"
+version = "0.1.0"
+dependencies = [
+ "contract-api",
+ "serde",
 ]
 
 [[package]]
