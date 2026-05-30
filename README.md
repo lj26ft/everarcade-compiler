@@ -15,7 +15,7 @@ git clone <repo>
 cd everarcade-compiler
 bash scripts/vendor_deps.sh
 cargo fmt --all --check
-cargo test --workspace
+CARGO_BUILD_JOBS=1 cargo check -p everarcade-cli -p everarcade-host -p runtime-client -p renderer-client
 bash scripts/build_runtime_release.sh
 bash scripts/validate_clean_vm_bootstrap.sh
 ```
@@ -43,7 +43,8 @@ EverArcade packages binaries, runtime config, and a manifest into a deterministi
 
 ## Where to start as a new developer
 
-- Start with `docs/START_HERE.md` for quickest operator path.
+- Start with `docs/CLI_QUICKSTART.md` for the fastest source install, create, run, replay, and package loop.
+- Use `docs/START_HERE.md` for the quickest operator/bootstrap path.
 - Use `docs/README.md` for the docs map.
 - Review `docs/stub-vs-usable-matrix.md` before building new features.
 - For local reproducibility and audit context, read `docs/onboarding-audit.md` and `docs/v0.1.0-runtime-audit.md`.

@@ -1,6 +1,7 @@
 # Documentation Index
 
 ## Onboarding docs
+- `CLI_QUICKSTART.md`
 - `START_HERE.md`
 - `linux-vm-bootstrap.md`
 - `developer/quickstart.md`
@@ -26,6 +27,7 @@
 - `canonical-package-format.md`
 
 ## Audit docs
+- `public-launch-readiness-audit.md`
 - `onboarding-audit.md`
 - `v0.1.0-runtime-audit.md`
 - `repo-size-audit.md`
