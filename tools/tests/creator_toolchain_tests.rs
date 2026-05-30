@@ -295,6 +295,7 @@ fn test_vertical_slice_package_reproducibility() {
 fn test_vertical_slice_new_developer_success_metric() {
     assert!(tools::vertical_slice_certification::validate_new_developer_success_metric());
 }
+
 #[test]
 fn test_creator_pipeline_equivalence() {
     assert!(tools::creator_pipeline::creator_pipeline_equivalence());
