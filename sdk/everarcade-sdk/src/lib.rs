@@ -106,3 +106,31 @@ where
 }
 
 pub use replay_tooling::*;
+
+pub mod rustrigs {
+    #[derive(Clone, Debug, PartialEq, Eq)]
+    pub struct RustrigTemplate {
+        pub crate_name: String,
+        pub package_hint: &'static str,
+        pub trait_surface: &'static str,
+        pub emits_records_only: bool,
+    }
+
+    pub fn cargo_new_workflow(name: &str) -> RustrigTemplate {
+        RustrigTemplate {
+            crate_name: name.to_owned(),
+            package_hint: "cargo new my-rustrig && cargo add everarcade-rig-combat",
+            trait_surface: "everarcade_sdk::rustrigs::Rustrig",
+            emits_records_only: true,
+        }
+    }
+
+    pub fn sdk_ready() -> bool {
+        let template = cargo_new_workflow("my-rustrig");
+        template.emits_records_only
+            && template.package_hint.contains("cargo new")
+            && template
+                .package_hint
+                .contains("cargo add everarcade-rig-combat")
+    }
+}

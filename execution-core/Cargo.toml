@@ -21,6 +21,7 @@ wasmtime = { version = "26", default-features = false, features = ["cranelift", 
 
 
 contract-api = { path = "../contract-api" }
+rustrigs = { path = "../rustrigs" }
 set-contract = { path = "../contracts/set-contract" }
 increment-contract = { path = "../contracts/increment-contract" }
 
