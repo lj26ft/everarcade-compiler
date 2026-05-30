@@ -1,0 +1,9 @@
+package_id = "arena-vanguard-quest"
+name = "Quest"
+version = "0.1.0"
+author = "everarcade-core"
+description = "Arena Vanguard Quest deterministic marketplace module"
+dependencies = []
+record_types = ["QuestRecord"]
+protocol_version = "everarcade-protocol-1"
+hash = "78435947f541d23603ae31f7067991391d22444f649efe225f77bcda834cf84f"

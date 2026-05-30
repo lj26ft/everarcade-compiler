@@ -1,19 +1,13 @@
-# Rustrig Milestone Report
+# Rustrig Marketplace Report
 
-## ABI readiness
-ABI v1 is append-only, backward compatible, deterministically serialized, canonically hashed, and replay-safe.
-
-## SDK readiness
-The SDK exposes an `everarcade-sdk::rustrigs` workflow that mirrors `cargo new my-rustrig` and `cargo add everarcade-rig-combat` developer ergonomics.
-
-## Marketplace readiness
-Marketplace metadata supports Rustrig Package, Rustrig Bundle, and Rustrig Template artifacts with version, hash, author, dependencies, and record types.
+## Ecosystem readiness
+The marketplace package format is scaffolded around deterministic Rustrig manifests, reproducible package bytes, signatures, and record-only behavior.
 
 ## Studio readiness
-Studio models Rustrig Browser, Rustrig Library, Rustrig Search, Rustrig Composition, and Rustrig Validation surfaces. Visual logic nodes map to Rustrigs and emit records.
+Studio can browse, search, install, update, remove, inspect dependencies, and view validation status for certified packages.
 
-## Replay guarantees
-Rustrigs are deterministic pure primitives that consume explicit input and emit protocol records. Runtime authority remains in execution-core/world/replay/orchestrator surfaces.
+## Security guarantees
+Marketplace modules distribute logic only. Runtime authority remains in execution-core, replay, deployment, and world runtimes.
 
 ## Known limitations
-This milestone establishes the canonical ABI, primitive library, validation harness, and integration surfaces. Rich UI rendering and package publishing backends remain scaffold-level integrations.
+This milestone provides deterministic in-repository certification fixtures and validation scaffolding rather than a remote public registry service.

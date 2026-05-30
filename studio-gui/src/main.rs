@@ -7,7 +7,9 @@ mod editing_engine;
 mod gameplay_authoring;
 mod interactive_viewport;
 mod layout;
+mod marketplace;
 mod replay;
+mod rustrig_composer;
 mod terrain;
 mod theme;
 mod viewport;
@@ -41,6 +43,32 @@ fn main() -> Result<(), eframe::Error> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_marketplace_browser_and_rustrig_composer() {
+        let mut browser = marketplace::MarketplaceBrowser::sample();
+        assert_eq!(browser.browse_packages().len(), 5);
+        assert_eq!(browser.search_packages("combat").len(), 1);
+        assert!(browser.install_package("arena-vanguard-combat"));
+        assert!(browser.update_package("arena-vanguard-combat"));
+        assert_eq!(
+            browser.view_validation_status("arena-vanguard-combat"),
+            Some("certified".to_owned())
+        );
+        assert!(browser.remove_package("arena-vanguard-combat"));
+
+        let mut composer = rustrig_composer::RustrigComposer::default();
+        composer.drag_package("arena-vanguard-combat");
+        composer.drag_package("arena-vanguard-inventory");
+        assert!(composer.connect_rustrigs("arena-vanguard-combat", "arena-vanguard-inventory"));
+        assert_eq!(composer.visual_composition().len(), 2);
+        assert!(composer
+            .record_inspection("arena-vanguard-combat")
+            .is_some());
+        assert!(composer
+            .dependency_inspection("arena-vanguard-combat")
+            .is_some());
+    }
 
     #[test]
     fn test_interactive_editing_equivalence() {
