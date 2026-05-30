@@ -2,6 +2,7 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+export CARGO_BUILD_JOBS="${CARGO_BUILD_JOBS:-1}"
 "$ROOT/scripts/preflight_vendor.sh"
 
 echo "capability validation"

@@ -1,0 +1,483 @@
+# Test Surface Audit
+
+Audit date: 2026-05-30
+
+## Summary
+- Integration test files discovered: 434.
+- `everarcade-host` integration test files: 150.
+- `execution-core` integration test files: 262.
+- `sdk` integration test files: 2.
+- `templates` integration test files: 5.
+- `tests` integration test files: 14.
+- `tools` integration test files: 1.
+
+## Categories
+
+### Critical fresh VM gate
+- `tools/tests/creator_toolchain_tests.rs` — pass for vertical-slice filters and full tools package in this audit; requires `vendor/`; launch-critical.
+- `execution-core/tests/creator_pipeline_runtime_tests.rs` — pass in targeted package test in this audit; requires `vendor/`; launch-critical protocol/launch runtime filters.
+- `studio-gui` package tests — pass in this audit; no separate `studio-gui/tests` directory, but package tests are launch-critical and require `vendor/`.
+
+### Targeted milestone gate
+- `execution-core/tests/security_runtime_tests.rs`, `adversarial_runtime_tests.rs`, `runtime_abuse_simulation_tests.rs`, `runtime_security_tests.rs`, `governance_enforcement_tests.rs`, `governance_abuse_scale_tests.rs` — run by security validation; requires `vendor/`; launch/security critical.
+- `execution-core/tests/simulation_runtime_tests.rs`, `gameplay_runtime_tests.rs`, `world_runtime_tests.rs`, `runtime_orchestration_tests.rs` — targeted by runtime milestone scripts; requires `vendor/`; medium-to-heavy depending on filter.
+- SDK/template tests under `sdk/tests` and `templates/*/tests` — targeted or optional gates; require `vendor/` when cargo is invoked offline.
+
+### Full workspace gate
+- Root `tests/**` integration tests and `everarcade-host/tests/**` are full-workspace sensitive because they exercise CLI/bootstrap/host/deployment behavior outside the minimal fresh-VM gate. They were not run in this pass.
+- Any `cargo test --workspace` gate remains intentionally deferred per task instruction.
+
+### Optional/regression gate
+- Example/template runtime tests are optional/regression until examples are added to a documented release gate.
+- Renderer/history/federation regression tests should remain scaffold-level unless promoted by a milestone.
+
+### Known heavy gate
+- Long-running/heavy patterns include `soak`, `stress`, `performance`, `multi_node`, `live`, `network`, `federation`, `workspace`, and host deployment/operator tests. Prefer targeted filters and `CARGO_BUILD_JOBS=1`.
+
+## Pass status from this audit
+- Pass: vertical-slice filters in `tools/tests/creator_toolchain_tests.rs`.
+- Pass: full `tools` package tests.
+- Pass: full `studio-gui` package tests.
+- Pass: targeted `execution-core --test creator_pipeline_runtime_tests`.
+- Pass: creator pipeline, protocol readiness, launch readiness, runtime surface audit, and security validation scripts.
+- Not run: full workspace validation and example-wide validation.
+
+## Vendor requirements
+- All offline locked cargo tests require the generated `vendor/` directory plus `.cargo/config.toml` created by `scripts/vendor_deps.sh`.
+- `Cargo.lock` currently requires `zerocopy` and `zerocopy-derive` 0.8.49; both are present in `vendor/` after this pass.
+
+## Integration test file inventory
+- `everarcade-host/tests/adversarial_governance_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/anchor_queue_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/archive_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/authority_cli_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/autonomous_civilization_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/autonomous_coordination_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/checkpoint_fast_sync_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/checkpoint_store_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/checkpoint_sync_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/checkpoint_transfer_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/civilization_runtime_loop_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/civilization_runtime_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/cluster_sync_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/compression_runtime_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/consensus_cli_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/continuity_engine_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/continuous_federation_runtime_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/convergence_engine_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/coordination_cli_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/crypto_identity_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/debug_command_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/discovery_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/distributed_civilization_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/distributed_convergence_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/distributed_execution_reconciliation_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/distributed_execution_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/distributed_governance_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/distributed_partition_runtime_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/distributed_receipt_disk_store_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/distributed_receipt_package_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/distributed_receipt_persistence_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/distributed_receipt_recovery_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/distributed_receipt_sync_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/distributed_receipt_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/distributed_state_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/distributed_world_runtime_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/divergence_cli_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/divergence_detection_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/doctor_command_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/economic_execution_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/economic_runtime_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/end_to_end_governance_flow_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/evernode_adapter_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/evernode_manifest_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/evernode_peer_manifest_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/evernode_state_manifest_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/evernode_sync_manifest_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/execution_capacity_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/execution_planner_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/execution_reconciliation_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/execution_resume_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/failover_receipt_persistence_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/federated_execution_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/federation_network_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/federation_scheduler_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/federation_security_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/federation_soak_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/federation_sync_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/fixture_package_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/fixture_regeneration_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/fixture_roundtrip_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/full_decode_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/genesis_runtime_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/governance_convergence_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/governance_loop_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/governance_runtime_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/help_output_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/historical_query_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/host_end_to_end_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/host_runner_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/index_rebuild_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/install_metadata_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/integrity_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/ipfs_adapter_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/ipfs_publication_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/linux_operator_flow_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/linux_stress_flow_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/live_federation_runtime_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/live_operator_deployment_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/local_peer_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/long_horizon_survivability_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/malicious_peer_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/manifest_repair_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/memory_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/message_validation_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/multi_node_convergence_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/multi_node_runtime_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/multiplayer_runtime_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/network_partition_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/network_protocol_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/network_receipt_message_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/networked_convergence_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/networked_execution_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/networked_receipt_propagation_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/observer_cli_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/operational_federation_runtime_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/operator_cli_flow_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/operator_cli_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/operator_config_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/operator_node_flow_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/operator_reassignment_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/operator_resync_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/operator_verify_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/package_corruption_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/package_loader_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/package_roundtrip_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/partition_failover_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/peer_identity_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/persistence_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/persistent_civilization_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/proof_distribution_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/protocol_signature_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/provenance_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/publish_queue_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/receipt_checkpoint_binding_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/receipt_checkpoint_persistence_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/receipt_range_transfer_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/receipt_store_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/reconciliation_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/recovery_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/replay_branch_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/replay_engine_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/replay_exchange_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/replay_window_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/resumable_sync_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/runtime_persistence_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/runtime_replay_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/scaling_publication_flow_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/scheduler_command_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/secure_convergence_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/session_security_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/signed_checkpoint_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/signed_receipt_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/snapshot_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/stale_node_recovery_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/state_folder_manifest_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/state_folder_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/storage_report_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/sync_cli_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/sync_message_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/task_assignment_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/tcp_framing_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/treaty_execution_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/window_continuity_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/workload_partition_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/xrpl_adapter_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/xrpl_anchor_intent_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/xrpl_root_anchor_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/xrpl_testnet_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `everarcade-host/tests/zk_boundary_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/abi_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/adversarial_runtime_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/adversarial_sync_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/amendment_transition_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/appliance_orchestration_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/arbitration_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/archive_operations_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/authority_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/autonomous_civilization_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/budget_validation_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/canonical_determinism_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/canonical_hash_freeze_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/capability_exchange_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/capability_lineage_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/capability_revocation_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/chain_restore_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/checkpoint_catchup_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/checkpoint_exchange_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/checkpoint_restore_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/checkpoint_snapshot_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/ci_orchestration_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/civilization_flow_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/civilization_genesis_vector_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/civilization_package_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/civilization_root_stability_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/clause_execution_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/codec_stability_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/common/fixtures.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/common/mod.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/consensus_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/constitutional_budget_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/constitutional_continuity_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/constitutional_economics_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/constitutional_interoperability_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/constitutional_review_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/constitutional_scope_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/contract_hash_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/convergence_proof_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/convergence_sync_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/convergence_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/coordination_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/creator_pipeline_runtime_tests.rs` — Critical fresh VM gate; Critical fresh VM gate; targeted milestone gate; requires vendor; launch-critical protocol/replay/authority filters..
+- `execution-core/tests/delegation_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/deployment_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/determinism_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/deterministic_runtime_hardening_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/distributed_convergence_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/divergence_detection_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/divergence_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/doctrine_validation_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/domain_identity_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/domain_transition_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/economic_convergence_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/economic_ledger_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/economic_treaty_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/economy_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/end_to_end_replay_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/end_to_end_sync_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/entity_evolution_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/entity_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/envelope_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/epoch_budget_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/epoch_checkpoint_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/epoch_materialization_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/epoch_root_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/epoch_transition_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/evernode_integration_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/executable_constitution_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/execution_cost_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/execution_trace_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/external_anchor_emission_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/external_anchor_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/fairness_simulation_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/federated_authority_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/federation_bundle_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/federation_checkpoint_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/federation_envelope_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/federation_migration_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/federation_quorum_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/federation_recovery_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/federation_replay_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/federation_runtime_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/federation_settlement_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/federation_simulation_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/federation_snapshot_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/federation_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/finality_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/fiscal_policy_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/freeze_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/fuel_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/full_execution_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/game_runtime_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/gameplay_runtime_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/genesis_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/golden_vector_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/governance_abuse_scale_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/governance_enforcement_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/governance_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/graphical_renderer_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/guest_runtime_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/hash_stability_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/historical_replay_dataplane_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/historical_replay_fabric_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/host_abi_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/inclusion_proof_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/incremental_world_runtime_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/interactive_runtime_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/internet_runtime_fabric_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/interoperability_convergence_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/interpretation_root_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/inventory_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/issuance_validation_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/jurisprudence_lineage_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/lease_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/legal_precedence_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/lifecycle_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/lineage_chain_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/live_peer_io_tests.rs` — Known heavy gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/local_runtime_demo_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/long_horizon_convergence_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/merkle_proof_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/merkle_root_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/merkle_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/migration_lineage_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/monetary_lineage_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/multi_node_simulation_tests.rs` — Known heavy gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/namespace_diplomacy_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/namespace_governance_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/network_tests.rs` — Known heavy gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/node_convergence_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/observer_sync_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/operator_diagnostics_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/operator_recovery_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/package_hash_stability_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/package_roundtrip_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/package_tamper_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/package_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/package_version_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/payload_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/performance_regression_tests.rs` — Known heavy gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/persistence_archive_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/persistence_restoration_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/persistence_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/persistent_world_runtime_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/precedent_chain_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/projection_artifact_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/projection_federation_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/projection_runtime_integration_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/projection_stream_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/proof_aggregation_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/proof_cost_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/proof_exchange_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/proof_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/proof_validation_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/protocol_upgrade_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/pruning_budget_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/pruning_policy_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/public_api_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/receipt_ancestry_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/receipt_lineage_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/receipt_merkle_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/receipt_range_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/receipt_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/receipt_validation_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/reconciliation_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/recovery_operations_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/release_candidate_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/release_certification_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/replay_compression_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/replay_convergence_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/replay_cost_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/replay_execution_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/replay_network_runtime_tests.rs` — Known heavy gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/replay_pruning_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/replay_root_encoding_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/replay_root_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/replay_state_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/replay_summary_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/replay_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/replay_transport_runtime_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/replay_validation_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/replay_window_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/rollback_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/root_recompute_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/runtime_abuse_simulation_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/runtime_activation_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/runtime_boundary_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/runtime_commit_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/runtime_federation_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/runtime_live_networking_tests.rs` — Known heavy gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/runtime_node_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/runtime_operational_networking_tests.rs` — Known heavy gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/runtime_operations_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/runtime_orchestration_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/runtime_security_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/runtime_semantics_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/runtime_service_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/runtime_validation_stress_tests.rs` — Known heavy gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/scheduler_fairness_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/scheduler_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/sdk_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/security_runtime_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/session_lineage_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/settlement_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/sharding_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/simulation_runtime_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/simulation_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/sovereign_convergence_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/sovereign_economic_convergence_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/sovereign_exchange_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/sovereign_operations_layer_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/sovereign_protocol_coordination_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/sovereign_world_persistence_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/starvation_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/state_diff_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/state_engine_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/state_merkle_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/state_root_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/state_transition_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/state_tree_hardening_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/storage_growth_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/storage_lineage_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/support/mod.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/support/runtime_validation.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/sync_apply_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/sync_plan_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/sync_reduce_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/sync_request_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/sync_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/sync_transcript_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/sync_window_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/tenant_isolation_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/terminal_renderer_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/topology_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/trace_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/trace_validation_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/treasury_identity_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/treasury_interoperability_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/treasury_transition_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/treaty_identity_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/treaty_revocation_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/treaty_transition_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/vault_continuity_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/verifier_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/vm_end_to_end_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/vm_input_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/vm_package_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/vm_receipt_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/wasm_abi_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/wasm_boundary_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/wasm_dag_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/wasm_engine_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/wasm_protocol_runtime_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/wasm_runtime_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/wasm_stateful_execution_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/workspace_scalability_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/world_epoch_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/world_load_simulation_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/world_partition_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/world_runtime_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/xrpl_anchor_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `execution-core/tests/xrpl_settlement_tests.rs` — Targeted milestone gate; requires vendor for offline locked cargo runs.
+- `sdk/everarcade-sdk/tests/replay_visualization_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `sdk/tests/sdk_runtime_tests.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `templates/cooperative-session/tests/replay_equivalence.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `templates/persistent-world/tests/replay_equivalence.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `templates/simulation-world/tests/replay_equivalence.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `templates/topdown-arena/tests/replay_equivalence.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `templates/turn-based/tests/replay_equivalence.rs` — Optional/regression gate; requires vendor for offline locked cargo runs.
+- `tests/bootstrap_tests/test_bootstrap_script.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `tests/bootstrap_tests/test_cli_runtime_aliases.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `tests/bootstrap_tests/test_local_federation_boot.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `tests/bootstrap_tests/test_replay_artifact_generation.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `tests/game_package_tests/test_package_determinism.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `tests/host_runtime_boundary_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `tests/local_federation_tests/test_local_federation_boot.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `tests/onboarding_tests/test_doctor_output.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `tests/onboarding_tests/test_missing_vendor_detection.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `tests/onboarding_tests/test_reset_flow.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `tests/release_determinism_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `tests/runtime_appliance_validation_tests.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `tests/sdk_tests/test_world_hooks.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `tests/toolchain_tests/test_build_game.rs` — Full workspace gate; requires vendor for offline locked cargo runs.
+- `tools/tests/creator_toolchain_tests.rs` — Critical fresh VM gate; Critical fresh VM gate; targeted milestone gate; requires vendor; launch-critical creator/vertical-slice filters pass in this audit..
