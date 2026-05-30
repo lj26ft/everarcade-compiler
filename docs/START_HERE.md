@@ -1,5 +1,7 @@
 # START HERE: Zero-Friction EverArcade Bootstrap
 
+For the fastest CLI-first game creation flow, start with `docs/CLI_QUICKSTART.md`. This page focuses on bootstrap/release validation.
+
 ## 1) Run this first
 
 ```bash
