@@ -1,0 +1,40 @@
+{
+  "authority": "external-xrpl-submission-only",
+  "records": [
+    {
+      "type": "ReceiptAnchorRecord",
+      "id": "arena-vanguard-receipt-0003",
+      "source": "execution receipt",
+      "payload_hash": "receipt:arena-vanguard:tick:3:world:players:2",
+      "anchor_hash": "anchor:receipt:arena-vanguard:0003"
+    },
+    {
+      "type": "ReplayAnchorRecord",
+      "id": "arena-vanguard-replay-0003",
+      "source": "arena-vanguard-world/replay/replay_0003.log",
+      "payload_hash": "replay:arena-vanguard:events:4",
+      "anchor_hash": "anchor:replay:arena-vanguard:0003"
+    },
+    {
+      "type": "WorldAnchorRecord",
+      "id": "arena-vanguard-world-0003",
+      "source": "arena-vanguard-world/world_manifest.toml",
+      "payload_hash": "world:arena-vanguard:tick:3:players:2:marketplace:6",
+      "anchor_hash": "anchor:world:arena-vanguard:0003"
+    },
+    {
+      "type": "DeploymentAnchorRecord",
+      "id": "arena-vanguard-deployment-0001",
+      "source": "deployment/evernode/deployment_manifest.toml",
+      "payload_hash": "deployment:evernode:arena-vanguard:ops:6",
+      "anchor_hash": "anchor:deployment:arena-vanguard:0001"
+    }
+  ],
+  "validation": {
+    "anchor_generation": "validated",
+    "anchor_replay": "validated",
+    "anchor_verification": "validated",
+    "anchor_equivalence": "validated",
+    "xrpl_submission_in_runtime": false
+  }
+}

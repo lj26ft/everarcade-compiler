@@ -1,0 +1,4 @@
+0|host_session|vanguard-host|world:arena-vanguard:tick:0
+1|join_session|vanguard-guest|world:arena-vanguard:tick:1
+2|combat_record|vanguard-host|arena-vanguard-combat
+3|checkpoint|checkpoint_0003|world:arena-vanguard:tick:3:players:2:marketplace:6

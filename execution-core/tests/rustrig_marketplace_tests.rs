@@ -138,7 +138,7 @@ fn test_arena_vanguard_marketplace_flow() {
         })
         .collect();
     let graph = DependencyGraph::new(manifests);
-    assert_eq!(packages.len(), 5);
+    assert_eq!(packages.len(), 6);
     assert!(packages
         .iter()
         .all(|pkg| install_package(pkg.clone(), &graph).is_ok()));

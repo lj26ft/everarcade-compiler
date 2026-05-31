@@ -1,0 +1,5 @@
+[world]
+manifest = "../../arena-vanguard-world/world_manifest.toml"
+checkpoint = "../../arena-vanguard-world/checkpoints/checkpoint_0003.state"
+replay = "../../arena-vanguard-world/replay/replay_0003.log"
+continuity = "player continuity, replay continuity, world continuity"

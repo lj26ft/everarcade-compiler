@@ -1,0 +1,15 @@
+[assets]
+id = "arena-vanguard-assets"
+version = "0.1.0"
+package = "asset package"
+deterministic = true
+
+[[assets.items]]
+id = "arena-vanguard-hero-sprite"
+kind = "sprite"
+hash = "asset:hero:0001"
+
+[[assets.items]]
+id = "arena-vanguard-arena-tiles"
+kind = "tileset"
+hash = "asset:arena:0001"

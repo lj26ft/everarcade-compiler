@@ -1,0 +1,22 @@
+[deployment]
+id = "arena-vanguard-evernode-trial"
+game = "arena-vanguard"
+provider = "evernode"
+mode = "local-simulation-before-live"
+authority = "runtime-orchestrator-only"
+submission = "external-operator"
+
+[operations]
+deploy = true
+start = true
+stop = true
+restart = true
+recover = true
+verify = true
+
+[simulation]
+single_node = "validated"
+multi_node = "validated"
+restart = "validated"
+failure = "validated"
+recovery = "validated"
