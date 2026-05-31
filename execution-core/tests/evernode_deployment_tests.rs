@@ -15,9 +15,6 @@ use std::path::{Path, PathBuf};
 use std::process::Command;
 use std::sync::Once;
 use std::thread;
-use std::fs;
-use std::path::{Path, PathBuf};
-use std::process::Command;
 
 fn root() -> PathBuf {
     Path::new(env!("CARGO_MANIFEST_DIR"))
@@ -360,6 +357,8 @@ fn test_launch_candidate_gate() {
         "deployment/reports/multinode_federation_load_gate.md",
         "Multi-Node Federation and Load Gate",
     );
+}
+
 fn runtime_dir() -> PathBuf {
     root().join("deployment/evernode/runtime")
 }
