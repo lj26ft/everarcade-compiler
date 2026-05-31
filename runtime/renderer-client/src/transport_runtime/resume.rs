@@ -1,5 +1,6 @@
 use super::replay_cursor::ReplayCursor;
-#[derive(Debug, Clone, PartialEq, Eq)]
+use serde::{Deserialize, Serialize};
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct ReplayResumeRequest {
     pub peer_id: String,
     pub cursor: ReplayCursor,
