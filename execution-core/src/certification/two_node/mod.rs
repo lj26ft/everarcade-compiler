@@ -201,13 +201,25 @@ impl NodeRuntime {
     ) -> Result<(), CertificationError> {
         for _ in 0..ticks {
             authority.tick()?;
-            observer.observe_tick_from(authority)?;
+            if authority.session.tick != observer.session.tick + 1 {
+                return Err(CertificationError::InvalidRecord(
+                    "authority replay window is not contiguous".to_owned(),
+                ));
+            }
+            observer.session.tick = authority.session.tick;
+            observer.session.state = authority.session.state;
+            let record = authority.replay.last().cloned().ok_or_else(|| {
+                CertificationError::CorruptReplay("authority replay is empty".to_owned())
+            })?;
+            observer.replay.push(record);
+            observer.metrics.replay_transfer_count += 1;
             if checkpoint_interval > 0 && authority.session.tick % checkpoint_interval == 0 {
                 let checkpoint = authority.checkpoint();
                 authority.checkpoints.push(checkpoint.clone());
                 observer.accept_checkpoint(checkpoint)?;
             }
         }
+        observer.validate_replay_root()?;
         Ok(())
     }
 
