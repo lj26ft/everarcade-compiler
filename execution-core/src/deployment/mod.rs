@@ -8,6 +8,7 @@ pub mod continuity;
 pub mod deterministic_io;
 pub mod diagnostics;
 pub mod distribution;
+pub mod evernode_runtime;
 pub mod federation;
 pub mod governance;
 pub mod image_builder;
