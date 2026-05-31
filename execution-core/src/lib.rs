@@ -8,6 +8,7 @@ pub mod behavior_tree;
 pub mod budget;
 pub mod canonical;
 pub mod capability;
+pub mod certification;
 pub mod checkpoint;
 pub mod client_protocol;
 pub mod codec;

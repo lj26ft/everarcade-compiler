@@ -1,12 +1,3 @@
-#!/usr/bin/env bash
-set -euo pipefail
-export CARGO_BUILD_JOBS="${CARGO_BUILD_JOBS:-1}"
-CARGO_FLAGS=()
-for arg in "$@"; do case "$arg" in --offline|--locked|--frozen) CARGO_FLAGS+=("$arg");; *) echo "unsupported argument: $arg" >&2; exit 2;; esac; done
-REPORT="deployment/reports/partition_validation_report.md"
-echo "[everarcade] partition validation: deterministic two-node partition detection"
-CARGO_BUILD_JOBS="$CARGO_BUILD_JOBS" cargo test -p execution-core --test two_node_certification_tests test_network_partition_detection "${CARGO_FLAGS[@]}"
-cat > "$REPORT" <<'REPORT'
 # Partition Validation Report
 
 ## evidence
@@ -27,4 +18,3 @@ cat > "$REPORT" <<'REPORT'
 
 ## next risks
 - Multi-partition and partial replay-window reconciliation remain unproven.
-REPORT
