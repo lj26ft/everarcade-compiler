@@ -1,6 +1,7 @@
 use crate::transport_runtime::peer_handshake::ReplayPeerHandshake;
+use crate::transport_runtime::resume::ReplayResumeRequest;
 use crate::transport_runtime::wire::{
-    ReplayAckWireMessage, ReplayChunkWireMessage, ReplayTransportError,
+    ReplayAckWireMessage, ReplayCheckpointWireMessage, ReplayChunkWireMessage, ReplayTransportError,
 };
 use serde::{Deserialize, Serialize};
 
@@ -8,6 +9,8 @@ use serde::{Deserialize, Serialize};
 pub enum TcpReplayFrame {
     Handshake(ReplayPeerHandshake),
     Chunk(ReplayChunkWireMessage),
+    Checkpoint(ReplayCheckpointWireMessage),
+    Resume(ReplayResumeRequest),
     Ack(ReplayAckWireMessage),
     Error(ReplayTransportError),
 }
