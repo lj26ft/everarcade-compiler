@@ -41,19 +41,21 @@ fn test_arena_vanguard_real_tcp_process_recovery_certification() {
     wait_for_file(&node_b_storage.join("ready.addr"), Duration::from_secs(5));
 
     let mut node_a = spawn_child("node-a-primary", addr, &node_a_storage);
-    wait_for_tick(
+    let first_phase_tick = wait_for_tick(
         &node_b_storage.join("progress.tick"),
         FIRST_PHASE_READY_TICK,
     );
 
     node_a.kill().unwrap();
     let _ = node_a.wait();
-    let disconnected_tick = read_tick(&node_b_storage.join("progress.tick"));
+    let disconnected_tick = read_tick(&node_b_storage.join("progress.tick"))
+        .expect("progress tick should be valid after wait_for_tick returned");
     wait_for_tick(
         &node_b_storage.join("progress.tick"),
-        disconnected_tick + RECOVERY_TRANSFER_TICKS,
+        first_phase_tick + RECOVERY_TRANSFER_TICKS,
     );
-    let continued_tick = read_tick(&node_b_storage.join("progress.tick"));
+    let continued_tick = read_tick(&node_b_storage.join("progress.tick"))
+        .expect("progress tick should be valid after wait_for_tick returned");
     assert!(
         continued_tick > disconnected_tick,
         "node-b continued after node-a died"
@@ -80,6 +82,41 @@ fn test_arena_vanguard_real_tcp_process_recovery_certification() {
         fs::read_to_string(node_a_storage.join("process.pid")).unwrap()
             != fs::read_to_string(node_b_storage.join("process.pid")).unwrap()
     );
+}
+
+#[test]
+fn test_read_tick_empty_file_is_retryable() {
+    let tmp = TempDir::new().unwrap();
+    let tick = tmp.path().join("progress.tick");
+    fs::write(&tick, "   ").unwrap();
+
+    assert_eq!(read_tick(&tick), None);
+}
+
+#[test]
+fn test_read_tick_partial_file_is_retryable() {
+    let tmp = TempDir::new().unwrap();
+    let tick = tmp.path().join("progress.tick");
+    fs::write(&tick, "12not-yet-complete").unwrap();
+
+    assert_eq!(read_tick(&tick), None);
+}
+
+#[test]
+fn test_wait_for_tick_accepts_eventual_valid_tick() {
+    let tmp = TempDir::new().unwrap();
+    let storage = tmp.path().to_path_buf();
+    let tick = storage.join("progress.tick");
+    fs::write(&tick, "").unwrap();
+
+    let writer_storage = storage.clone();
+    let writer = thread::spawn(move || {
+        thread::sleep(Duration::from_millis(50));
+        write_tick(&writer_storage, 7);
+    });
+
+    assert_eq!(wait_for_tick(&tick, 7), 7);
+    writer.join().unwrap();
 }
 
 #[test]
@@ -464,22 +501,42 @@ fn parse_field(record: &str, prefix: &str) -> Option<i64> {
 }
 
 fn write_tick(storage: &Path, tick: u64) {
-    fs::write(storage.join("progress.tick"), tick.to_string()).unwrap();
+    let path = storage.join("progress.tick");
+    let tmp = path.with_extension("tick.tmp");
+    {
+        let mut file = fs::File::create(&tmp).unwrap();
+        write!(file, "{tick}").unwrap();
+        file.sync_all().unwrap();
+    }
+    fs::rename(tmp, path).unwrap();
 }
 
-fn read_tick(path: &Path) -> u64 {
-    fs::read_to_string(path).unwrap().trim().parse().unwrap()
+fn read_tick(path: &Path) -> Option<u64> {
+    let raw = fs::read_to_string(path).ok()?;
+    let trimmed = raw.trim();
+    if trimmed.is_empty() {
+        return None;
+    }
+    trimmed.parse().ok()
 }
 
-fn wait_for_tick(path: &Path, target: u64) {
+fn wait_for_tick(path: &Path, target: u64) -> u64 {
     let deadline = Instant::now() + Duration::from_secs(10);
+    let mut last_valid_tick = None;
+    let mut last_raw_contents = None;
     while Instant::now() < deadline {
-        if path.exists() && read_tick(path) >= target {
-            return;
+        last_raw_contents = fs::read_to_string(path).ok();
+        if let Some(tick) = read_tick(path) {
+            last_valid_tick = Some(tick);
+            if tick >= target {
+                return tick;
+            }
         }
         thread::sleep(Duration::from_millis(25));
     }
-    panic!("timed out waiting for {path:?} to reach tick {target}");
+    panic!(
+        "timed out waiting for {path:?} to reach tick {target}; last_valid_tick={last_valid_tick:?}; last_raw_contents={last_raw_contents:?}"
+    );
 }
 
 fn wait_for_file(path: &Path, timeout: Duration) {
