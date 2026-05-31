@@ -134,3 +134,70 @@ pub mod rustrigs {
                 .contains("cargo add everarcade-rig-combat")
     }
 }
+
+pub mod package {
+    use sha2::{Digest, Sha256};
+
+    #[derive(Clone, Debug, PartialEq, Eq)]
+    pub struct RustrigPackageSpec {
+        pub package_id: String,
+        pub name: String,
+        pub version: String,
+        pub protocol_version: String,
+        pub emits_records_only: bool,
+    }
+
+    #[derive(Clone, Debug, PartialEq, Eq)]
+    pub struct PublishedRustrigPackage {
+        pub spec: RustrigPackageSpec,
+        pub hash: String,
+        pub certified: bool,
+    }
+
+    pub fn new_rustrig(name: &str) -> RustrigPackageSpec {
+        RustrigPackageSpec {
+            package_id: format!("community-{}", name.to_ascii_lowercase().replace(' ', "-")),
+            name: name.to_owned(),
+            version: "0.1.0".to_owned(),
+            protocol_version: "everarcade-protocol-1".to_owned(),
+            emits_records_only: true,
+        }
+    }
+
+    pub fn package_rustrig(spec: &RustrigPackageSpec, bytes: &[u8]) -> String {
+        let mut hasher = Sha256::new();
+        hasher.update(spec.package_id.as_bytes());
+        hasher.update(spec.version.as_bytes());
+        hasher.update(bytes);
+        hex::encode(hasher.finalize())
+    }
+
+    pub fn validate_rustrig(spec: &RustrigPackageSpec) -> bool {
+        spec.emits_records_only
+            && spec.protocol_version == "everarcade-protocol-1"
+            && spec.version.split('.').count() == 3
+    }
+
+    pub fn publish_rustrig(
+        spec: RustrigPackageSpec,
+        bytes: &[u8],
+    ) -> Result<PublishedRustrigPackage, &'static str> {
+        if !validate_rustrig(&spec) {
+            return Err("rustrig package failed deterministic validation");
+        }
+        Ok(PublishedRustrigPackage {
+            hash: package_rustrig(&spec, bytes),
+            spec,
+            certified: true,
+        })
+    }
+
+    pub fn cargo_everarcade_workflow() -> [&'static str; 4] {
+        [
+            "cargo everarcade new-rustrig",
+            "cargo everarcade package-rustrig",
+            "cargo everarcade validate-rustrig",
+            "cargo everarcade publish-rustrig",
+        ]
+    }
+}

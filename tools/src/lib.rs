@@ -439,3 +439,5 @@ pub mod rustrig_marketplace {
         }
     }
 }
+
+pub mod package_certification;

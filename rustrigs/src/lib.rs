@@ -1,6 +1,7 @@
 pub mod ai;
 pub mod combat;
 pub mod crafting;
+pub mod dependency;
 pub mod deployment;
 pub mod dialogue;
 pub mod diplomacy;
@@ -9,6 +10,7 @@ pub mod factions;
 pub mod interaction;
 pub mod inventory;
 pub mod movement;
+pub mod package;
 pub mod progression;
 pub mod quests;
 pub mod world;

@@ -1,0 +1,9 @@
+package_id = "arena-vanguard-combat"
+name = "Combat"
+version = "0.1.0"
+author = "everarcade-core"
+description = "Arena Vanguard Combat deterministic marketplace module"
+dependencies = []
+record_types = ["CombatRecord"]
+protocol_version = "everarcade-protocol-1"
+hash = "c021eb33da2ad1a72d2c8ac2376c6686df985f621a08bbe25837bebe06625f37"

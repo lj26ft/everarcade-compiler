@@ -1,0 +1,9 @@
+package_id = "arena-vanguard-dialogue"
+name = "Dialogue"
+version = "0.1.0"
+author = "everarcade-core"
+description = "Arena Vanguard Dialogue deterministic marketplace module"
+dependencies = []
+record_types = ["DialogueRecord"]
+protocol_version = "everarcade-protocol-1"
+hash = "ecf74bda045afef9959e1f13b9fcd8dec1ccb9ae7e22889a81bc8c72d65cfffd"
