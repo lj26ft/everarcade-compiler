@@ -1,0 +1,8 @@
+[runtime]
+crate = "execution-core"
+package = "../../arena-vanguard-package/runtime_package.toml"
+start_command = "everarcade-runtime start arena-vanguard"
+stop_command = "everarcade-runtime stop arena-vanguard"
+restart_command = "everarcade-runtime restart arena-vanguard"
+recover_command = "everarcade-runtime recover arena-vanguard --checkpoint checkpoint_0003"
+verify_command = "everarcade-runtime verify arena-vanguard --replay replay_0003"

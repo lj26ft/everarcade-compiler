@@ -89,18 +89,25 @@ pub fn required_artifacts_present(artifacts: &RustrigPackageArtifactSet) -> bool
 }
 
 pub fn arena_vanguard_required_manifests() -> Vec<RustrigPackageManifest> {
-    ["Combat", "Inventory", "Quest", "Dialogue", "Economy"]
-        .into_iter()
-        .map(|name| RustrigPackageManifest {
-            package_id: format!("arena-vanguard-{}", name.to_ascii_lowercase()),
-            name: name.to_owned(),
-            version: "0.1.0".to_owned(),
-            author: "everarcade-core".to_owned(),
-            description: format!("Arena Vanguard {name} deterministic marketplace module"),
-            dependencies: Vec::new(),
-            record_types: vec![format!("{name}Record")],
-            protocol_version: "everarcade-protocol-1".to_owned(),
-            hash: format!("arena-vanguard-{}-hash", name.to_ascii_lowercase()),
-        })
-        .collect()
+    [
+        "Combat",
+        "Inventory",
+        "Quest",
+        "Dialogue",
+        "Economy",
+        "World",
+    ]
+    .into_iter()
+    .map(|name| RustrigPackageManifest {
+        package_id: format!("arena-vanguard-{}", name.to_ascii_lowercase()),
+        name: name.to_owned(),
+        version: "0.1.0".to_owned(),
+        author: "everarcade-core".to_owned(),
+        description: format!("Arena Vanguard {name} deterministic marketplace module"),
+        dependencies: Vec::new(),
+        record_types: vec![format!("{name}Record")],
+        protocol_version: "everarcade-protocol-1".to_owned(),
+        hash: format!("arena-vanguard-{}-hash", name.to_ascii_lowercase()),
+    })
+    .collect()
 }

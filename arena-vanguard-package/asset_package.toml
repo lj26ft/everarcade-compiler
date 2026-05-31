@@ -1,0 +1,5 @@
+[package]
+type = "asset package"
+game = "arena-vanguard"
+manifest = "../arena-vanguard-assets/asset_manifest.toml"
+deterministic = true

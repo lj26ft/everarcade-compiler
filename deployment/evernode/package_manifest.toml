@@ -1,0 +1,6 @@
+[package]
+runtime = "../../arena-vanguard-package/runtime_package.toml"
+world = "../../arena-vanguard-package/world_package.toml"
+deployment = "../../arena-vanguard-package/deployment_package.toml"
+assets = "../../arena-vanguard-package/asset_package.toml"
+marketplace = "../../arena-vanguard-rustrigs/marketplace_manifest.toml"

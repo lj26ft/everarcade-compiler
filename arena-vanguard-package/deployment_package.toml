@@ -1,0 +1,6 @@
+[package]
+type = "deployment package"
+game = "arena-vanguard"
+bridge = "../deployment/evernode/deployment_manifest.toml"
+operations = ["deploy", "start", "stop", "restart", "recover", "verify"]
+runtime_authoritative = true

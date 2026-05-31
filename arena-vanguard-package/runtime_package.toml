@@ -1,0 +1,8 @@
+[package]
+type = "runtime package"
+game = "arena-vanguard"
+world = "arena-vanguard-world"
+runtime_authority = "execution-core"
+replay = "../arena-vanguard-world/replay/replay_0003.log"
+checkpoint = "../arena-vanguard-world/checkpoints/checkpoint_0003.state"
+deterministic = true

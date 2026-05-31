@@ -1,0 +1,6 @@
+world=arena-vanguard-world
+tick=3
+players=host:vanguard-host,join:vanguard-guest
+state_root=world:arena-vanguard:tick:3:players:2:marketplace:6
+inventory_root=inventory:host:sword:guest:potion
+quest_root=quest:arena-control:stage:2

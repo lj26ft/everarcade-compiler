@@ -1,0 +1,10 @@
+[package]
+type = "world package"
+game = "arena-vanguard"
+manifest = "../arena-vanguard-world/world_manifest.toml"
+startup = true
+shutdown = true
+restart = true
+recovery = true
+checkpoint_restore = true
+replay_equivalence = true

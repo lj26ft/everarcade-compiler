@@ -1,0 +1,34 @@
+[marketplace]
+game = "arena-vanguard"
+source = "Studio Marketplace Rustrigs"
+no_custom_gameplay_bypasses = true
+
+[[packages]]
+category = "Combat"
+id = "arena-vanguard-combat"
+record = "CombatRecord"
+
+[[packages]]
+category = "Inventory"
+id = "arena-vanguard-inventory"
+record = "InventoryRecord"
+
+[[packages]]
+category = "Quest"
+id = "arena-vanguard-quest"
+record = "QuestRecord"
+
+[[packages]]
+category = "Dialogue"
+id = "arena-vanguard-dialogue"
+record = "DialogueRecord"
+
+[[packages]]
+category = "Economy"
+id = "arena-vanguard-economy"
+record = "EconomyRecord"
+
+[[packages]]
+category = "World"
+id = "arena-vanguard-world"
+record = "WorldRecord"

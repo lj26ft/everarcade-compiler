@@ -1,0 +1,20 @@
+[game]
+id = "arena-vanguard"
+name = "Arena Vanguard"
+version = "0.1.0"
+certification_title = true
+source_of_truth = "running-software"
+
+[workflow]
+studio = true
+marketplace = true
+rustrigs = true
+templates = ["topdown-arena", "persistent-world"]
+publish_pipeline = true
+manual_runtime_modifications = false
+
+[packages]
+runtime = "../arena-vanguard-package/runtime_package.toml"
+world = "../arena-vanguard-package/world_package.toml"
+deployment = "../arena-vanguard-package/deployment_package.toml"
+assets = "../arena-vanguard-package/asset_package.toml"

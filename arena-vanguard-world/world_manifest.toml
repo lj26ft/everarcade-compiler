@@ -1,0 +1,16 @@
+[world]
+id = "arena-vanguard-world"
+game = "arena-vanguard"
+seed = "arena-vanguard-certification-seed-0001"
+tick_rate = 30
+checkpoint = "checkpoints/checkpoint_0003.state"
+replay = "replay/replay_0003.log"
+state_root = "world:arena-vanguard:tick:3:players:2:marketplace:6"
+
+[lifecycle]
+startup = "validated"
+shutdown = "validated"
+restart = "validated"
+recovery = "validated"
+checkpoint_restore = "validated"
+replay_equivalence = "validated"

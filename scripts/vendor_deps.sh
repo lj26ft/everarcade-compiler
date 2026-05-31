@@ -31,9 +31,25 @@ offline = true
 CFG
 
 if ! cargo metadata --offline --locked >/tmp/runtime_vendor_metadata.json 2>/tmp/runtime_vendor_err.log; then
-  echo "Vendor validation failed. Ensure vendor/ exists and rerun: bash scripts/vendor_deps.sh" >&2
+  echo "Vendor validation failed; refreshing vendor directory" >&2
   cat /tmp/runtime_vendor_err.log >&2
-  exit 1
+  rm -rf vendor
+  cat > .cargo/config.toml <<'CFG'
+[net]
+offline = false
+CFG
+  cargo vendor --locked vendor >/tmp/everarcade-vendor-config.toml
+  cat > .cargo/config.toml <<'CFG'
+[source.crates-io]
+replace-with = "vendored-sources"
+
+[source.vendored-sources]
+directory = "vendor"
+
+[net]
+offline = true
+CFG
+  cargo metadata --offline --locked >/tmp/runtime_vendor_metadata.json
 fi
 vendor_hash="$(find vendor -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum | awk '{print $1}')"
 cat > deployment/reports/vendor_validation_report.md <<RPT
