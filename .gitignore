@@ -38,3 +38,8 @@ scripts/Fresh VM install full.txt
 scripts/github token ghp .txt
 scripts/New Vm EverArcade validation.txt
 scripts/script for VM validation.txt
+# Generated EverNode deployment packages
+deployment/evernode/runtime/*.tar.gz
+deployment/evernode/runtime/*.sig
+deployment/evernode/runtime/*.tmp
+deployment/evernode/runtime/*.pkg
