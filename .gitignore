@@ -45,3 +45,8 @@ scripts/script for VM validation.txt
 /deployment/evernode/runtime/arena-vanguard-*.tar.gz.sig
 /deployment/evernode/runtime/arena-vanguard-*.receipt.json
 /deployment/reports/*_run.md
+# Generated EverNode deployment packages
+deployment/evernode/runtime/*.tar.gz
+deployment/evernode/runtime/*.sig
+deployment/evernode/runtime/*.tmp
+deployment/evernode/runtime/*.pkg
