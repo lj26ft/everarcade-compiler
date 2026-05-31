@@ -1,0 +1,20 @@
+[manifest]
+name = "arena-vanguard-operator"
+version = "0.1.0-launch-candidate"
+created_at = "2026-05-31T00:00:00Z"
+reproducible = true
+
+[operator]
+install = "docs/operators/install.md"
+bootstrap = "docs/operators/bootstrap.md"
+deploy = "docs/operators/deploy.md"
+recover = "docs/operators/recover.md"
+upgrade = "docs/operators/upgrade.md"
+rollback = "docs/operators/rollback.md"
+default_cargo_build_jobs = 1
+
+[validation]
+package = "required"
+deployment = "required"
+replay_continuity = "required"
+checkpoint_continuity = "required"

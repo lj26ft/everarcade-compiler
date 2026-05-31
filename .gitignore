@@ -38,3 +38,10 @@ scripts/Fresh VM install full.txt
 scripts/github token ghp .txt
 scripts/New Vm EverArcade validation.txt
 scripts/script for VM validation.txt
+
+# Generated EverNode launch-candidate artifacts
+/deployment/evernode/runtime/arena-vanguard-*.tar.gz
+/deployment/evernode/runtime/arena-vanguard-*.tar.gz.sha256
+/deployment/evernode/runtime/arena-vanguard-*.tar.gz.sig
+/deployment/evernode/runtime/arena-vanguard-*.receipt.json
+/deployment/reports/*_run.md

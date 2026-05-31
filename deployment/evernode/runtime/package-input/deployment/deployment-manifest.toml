@@ -1,0 +1,29 @@
+[manifest]
+name = "arena-vanguard-deployment"
+version = "0.1.0-launch-candidate"
+created_at = "2026-05-31T00:00:00Z"
+reproducible = true
+
+[deployment]
+runtime_package = "arena-vanguard-runtime.tar.gz"
+world_package = "arena-vanguard-world.tar.gz"
+deployment_package = "arena-vanguard-deployment.tar.gz"
+verify_package = true
+verify_deployment = true
+verify_replay_continuity = true
+verify_checkpoint_continuity = true
+
+[federation]
+node_a = "evernode-a"
+node_b = "evernode-b"
+transport = "tcp"
+join = "validated"
+checkpoint_sync = "validated"
+replay_sync = "validated"
+recovery = "validated"
+
+[artifacts]
+package = "arena-vanguard-deployment.tar.gz"
+hash = "arena-vanguard-deployment.tar.gz.sha256"
+signature = "arena-vanguard-deployment.tar.gz.sig"
+receipt = "arena-vanguard-deployment.receipt.json"

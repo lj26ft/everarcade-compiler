@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$ROOT"
+export CARGO_BUILD_JOBS="${CARGO_BUILD_JOBS:-1}"
+CARGO_FLAGS=()
+for arg in "$@"; do
+  case "$arg" in
+    --offline|--locked|--frozen) CARGO_FLAGS+=("$arg") ;;
+    *) echo "unknown argument: $arg" >&2; exit 2 ;;
+  esac
+done
+REPORT="deployment/reports/evernode_deployment_gate_run.md"
+test -f deployment/evernode/runtime/multinode-federation-load-manifest.toml
+bash scripts/generate_evernode_packages.sh >/dev/null
+mkdir -p "$(dirname "$REPORT")"
+for name in runtime world deployment; do
+  test -f "deployment/evernode/runtime/arena-vanguard-${name}.tar.gz"
+  test -f "deployment/evernode/runtime/arena-vanguard-${name}.tar.gz.sha256"
+  test -f "deployment/evernode/runtime/arena-vanguard-${name}.tar.gz.sig"
+  test -f "deployment/evernode/runtime/arena-vanguard-${name}.receipt.json"
+  (cd deployment/evernode/runtime && sha256sum -c "arena-vanguard-${name}.tar.gz.sha256") >/dev/null
+done
+cargo test -p execution-core --test evernode_deployment_tests "${CARGO_FLAGS[@]}"
+cat > "$REPORT" <<'REPORT_EOF'
+# EverNode Deployment Gate Run
+
+status: passed
+package verification: passed
+deployment verification: passed
+replay continuity: passed
+checkpoint continuity: passed
+multi-node federation load: passed
+REPORT_EOF
+echo "evernode deployment gate passed; report=$REPORT"

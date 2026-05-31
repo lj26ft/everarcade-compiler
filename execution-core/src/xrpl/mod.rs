@@ -8,6 +8,7 @@ pub mod manifests;
 pub mod markets;
 pub mod ownership;
 pub mod payments;
+pub mod publisher;
 pub mod settlement;
 pub mod vaults;
 pub mod world_identity;

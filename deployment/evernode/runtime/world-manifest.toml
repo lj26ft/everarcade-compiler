@@ -1,0 +1,18 @@
+[manifest]
+name = "arena-vanguard-world"
+version = "0.1.0-launch-candidate"
+created_at = "2026-05-31T00:00:00Z"
+reproducible = true
+
+[world]
+world_id = "arena-vanguard"
+world_root = "world:arena-vanguard:tick:3:players:2:marketplace:6"
+replay_root = "replay:arena-vanguard:tick:3:root"
+checkpoint_root = "checkpoint:arena-vanguard:tick:3:root"
+continuity_root = "continuity:arena-vanguard:deployment:root"
+
+[artifacts]
+package = "arena-vanguard-world.tar.gz"
+hash = "arena-vanguard-world.tar.gz.sha256"
+signature = "arena-vanguard-world.tar.gz.sig"
+receipt = "arena-vanguard-world.receipt.json"

@@ -1,0 +1,20 @@
+[manifest]
+name = "arena-vanguard-runtime"
+version = "0.1.0-launch-candidate"
+protocol = "everarcade-protocol-1"
+created_at = "2026-05-31T00:00:00Z"
+reproducible = true
+
+[runtime]
+engine = "execution-core"
+deterministic = true
+replay_continuity = "required"
+checkpoint_continuity = "required"
+recovery = ["runtime_crash", "node_restart", "checkpoint_restore", "world_restore"]
+networking = "real_tcp_transport"
+
+[artifacts]
+package = "arena-vanguard-runtime.tar.gz"
+hash = "arena-vanguard-runtime.tar.gz.sha256"
+signature = "arena-vanguard-runtime.tar.gz.sig"
+receipt = "arena-vanguard-runtime.receipt.json"
