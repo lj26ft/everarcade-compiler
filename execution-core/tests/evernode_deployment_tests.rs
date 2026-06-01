@@ -339,7 +339,15 @@ fn test_arena_vanguard_deployment_recovery() {
 fn test_launch_candidate_gate() {
     assert_contains(
         "deployment/reports/evernode_launch_gate.md",
-        "| runtime | Ready |",
+        "| generated package/runtime gate | Ready |",
+    );
+    assert_contains(
+        "deployment/reports/evernode_launch_gate.md",
+        "| live EverNode deployment | Partially Ready |",
+    );
+    assert_contains(
+        "deployment/reports/evernode_launch_gate.md",
+        "| unsupported live operations | Not Ready |",
     );
     assert_contains(
         "deployment/reports/evernode_launch_gate.md",
