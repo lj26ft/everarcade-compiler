@@ -50,3 +50,4 @@ deployment/evernode/runtime/*.tar.gz
 deployment/evernode/runtime/*.sig
 deployment/evernode/runtime/*.tmp
 deployment/evernode/runtime/*.pkg
+archive/validation_logs_production_useful_prototype_tar.gz
