@@ -129,6 +129,21 @@ Commands:
   governance-policy --world-root <path>
   governance-authority --world-root <path>
 
+  lease-status
+  lease-list
+  lease-audit
+  runtime-list
+  runtime-status
+  runtime-restart
+  runtime-upgrade
+  deployment-list
+  deployment-verify
+  deployment-rollback
+  topology
+  federation-health
+  alerts
+  metrics
+
   release-certification-status
   release-lineage-status
   ci-execution-replay-status
@@ -533,6 +548,121 @@ fn save_finality_cli_state(world_root: &Path, state: &FinalityCliState) -> Resul
     .map_err(|e| HostError::InvalidArgs(e.to_string()))
 }
 
+fn run_operator_control_plane_command(cmd: &str) -> Result<bool, HostError> {
+    let mut control_plane = control_plane::OperatorControlPlane::arena_vanguard();
+    let deployed = control_plane
+        .orchestrator
+        .deploy_runtime(
+            "arena-vanguard",
+            "arena-package-hash",
+            "runtime-1.0.0",
+            vec!["combat-rustrig".into()],
+        )
+        .map_err(HostError::InvalidArgs)?;
+    control_plane.record_operator_action(cmd);
+    match cmd {
+        "lease-status" => {
+            println!("lease_status=ok");
+            println!("lease_id={}", deployed.lease.id.0);
+            println!("status={:?}", deployed.lease.status);
+        }
+        "lease-list" => {
+            println!("lease_list=ok");
+            for lease in control_plane.orchestrator.leases.leases.values() {
+                println!(
+                    "lease={} game={} status={:?}",
+                    lease.id.0, lease.game_id, lease.status
+                );
+            }
+        }
+        "lease-audit" => {
+            println!("lease_audit=ok");
+            for event in control_plane.lease_audit() {
+                println!("audit={event}");
+            }
+        }
+        "runtime-list" => {
+            println!("runtime_list=ok");
+            for runtime in control_plane.orchestrator.supervisor.runtimes.values() {
+                println!(
+                    "runtime={} version={} status={:?}",
+                    runtime.runtime_id, runtime.version, runtime.status
+                );
+            }
+        }
+        "runtime-status" => {
+            println!("runtime_status=ok");
+            println!("runtime_id={}", deployed.runtime.runtime_id);
+            println!(
+                "verified={}",
+                control_plane
+                    .orchestrator
+                    .supervisor
+                    .verify_runtime(&deployed.runtime.runtime_id)
+            );
+        }
+        "runtime-restart" => {
+            control_plane
+                .orchestrator
+                .supervisor
+                .restart_runtime(&deployed.runtime.runtime_id)
+                .map_err(HostError::InvalidArgs)?;
+            println!("runtime_restart=ok");
+            println!("runtime_id={}", deployed.runtime.runtime_id);
+        }
+        "runtime-upgrade" => {
+            control_plane
+                .orchestrator
+                .supervisor
+                .upgrade_runtime(&deployed.runtime.runtime_id, "runtime-1.1.0")
+                .map_err(HostError::InvalidArgs)?;
+            println!("runtime_upgrade=ok");
+            println!("runtime_id={}", deployed.runtime.runtime_id);
+            println!("version=runtime-1.1.0");
+        }
+        "deployment-list" => {
+            println!("deployment_list=ok");
+            println!("deployment_id={}", deployed.deployment_id);
+        }
+        "deployment-verify" => {
+            println!("deployment_verify=ok");
+            println!(
+                "verified={}",
+                control_plane
+                    .orchestrator
+                    .registry
+                    .verify(&format!("deployment:{}", deployed.deployment_id))
+            );
+        }
+        "deployment-rollback" => {
+            control_plane.orchestrator.rollback("operator rollback");
+            println!("deployment_rollback=ok");
+        }
+        "topology" => {
+            println!("topology=ok");
+            println!("leader={}", control_plane.topology.leader);
+            println!("nodes={}", control_plane.topology.nodes.len());
+        }
+        "federation-health" => {
+            println!("federation_health=ok");
+            println!("health={}", control_plane.topology.federation_health());
+        }
+        "alerts" => {
+            control_plane.emit_lease_exhaustion();
+            println!("alerts=ok");
+            println!("count={}", control_plane.alerts.alerts.len());
+        }
+        "metrics" => {
+            let metrics = control_plane.metrics();
+            println!("metrics=ok");
+            println!("deployment_count={}", metrics.deployment.deployment_count);
+            println!("ticks_per_sec={}", metrics.runtime.ticks_per_sec);
+        }
+        _ => return Ok(false),
+    }
+    Ok(true)
+}
+
 fn run_cli() -> Result<(), HostError> {
     let args: Vec<String> = std::env::args().collect();
     if args.len() == 1 || args.iter().any(|a| a == "--help" || a == "-h") {
@@ -544,6 +674,21 @@ fn run_cli() -> Result<(), HostError> {
         .ok_or_else(|| HostError::InvalidArgs("missing command".into()))?;
     let state = PathBuf::from(arg_value(&args, "--state").unwrap_or_else(|| ".everarcade".into()));
     match cmd.as_str() {
+        "lease-list"
+        | "lease-audit"
+        | "runtime-list"
+        | "runtime-status"
+        | "runtime-restart"
+        | "runtime-upgrade"
+        | "deployment-list"
+        | "deployment-verify"
+        | "deployment-rollback"
+        | "topology"
+        | "federation-health"
+        | "alerts"
+        | "metrics" => {
+            run_operator_control_plane_command(cmd)?;
+        }
         "init" => {
             HostPaths::new(state.clone()).ensure()?;
             if !validate(&state) {
@@ -1158,10 +1303,11 @@ fn run_cli() -> Result<(), HostError> {
             println!("new_epoch={}", state.registry.current_epoch);
         }
         "lease-status" => {
-            let world_root = PathBuf::from(
-                arg_value(&args, "--world-root")
-                    .ok_or_else(|| HostError::InvalidArgs("missing --world-root".into()))?,
-            );
+            let Some(world_root_arg) = arg_value(&args, "--world-root") else {
+                run_operator_control_plane_command(cmd)?;
+                return Ok(());
+            };
+            let world_root = PathBuf::from(world_root_arg);
             let state = load_authority_cli_state(&world_root)?;
             let report = execution_core::leases::verify_lease_expiration(
                 &state.lease_registry.current_lease,
