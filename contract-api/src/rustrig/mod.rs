@@ -67,3 +67,9 @@ impl RustrigDescriptor {
         }
     }
 }
+
+pub mod context;
+pub mod output;
+
+pub use context::RustrigContext;
+pub use output::RustrigOutput;

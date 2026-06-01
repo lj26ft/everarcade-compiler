@@ -1,4 +1,7 @@
+use contract_api::protocol_records::fields;
+use contract_api::rustrig::RustrigContext;
 use execution_core::marketplace::{install_package, replay_safe_marketplace, MarketplacePackage};
+use execution_core::rustrig_runtime::{ExecutionRequest, RustrigKernel};
 use rustrigs::dependency::DependencyGraph;
 use rustrigs::package::arena_vanguard_required_manifests;
 use rustrigs::xrpl::{anchor_records_equivalent, arena_vanguard_anchor_records};
@@ -242,4 +245,54 @@ fn test_v0_1_certification_gate() {
     ] {
         assert!(certification.contains(gate), "missing gate {gate}");
     }
+}
+
+#[test]
+fn test_arena_vanguard_real_rustrig_execution_flow() {
+    let ctx = RustrigContext {
+        world_root: "arena:vanguard".to_owned(),
+        replay_root: "replay:arena".to_owned(),
+        checkpoint_root: "checkpoint:arena".to_owned(),
+        actor_id: "arena-player".to_owned(),
+        tick: 42,
+        input_hash: "arena-vanguard-flow".to_owned(),
+        protocol_version: "everarcade-protocol-1".to_owned(),
+    };
+    let mut kernel = RustrigKernel::default();
+    for id in [
+        "world.spawn_entity",
+        "world.move_entity",
+        "combat.apply_damage",
+        "inventory.add_item",
+        "quests.advance_objective",
+        "dialogue.complete_dialogue",
+        "economy.create_ledger_entry",
+        "replay.emit_event",
+        "runtime.checkpoint",
+        "runtime.recover",
+    ] {
+        let result = kernel
+            .execute(ExecutionRequest {
+                rustrig_id: id.to_owned(),
+                version: "1.0.0".to_owned(),
+                context: ctx.clone(),
+                payload: fields(&[
+                    ("entity", "arena-player".to_owned()),
+                    ("target", "arena-player".to_owned()),
+                    ("item", "arena-medal".to_owned()),
+                    ("quest", "arena-vanguard".to_owned()),
+                    ("conversation", "vanguard-coach".to_owned()),
+                    ("amount", "3".to_owned()),
+                ]),
+            })
+            .expect("arena vanguard rustrig execution");
+        assert_eq!(result.output.rustrig_id, id);
+    }
+    assert!(kernel.state.world.contains_key("arena-player"));
+    assert!(!kernel.state.combat.is_empty());
+    assert!(!kernel.state.inventory.is_empty());
+    assert!(!kernel.state.quests.is_empty());
+    assert!(!kernel.state.dialogue.is_empty());
+    assert!(!kernel.state.economy.is_empty());
+    assert!(kernel.replay.events.len() >= 10);
 }

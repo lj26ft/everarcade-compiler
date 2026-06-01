@@ -66,6 +66,7 @@ pub mod replay_runtime;
 pub mod runtime;
 pub mod runtime_commit;
 pub mod runtime_semantics;
+pub mod rustrig_runtime;
 pub mod scheduler;
 pub mod security;
 pub mod session;
