@@ -3,6 +3,7 @@ members = [
     "everarcade-abi",
     "execution-core",
     "contract-api",
+    "control-plane",
     "rustrigs",
     "contracts/set-contract",
     "contracts/increment-contract",
