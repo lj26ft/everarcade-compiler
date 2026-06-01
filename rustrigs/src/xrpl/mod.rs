@@ -1,5 +1,5 @@
 use crate::{ReplaySafeRustrig, Rustrig, RustrigDescriptor, VersionedRustrig};
-use contract_api::protocol_records::{fields, XrplIntentRecord};
+use contract_api::protocol_records::{fields, ProtocolRecord, XrplIntentRecord};
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct XrplIntentInput {
     pub account: String,
@@ -9,23 +9,26 @@ pub struct XrplIntentInput {
     pub destination: String,
     pub tick: u64,
 }
+fn rec(action: &str, i: &XrplIntentInput) -> XrplIntentRecord {
+    XrplIntentRecord::new(
+        action,
+        i.account.clone(),
+        fields(&[
+            ("intent", i.intent.clone()),
+            ("asset", i.asset.clone()),
+            ("amount", i.amount.to_string()),
+            ("destination", i.destination.clone()),
+            ("tick", i.tick.to_string()),
+            ("submission", String::from("runtime-bridge-only")),
+        ]),
+    )
+}
 pub struct CreateXrplIntent;
 impl Rustrig for CreateXrplIntent {
     type Input = XrplIntentInput;
     type Output = XrplIntentRecord;
     fn execute(i: Self::Input) -> Self::Output {
-        XrplIntentRecord::new(
-            "create-xrpl-intent",
-            i.account,
-            fields(&[
-                ("intent", i.intent),
-                ("asset", i.asset),
-                ("amount", i.amount.to_string()),
-                ("destination", i.destination),
-                ("tick", i.tick.to_string()),
-                ("submission", String::from("runtime-bridge-only")),
-            ]),
-        )
+        rec("create-xrpl-intent", &i)
     }
 }
 impl ReplaySafeRustrig for CreateXrplIntent {}
@@ -34,12 +37,28 @@ impl VersionedRustrig for CreateXrplIntent {
     const VERSION: &'static str = "1.0.0";
     const RECORD_TYPE: &'static str = "XrplIntentRecord";
 }
+pub fn create_anchor_intent(i: XrplIntentInput) -> Vec<ProtocolRecord> {
+    vec![ProtocolRecord::XrplIntent(rec("create-anchor-intent", &i))]
+}
+pub fn create_settlement_intent(i: XrplIntentInput) -> Vec<ProtocolRecord> {
+    vec![ProtocolRecord::XrplIntent(rec(
+        "create-settlement-intent",
+        &i,
+    ))]
+}
+pub fn create_vault_intent(i: XrplIntentInput) -> Vec<ProtocolRecord> {
+    vec![ProtocolRecord::XrplIntent(rec("create-vault-intent", &i))]
+}
 pub fn descriptors() -> Vec<RustrigDescriptor> {
-    vec![RustrigDescriptor::new(
+    [
         "CreateXrplIntent",
-        "1.0.0",
-        "XrplIntentRecord",
-    )]
+        "CreateAnchorIntent",
+        "CreateSettlementIntent",
+        "CreateVaultIntent",
+    ]
+    .into_iter()
+    .map(|n| RustrigDescriptor::new(n, "1.0.0", "XrplIntentRecord"))
+    .collect()
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]

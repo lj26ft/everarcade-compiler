@@ -113,7 +113,12 @@ pub mod rustrigs {
         pub crate_name: String,
         pub package_hint: &'static str,
         pub trait_surface: &'static str,
+        pub context_input: &'static str,
+        pub record_output: &'static str,
         pub emits_records_only: bool,
+        pub determinism_test: &'static str,
+        pub replay_equivalence_test: &'static str,
+        pub abi_compatibility_test: &'static str,
     }
 
     pub fn cargo_new_workflow(name: &str) -> RustrigTemplate {
@@ -121,13 +126,27 @@ pub mod rustrigs {
             crate_name: name.to_owned(),
             package_hint: "cargo new my-rustrig && cargo add everarcade-rig-combat",
             trait_surface: "everarcade_sdk::rustrigs::Rustrig",
+            context_input: "contract_api::rustrig::RustrigContext",
+            record_output: "contract_api::rustrig::RustrigOutput",
             emits_records_only: true,
+            determinism_test: "cargo test deterministic_rustrig_output",
+            replay_equivalence_test: "cargo test replay_equivalence",
+            abi_compatibility_test: "cargo test abi_compatibility",
         }
     }
 
     pub fn sdk_ready() -> bool {
         let template = cargo_new_workflow("my-rustrig");
         template.emits_records_only
+            && template.context_input.ends_with("RustrigContext")
+            && template.record_output.ends_with("RustrigOutput")
+            && template.determinism_test.contains("deterministic")
+            && template
+                .replay_equivalence_test
+                .contains("replay_equivalence")
+            && template
+                .abi_compatibility_test
+                .contains("abi_compatibility")
             && template.package_hint.contains("cargo new")
             && template
                 .package_hint
@@ -145,6 +164,11 @@ pub mod package {
         pub version: String,
         pub protocol_version: String,
         pub emits_records_only: bool,
+        pub includes_context_input: bool,
+        pub includes_record_output: bool,
+        pub includes_determinism_test: bool,
+        pub includes_replay_equivalence_test: bool,
+        pub includes_abi_compatibility_test: bool,
     }
 
     #[derive(Clone, Debug, PartialEq, Eq)]
@@ -161,6 +185,11 @@ pub mod package {
             version: "0.1.0".to_owned(),
             protocol_version: "everarcade-protocol-1".to_owned(),
             emits_records_only: true,
+            includes_context_input: true,
+            includes_record_output: true,
+            includes_determinism_test: true,
+            includes_replay_equivalence_test: true,
+            includes_abi_compatibility_test: true,
         }
     }
 
@@ -174,6 +203,11 @@ pub mod package {
 
     pub fn validate_rustrig(spec: &RustrigPackageSpec) -> bool {
         spec.emits_records_only
+            && spec.includes_context_input
+            && spec.includes_record_output
+            && spec.includes_determinism_test
+            && spec.includes_replay_equivalence_test
+            && spec.includes_abi_compatibility_test
             && spec.protocol_version == "everarcade-protocol-1"
             && spec.version.split('.').count() == 3
     }

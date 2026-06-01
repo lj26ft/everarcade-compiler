@@ -29,6 +29,11 @@ pub fn library() -> Vec<RustrigDescriptor> {
     rigs.extend(dialogue::descriptors());
     rigs.extend(economy::descriptors());
     rigs.extend(world::descriptors());
+    rigs.extend(progression::descriptors());
+    rigs.extend(crafting::descriptors());
+    rigs.extend(factions::descriptors());
+    rigs.extend(movement::descriptors());
+    rigs.extend(interaction::descriptors());
     rigs.extend(xrpl::descriptors());
     rigs.extend(deployment::descriptors());
     rigs

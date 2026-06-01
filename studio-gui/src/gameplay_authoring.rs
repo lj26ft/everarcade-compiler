@@ -31,6 +31,8 @@ pub struct GameplayNode {
     pub deterministic: bool,
     pub rustrig: &'static str,
     pub record_type: &'static str,
+    pub runtime_surface: &'static str,
+    pub preview_mode: bool,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -140,48 +142,60 @@ impl GameplayAuthoringState {
                     label: "On Interact",
                     kind: GameplayNodeKind::Event,
                     deterministic: true,
-                    rustrig: "StartDialogue",
+                    rustrig: "dialogue.complete_dialogue",
                     record_type: "DialogueRecord",
+                    runtime_surface: "Rustrig Runtime Execution",
+                    preview_mode: false,
                 },
                 GameplayNode {
                     id: "condition:has-key",
                     label: "Has Item: Key",
                     kind: GameplayNodeKind::Condition,
                     deterministic: true,
-                    rustrig: "ValidateInventory",
+                    rustrig: "inventory.add_item",
                     record_type: "InventoryRecord",
+                    runtime_surface: "Rustrig Runtime Execution",
+                    preview_mode: false,
                 },
                 GameplayNode {
                     id: "action:open-door",
                     label: "Open Door",
                     kind: GameplayNodeKind::Action,
                     deterministic: true,
-                    rustrig: "MoveEntity",
+                    rustrig: "world.move_entity",
                     record_type: "WorldRecord",
+                    runtime_surface: "Rustrig Runtime Execution",
+                    preview_mode: false,
                 },
                 GameplayNode {
                     id: "timer:cooldown",
                     label: "Start Cooldown Timer",
                     kind: GameplayNodeKind::Timer,
                     deterministic: true,
-                    rustrig: "CalculateCooldown",
+                    rustrig: "combat.apply_damage",
                     record_type: "CombatRecord",
+                    runtime_surface: "Rustrig Runtime Execution",
+                    preview_mode: false,
                 },
                 GameplayNode {
                     id: "state:quest-advanced",
                     label: "Advance Quest State",
                     kind: GameplayNodeKind::StateTransition,
                     deterministic: true,
-                    rustrig: "AdvanceQuest",
+                    rustrig: "quests.advance_objective",
                     record_type: "QuestRecord",
+                    runtime_surface: "Rustrig Runtime Execution",
+                    preview_mode: false,
                 },
                 GameplayNode {
                     id: "trigger:proximity",
                     label: "Area Proximity Trigger",
                     kind: GameplayNodeKind::Trigger,
                     deterministic: true,
-                    rustrig: "SpawnEntity",
+                    rustrig: "world.spawn_entity",
                     record_type: "WorldRecord",
+                    runtime_surface: "Rustrig Runtime Execution",
+                    preview_mode: false,
                 },
             ],
             edges: vec![
@@ -380,11 +394,12 @@ impl GameplayAuthoringState {
                 .nodes
                 .iter()
                 .all(|node| node.deterministic)
-            && self
-                .visual_logic
-                .nodes
-                .iter()
-                .all(|node| !node.rustrig.is_empty() && node.record_type.ends_with("Record"))
+            && self.visual_logic.nodes.iter().all(|node| {
+                !node.rustrig.is_empty()
+                    && node.record_type.ends_with("Record")
+                    && node.runtime_surface == "Rustrig Runtime Execution"
+                    && !node.preview_mode
+            })
             && self.rustrig_surfaces.len() == 5
             && self.quests.visual_authoring
             && self.dialogue.visual_editing
@@ -410,13 +425,15 @@ fn graph_hash(graph: &VisualLogicGraph) -> String {
     let mut parts = vec!["visual-logic-graph".to_owned()];
     parts.extend(graph.nodes.iter().map(|node| {
         format!(
-            "{}:{}:{}:{}:{}:{}",
+            "{}:{}:{}:{}:{}:{}:{}:{}",
             node.id,
             node.label,
             node.kind.as_str(),
             node.deterministic,
             node.rustrig,
-            node.record_type
+            node.record_type,
+            node.runtime_surface,
+            node.preview_mode
         )
     }));
     parts.extend(
@@ -482,6 +499,10 @@ pub fn rustrig_visual_logic_integration() -> bool {
             "Rustrig Validation",
         ]
         && state.visual_logic.nodes.iter().all(|node| {
-            node.deterministic && !node.rustrig.is_empty() && node.record_type.ends_with("Record")
+            node.deterministic
+                && !node.rustrig.is_empty()
+                && node.record_type.ends_with("Record")
+                && node.runtime_surface == "Rustrig Runtime Execution"
+                && !node.preview_mode
         })
 }
