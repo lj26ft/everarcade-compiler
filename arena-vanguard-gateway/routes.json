@@ -1,0 +1,13 @@
+{
+  "gateway": "arena-vanguard-session-bridge",
+  "authority": "gateway submits runtime actions only; no frontend or gateway authority logic",
+  "endpoints": {
+    "/join": { "method": "POST", "action": "runtime.join" },
+    "/leave": { "method": "POST", "action": "runtime.leave" },
+    "/move": { "method": "POST", "action": "runtime.move" },
+    "/attack": { "method": "POST", "action": "runtime.attack" },
+    "/interact": { "method": "POST", "action": "runtime.interact" },
+    "/status": { "method": "GET", "action": "runtime.telemetry" }
+  },
+  "statusFeed": ["player count", "runtime health", "world health", "session count"]
+}
