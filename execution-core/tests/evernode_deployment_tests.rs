@@ -373,11 +373,30 @@ fn runtime_dir() -> PathBuf {
 
 fn run_build_script() {
     let status = Command::new("bash")
-        .arg("scripts/build_evernode_packages.sh")
+        .arg("scripts/generate_evernode_packages.sh")
         .current_dir(root())
         .status()
         .expect("run EverNode package builder");
     assert!(status.success(), "EverNode package builder failed");
+}
+
+fn run_generate_script_with_args(args: &[&str]) {
+    let status = Command::new("bash")
+        .arg("scripts/generate_evernode_packages.sh")
+        .args(args)
+        .current_dir(root())
+        .status()
+        .expect("run EverNode package generator");
+    assert!(status.success(), "EverNode package generator failed");
+}
+
+fn verify_packages_sha256() {
+    let status = Command::new("sha256sum")
+        .args(["-c", "packages.sha256"])
+        .current_dir(runtime_dir())
+        .status()
+        .expect("sha256sum verifies packages.sha256");
+    assert!(status.success(), "packages.sha256 verification failed");
 }
 
 fn sha256(path: &Path) -> String {
@@ -408,7 +427,7 @@ fn test_evernode_packages_are_generated_and_validated() {
 
     for package in expected {
         let tarball = runtime_dir().join(format!("{package}.tar.gz"));
-        let signature = runtime_dir().join(format!("{package}.sig"));
+        let signature = runtime_dir().join(format!("{package}.tar.gz.sig"));
         assert!(tarball.is_file(), "missing generated tarball {tarball:?}");
         assert!(
             signature.is_file(),
@@ -424,8 +443,8 @@ fn test_evernode_packages_are_generated_and_validated() {
         let signature_body = fs::read_to_string(&signature).expect("read generated signature");
         assert_eq!(
             signature_body.trim(),
-            format!("evernode-offline-signature-v1 {package} {digest}"),
-            "signature should bind package name to generated tarball digest"
+            format!("evernode-offline-signature-v1 {package}.tar.gz {digest}"),
+            "signature should bind package tarball name to generated tarball digest"
         );
     }
 }
@@ -437,6 +456,8 @@ fn test_evernode_generated_binaries_are_not_source_controlled() {
             "ls-files",
             "deployment/evernode/runtime/*.tar.gz",
             "deployment/evernode/runtime/*.sig",
+            "deployment/evernode/runtime/*.receipt.json",
+            "dist/everarcade-hotpocket-contract*",
         ])
         .current_dir(root())
         .output()
@@ -450,6 +471,77 @@ fn test_evernode_generated_binaries_are_not_source_controlled() {
 }
 
 #[test]
+fn test_generate_evernode_packages_writes_fresh_package_sha256() {
+    run_build_script();
+    fs::write(
+        runtime_dir().join("packages.sha256"),
+        "0000000000000000000000000000000000000000000000000000000000000000  arena-vanguard-runtime.tar.gz\n",
+    )
+    .expect("write intentionally stale package checksum manifest");
+
+    run_build_script();
+    verify_packages_sha256();
+
+    let checksums = fs::read_to_string(runtime_dir().join("packages.sha256"))
+        .expect("packages.sha256 regenerated");
+    for package in [
+        "arena-vanguard-deployment",
+        "arena-vanguard-runtime",
+        "arena-vanguard-world",
+    ] {
+        let digest = sha256(&runtime_dir().join(format!("{package}.tar.gz")));
+        assert!(
+            checksums.contains(&format!("{digest}  {package}.tar.gz")),
+            "packages.sha256 should contain the fresh digest for {package}"
+        );
+    }
+}
+
+#[test]
+fn test_hotpocket_contract_staging_layout() {
+    run_generate_script_with_args(&["--stage-contract"]);
+
+    let contract_dir = root().join("dist/everarcade-hotpocket-contract");
+    assert!(contract_dir.join("packages/packages.sha256").is_file());
+    assert!(contract_dir.join("config/runtime-manifest.toml").is_file());
+    assert!(contract_dir.join("config/world-manifest.toml").is_file());
+    assert!(contract_dir
+        .join("config/deployment-manifest.toml")
+        .is_file());
+    assert!(contract_dir.join("state/operator").is_dir());
+    assert!(contract_dir.join("start.sh").is_file());
+
+    let status = Command::new("sha256sum")
+        .args(["-c", "packages.sha256"])
+        .current_dir(contract_dir.join("packages"))
+        .status()
+        .expect("verify staged packages.sha256");
+    assert!(status.success(), "staged packages.sha256 should verify");
+}
+
+#[test]
+fn test_generated_package_artifacts_are_gitignored() {
+    let output = Command::new("git")
+        .args([
+            "check-ignore",
+            "deployment/evernode/runtime/arena-vanguard-runtime.tar.gz",
+            "deployment/evernode/runtime/arena-vanguard-runtime.tar.gz.sig",
+            "deployment/evernode/runtime/arena-vanguard-runtime.receipt.json",
+            "dist/everarcade-hotpocket-contract/",
+            "dist/everarcade-hotpocket-contract.tar.gz",
+        ])
+        .current_dir(root())
+        .output()
+        .expect("git check-ignore runs");
+    assert!(
+        output.status.success(),
+        "generated package artifacts should be gitignored: stdout={} stderr={}",
+        String::from_utf8_lossy(&output.stdout),
+        String::from_utf8_lossy(&output.stderr)
+    );
+}
+
+#[test]
 fn test_evernode_package_builder_is_reproducible() {
     run_build_script();
     let first = fs::read_to_string(runtime_dir().join("packages.sha256"))
@@ -457,5 +549,6 @@ fn test_evernode_package_builder_is_reproducible() {
     run_build_script();
     let second = fs::read_to_string(runtime_dir().join("packages.sha256"))
         .expect("read second generated package checksum manifest");
+    verify_packages_sha256();
     assert_eq!(first, second, "EverNode package generation must be stable");
 }

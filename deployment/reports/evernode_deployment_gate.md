@@ -12,4 +12,4 @@
 - Ready status is limited to the validated generated package/runtime gate and deterministic validation artifacts.
 - Live EverNode deployment remains Partially Ready until an actual production deployment is performed and evidenced.
 - Unsupported live operations remain Not Ready and must not be treated as production-ready behavior.
-- Generated `.tar.gz` and `.sig` files are not source controlled; rebuild with `scripts/build_evernode_packages.sh` and validate `deployment/evernode/runtime/packages.sha256`.
+- Generated `.tar.gz` and `.sig` files are not source controlled; rebuild with `scripts/generate_evernode_packages.sh` and validate `deployment/evernode/runtime/packages.sha256`.
