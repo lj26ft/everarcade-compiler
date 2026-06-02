@@ -1,13 +1,35 @@
 {
-  "gateway": "arena-vanguard-session-bridge",
-  "authority": "gateway submits runtime actions only; no frontend or gateway authority logic",
+  "gateway": "arena-vanguard-live-runtime-binding",
+  "authority": "transport-only; gateway submits runtime actions and relays runtime-owned state feeds",
+  "runtimeBinding": {
+    "launchesRuntime": true,
+    "attachesRuntime": true,
+    "discoversRuntime": true,
+    "healthChecksRuntime": true
+  },
+  "transport": {
+    "http": true,
+    "websocket": true,
+    "reconnect": true,
+    "heartbeat": true,
+    "sessionResume": true,
+    "connectionTimeoutMs": 30000,
+    "retryMs": 250,
+    "resumeToken": true,
+    "heartbeatValidation": true
+  },
   "endpoints": {
     "/join": { "method": "POST", "action": "runtime.join" },
     "/leave": { "method": "POST", "action": "runtime.leave" },
     "/move": { "method": "POST", "action": "runtime.move" },
     "/attack": { "method": "POST", "action": "runtime.attack" },
     "/interact": { "method": "POST", "action": "runtime.interact" },
+    "/use-item": { "method": "POST", "action": "runtime.useItem" },
+    "/resume": { "method": "POST", "action": "runtime.resume" },
+    "/heartbeat": { "method": "GET", "action": "transport.heartbeat" },
+    "/world-state": { "method": "GET", "action": "runtime.worldStateFeed" },
     "/status": { "method": "GET", "action": "runtime.telemetry" }
   },
-  "statusFeed": ["player count", "runtime health", "world health", "session count"]
+  "statusFeed": ["active sessions", "players online", "gateway status", "runtime status", "replay growth", "checkpoint age", "recovery state"],
+  "sessionRegistry": ["SessionId", "PlayerCount", "RuntimeHealth", "CheckpointAge", "ReplaySize"]
 }

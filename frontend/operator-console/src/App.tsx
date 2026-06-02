@@ -1,8 +1,8 @@
 import { status } from "@everarcade/shared-api";
 
-export const healthPanels = ["Runtime Health", "Replay Health", "Deployment Status", "Federation Health", "Alerts", "Metrics"];
-export const metrics = ["Ticks/sec", "Session Count", "Player Count", "Runtime Tick", "Checkpoint Age", "Replay Growth", "Runtime Count", "Deployment Count", "Federation Nodes"];
-export const alertStates = ["Healthy", "Warning", "Critical"];
+export const healthPanels = ["Active Sessions", "Players Online", "Gateway Status", "Runtime Status", "Replay Growth", "Checkpoint Age", "Recovery State", "Alerts", "Metrics"];
+export const metrics = ["Join Rate", "Reconnect Rate", "Action Throughput", "Gateway Latency", "Session Duration", "Session Count", "Player Count", "Runtime Tick", "Checkpoint Age", "Replay Growth"];
+export const alertStates = ["Healthy", "Warning", "Failed", "Recovering"];
 export const alerts = ["Runtime Stalled", "Checkpoint Delay", "Recovery Failure", "Deployment Failure"];
 
 export function App() {

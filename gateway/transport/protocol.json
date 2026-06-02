@@ -1,0 +1,7 @@
+{
+  "authority": "transport-only",
+  "http": ["join", "leave", "move", "attack", "interact", "use-item", "status"],
+  "websocket": ["world-state-feed", "heartbeat", "resume"],
+  "reconnect": { "resume_token": true, "timeout_ms": 30000, "retry_ms": 250, "heartbeat_ms": 5000 },
+  "session_resume": ["restore-character", "restore-position", "restore-inventory", "restore-progression"]
+}

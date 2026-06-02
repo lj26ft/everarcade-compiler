@@ -4,8 +4,8 @@ import { connectWallet, disconnectWallet } from "@everarcade/shared-wallet";
 export const playerHomeSections = ["Featured Games", "My Games", "My Profile", "Wallet", "Servers"];
 export const gameBrowserColumns = ["Game Name", "Genre", "Players Online", "Version", "Status"];
 export const arenaVanguardSections = ["Play", "Profile", "Inventory", "Progression", "Leaderboards", "World Status"];
-export const arenaVanguardHud = ["Health", "Energy", "XP", "Level", "Inventory", "Quest Tracker"];
-export const arenaVanguardWorldZones = ["Arena Outpost", "spawn zone", "enemy zone", "loot zone"];
+export const arenaVanguardHud = ["Health", "Energy", "XP", "Level", "Inventory", "Quest Status"];
+export const arenaVanguardWorldZones = ["Arena Outpost", "Spawn Area", "Combat Area", "Loot Area", "Safe Area"];
 export const arenaVanguardRuntimeFlow = [
   "Click Play",
   "Join Session",
@@ -15,7 +15,9 @@ export const arenaVanguardRuntimeFlow = [
   "Movement Input",
   "Combat Input",
   "Inventory View",
-  "Reconnect Flow"
+  "WorldStateFeed",
+  "Reconnect Flow",
+  "Session Resume"
 ];
 
 export function App() {
@@ -27,7 +29,7 @@ export function App() {
     <section aria-label="Featured Games">
       <h2>Arena Vanguard</h2>
       <p>First-class deterministic arena experience using runtime APIs only.</p>
-      <button data-testid="arena-vanguard-play" data-runtime-action="join">Play Arena Vanguard</button>
+      <button data-testid="arena-vanguard-play" data-runtime-action="join" data-gateway="/join">Play Arena Vanguard</button>
     </section>
     <section aria-label="Game Browser">
       {gameBrowserColumns.map(column => <strong key={column}>{column}</strong>)}
@@ -39,14 +41,15 @@ export function App() {
         {arenaVanguardRuntimeFlow.map(step => <li key={step}>{step}</li>)}
       </ol>
     </section>
-    <section aria-label="Arena Vanguard HUD" data-authority="runtime-read-only">
+    <section aria-label="Arena Vanguard HUD" data-authority="runtime-state-feed">
       {arenaVanguardHud.map(item => <output key={item}>{item}</output>)}
     </section>
     <section aria-label="Arena Outpost World View" data-authority="runtime-read-only">
       {arenaVanguardWorldZones.map(zone => <article key={zone}>{zone}</article>)}
-      <button data-runtime-action="move">Move</button>
-      <button data-runtime-action="attack">Attack</button>
-      <button data-runtime-action="interact">Interact / Loot</button>
+      <button data-runtime-action="move" data-gateway="/move">Move</button>
+      <button data-runtime-action="attack" data-gateway="/attack">Attack</button>
+      <button data-runtime-action="interact" data-gateway="/interact">Interact / Loot</button>
+      <button data-runtime-action="resume" data-gateway="/resume">Resume Session</button>
     </section>
     <section aria-label="Wallet">
       <button>Connect</button><button>Disconnect</button><span>Display Address</span><span>Display Network</span>

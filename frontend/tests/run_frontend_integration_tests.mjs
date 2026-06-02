@@ -12,6 +12,7 @@ const rootFiles = [
   "frontend-gateway/routes.json",
   "docs/frontend/json_contracts.md",
   "frontend/tests/arena_vanguard_playable.test.ts",
+  "frontend/tests/live_session.test.ts",
   "arena-vanguard-gateway/routes.json"
 ];
 
@@ -74,4 +75,21 @@ test("arena vanguard gateway exposes playable session endpoints", () => {
   for (const endpoint of ["/join", "/leave", "/move", "/attack", "/interact", "/status"]) {
     assert.ok(routes.endpoints[endpoint], endpoint);
   }
+});
+
+
+test("arena vanguard live session frontend validation is wired", () => {
+  const body = readFileSync("frontend/tests/live_session.test.ts", "utf8");
+  for (const token of ["Play Flow", "Join Flow", "Movement", "Combat", "Inventory", "Reconnect", "HUD Sync", "Session Resume"]) {
+    assert.match(body, new RegExp(token));
+  }
+});
+
+test("arena vanguard gateway exposes live session transport endpoints", () => {
+  const routes = JSON.parse(readFileSync("arena-vanguard-gateway/routes.json", "utf8"));
+  for (const endpoint of ["/join", "/leave", "/move", "/attack", "/interact", "/use-item", "/resume", "/heartbeat", "/world-state", "/status"]) {
+    assert.ok(routes.endpoints[endpoint], endpoint);
+  }
+  assert.equal(routes.transport.resumeToken, true);
+  assert.equal(routes.runtimeBinding.attachesRuntime, true);
 });
