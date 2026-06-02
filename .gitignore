@@ -63,3 +63,5 @@ deployment/evernode/runtime/*.receipt.json
 deployment/reports/*_run.md
 dist/everarcade-hotpocket-contract/
 dist/everarcade-hotpocket-contract.tar.gz
+validation_logs/
+validation_logs.tar.gz

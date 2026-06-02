@@ -1,5 +1,6 @@
 mod commands;
 mod config;
+mod product;
 mod runtime_snapshot;
 use std::env;
 
@@ -22,6 +23,11 @@ fn run() -> Result<(), String> {
         return runtime_snapshot::runtime_snapshot(
             args.get(2).map(String::as_str).unwrap_or("runtime/config"),
         );
+    }
+    if let Some(cmd) = args.get(1).map(String::as_str) {
+        if product::is_product_command(cmd) {
+            return product::dispatch(&args);
+        }
     }
     commands::dispatch(&args).or_else(|e| {
         commands::print_help();

@@ -3,11 +3,11 @@ set -euo pipefail
 
 # Policy:
 # - Canonical deterministic vector fixtures are allowed as tracked assets.
-# - Runtime-generated receipts/checkpoints/state artifacts must remain untracked.
+# - Runtime-generated tarballs, signatures, receipts, dist outputs, and transient
+#   runtime state must remain untracked.
 
 tracked_files="$(git ls-files)"
 
-# Explicit runtime artifact path patterns that must never be tracked.
 RUNTIME_PATTERNS=(
   '(^|/)\.everarcade($|/)'
   '(^|/)target($|/)'
@@ -16,15 +16,38 @@ RUNTIME_PATTERNS=(
   '^state($|/)'
   '^\.everarcade($|/)'
   '\.tmp$'
-  '\.log$'
+  '^dist($|/)'
+  '\.tar\.gz$'
+  '\.sig$'
+  '\.pkg$'
+  '^validation_logs($|/)'
+  '^validation_logs\.tar\.gz$'
+  '(^|/)receipt\.json$'
 )
+
+allowed_fixture_patterns=(
+  '^deployment/evernode/runtime/package-input/.*/receipt\.json$'
+)
+
+is_allowed_fixture() {
+  local file="$1"
+  local pattern
+  for pattern in "${allowed_fixture_patterns[@]}"; do
+    if [[ "$file" =~ $pattern ]]; then
+      return 0
+    fi
+  done
+  return 1
+}
 
 violations=""
 for pattern in "${RUNTIME_PATTERNS[@]}"; do
-  matches="$(printf '%s\n' "$tracked_files" | grep -E "$pattern" || true)"
-  if [[ -n "$matches" ]]; then
-    violations+="$matches"$'\n'
-  fi
+  while IFS= read -r file; do
+    [[ -n "$file" ]] || continue
+    if ! is_allowed_fixture "$file"; then
+      violations+="$file"$'\n'
+    fi
+  done < <(printf '%s\n' "$tracked_files" | grep -E "$pattern" || true)
 done
 
 if [[ -n "$violations" ]]; then
