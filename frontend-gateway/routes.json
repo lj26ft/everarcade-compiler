@@ -1,0 +1,14 @@
+{
+  "gateway": "everarcade-product-facade",
+  "authority": "frontend-gateway shells out to product commands and never writes runtime authority directly",
+  "endpoints": {
+    "/doctor": { "command": "everarcade doctor --json", "method": "POST" },
+    "/status": { "command": "everarcade status --json", "method": "POST" },
+    "/package": { "command": "everarcade package --json", "method": "POST" },
+    "/rehearse": { "command": "everarcade rehearse --json", "method": "POST" },
+    "/deploy": { "command": "everarcade deploy --dry-run --json", "method": "POST" },
+    "/validate": { "command": "everarcade validate --profile quick --json", "method": "POST" },
+    "/projects": { "command": "everarcade new <game-id> --json", "method": "POST" },
+    "/rustrigs": { "command": "everarcade add-rustrig <name> --json", "method": "POST" }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "name": "everarcade-frontend-workspace",
+  "private": true,
+  "version": "0.1.0",
+  "description": "EverArcade creator, player, operator, and gateway frontend workspace.",
+  "workspaces": [
+    "frontend/creator-dashboard",
+    "frontend/player-portal",
+    "frontend/operator-console",
+    "frontend/shared-ui",
+    "frontend/shared-api",
+    "frontend/shared-types",
+    "frontend/shared-wallet",
+    "frontend-gateway"
+  ],
+  "scripts": {
+    "test": "node --test frontend/tests/run_frontend_integration_tests.mjs",
+    "frontend:validate": "bash scripts/run_frontend_validation.sh"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "latest",
+    "typescript": "latest",
+    "vite": "latest",
+    "react": "latest",
+    "react-dom": "latest"
+  }
+}
