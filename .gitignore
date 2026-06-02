@@ -51,3 +51,15 @@ deployment/evernode/runtime/*.sig
 deployment/evernode/runtime/*.tmp
 deployment/evernode/runtime/*.pkg
 archive/validation_logs_production_useful_prototype_tar.gz
+
+# Generated EverNode/HotPocket package artifacts
+deployment/evernode/runtime/*.tar.gz
+deployment/evernode/runtime/*.tar.gz.sha256
+deployment/evernode/runtime/*.tar.gz.sig
+deployment/evernode/runtime/*.sig
+deployment/evernode/runtime/*.pkg
+deployment/evernode/runtime/*.tmp
+deployment/evernode/runtime/*.receipt.json
+deployment/reports/*_run.md
+dist/everarcade-hotpocket-contract/
+dist/everarcade-hotpocket-contract.tar.gz

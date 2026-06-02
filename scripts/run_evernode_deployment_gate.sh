@@ -34,7 +34,7 @@ multi-node federation load: passed
 REPORT_EOF
 echo "evernode deployment gate passed; report=$REPORT"
 
-bash scripts/build_evernode_packages.sh
+bash scripts/generate_evernode_packages.sh
 (cd deployment/evernode/runtime && sha256sum -c packages.sha256 >/dev/null)
 CARGO_BUILD_JOBS=1 cargo test -p execution-core --test evernode_deployment_tests "$@"
 
@@ -54,7 +54,7 @@ cat > deployment/reports/evernode_launch_gate.md <<'RPT'
 - Ready status is limited to the validated generated package/runtime gate and deterministic validation artifacts.
 - Live EverNode deployment remains Partially Ready until an actual production deployment is performed and evidenced.
 - Unsupported live operations remain Not Ready and must not be treated as production-ready behavior.
-- Generated `.tar.gz` and `.sig` files are not source controlled; rebuild with `scripts/build_evernode_packages.sh` and validate `deployment/evernode/runtime/packages.sha256`.
+- Generated `.tar.gz` and `.sig` files are not source controlled; rebuild with `scripts/generate_evernode_packages.sh` and validate `deployment/evernode/runtime/packages.sha256`.
 RPT
 cp deployment/reports/evernode_launch_gate.md deployment/reports/evernode_deployment_gate.md
 

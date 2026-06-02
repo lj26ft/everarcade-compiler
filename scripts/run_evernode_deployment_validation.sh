@@ -11,7 +11,7 @@ for op in deploy start stop restart recover verify; do
   deployment/evernode/operations.sh "$op" >/dev/null
 done
 
-bash scripts/build_evernode_packages.sh
+bash scripts/generate_evernode_packages.sh
 (cd deployment/evernode/runtime && sha256sum -c packages.sha256 >/dev/null)
 
 CARGO_BUILD_JOBS=1 cargo test -p execution-core --test arena_vanguard_certification_tests --offline --locked
