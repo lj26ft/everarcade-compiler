@@ -13,6 +13,10 @@ const rootFiles = [
   "docs/frontend/json_contracts.md",
   "frontend/tests/arena_vanguard_playable.test.ts",
   "frontend/tests/live_session.test.ts",
+  "frontend/tests/browser_multiplayer.test.ts",
+  "arena-vanguard-browser/src/client.ts",
+  "gateway/websocket/protocol.json",
+  "frontend/player-portal/src/rendering/index.ts",
   "arena-vanguard-gateway/routes.json"
 ];
 
@@ -92,4 +96,29 @@ test("arena vanguard gateway exposes live session transport endpoints", () => {
   }
   assert.equal(routes.transport.resumeToken, true);
   assert.equal(routes.runtimeBinding.attachesRuntime, true);
+});
+
+
+test("arena vanguard browser multiplayer validation is wired", () => {
+  const body = readFileSync("frontend/tests/browser_multiplayer.test.ts", "utf8");
+  for (const name of ["testJoinSession", "testMovementSync", "testCombatSync", "testLootSync", "testReconnectFlow", "testHudSync", "testEnemySync", "testMultiplayerVisibility"]) {
+    assert.match(body, new RegExp(`function ${name}`));
+  }
+});
+
+test("browser rendering layer consumes WorldStateFeed only", () => {
+  const app = readFileSync("frontend/player-portal/src/App.tsx", "utf8");
+  for (const token of ["renderPlayers", "renderEnemies", "renderLoot", "renderZones", "renderHud", "WorldStateFeed"]) {
+    assert.match(app, new RegExp(token));
+  }
+});
+
+test("websocket runtime streaming protocol is declared", () => {
+  const protocol = JSON.parse(readFileSync("gateway/websocket/protocol.json", "utf8"));
+  assert.equal(protocol.binarySafe, true);
+  assert.equal(protocol.jsonSafe, true);
+  assert.equal(protocol.reconnectCapable, true);
+  for (const field of ["tick", "session_id", "players", "enemies", "zones", "loot", "runtime_health", "checkpoint_age", "replay_size"]) {
+    assert.ok(protocol.worldStateFeed.includes(field), field);
+  }
 });

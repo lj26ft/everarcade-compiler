@@ -1,0 +1,7 @@
+{
+  "name": "arena-vanguard-browser",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Browser-only Arena Vanguard client that consumes authoritative runtime feeds."
+}

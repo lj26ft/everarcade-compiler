@@ -1,5 +1,6 @@
 import { arenaVanguardGateway, status } from "@everarcade/shared-api";
 import { connectWallet, disconnectWallet } from "@everarcade/shared-wallet";
+import { renderEnemies, renderHud, renderLoot, renderPlayers, renderZones } from "./rendering";
 
 export const playerHomeSections = ["Featured Games", "My Games", "My Profile", "Wallet", "Servers"];
 export const gameBrowserColumns = ["Game Name", "Genre", "Players Online", "Version", "Status"];
@@ -17,7 +18,13 @@ export const arenaVanguardRuntimeFlow = [
   "Inventory View",
   "WorldStateFeed",
   "Reconnect Flow",
-  "Session Resume"
+  "Session Resume",
+  "Connect WebSocket",
+  "Subscribe Feed",
+  "Render Other Players",
+  "Render Enemies",
+  "Render Loot",
+  "Runtime HUD Binding"
 ];
 
 export function App() {
@@ -44,12 +51,14 @@ export function App() {
     <section aria-label="Arena Vanguard HUD" data-authority="runtime-state-feed">
       {arenaVanguardHud.map(item => <output key={item}>{item}</output>)}
     </section>
-    <section aria-label="Arena Outpost World View" data-authority="runtime-read-only">
+    <section aria-label="Arena Outpost World View" data-authority="runtime-read-only" data-transport="WorldStateFeed">
       {arenaVanguardWorldZones.map(zone => <article key={zone}>{zone}</article>)}
       <button data-runtime-action="move" data-gateway="/move">Move</button>
       <button data-runtime-action="attack" data-gateway="/attack">Attack</button>
       <button data-runtime-action="interact" data-gateway="/interact">Interact / Loot</button>
       <button data-runtime-action="resume" data-gateway="/resume">Resume Session</button>
+      <output data-testid="connected-browsers">Connected Browsers</output>
+      <output data-testid="websocket-health">WebSocket Healthy</output>
     </section>
     <section aria-label="Wallet">
       <button>Connect</button><button>Disconnect</button><span>Display Address</span><span>Display Network</span>
@@ -57,4 +66,4 @@ export function App() {
   </main>;
 }
 
-export const playerPortalBindings = { arenaVanguardGateway, connectWallet, disconnectWallet, status };
+export const playerPortalBindings = { arenaVanguardGateway, connectWallet, disconnectWallet, status, renderPlayers, renderEnemies, renderLoot, renderZones, renderHud };
