@@ -1,50 +1,135 @@
 import { createServer } from "node:http";
-import { randomUUID } from "node:crypto";
+import { randomUUID, createHash } from "node:crypto";
 
-const sessions = new Map();
-let runtimeTick = 0;
-let replayGrowth = 0;
-let lastCheckpointTick = 0;
+const runtimeHost = {
+  sessionId: "arena-vanguard-live",
+  runtimeHealth: "healthy",
+  gatewayHealth: "healthy",
+  tick: 0,
+  replay: [],
+  checkpoints: [],
+  sessions: new Map(),
+  enemies: new Map([["enemy-raider-1", { enemyId: "enemy-raider-1", x: 8, y: 0, zone: "Combat Area", health: 100, status: "hostile" }]]),
+  metrics: { joinRate: 0, reconnectRate: 0, actionThroughput: 0, gatewayLatencyMs: 1, sessionDurationTicks: 0 }
+};
 
-function runtimeAction(type, body = {}) {
-  runtimeTick += 1;
-  replayGrowth += 1;
-  const seed = body.playerSeed ?? body.playerId ?? "guest";
+function resumeToken(sessionId, playerId) {
+  return `resume:${createHash("sha256").update(sessionId).update(playerId).digest("hex")}`;
+}
+
+function zoneFor(x, y) {
+  if (x === 0 && y === 0) return "Spawn Area";
+  if (Math.abs(x) <= 2 && Math.abs(y) <= 2) return "Safe Area";
+  if (x >= 5) return "Combat Area";
+  return "Loot Area";
+}
+
+function runtimeRecord(kind) {
+  runtimeHost.tick += 1;
+  runtimeHost.metrics.sessionDurationTicks = runtimeHost.tick;
+  runtimeHost.replay.push(`${runtimeHost.tick}:${runtimeHost.sessionId}:${kind}`);
+}
+
+function persistCheckpoint() {
+  runtimeHost.runtimeHealth = "checkpointing";
+  runtimeHost.checkpoints.push(runtimeHost.replay.length);
+  runtimeHost.runtimeHealth = "healthy";
+}
+
+function playerFor(body = {}) {
+  const seed = body.playerSeed ?? body.playerId?.replace(/^player-/, "") ?? "guest";
   const playerId = `player-${seed}`;
-  const sessionId = body.sessionId ?? `session-${seed}`;
-  const current = sessions.get(playerId) ?? {
+  const existing = runtimeHost.sessions.get(playerId);
+  if (existing) return existing;
+  return {
     playerId,
-    sessionId,
+    sessionId: runtimeHost.sessionId,
     characterId: `character-${seed}`,
-    x: 0,
-    y: 0,
+    position: { x: 0, y: 0, zone: "Spawn Area" },
     health: 100,
     energy: 50,
     xp: 0,
     level: 1,
-    inventory: [{ item: "gold", quantity: 0 }],
-    connected: false
+    inventory: ["starter blade"],
+    connected: false,
+    resumeToken: resumeToken(runtimeHost.sessionId, playerId)
   };
-  if (type === "join") current.connected = true;
-  if (type === "leave") { current.connected = false; lastCheckpointTick = runtimeTick; }
-  if (type === "move") { current.x += Number(body.dx ?? 0); current.y += Number(body.dy ?? 0); }
-  if (type === "attack") { current.xp += 25; if (current.xp >= current.level * 100) { current.xp = 0; current.level += 1; } }
-  if (type === "interact") current.inventory.push({ item: body.item ?? "health potion", quantity: Number(body.quantity ?? 1) });
-  sessions.set(playerId, current);
-  return { status: "submitted", authority: "runtime", runtimeTick, actionId: randomUUID(), session: current };
+}
+
+function worldStateFeed() {
+  return {
+    type: "WorldStateFeed",
+    tick: runtimeHost.tick,
+    sessionId: runtimeHost.sessionId,
+    players: [...runtimeHost.sessions.values()],
+    enemies: [...runtimeHost.enemies.values()],
+    worldState: { zones: ["Spawn Area", "Combat Area", "Loot Area", "Safe Area"], authority: "runtime" },
+    replaySize: runtimeHost.replay.length,
+    checkpointAge: runtimeHost.replay.length - runtimeHost.checkpoints.length
+  };
+}
+
+// Gateway handlers are transport-only: each handler submits to this runtime-owned reducer and returns runtime state.
+function runtimeAction(type, body = {}) {
+  const current = playerFor(body);
+  if (type === "join") { runtimeHost.metrics.joinRate += 1; current.connected = true; }
+  if (type === "leave") { current.connected = false; persistCheckpoint(); }
+  if (type === "move") {
+    current.position.x += Number(body.dx ?? 0);
+    current.position.y += Number(body.dy ?? 0);
+    current.position.zone = zoneFor(current.position.x, current.position.y);
+    current.energy = Math.max(0, current.energy - 1);
+    runtimeHost.metrics.actionThroughput += 1;
+  }
+  if (type === "attack") {
+    const enemy = runtimeHost.enemies.get(body.targetId ?? body.enemyId ?? "enemy-raider-1");
+    if (enemy) {
+      enemy.health = Math.max(0, enemy.health - 25);
+      enemy.status = enemy.health === 0 ? "defeated" : "hostile";
+      current.xp += 35;
+      if (current.xp >= current.level * 100) { current.xp -= current.level * 100; current.level += 1; }
+    }
+    runtimeHost.metrics.actionThroughput += 1;
+  }
+  if (type === "interact") { current.inventory.push(body.item ?? "field cache"); current.xp += 10; runtimeHost.metrics.actionThroughput += 1; }
+  if (type === "use-item") {
+    const index = current.inventory.indexOf(body.item ?? body.itemId ?? "health potion");
+    if (index >= 0) { current.inventory.splice(index, 1); current.health = Math.min(100, current.health + 20); }
+    runtimeHost.metrics.actionThroughput += 1;
+  }
+  runtimeHost.sessions.set(current.playerId, current);
+  runtimeRecord(type);
+  return { status: "submitted", authority: "runtime", actionId: randomUUID(), session: current, feed: worldStateFeed() };
+}
+
+function resume(body = {}) {
+  const session = [...runtimeHost.sessions.values()].find(candidate => candidate.resumeToken === body.resumeToken);
+  if (!session) return { status: "failed", error: "invalid resume token" };
+  session.connected = true;
+  runtimeHost.metrics.reconnectRate += 1;
+  runtimeRecord("resume");
+  return { status: "resumed", authority: "runtime", session, feed: worldStateFeed() };
+}
+
+function heartbeat() {
+  return { status: "ok", heartbeat: "valid", gatewayHealth: runtimeHost.gatewayHealth, runtimeHealth: runtimeHost.runtimeHealth, timeoutMs: 30000 };
 }
 
 function status() {
-  const playerCount = [...sessions.values()].filter(session => session.connected).length;
+  const playerCount = [...runtimeHost.sessions.values()].filter(session => session.connected).length;
   return {
     status: "healthy",
-    runtimeHealth: "healthy",
-    worldHealth: "healthy",
-    sessionCount: sessions.size,
+    gatewayHealth: runtimeHost.gatewayHealth,
+    runtimeHealth: runtimeHost.runtimeHealth,
+    activeSessions: 1,
+    sessionRegistry: [{ sessionId: runtimeHost.sessionId, playerCount, runtimeHealth: runtimeHost.runtimeHealth, checkpointAge: runtimeHost.replay.length - runtimeHost.checkpoints.length, replaySize: runtimeHost.replay.length }],
     playerCount,
-    runtimeTick,
-    replayGrowth,
-    checkpointAge: runtimeTick - lastCheckpointTick
+    runtimeTick: runtimeHost.tick,
+    replayGrowth: runtimeHost.replay.length,
+    checkpointAge: runtimeHost.replay.length - runtimeHost.checkpoints.length,
+    recoveryState: runtimeHost.runtimeHealth === "recovering" ? "recovering" : "stable",
+    metrics: runtimeHost.metrics,
+    feed: worldStateFeed()
   };
 }
 
@@ -64,6 +149,10 @@ const handlers = {
   "/move": body => runtimeAction("move", body),
   "/attack": body => runtimeAction("attack", body),
   "/interact": body => runtimeAction("interact", body),
+  "/use-item": body => runtimeAction("use-item", body),
+  "/resume": body => resume(body),
+  "/heartbeat": () => heartbeat(),
+  "/world-state": () => worldStateFeed(),
   "/status": () => status()
 };
 
@@ -81,5 +170,5 @@ export const server = createServer(async (request, response) => {
 });
 
 if (import.meta.url === `file://${process.argv[1]}`) {
-  server.listen(Number(process.env.PORT ?? 8791), () => console.log("arena-vanguard-gateway listening"));
+  server.listen(Number(process.env.PORT ?? 8791), () => console.log("arena-vanguard-gateway live runtime binding listening"));
 }

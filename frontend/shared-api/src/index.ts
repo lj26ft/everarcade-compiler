@@ -1,6 +1,6 @@
 import type { DeploymentResult, DoctorResult, PackageResult, ProjectResult, RustrigResult, StatusResult, ValidationResult } from "@everarcade/shared-types";
 
-export type ProductCommand = "doctor" | "new" | "add-rustrig" | "run" | "package" | "rehearse" | "deploy" | "validate" | "status";
+export type ProductCommand = "doctor" | "new" | "add-rustrig" | "run" | "package" | "rehearse" | "deploy" | "validate" | "status" | "session-status";
 
 export interface CommandRequest {
   command: ProductCommand;
@@ -53,7 +53,7 @@ export const validateGame = (provider: ProductFacadeProvider, profile = "quick")
   provider.execute<ValidationResult>({ command: "validate", args: ["--profile", profile] });
 export const status = (provider: ProductFacadeProvider): Promise<StatusResult> => provider.execute<StatusResult>({ command: "status" });
 
-export type ArenaVanguardAction = "join" | "leave" | "move" | "attack" | "interact" | "status";
+export type ArenaVanguardAction = "join" | "leave" | "move" | "attack" | "interact" | "use-item" | "resume" | "heartbeat" | "world-state" | "status";
 
 export interface ArenaVanguardGatewayProvider {
   submit<T>(action: ArenaVanguardAction, payload?: Record<string, unknown>): Promise<T>;
@@ -64,9 +64,9 @@ export class ArenaVanguardHttpProvider implements ArenaVanguardGatewayProvider {
 
   async submit<T>(action: ArenaVanguardAction, payload: Record<string, unknown> = {}): Promise<T> {
     const response = await fetch(`${this.baseUrl}/${action}`, {
-      method: action === "status" ? "GET" : "POST",
+      method: ["status", "heartbeat", "world-state"].includes(action) ? "GET" : "POST",
       headers: { "content-type": "application/json" },
-      body: action === "status" ? undefined : JSON.stringify(payload)
+      body: ["status", "heartbeat", "world-state"].includes(action) ? undefined : JSON.stringify(payload)
     });
     if (!response.ok) throw new Error(`arena vanguard gateway failed: ${response.status}`);
     return response.json() as Promise<T>;
@@ -79,5 +79,9 @@ export const arenaVanguardGateway = {
   move: (provider: ArenaVanguardGatewayProvider, playerId: string, dx: number, dy: number) => provider.submit("move", { playerId, dx, dy }),
   attack: (provider: ArenaVanguardGatewayProvider, playerId: string, targetId: string) => provider.submit("attack", { playerId, targetId }),
   interact: (provider: ArenaVanguardGatewayProvider, playerId: string, item: string) => provider.submit("interact", { playerId, item }),
+  useItem: (provider: ArenaVanguardGatewayProvider, playerId: string, itemId: string) => provider.submit("use-item", { playerId, itemId }),
+  resume: (provider: ArenaVanguardGatewayProvider, resumeToken: string) => provider.submit("resume", { resumeToken }),
+  heartbeat: (provider: ArenaVanguardGatewayProvider) => provider.submit("heartbeat"),
+  worldState: (provider: ArenaVanguardGatewayProvider) => provider.submit("world-state"),
   status: (provider: ArenaVanguardGatewayProvider) => provider.submit("status")
 };

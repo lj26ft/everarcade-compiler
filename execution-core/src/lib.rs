@@ -186,3 +186,5 @@ pub mod governance_runtime;
 pub mod procedural_world;
 pub mod social_memory;
 pub mod society_runtime;
+
+pub mod arena_vanguard_live;
