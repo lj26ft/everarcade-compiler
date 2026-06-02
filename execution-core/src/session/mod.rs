@@ -6,8 +6,17 @@ pub mod sync_session;
 
 pub use execution_session::ExecutionSession;
 pub mod continuity;
+pub mod disconnect;
+pub mod heartbeat;
 pub mod lifecycle;
+pub mod player;
 pub mod player_registry;
+pub mod presence;
+pub mod reconnect;
 pub mod recovery;
 pub mod runtime;
+pub mod session;
+pub mod spawn;
 pub mod validation;
+pub use player::{Character, CharacterId, InventoryItem, PlayerId, SessionId};
+pub use session::{ArenaTelemetry, ArenaVanguardRuntime, Enemy, EnemyKind, LootDrop};

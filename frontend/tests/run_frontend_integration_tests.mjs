@@ -10,7 +10,9 @@ const rootFiles = [
   "frontend/shared-types/src/index.ts",
   "frontend/shared-wallet/src/index.ts",
   "frontend-gateway/routes.json",
-  "docs/frontend/json_contracts.md"
+  "docs/frontend/json_contracts.md",
+  "frontend/tests/arena_vanguard_playable.test.ts",
+  "arena-vanguard-gateway/routes.json"
 ];
 
 for (const file of rootFiles) {
@@ -56,5 +58,20 @@ test("json contracts freeze required schemas", () => {
   const body = readFileSync("docs/frontend/json_contracts.md", "utf8");
   for (const contract of ["DoctorResult", "StatusResult", "PackageResult", "ValidationResult", "DeploymentResult"]) {
     assert.match(body, new RegExp(`## ${contract}`));
+  }
+});
+
+
+test("arena vanguard frontend playable flow is wired", () => {
+  const body = readFileSync("frontend/player-portal/src/App.tsx", "utf8");
+  for (const token of ["Play Arena Vanguard", "Join Session", "Arena Vanguard HUD", "Movement Input", "Combat Input", "Inventory View", "Reconnect Flow"]) {
+    assert.match(body, new RegExp(token));
+  }
+});
+
+test("arena vanguard gateway exposes playable session endpoints", () => {
+  const routes = JSON.parse(readFileSync("arena-vanguard-gateway/routes.json", "utf8"));
+  for (const endpoint of ["/join", "/leave", "/move", "/attack", "/interact", "/status"]) {
+    assert.ok(routes.endpoints[endpoint], endpoint);
   }
 });
