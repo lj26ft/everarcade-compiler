@@ -1,0 +1,31 @@
+{
+  "transport": "arena-vanguard-runtime-websocket",
+  "authority": "runtime",
+  "binarySafe": true,
+  "jsonSafe": true,
+  "deterministicOrdering": "monotonic sequence per connection, tick ordered WorldStateFeed",
+  "reconnectCapable": true,
+  "messages": [
+    "PlayerJoin",
+    "PlayerLeave",
+    "WorldStateFeed",
+    "EnemyUpdates",
+    "PlayerUpdates",
+    "InventoryUpdates",
+    "QuestUpdates",
+    "Heartbeat",
+    "Resume"
+  ],
+  "worldStateFeed": [
+    "tick",
+    "session_id",
+    "players",
+    "enemies",
+    "zones",
+    "loot",
+    "runtime_health",
+    "checkpoint_age",
+    "replay_size"
+  ],
+  "deploymentCompatibility": ["Gateway", "HotPocket", "EverNode"]
+}

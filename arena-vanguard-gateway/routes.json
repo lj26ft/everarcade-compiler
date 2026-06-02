@@ -19,17 +19,87 @@
     "heartbeatValidation": true
   },
   "endpoints": {
-    "/join": { "method": "POST", "action": "runtime.join" },
-    "/leave": { "method": "POST", "action": "runtime.leave" },
-    "/move": { "method": "POST", "action": "runtime.move" },
-    "/attack": { "method": "POST", "action": "runtime.attack" },
-    "/interact": { "method": "POST", "action": "runtime.interact" },
-    "/use-item": { "method": "POST", "action": "runtime.useItem" },
-    "/resume": { "method": "POST", "action": "runtime.resume" },
-    "/heartbeat": { "method": "GET", "action": "transport.heartbeat" },
-    "/world-state": { "method": "GET", "action": "runtime.worldStateFeed" },
-    "/status": { "method": "GET", "action": "runtime.telemetry" }
+    "/join": {
+      "method": "POST",
+      "action": "runtime.join"
+    },
+    "/leave": {
+      "method": "POST",
+      "action": "runtime.leave"
+    },
+    "/move": {
+      "method": "POST",
+      "action": "runtime.move"
+    },
+    "/attack": {
+      "method": "POST",
+      "action": "runtime.attack"
+    },
+    "/interact": {
+      "method": "POST",
+      "action": "runtime.interact"
+    },
+    "/use-item": {
+      "method": "POST",
+      "action": "runtime.useItem"
+    },
+    "/resume": {
+      "method": "POST",
+      "action": "runtime.resume"
+    },
+    "/heartbeat": {
+      "method": "GET",
+      "action": "transport.heartbeat"
+    },
+    "/world-state": {
+      "method": "GET",
+      "action": "runtime.worldStateFeed"
+    },
+    "/status": {
+      "method": "GET",
+      "action": "runtime.telemetry"
+    }
   },
-  "statusFeed": ["active sessions", "players online", "gateway status", "runtime status", "replay growth", "checkpoint age", "recovery state"],
-  "sessionRegistry": ["SessionId", "PlayerCount", "RuntimeHealth", "CheckpointAge", "ReplaySize"]
+  "statusFeed": [
+    "connected browsers",
+    "websocket connections",
+    "active sessions",
+    "players online",
+    "gateway status",
+    "runtime status",
+    "runtime health",
+    "gateway health",
+    "replay growth",
+    "checkpoint age",
+    "recovery state"
+  ],
+  "sessionRegistry": [
+    "SessionId",
+    "PlayerCount",
+    "RuntimeHealth",
+    "CheckpointAge",
+    "ReplaySize"
+  ],
+  "websocket": {
+    "path": "/runtime-feed",
+    "protocol": "gateway/websocket/protocol.json",
+    "messages": [
+      "PlayerJoin",
+      "PlayerLeave",
+      "WorldStateFeed",
+      "EnemyUpdates",
+      "PlayerUpdates",
+      "InventoryUpdates",
+      "QuestUpdates",
+      "Heartbeat",
+      "Resume"
+    ]
+  },
+  "metrics": [
+    "websocket count",
+    "connection rate",
+    "reconnect rate",
+    "world feed rate",
+    "action throughput"
+  ]
 }
