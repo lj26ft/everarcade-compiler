@@ -27,6 +27,7 @@ increment-contract = { path = "../contracts/increment-contract" }
 
 
 [dev-dependencies]
+provider-evernode = { path = "../provider-evernode" }
 control-plane = { path = "../control-plane" }
 tempfile = "3"
 wat = "1"

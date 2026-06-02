@@ -4,6 +4,7 @@ members = [
     "execution-core",
     "contract-api",
     "control-plane",
+    "provider-evernode",
     "rustrigs",
     "contracts/set-contract",
     "contracts/increment-contract",

@@ -9,16 +9,16 @@ for arg in "$@"; do
   esac
 done
 mkdir -p deployment/reports
-REPORT="deployment/reports/live_deployment_readiness.md"
+REPORT="deployment/reports/provider_recovery_readiness.md"
 {
-  echo "# Live Deployment Validation"
+  echo "# Provider Recovery Validation"
   echo
   echo "Classification: Partially Ready"
   echo
-  echo "Validation command: CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS cargo test -p execution-core --test live_deployment_tests ${CARGO_FLAGS[*]}"
+  echo "Validation command: CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS cargo test -p execution-core --test evernode_provider_tests ${CARGO_FLAGS[*]}"
   echo
 } > "$REPORT"
-if CARGO_BUILD_JOBS="$CARGO_BUILD_JOBS" cargo test -p execution-core --test live_deployment_tests "${CARGO_FLAGS[@]}"; then
+if CARGO_BUILD_JOBS="$CARGO_BUILD_JOBS" cargo test -p execution-core --test evernode_provider_tests "${CARGO_FLAGS[@]}"; then
   echo "Result: PASS" >> "$REPORT"
 else
   status=$?
