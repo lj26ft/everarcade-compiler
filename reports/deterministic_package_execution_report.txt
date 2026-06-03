@@ -1,0 +1,8 @@
+Timestamp: 2026-06-03T20:52:24Z
+Package Identifier: arena-vanguard-world
+Execution Root A: 6b61d627af4108c21449e416fe34e65afc8fc8a75042f60e546d2a8f8afb66fb
+Execution Root B: 6b61d627af4108c21449e416fe34e65afc8fc8a75042f60e546d2a8f8afb66fb
+Replay Root: 6b61d627af4108c21449e416fe34e65afc8fc8a75042f60e546d2a8f8afb66fb
+Determinism Status: PASS
+Replay Status: PASS
+Overall Result: PASS
