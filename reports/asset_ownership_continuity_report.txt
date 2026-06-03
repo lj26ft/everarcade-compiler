@@ -1,0 +1,17 @@
+Timestamp: 2026-06-03T22:24:25Z
+Asset Root Genesis: 71f1abedb6390dabdc17fcf2c4902b347124e7110318e2b589e56b1803c6c9aa
+Ownership Root Assignment: 4be008655090befa2debf0a87ddb5c63fabe0f98580bb726a2941dc8d5745a60
+Ownership Root Transfer: 6a972b82d396b44eb5fae2edf74b7508427482d007c0dbfe0cce5853d2adb6aa
+Ownership Root Epoch 0: 6a972b82d396b44eb5fae2edf74b7508427482d007c0dbfe0cce5853d2adb6aa
+Ownership Root Epoch 1: a760ea6af99e8b99e9e7242190953883318abb77c66da178ef8c37971982be81
+Ownership Root Epoch 2: ad6114b34c7457e59c867a865ab17e3c609453deb90bcfcbf42f8393c2c77ae3
+Ownership Checkpoint Identifier: 5a92f00dadea34d1696b7830d251c7953a315ffda9166b9388ab25360a629700
+Ownership Continuity Root: fe3edc947a6f24b92a0a5a97d4bc4313699045a8034911b584a9fca3f5662a51
+Replay Ownership Root: fe3edc947a6f24b92a0a5a97d4bc4313699045a8034911b584a9fca3f5662a51
+Assignment Status: PASS
+Transfer Status: PASS
+Checkpoint Status: PASS
+Restoration Status: PASS
+Replay Status: PASS
+Integrity Status: PASS
+Overall Result: PASS
