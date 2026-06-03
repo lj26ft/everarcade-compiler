@@ -23,16 +23,14 @@ ipfs/
 xrpl/
 distributed_receipts/
 
-# Release artifacts
-dist/
-*.tar.gz
-*.sha256
-/vendor/
+# Vendor artifacts (generated locally or attached to releases, not source)
+vendor/
+dist/vendor.tar.gz
+dist/vendor.tar.gz.sha256
 everarcade-host/tests/fixtures/counter_world/*.bin
 everarcade-host/tests/fixtures/counter_world/*.wasm
 __pycache__/
 *.pyc
-vendor/
 target/
 scripts/Fresh VM install full.txt
 scripts/github token ghp .txt

@@ -1,23 +1,31 @@
 # Vendor Artifact Restore
 
-The repository validates the runtime with Cargo in offline mode. Cargo is
-configured to replace crates.io with a local `vendor/` directory, but `vendor/`
-is intentionally ignored because it is generated dependency material rather than
-source owned by this repository.
+Runtime offline validation resolves crates through a generated `vendor/`
+directory. That dependency snapshot is required for offline checks, but it is
+not repository source and must not be committed.
 
-## Why `vendor/` is ignored
+## Git policy
 
-`vendor/` contains third-party crate sources restored or generated for local
-release validation. Keeping it out of Git avoids a large dependency snapshot in
-normal source diffs and prevents accidental commits of generated artifacts.
+The following generated paths are ignored:
 
-## Why offline validation still needs it
+```text
+vendor/
+dist/vendor.tar.gz
+dist/vendor.tar.gz.sha256
+```
 
-`.cargo/config.toml` points Cargo at `vendor/` for offline dependency resolution.
-When `vendor/` is absent, `cargo metadata --offline --locked` and the targeted
-runtime checks cannot resolve registry dependencies from crates.io.
+Vendor archives are release attachments or local operator artifacts, not normal
+source files. Codex and contributors should not modify, stage, force-add, or
+commit `vendor/`, `dist/vendor.tar.gz`, or `dist/vendor.tar.gz.sha256`.
 
-## Package the local artifact
+## Why the artifact exists
+
+`.cargo/config.toml` replaces crates.io with `vendor/` so validation can run
+without registry access. A fresh clone does not include `vendor/`, so offline
+validation cannot resolve dependencies until the directory is restored from an
+external artifact.
+
+## Package a local artifact
 
 Use this only when a valid local `vendor/` directory already exists:
 
@@ -26,29 +34,36 @@ bash scripts/package_vendor_artifact.sh
 ```
 
 The script does not run `cargo vendor` and does not modify `Cargo.lock`. It
-creates:
+creates ignored local files:
 
 ```text
 dist/vendor.tar.gz
 dist/vendor.tar.gz.sha256
 ```
 
-The checksum is printed so operators can compare the artifact they distribute or
-store outside Git.
+To distribute them, attach both files to the release. Do not include them in a
+source commit or PR.
 
-## Restore on a clean clone
+## Restore on a fresh clone
 
-Place both artifact files in `dist/` and run:
+Before offline validation on a fresh clone, obtain both files from one of these
+sources:
+
+- a local build
+- a release attachment
+- a copied `dist/` directory
+
+Place them in `dist/` and run:
 
 ```bash
 bash scripts/restore_vendor_artifact.sh
 ```
 
 The restore script verifies `dist/vendor.tar.gz.sha256` before deleting any
-existing `vendor/` directory. If the artifact is missing or the checksum fails,
-it exits without replacing `vendor/`.
+existing `vendor/` directory. If the artifact is missing or checksum
+verification fails, it exits without replacing `vendor/`.
 
-## Run the runtime offline gate
+## Run offline validation
 
 After restoring `vendor/`, run:
 
@@ -56,27 +71,11 @@ After restoring `vendor/`, run:
 bash scripts/check_runtime_offline_gate.sh
 ```
 
-The gate runs the minimal offline validation set:
-
-```bash
-cargo metadata --offline --locked --format-version 1
-cargo check -p everarcade-runtime --offline --locked
-cargo test -p everarcade-runtime --tests --offline --locked
-```
-
-It writes a compact report to:
+The gate runs the minimal offline validation set and writes:
 
 ```text
 reports/runtime_offline_gate_report.txt
 ```
 
-If `vendor/` is missing, the gate prints:
-
-```text
-vendor/ is missing. Run: bash scripts/restore_vendor_artifact.sh
-```
-
-## Commit policy
-
-Do not commit `vendor/`. Treat it as a restored artifact for offline validation,
-not as repository source.
+If `vendor/` is missing, restore it from a release artifact before running the
+offline gate.
