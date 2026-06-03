@@ -14,6 +14,7 @@ const rootFiles = [
   "frontend/tests/arena_vanguard_playable.test.ts",
   "frontend/tests/live_session.test.ts",
   "frontend/tests/browser_multiplayer.test.ts",
+  "frontend/tests/player_portal_smoke.test.ts",
   "arena-vanguard-browser/src/client.ts",
   "gateway/websocket/protocol.json",
   "frontend/player-portal/src/rendering/index.ts",
@@ -120,5 +121,12 @@ test("websocket runtime streaming protocol is declared", () => {
   assert.equal(protocol.reconnectCapable, true);
   for (const field of ["tick", "session_id", "players", "enemies", "zones", "loot", "runtime_health", "checkpoint_age", "replay_size"]) {
     assert.ok(protocol.worldStateFeed.includes(field), field);
+  }
+});
+
+test("player portal browser smoke coverage is wired", () => {
+  const smoke = readFileSync("frontend/tests/player_portal_smoke.test.ts", "utf8");
+  for (const token of ["/src/main.tsx", "🎮 EverArcade Player Portal", "Arena Vanguard", "Play Arena Vanguard", "Runtime Status", "blank page"]) {
+    assert.match(smoke, new RegExp(token));
   }
 });
