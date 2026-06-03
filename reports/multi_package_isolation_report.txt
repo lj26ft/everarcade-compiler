@@ -1,0 +1,16 @@
+Timestamp: 2026-06-03T21:44:58Z
+Package Identifier A: arena-vanguard-world.package-a
+Package Identifier B: arena-vanguard-world.package-b
+State Root A1: 2a332980ab9c5720a6a3ed8cae08950894553d6aaddd95503ab0c9d58fed0546
+State Root B1: 122524c99a943a04de05a4d5a222d5024bde876a6949219b529e4073538cceb0
+Checkpoint A: 02660c8b020a0ce13936362408f524b4fc6db8113874b4b871a248bb2597150e
+Checkpoint B: ba535a71943aad66c635754e4f0702910dff2fc7cbc6f62c43c216ec129b14aa
+Continuity Root A: 58a8718112db8d79bf008bebd353471f81f125fb12ac89cbe92e35ec57bcda9e
+Continuity Root B: 7bb7663828d0ee81fc26c111a53738fc21f362bd47d0204ce789d1a5301c2e07
+Replay Root A: 58a8718112db8d79bf008bebd353471f81f125fb12ac89cbe92e35ec57bcda9e
+Replay Root B: 7bb7663828d0ee81fc26c111a53738fc21f362bd47d0204ce789d1a5301c2e07
+Isolation Status: PASS
+Persistence Status: PASS
+Restoration Status: PASS
+Replay Status: PASS
+Overall Result: PASS
