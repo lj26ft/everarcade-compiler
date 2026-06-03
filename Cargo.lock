@@ -379,6 +379,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "everarcade-runtime"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "hex",
+ "serde",
+ "serde_json",
+ "sha2",
+ "tempfile",
+ "thiserror 1.0.69",
+]
+
+[[package]]
 name = "everarcade-sdk"
 version = "0.1.0"
 dependencies = [
