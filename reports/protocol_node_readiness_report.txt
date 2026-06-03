@@ -1,0 +1,7 @@
+Timestamp: 2026-06-03T20:45:55Z
+Bootstrap Status: FAIL
+Persistence Status: FAIL
+Recovery Status: FAIL
+Replay Status: FAIL
+Checkpoint Status: FAIL
+Overall Result: FAIL
