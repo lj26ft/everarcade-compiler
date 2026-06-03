@@ -24,3 +24,5 @@ tar -czf "$ARTIFACT" -C "$ROOT_DIR" vendor
 hash_value="$(awk '{print $1}' "$CHECKSUM")"
 echo "vendor artifact: $ARTIFACT"
 echo "sha256: $hash_value"
+echo "vendor artifact generated locally; do not commit dist/vendor.tar.gz"
+echo "To distribute, attach dist/vendor.tar.gz and dist/vendor.tar.gz.sha256 to the release."

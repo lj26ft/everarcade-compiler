@@ -9,7 +9,7 @@ VENDOR_DIR="$ROOT_DIR/vendor"
 
 if [[ ! -f "$ARTIFACT" ]]; then
   echo "Missing artifact: dist/vendor.tar.gz" >&2
-  echo "Create or obtain it before restoring vendor/." >&2
+  echo "Obtain it from a local build, a release attachment, or a copied dist/ directory before restoring vendor/." >&2
   exit 1
 fi
 
@@ -33,3 +33,4 @@ if [[ ! -d "$VENDOR_DIR" ]]; then
 fi
 
 echo "vendor/ restored from dist/vendor.tar.gz"
+echo "Artifact source may be a local build, a release attachment, or a copied dist/ directory."
