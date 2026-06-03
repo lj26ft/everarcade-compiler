@@ -1,0 +1,17 @@
+Timestamp: 2026-06-03T22:00:48Z
+World Identifier: 5e12c992b2ccf638379cdacaaa5bb79ef17c7f4fe07fc44b395562ad206f745b
+Genesis Root: 057755d7d2648678e258fee631992b41f138e357bc4ae5559936d0de1584bc72
+Epoch 0 Root: 93ea294b3947eae051986f5cf68b9b3564eb76af9a59902c37784ac9afbe48b8
+Epoch 1 Root: 0b8ac5e4227db9747898640c473782cfe46e5655615546f00e577bf55581e7b4
+Epoch 2 Root: 7778a81bbdf0734c35532397ee13b2d9bd686b76696c7107ae5452b3e1c359fb
+Epoch 3 Root: 1cff8246f6ca2e3610f4e5b0f80baabc3fa3f731faf0b93766b78e8864603cbc
+Epoch 4 Root: 44b6311cce6673d61bc2fea4f4f4beeb76cf93cda811ee0da402f73e0e3b1b87
+Checkpoint Identifier: c51da3d72ff5f33e3167750297ee34fdf35471ecbf572f88fff7ff8367bbc19e
+World Continuity Root: 83a025cab1e2f4c5843c6a41c9e4f68f0b906db2e7567558bb5bb19dd58d460d
+Replay Continuity Root: 83a025cab1e2f4c5843c6a41c9e4f68f0b906db2e7567558bb5bb19dd58d460d
+Evolution Status: PASS
+Checkpoint Status: PASS
+Restoration Status: PASS
+Epoch Status: PASS
+Replay Status: PASS
+Overall Result: PASS
