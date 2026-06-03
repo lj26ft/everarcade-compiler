@@ -1,0 +1,23 @@
+Timestamp: 2026-06-03T22:41:14Z
+Vault Genesis Root: c5434f1d6911fdd7ea4e29287c1cd759232c18620475520bb402953fb19b9000
+Ownership Root: cc8dc672fbbe15a93dae49c3878111a6d81384089608c1903e950551ac4aa75a
+Inventory Root: 6c530a4a134b55722f7971558f340a952865e0151b55447a43ac087d54d8a90f
+Vault Root Creation: 0ad6879d33b5772a4dd06584ac156266ee32a3f57255623cc47353279de68af0
+Vault Deposit Root: c629b2d672f3269fadfdb18e5d8c6bc6225d567ce3a0bc83817224d3cf7cf70a
+Vault Transfer Root: 902d399f6224263f867fab2736618d3e0d6e1ef7d598b2ecd63085f8eef5a78e
+Vault Withdrawal Root: f4a08f69d9d8b4d3f42e6464017e2a452dfb7977aa40a202596341e8e2d17f5f
+Vault Root Epoch 0: f4a08f69d9d8b4d3f42e6464017e2a452dfb7977aa40a202596341e8e2d17f5f
+Vault Root Epoch 1: 58a42c03018b4cfed22c0dfbc1763456a18a0f53cc40f6ab815445bcfa0257e0
+Vault Root Epoch 2: 163a6c8f34228526f57d9cb4bb719b60d12a0c17be1c17ab85d10fccfe5b7b46
+Vault Checkpoint Identifier: f4c40735c5ac47ec83248a0e5fd4ad6ce867bf6fb7b3ad673c7ab69df1e2f504
+Vault Continuity Root: 2547f30fcac2bdfe6d4c35190e7ff76c5d1116bce9bb38901d4cc7eb00df839e
+Replay Vault Root: 2547f30fcac2bdfe6d4c35190e7ff76c5d1116bce9bb38901d4cc7eb00df839e
+Creation Status: PASS
+Deposit Status: PASS
+Transfer Status: PASS
+Withdrawal Status: PASS
+Checkpoint Status: PASS
+Restoration Status: PASS
+Replay Status: PASS
+Custody Integrity Status: PASS
+Overall Result: PASS
