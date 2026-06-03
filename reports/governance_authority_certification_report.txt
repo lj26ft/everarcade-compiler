@@ -1,0 +1,26 @@
+Timestamp: 2026-06-03T23:09:44Z
+Governance Genesis Root: 8abdddf2ccbc4bf5a53e59855f12c225a0ec5d53dbd4b50776073841f7d36b97
+Proposal Creation Root: fd9dca3105f332ff1a541f47bb8beb9f7c2a10e213c0d4e27437ce5dbb6f1259
+Voting Root: fb460130ca59267d57b071d6ff6956c1e768cf8f037f2b686366a590cde309bc
+Approval Root: 4a1b940e76e9c26900e5e959d217fed78d70b2f3f6907cb25a5598220d851470
+Policy Activation Root: 8ae30ef45a9c596561cc380576432791e4ba770b6ddf4ed975e008484591dff8
+Enforcement Root: 096184faf07dcdcfbb8dd73af0c906878487a5911406a4cc2faa6a7e3980fc29
+Governance Rejection Root: 3a4b66027ad35536ab769fc23a6f4b97a8aab29c1b09ed540c78847f4f31f7dc
+Governance Root Epoch 0: 8abdddf2ccbc4bf5a53e59855f12c225a0ec5d53dbd4b50776073841f7d36b97
+Governance Root Epoch 1: 759a411c580e5c1750b18f92763f22fe6f350c0261fdfc72dbab8c5c01bda58e
+Governance Root Epoch 2: 4e32a1ca20719a6c8513226328034cf5ba615b992ee8c8f8619102ded3d238cd
+Governance Checkpoint Identifier: 9e6a26da6740f38c16d70f46206839216decf2ec7178b206dfffa0e282117918
+Governance Continuity Root: 7d4608afbcb3aeaa4915adcb7f62aa27324b8ffc2a76a476431de33723d2fe59
+Replay Governance Root: 7d4608afbcb3aeaa4915adcb7f62aa27324b8ffc2a76a476431de33723d2fe59
+Proposal Status: PASS
+Voting Status: PASS
+Approval Status: PASS
+Policy Status: PASS
+Enforcement Status: PASS
+Checkpoint Status: PASS
+Restoration Status: PASS
+Replay Status: PASS
+Integrity Status: PASS
+Proposal #001 Status: Approved
+Proposal #002 Status: Rejected
+Overall Result: PASS
