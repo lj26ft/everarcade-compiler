@@ -23,6 +23,7 @@ members = [
     "runtime/renderer-client",
     "tools",
     "runtime/content-registry",
+    "runtime/everarcade-runtime",
     "studio-gui",
 ]
 

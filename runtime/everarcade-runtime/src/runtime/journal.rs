@@ -1,0 +1,126 @@
+use crate::runtime::persistence::PersistenceManager;
+use anyhow::{anyhow, Result};
+use serde::{Deserialize, Serialize};
+use sha2::{Digest, Sha256};
+use std::path::PathBuf;
+use std::time::{SystemTime, UNIX_EPOCH};
+
+pub const GENESIS_HASH: &str = "0000000000000000000000000000000000000000000000000000000000000000";
+
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
+pub struct JournalEntry {
+    pub sequence: u64,
+    pub previous_hash: String,
+    pub state_root: String,
+    pub input_hash: String,
+    pub receipt_hash: String,
+    pub timestamp_ms: u128,
+    pub entry_hash: String,
+}
+
+#[derive(Clone, Debug)]
+pub struct JournalManager {
+    pub path: PathBuf,
+    persistence: PersistenceManager,
+}
+
+impl JournalManager {
+    pub fn new(path: PathBuf, persistence: PersistenceManager) -> Self {
+        Self { path, persistence }
+    }
+
+    pub fn append(
+        &self,
+        sequence: u64,
+        previous_hash: String,
+        state_root: String,
+        input_hash: String,
+        receipt_hash: String,
+    ) -> Result<JournalEntry> {
+        let timestamp_ms = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap_or_default()
+            .as_millis();
+        let entry_hash = Self::hash_fields(
+            sequence,
+            &previous_hash,
+            &state_root,
+            &input_hash,
+            &receipt_hash,
+            timestamp_ms,
+        );
+        let entry = JournalEntry {
+            sequence,
+            previous_hash,
+            state_root,
+            input_hash,
+            receipt_hash,
+            timestamp_ms,
+            entry_hash,
+        };
+        self.persistence
+            .append_line_fsync(&self.path, &serde_json::to_string(&entry)?)?;
+        Ok(entry)
+    }
+
+    pub fn entries(&self) -> Result<Vec<JournalEntry>> {
+        let data = self.persistence.read_to_string_if_exists(&self.path)?;
+        data.lines()
+            .filter(|l| !l.trim().is_empty())
+            .map(|l| Ok(serde_json::from_str(l)?))
+            .collect()
+    }
+
+    pub fn verify(&self) -> Result<Option<JournalEntry>> {
+        let entries = self.entries()?;
+        let mut previous = GENESIS_HASH.to_string();
+        let mut expected_sequence = 1;
+        for entry in &entries {
+            if entry.sequence != expected_sequence {
+                return Err(anyhow!("journal sequence gap at {}", expected_sequence));
+            }
+            if entry.previous_hash != previous {
+                return Err(anyhow!("journal hash chain broken at {}", entry.sequence));
+            }
+            let expected_hash = Self::hash_fields(
+                entry.sequence,
+                &entry.previous_hash,
+                &entry.state_root,
+                &entry.input_hash,
+                &entry.receipt_hash,
+                entry.timestamp_ms,
+            );
+            if entry.entry_hash != expected_hash {
+                return Err(anyhow!("journal entry hash mismatch at {}", entry.sequence));
+            }
+            previous = entry.entry_hash.clone();
+            expected_sequence += 1;
+        }
+        Ok(entries.last().cloned())
+    }
+
+    pub fn latest_hash(&self) -> Result<String> {
+        Ok(self
+            .verify()?
+            .map(|e| e.entry_hash)
+            .unwrap_or_else(|| GENESIS_HASH.to_string()))
+    }
+
+    pub fn hash_fields(
+        sequence: u64,
+        previous_hash: &str,
+        state_root: &str,
+        input_hash: &str,
+        receipt_hash: &str,
+        timestamp_ms: u128,
+    ) -> String {
+        let mut h = Sha256::new();
+        h.update(sequence.to_le_bytes());
+        h.update(previous_hash.as_bytes());
+        h.update(state_root.as_bytes());
+        h.update(input_hash.as_bytes());
+        h.update(receipt_hash.as_bytes());
+        h.update(timestamp_ms.to_le_bytes());
+        hex::encode(h.finalize())
+    }
+}
