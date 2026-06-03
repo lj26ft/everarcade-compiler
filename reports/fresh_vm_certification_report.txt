@@ -1,0 +1,5 @@
+Timestamp: 2026-06-03T17:15:42Z
+Ubuntu Version: Ubuntu 24.04.4 LTS
+Vendor Restore Status: MISSING ARTIFACT
+Release Candidate Validation Status: NOT RUN
+Overall Result: FAIL
