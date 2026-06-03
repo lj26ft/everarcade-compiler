@@ -1,0 +1,19 @@
+Timestamp: 2026-06-03T22:14:34Z
+Economic Genesis Root: bf951dcd52080cd8201a3fa93cacfd3ece0627ec5049a14892885a0b2f15187a
+Issuance Root: 912543d63efa2b5771d956201bccfa166b39b0c9a1c646e361167673fd845c9e
+Ownership Root: b54f4128ca6cd1760539312d820ce466f382ada29f49038acfa52aaffcda7be5
+Transfer Root: 9ae2f625a553130adb42801361704b00d378bc80f5807c7adfa7a6884b2153c3
+Ledger Root Epoch 0: 9ae2f625a553130adb42801361704b00d378bc80f5807c7adfa7a6884b2153c3
+Ledger Root Epoch 1: 16f51cbb9180568d5ca2af82eaa730fa23a650af14303b566df0e08f0c2595ec
+Ledger Root Epoch 2: 25b72b492d49d17e4e22ce7e9364ac1b30e4b0dd196970a4f1849cf7c4ad9927
+Economic Checkpoint Identifier: e779882c8d2226e18360a8a0ab4f6e459d929897306ceafcdb40e0c638224724
+Economic Continuity Root: e18ed3c63663cfaae1a58ef357bd94b79a031aa784817681e25506a205b98742
+Replay Continuity Root: e18ed3c63663cfaae1a58ef357bd94b79a031aa784817681e25506a205b98742
+Issuance Status: PASS
+Ownership Status: PASS
+Transfer Status: PASS
+Checkpoint Status: PASS
+Restoration Status: PASS
+Replay Status: PASS
+Integrity Status: PASS
+Overall Result: PASS
