@@ -1,0 +1,6 @@
+Timestamp: 2026-06-03T16:56:00Z
+Artifact Path: dist/vendor.tar.gz
+Artifact SHA256: UNKNOWN
+Restore Status: MISSING ARTIFACT
+Metadata Status: NOT RUN
+Overall Result: FAIL
