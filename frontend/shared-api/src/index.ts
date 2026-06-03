@@ -53,6 +53,14 @@ export const validateGame = (provider: ProductFacadeProvider, profile = "quick")
   provider.execute<ValidationResult>({ command: "validate", args: ["--profile", profile] });
 export const status = (provider: ProductFacadeProvider): Promise<StatusResult> => provider.execute<StatusResult>({ command: "status" });
 
+export const DEFAULT_ARENA_VANGUARD_GATEWAY_PORT = "8791";
+
+export function resolveArenaVanguardRuntimeFeedUrl(locationLike: Pick<Location, "protocol" | "hostname"> = globalThis.location): string {
+  const protocol = locationLike.protocol === "https:" ? "wss" : "ws";
+  const gatewayPort = import.meta.env?.VITE_ARENA_VANGUARD_GATEWAY_PORT ?? DEFAULT_ARENA_VANGUARD_GATEWAY_PORT;
+  return `${protocol}://${locationLike.hostname}:${gatewayPort}/runtime-feed`;
+}
+
 export type ArenaVanguardAction = "join" | "leave" | "move" | "attack" | "interact" | "use-item" | "resume" | "heartbeat" | "world-state" | "status";
 
 export interface ArenaVanguardGatewayProvider {
