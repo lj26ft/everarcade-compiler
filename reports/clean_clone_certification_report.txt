@@ -1,0 +1,5 @@
+Timestamp: 2026-06-03T17:07:56Z
+Vendor Artifact Present: NO
+Vendor Restore Status: NOT RUN
+Release Candidate Validation Status: NOT RUN
+Overall Result: FAIL
