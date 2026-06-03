@@ -1,0 +1,9 @@
+Timestamp: 2026-06-03T17:49:51Z
+Bundle Path: dist/everarcade-runtime-v0.1.0-bundle.tar.gz
+Bootstrap Directory: runtime-bootstrap/
+Bundle Verification: PASS
+Vendor Restore: PASS
+Release Candidate Validation: PASS
+Runtime Bootstrap: PASS
+Overall Result: PASS
+Runtime Bootstrap Certification: PASS
