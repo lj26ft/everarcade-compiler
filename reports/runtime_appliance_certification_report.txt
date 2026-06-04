@@ -1,0 +1,8 @@
+Runtime Appliance Certification Report
+Version: everarcade-runtime-v0.1
+Bundle Exists: PASS
+Checksum Valid: PASS
+Installation Succeeds: PASS
+Validation Succeeds: PASS
+Doctor Succeeds: PASS
+Runtime Appliance v0.1: PASS
