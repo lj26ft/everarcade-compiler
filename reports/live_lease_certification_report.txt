@@ -1,0 +1,16 @@
+Live Evernode Lease Deployment Certification Report
+Deployment: PASS
+Validation: PASS
+Runtime Start: PASS
+Health: PASS
+Checkpoint: PASS
+Replay: PASS
+Restore: PASS
+Stop: PASS
+Replay Continuity Root Match: PASS
+Live Evernode Lease Deployment: PASS
+
+Deployment Report: /workspace/everarcade-compiler/reports/live_lease_deployment_report.txt
+Validation Report: /workspace/everarcade-compiler/reports/live_lease_validation_report.txt
+Failure Registry:
+No Deployment Failures Observed

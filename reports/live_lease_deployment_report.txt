@@ -1,0 +1,26 @@
+Live Evernode Lease Deployment Report
+Started At: 2026-06-04T16:04:14Z
+Lease Root: /workspace/everarcade-compiler/tmp/live-evernode-lease
+Package: /workspace/everarcade-compiler/dist/everarcade-lease-handoff-v0.1.tar.gz
+Checksum: /workspace/everarcade-compiler/dist/everarcade-lease-handoff-v0.1.tar.gz.sha256
+Automatic Package Build: SKIPPED
+Package Exists: PASS
+Package Checksum: PASS
+Manifest: PASS
+Extract Package: PASS
+Initialize Lease Layout: PASS
+Deployment Metadata: PASS
+Protocol Behavior Modified: no
+Live Lease Deployment: PASS
+
+Manifest Summary:
+EverArcade Evernode Lease Handoff Package v0.1
+
+Checksum Output:
+everarcade-lease-handoff-v0.1.tar.gz: OK
+
+Build Output:
+
+
+Failure Registry:
+No Deployment Failures Observed

@@ -1,0 +1,160 @@
+Live Evernode Lease Validation Report
+Started At: 2026-06-04T16:04:14Z
+Lease Root: /workspace/everarcade-compiler/tmp/live-evernode-lease
+Runtime Assets: PASS
+Node Assets: PASS
+HotPocket Assets: PASS
+Evernode Assets: PASS
+Operator Assets: PASS
+Node Initialization: PASS
+Start: PASS
+Health: PASS
+Checkpoint: PASS
+Replay: PASS
+Restore: PASS
+Stop: PASS
+Replay Continuity Root Match: PASS
+Checkpoint Identifier: checkpoint-20260604T160415Z
+Replay Root: cbb9d4fbcdf4486b0fa5c793a7a0009654bad8311d84792d8c26222dd5c55589
+Continuity Root: cbb9d4fbcdf4486b0fa5c793a7a0009654bad8311d84792d8c26222dd5c55589
+Node Restore Continuity Root: 6377b6fcd7e83af049c6d6a3542b5794592acea25940c00abb1ed0b525b03005
+Protocol Behavior Modified: no
+Live Lease Validation: PASS
+
+Lease Environment Summary:
+Disk Space:
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/vda         63G   32G   29G  53% /
+
+Memory Availability:
+               total        used        free      shared  buff/cache   available
+Mem:            17Gi       571Mi        16Gi       5.0Mi       1.1Gi        17Gi
+Swap:             0B          0B          0B
+
+CPU Count:
+3
+
+Filesystem Layout:
+/workspace/everarcade-compiler/tmp/live-evernode-lease/checksums
+/workspace/everarcade-compiler/tmp/live-evernode-lease/checksums/package-files.sha256
+/workspace/everarcade-compiler/tmp/live-evernode-lease/docs
+/workspace/everarcade-compiler/tmp/live-evernode-lease/docs/operator-runbook.txt
+/workspace/everarcade-compiler/tmp/live-evernode-lease/docs/runtime-platform
+/workspace/everarcade-compiler/tmp/live-evernode-lease/evernode
+/workspace/everarcade-compiler/tmp/live-evernode-lease/evernode/backups
+/workspace/everarcade-compiler/tmp/live-evernode-lease/evernode/checkpoints
+/workspace/everarcade-compiler/tmp/live-evernode-lease/evernode/hotpocket
+/workspace/everarcade-compiler/tmp/live-evernode-lease/evernode/journals
+/workspace/everarcade-compiler/tmp/live-evernode-lease/evernode/lease
+/workspace/everarcade-compiler/tmp/live-evernode-lease/evernode/logs
+/workspace/everarcade-compiler/tmp/live-evernode-lease/evernode/node
+/workspace/everarcade-compiler/tmp/live-evernode-lease/evernode/reports
+/workspace/everarcade-compiler/tmp/live-evernode-lease/evernode/runtime
+/workspace/everarcade-compiler/tmp/live-evernode-lease/handoff
+/workspace/everarcade-compiler/tmp/live-evernode-lease/handoff/everarcade-lease-handoff-v0.1
+/workspace/everarcade-compiler/tmp/live-evernode-lease/hotpocket
+/workspace/everarcade-compiler/tmp/live-evernode-lease/hotpocket/README.md
+/workspace/everarcade-compiler/tmp/live-evernode-lease/hotpocket/adapter
+/workspace/everarcade-compiler/tmp/live-evernode-lease/hotpocket/checkpoint
+/workspace/everarcade-compiler/tmp/live-evernode-lease/hotpocket/input
+/workspace/everarcade-compiler/tmp/live-evernode-lease/hotpocket/output
+/workspace/everarcade-compiler/tmp/live-evernode-lease/hotpocket/replay
+/workspace/everarcade-compiler/tmp/live-evernode-lease/hotpocket/settlement
+/workspace/everarcade-compiler/tmp/live-evernode-lease/hotpocket/status
+/workspace/everarcade-compiler/tmp/live-evernode-lease/manifests
+/workspace/everarcade-compiler/tmp/live-evernode-lease/manifests/deployment-manifest.txt
+/workspace/everarcade-compiler/tmp/live-evernode-lease/manifests/evernode-deployment-manifest.txt
+/workspace/everarcade-compiler/tmp/live-evernode-lease/metadata
+/workspace/everarcade-compiler/tmp/live-evernode-lease/metadata/live-lease-deployment.env
+/workspace/everarcade-compiler/tmp/live-evernode-lease/node
+/workspace/everarcade-compiler/tmp/live-evernode-lease/node/backups
+/workspace/everarcade-compiler/tmp/live-evernode-lease/node/checkpoints
+/workspace/everarcade-compiler/tmp/live-evernode-lease/node/config
+/workspace/everarcade-compiler/tmp/live-evernode-lease/node/journals
+/workspace/everarcade-compiler/tmp/live-evernode-lease/node/logs
+/workspace/everarcade-compiler/tmp/live-evernode-lease/node/node_manifest.json
+/workspace/everarcade-compiler/tmp/live-evernode-lease/node/reports
+/workspace/everarcade-compiler/tmp/live-evernode-lease/node/state
+/workspace/everarcade-compiler/tmp/live-evernode-lease/node/worlds
+/workspace/everarcade-compiler/tmp/live-evernode-lease/reports
+/workspace/everarcade-compiler/tmp/live-evernode-lease/reports/node_checkpoint_report.txt
+/workspace/everarcade-compiler/tmp/live-evernode-lease/reports/node_initialization_report.txt
+/workspace/everarcade-compiler/tmp/live-evernode-lease/reports/node_replay_report.txt
+/workspace/everarcade-compiler/tmp/live-evernode-lease/reports/node_restore_report.txt
+/workspace/everarcade-compiler/tmp/live-evernode-lease/reports/node_start_report.txt
+/workspace/everarcade-compiler/tmp/live-evernode-lease/reports/node_stop_report.txt
+/workspace/everarcade-compiler/tmp/live-evernode-lease/runtime
+/workspace/everarcade-compiler/tmp/live-evernode-lease/runtime/config
+/workspace/everarcade-compiler/tmp/live-evernode-lease/runtime/deployment
+/workspace/everarcade-compiler/tmp/live-evernode-lease/scripts
+/workspace/everarcade-compiler/tmp/live-evernode-lease/scripts/build_lease_handoff_package.sh
+/workspace/everarcade-compiler/tmp/live-evernode-lease/scripts/certify_evernode_deployment.sh
+/workspace/everarcade-compiler/tmp/live-evernode-lease/scripts/certify_hotpocket_integration.sh
+/workspace/everarcade-compiler/tmp/live-evernode-lease/scripts/certify_lease_handoff_package.sh
+/workspace/everarcade-compiler/tmp/live-evernode-lease/scripts/evernode_bootstrap.sh
+/workspace/everarcade-compiler/tmp/live-evernode-lease/scripts/evernode_health.sh
+/workspace/everarcade-compiler/tmp/live-evernode-lease/scripts/evernode_start.sh
+/workspace/everarcade-compiler/tmp/live-evernode-lease/scripts/evernode_stop.sh
+/workspace/everarcade-compiler/tmp/live-evernode-lease/scripts/install_lease_handoff_package.sh
+/workspace/everarcade-compiler/tmp/live-evernode-lease/scripts/node_checkpoint.sh
+/workspace/everarcade-compiler/tmp/live-evernode-lease/scripts/node_common.sh
+/workspace/everarcade-compiler/tmp/live-evernode-lease/scripts/node_doctor.sh
+/workspace/everarcade-compiler/tmp/live-evernode-lease/scripts/node_init.sh
+/workspace/everarcade-compiler/tmp/live-evernode-lease/scripts/node_replay.sh
+/workspace/everarcade-compiler/tmp/live-evernode-lease/scripts/node_restore.sh
+/workspace/everarcade-compiler/tmp/live-evernode-lease/scripts/node_start.sh
+/workspace/everarcade-compiler/tmp/live-evernode-lease/scripts/node_status.sh
+/workspace/everarcade-compiler/tmp/live-evernode-lease/scripts/node_stop.sh
+/workspace/everarcade-compiler/tmp/live-evernode-lease/scripts/runtime_doctor.sh
+/workspace/everarcade-compiler/tmp/live-evernode-lease/scripts/runtime_start.sh
+/workspace/everarcade-compiler/tmp/live-evernode-lease/scripts/runtime_status.sh
+/workspace/everarcade-compiler/tmp/live-evernode-lease/scripts/runtime_stop.sh
+/workspace/everarcade-compiler/tmp/live-evernode-lease/scripts/validate_evernode_deployment.sh
+/workspace/everarcade-compiler/tmp/live-evernode-lease/scripts/validate_hotpocket_integration.sh
+/workspace/everarcade-compiler/tmp/live-evernode-lease/scripts/validate_lease_handoff_package.sh
+/workspace/everarcade-compiler/tmp/live-evernode-lease/scripts/verify_lease_handoff_package.sh
+
+Runtime Constraints:
+Networking=disabled
+Consensus=disabled
+XRPL_RPC=disabled
+Hooks=disabled
+Xaman=disabled
+Renderer=disabled
+GPU=disabled
+
+Node Initialization Output:
+Node Initialized
+Node Initialization: PASS
+
+Start Output:
+Node Running
+Node Start: PASS
+
+Health Output:
+Node Status
+Runtime Status: running
+Latest Checkpoint: NONE
+Latest Replay Root: NONE
+Latest Continuity Root: NONE
+World Status: running
+Node Healthy
+Node Status: PASS
+
+Checkpoint Output:
+Checkpoint: PASS
+
+Replay Output:
+Replay PASS
+Replay: PASS
+
+Restore Output:
+Restore PASS
+Restore: PASS
+
+Stop Output:
+Node Stopped
+Stop: PASS
+
+Failure Registry:
+No Deployment Failures Observed
