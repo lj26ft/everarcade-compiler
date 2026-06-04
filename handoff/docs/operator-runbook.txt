@@ -1,0 +1,35 @@
+EverArcade Evernode Lease Handoff Operator Runbook v0.1
+
+1. Receive Package
+   - Receive everarcade-lease-handoff-v0.1.tar.gz and its .sha256 file.
+   - Store both files in the lease operator workspace.
+
+2. Verify Checksum
+   - Run: sha256sum -c everarcade-lease-handoff-v0.1.tar.gz.sha256
+   - Or run: bash scripts/verify_lease_handoff_package.sh
+
+3. Install Package
+   - Run: bash scripts/install_lease_handoff_package.sh
+   - The default local install target is handoff/lease-install/.
+
+4. Validate Package
+   - Run: bash scripts/validate_lease_handoff_package.sh
+   - Continue only when the validation report says PASS.
+
+5. Start Runtime
+   - Enter the installed package directory.
+   - Review operator.env templates and lease-specific credentials.
+   - Run the staged runtime start script only after live credentials are supplied.
+
+6. Run Health Check
+   - Run the staged runtime doctor and Evernode validation scripts.
+   - Confirm reports show runtime, node, HotPocket, and Evernode assets are present.
+
+7. Recovery Procedure
+   - Stop runtime scripts first.
+   - Preserve reports, checkpoints, journals, and logs.
+   - Reinstall from the original immutable tarball and re-run validation.
+
+8. Upgrade Procedure
+   - Treat every upgrade as a new immutable handoff package.
+   - Verify the new checksum, install into a clean target, validate, then switch over.
