@@ -1,0 +1,7 @@
+Evernode Install Report
+Package: /workspace/everarcade-compiler/dist/everarcade-evernode-v0.1.tar.gz
+Checksum: PASS
+Manifest: PASS
+Layout: PASS
+Installed: PASS
+Installation: PASS

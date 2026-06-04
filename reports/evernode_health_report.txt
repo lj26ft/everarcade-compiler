@@ -1,0 +1,7 @@
+Evernode Health Report
+Runtime Layout: PASS
+Node Layout: PASS
+Checkpoint Presence: PASS
+Report Presence: PASS
+HotPocket Presence: PASS
+Health: PASS

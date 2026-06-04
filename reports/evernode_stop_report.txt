@@ -1,0 +1,5 @@
+Evernode Stop Report
+Runtime Stop: PASS
+State Persisted: PASS
+Journals Flushed: PASS
+Stop: PASS
