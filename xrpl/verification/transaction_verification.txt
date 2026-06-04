@@ -1,0 +1,9 @@
+version=xrpl-live-settlement-v0.1
+structure=PASS
+account=PASS
+amount=PASS
+memo_integrity=PASS
+reference_integrity=PASS
+intent.root=c8ea6d6549e6ae4612364b9de6d8370fce2bc121f871e60ea268da478758d35e
+transaction.root=f83a33fdc8d0a82314a75747d1b136dcbebadbfa52f2bc9b8d5bddd0ea8e4b60
+verification.root=9339f0bf54ac7268043feafc381fa640c11529a773adc0dd101bdd47b44667a2
