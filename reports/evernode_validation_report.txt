@@ -1,0 +1,35 @@
+Evernode Deployment Validation Report
+Layout: PASS
+Deployment Manifest: PASS
+Protocol Node Scripts: PASS
+HotPocket Validation Script: PASS
+HotPocket Certification Script: PASS
+Node Doctor: PASS
+HotPocket Validation Run: PASS
+Evernode Deployment Validation: PASS
+
+Node Doctor Output:
+Node Diagnostics
+Directories: PASS
+Config: PASS
+State: PASS
+Checkpoints: PASS
+Journals: PASS
+Reports: PASS
+Runtime Appliance: REPOSITORY_RUNTIME_WRAPPERS_PRESENT
+Node Healthy
+Doctor: PASS
+
+Node Doctor Retry Output:
+
+
+HotPocket Validation Output:
+HotPocket Integration Validation Report
+Adapter: PASS
+Input Export: PASS
+Output Export: PASS
+Checkpoint Export: PASS
+Replay Export: PASS
+Settlement Export: PASS
+Status Export: PASS
+HotPocket Integration Validation: PASS

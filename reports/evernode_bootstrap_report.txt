@@ -1,0 +1,6 @@
+Evernode Bootstrap Report
+Layout: PASS
+Protocol Node Scripts: PASS
+HotPocket Adapter Scripts: PASS
+Deployment Manifest: PASS
+Evernode Bootstrap: PASS
