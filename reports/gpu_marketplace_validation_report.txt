@@ -1,0 +1,36 @@
+GPU Marketplace Validation Report
+Version: 0.1
+Marketplace ID: everarcade-gpu-marketplace-v0.1
+Authority: non-authoritative-projection-compute
+Canonical Ordering: epoch-priority-job-id-provider-id-lexicographic
+Replay Safe: true
+Live Discovery: false
+Payments: settlement-intent-only
+
+Identity: PASS
+Registration: PASS
+Capability: PASS
+Capacity: PASS
+Assignment: PASS
+Artifacts: PASS
+Verification: PASS
+Settlement Intent: PASS
+Reputation: PASS
+Replay: PASS
+Lease Integration: PASS
+
+Provider Identity Root: 7c58e25c6198a3fcff4e4b494e836ff858ec325c96b4ec68f76ec3a222c81f3a
+Registration Root: 42869647f6e227878d17668b9b7d0fc0bdf5e1b3823d280a38e24018c0f2da0b
+Capability Root: ea377fba47a9ac873a3687ea8e6c1e1caaf359bc75caf42a79bb63ae98a31b8d
+Capacity Root: de65886073b577bfea2d479c81ff3ae576a77eda99dcaf5d4972a66be2985d7d
+Assignment Root: 6c00e9913569419aa57106a6ab4e6f4d9e6ded3aabb7627334b57aa317430769
+Artifact Submission Root: c1557f5311c535afc8aecaafe4251c8cbba89a94750b250e48c8e32d4ebbbad5
+Verification Root: 6667d5cb4a3e99c468bdbdb2dc74962b36ec3a69877a06c3475ca7948b967434
+Settlement Intent Root: a39fcc968ee52f99c1cd6e90404bdda7b18298d053b1a9d1bcdc6f68a6f5c8f8
+Reputation Root: 2ade8e28ce1ce9cc2a787562754b810469dab5a870e2c3018bb7893585f77e8d
+Marketplace Root: 2216b9e9316f2d91f548e933961ff0ae038b30fa5d04866b7d0aab612ec4fb9c
+Marketplace Replay Root: 2216b9e9316f2d91f548e933961ff0ae038b30fa5d04866b7d0aab612ec4fb9c
+Replay Equals Marketplace: true
+Lease Integration Root: f2313966587c1d3d7911a07e62098cba381b0354ed17cb0f294a8579fde535f9
+
+GPU Marketplace Validation: PASS

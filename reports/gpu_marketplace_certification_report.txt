@@ -1,0 +1,15 @@
+GPU Marketplace Certification Report
+Validation Report: reports/gpu_marketplace_validation_report.txt
+Identity Evidence: gpu/marketplace/artifacts/identity_transcript.txt
+Registration Evidence: gpu/marketplace/artifacts/registration_transcript.txt
+Capability Evidence: gpu/marketplace/artifacts/capability_transcript.txt
+Capacity Evidence: gpu/marketplace/artifacts/capacity_transcript.txt
+Assignment Evidence: gpu/marketplace/artifacts/assignment_transcript.txt
+Artifact Evidence: gpu/marketplace/artifacts/artifact_submission_transcript.txt
+Verification Evidence: gpu/marketplace/artifacts/verification_transcript.txt
+Settlement Intent Evidence: gpu/marketplace/artifacts/settlement_intent_transcript.txt
+Reputation Evidence: gpu/marketplace/artifacts/reputation_transcript.txt
+Replay Evidence: gpu/marketplace/artifacts/marketplace_replay_transcript.txt
+Lease Integration Evidence: runtime/gpu-marketplace/artifacts/lease_integration_transcript.txt
+
+GPU Marketplace: PASS
