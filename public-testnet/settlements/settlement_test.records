@@ -1,0 +1,13 @@
+testnet_id=everarcade-public-testnet-v0.1
+version=0.1
+network=xrpl-testnet-only
+funds=no-production-funds
+ordering=participant-id-record-id-action-lexicographic
+authority=auditable-testnet-operations
+deployment_registry_root=3b69487832529d9fc9a1f773e7d2c6da0f6aae0f52ff7fe411abbda9f20e649d
+settlement_intent=intent-0001|project=project-arena|amount=100-test-drops|production_funds=false|status=authorized-test
+xrpl_test_settlement=xrpl-test-0001|intent=intent-0001|network=testnet|ledger=observed-test-ledger|status=observed
+xaman_test_authorization=xaman-test-0001|intent=intent-0001|wallet=xaman-test-alpha|status=signed-test
+receipt_import=receipt-0001|settlement=xrpl-test-0001|imported=true|status=verified
+settlement_intent=intent-0002|project=project-civ|amount=250-test-drops|production_funds=false|status=authorized-test
+receipt_import=receipt-0002|settlement=xrpl-test-0002|imported=true|status=verified

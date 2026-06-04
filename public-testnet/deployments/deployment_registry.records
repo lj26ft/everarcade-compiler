@@ -1,0 +1,13 @@
+testnet_id=everarcade-public-testnet-v0.1
+version=0.1
+network=xrpl-testnet-only
+funds=no-production-funds
+ordering=participant-id-record-id-action-lexicographic
+authority=auditable-testnet-operations
+developer_enrollment_root=78280345dcdfab2d7593ebcf29f81a3e4496656d27798396a3f13bf84b3b1f17
+operator_enrollment_root=8501974d987816da61964a959e3ca6b11c385fc872fcd9f35348a647096224c7
+project=project-arena|deployment=deploy-arena-001|lease=lease-east-001|federation=federation-core-001|status=running
+project=project-civ|deployment=deploy-civ-001|lease=lease-west-001|federation=federation-core-001|status=running
+project=project-render|deployment=deploy-render-001|lease=lease-observer-001|federation=federation-observer-001|status=validating
+membership=federation-core-001|lease=lease-east-001|operator=lease-operator-east|status=active
+membership=federation-core-001|lease=lease-west-001|operator=node-operator-west|status=active

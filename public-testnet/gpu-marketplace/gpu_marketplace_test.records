@@ -1,0 +1,14 @@
+testnet_id=everarcade-public-testnet-v0.1
+version=0.1
+network=xrpl-testnet-only
+funds=no-production-funds
+ordering=participant-id-record-id-action-lexicographic
+authority=auditable-testnet-operations
+gpu_enrollment_root=473864e659f2e061df9b8025c5273e9c363df0dd1ea02a0f8a0b1493cc47d8fd
+settlement_test_root=a3564d9bee92ab26f755c1e93d2fb8373608d120c034be87c30ec965a7af5708
+gpu_job=job-0001|provider=gpu-provider-a|artifact=artifact-projection-0001|verification=verification-0001|settlement_intent=intent-gpu-0001|status=verified
+gpu_job=job-0002|provider=gpu-provider-b|artifact=artifact-render-0002|verification=verification-0002|settlement_intent=intent-gpu-0002|status=verified
+artifact=artifact-projection-0001|hash=deterministic-artifact-a|replay=replay-gpu-0001
+artifact=artifact-render-0002|hash=deterministic-artifact-b|replay=replay-gpu-0002
+verification=verification-0001|result=pass|observer=operator-core
+verification=verification-0002|result=pass|observer=operator-core

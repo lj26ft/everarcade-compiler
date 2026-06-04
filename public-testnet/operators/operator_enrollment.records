@@ -1,0 +1,12 @@
+testnet_id=everarcade-public-testnet-v0.1
+version=0.1
+network=xrpl-testnet-only
+funds=no-production-funds
+ordering=participant-id-record-id-action-lexicographic
+authority=auditable-testnet-operations
+operator=lease-operator-east|role=lease-operator|lease=lease-east-001|node=node-east-01|status=active
+operator=node-operator-west|role=node-operator|lease=lease-west-001|node=node-west-01|status=active
+operator=federation-operator-core|role=federation-operator|federation=federation-core-001|node=node-core-01|status=active
+operator_record=lease-operator-east|health=pass|checkpoint=checkpoint-east-64|replay=replay-east-64
+operator_record=node-operator-west|health=pass|checkpoint=checkpoint-west-71|replay=replay-west-71
+operator_record=federation-operator-core|health=pass|checkpoint=checkpoint-core-99|replay=replay-core-99

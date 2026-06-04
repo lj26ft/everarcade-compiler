@@ -1,0 +1,17 @@
+testnet_id=everarcade-public-testnet-v0.1
+version=0.1
+network=xrpl-testnet-only
+funds=no-production-funds
+ordering=participant-id-record-id-action-lexicographic
+authority=auditable-testnet-operations
+developer=developer-alpha|registration=accepted|contact=forum-alpha|status=active
+project=project-arena|developer=developer-alpha|registration=accepted|approval=approved|status=deployable
+project_status=project-arena|build=certified-runtime|lease=assigned|player_access=open-test
+
+developer=developer-beta|registration=accepted|contact=forum-beta|status=active
+project=project-civ|developer=developer-beta|registration=accepted|approval=approved|status=deployable
+project_status=project-civ|build=certified-runtime|lease=federated|player_access=limited-test
+
+developer=developer-gamma|registration=accepted|contact=forum-gamma|status=active
+project=project-render|developer=developer-gamma|registration=accepted|approval=approved|status=gpu-validation
+project_status=project-render|build=certified-renderer|lease=observer|player_access=closed-test

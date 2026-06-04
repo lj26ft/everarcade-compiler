@@ -1,0 +1,33 @@
+Public Testnet Certification Report
+Version: 0.1
+Testnet ID: everarcade-public-testnet-v0.1
+Testnet Only: true
+No Production Funds: true
+Production Revenue: false
+Production Asset Value: false
+Auditable Records: true
+Replayable Records: true
+Certified Runtime Stack: protocol-runtime,civilization-runtime,federation-runtime,renderer-runtime,gpu-runtime,gpu-marketplace,xrpl-testnet,xaman-test
+
+Enrollment: PASS
+Deployments: PASS
+Civilizations: PASS
+GPU Marketplace: PASS
+Settlements: PASS
+Governance: PASS
+Replay: PASS
+
+Developer Enrollment Root: 78280345dcdfab2d7593ebcf29f81a3e4496656d27798396a3f13bf84b3b1f17
+Operator Enrollment Root: 8501974d987816da61964a959e3ca6b11c385fc872fcd9f35348a647096224c7
+GPU Enrollment Root: 473864e659f2e061df9b8025c5273e9c363df0dd1ea02a0f8a0b1493cc47d8fd
+Deployment Registry Root: 3b69487832529d9fc9a1f773e7d2c6da0f6aae0f52ff7fe411abbda9f20e649d
+Civilization Registry Root: 44ab3faad056df4f5a63b907f55b9f8b491465156492a32f5a4f8965187294ec
+Settlement Test Root: a3564d9bee92ab26f755c1e93d2fb8373608d120c034be87c30ec965a7af5708
+GPU Test Root: db9e6d523761ea9cba2e6f87de814435cc29e8ac410ba0d7d6d16b60f2573ef1
+Governance Root: baa685be80bedb1b4e1ea52085628bb7e067fdec3dfc6464775144e800e96d29
+Analytics Root: 8b88f6743813097523bbf14889ce725a05ad1a6d97f7c96238f3263833618d7f
+Testnet Replay Root: f416bbbb794a8a70ff79721976bcb4a3a7e47e9b11a0904d83d973b596f8ecb6
+Public Testnet Root: f416bbbb794a8a70ff79721976bcb4a3a7e47e9b11a0904d83d973b596f8ecb6
+Replay Root Equals Testnet Root: true
+
+Public Testnet: PASS

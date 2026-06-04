@@ -1,0 +1,11 @@
+testnet_id=everarcade-public-testnet-v0.1
+version=0.1
+network=xrpl-testnet-only
+funds=no-production-funds
+ordering=participant-id-record-id-action-lexicographic
+authority=auditable-testnet-operations
+deployment_registry_root=3b69487832529d9fc9a1f773e7d2c6da0f6aae0f52ff7fe411abbda9f20e649d
+civilization=civ-genesis|world=world-genesis|region=region-north|governance_state=open-council|economy_state=test-credit
+civilization=civ-arcade|world=world-arena|region=region-south|governance_state=operator-council|economy_state=test-ticket
+world=world-genesis|status=active|replay=replay-world-genesis-12
+region=region-north|status=active|shard=shard-north-01
