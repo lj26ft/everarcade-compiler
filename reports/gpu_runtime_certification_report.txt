@@ -1,0 +1,30 @@
+GPU Runtime Certification Report
+Version: 0.1
+Runtime ID: everarcade-gpu-runtime-v0.1
+Authority: non-authoritative
+Canonical Ordering: priority-epoch-job-id-lexicographic
+Replay Safe: true
+Live Hardware Inspection: false
+
+Jobs: PASS
+Workers: PASS
+Devices: PASS
+Queues: PASS
+Artifacts: PASS
+Verification: PASS
+Replay: PASS
+Renderer Integration: PASS
+
+Projection Root: 151f030661547eea6a4f6cf5a49298b85ece2516e5cbc90a26b350ffc496e965
+GPU Job Root: 0643b659a388b36788d8ff39d185d5ef163599d57f87c8b4593b7fe8f4ae7f8e
+Worker Root: b20e3e0f291cf2597d412a076e7f3fd07fefb5d8ad5bba5955153c5c54dd2c5f
+Device Root: 6d7b5a57e83799c7c9245949a3ff791d039c6c77c693015c94f9b9896423c39a
+Queue Root: 3efb8a381bad3c87d986c14d3e09261fdec5da9766341fe9b905ced28af88869
+Artifact Root: 0a006aae393acb4b3441a6fc74063af9af8b871c7e9b013a6ad5a0e5ff41fb97
+Render Root: c8739cec10037c7e4e40435ffcd4a9ab7a34417f115b223044503f12b81f62aa
+Verification Root: 372c2788b452fa838cfa694fdf2e83bb27ddbaddee5b35d86dc0a456ee6444db
+Replay Render Root: c8739cec10037c7e4e40435ffcd4a9ab7a34417f115b223044503f12b81f62aa
+Integration Root: b83bdf36eed8a44ade6be12b256dccb91b56779b572f594267e2a5c452f15970
+Replay Equals Render: true
+
+GPU Runtime: PASS
