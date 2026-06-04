@@ -1,0 +1,13 @@
+version=multi-lease-federation-runtime-v0.1
+FederationID=everarcade-federation-alpha
+MembershipEpoch=epoch-0001
+Event.0=Join:lease-a:node-a:epoch-0001
+Event.1=Join:lease-b:node-b:epoch-0001
+Event.2=Join:lease-c:node-c:epoch-0001
+Event.3=Suspend:lease-b:node-b:epoch-0001:isolated-not-mutating-peers
+Event.4=Recover:lease-b:node-b:epoch-0001:replay-roots-verified
+Event.5=Leave:none:none:epoch-0001:not-entered
+Deterministic=PASS
+ReplaySafe=PASS
+EpochAware=PASS
+IdentityRoot=81dcdefb93fc9e9867392a6c474f23d6be4d8a74c9f89378434bb280c328929b
