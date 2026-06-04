@@ -1,0 +1,10 @@
+version=multi-lease-federation-runtime-v0.1
+FederationID=everarcade-federation-alpha
+MembershipEpoch=epoch-0001
+LeaseMembership=lease-a,lease-b,lease-c
+Connectivity.0=lease-a->lease-b:evidence-only
+Connectivity.1=lease-b->lease-c:evidence-only
+Connectivity.2=lease-c->lease-a:evidence-only
+EpochState=active
+NetworkingImplementation=not-required
+MembershipRoot=be5b782a50dd14322e7080fed0ab837431d6fc9ffd7fa69a6ac40a0036391f1e

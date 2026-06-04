@@ -1,0 +1,27 @@
+Multi-Lease Federation Validation Report
+Version: multi-lease-federation-runtime-v0.1
+Federation ID: everarcade-federation-alpha
+Membership Epoch: epoch-0001
+Civilization Epoch: civilization-epoch-0001
+
+Identity: PASS
+Membership: PASS
+Topology: PASS
+Checkpoint Exchange: PASS
+Replay Exchange: PASS
+Settlement Exchange: PASS
+Synchronization: PASS
+Recovery: PASS
+
+Federation Identity Root: 81dcdefb93fc9e9867392a6c474f23d6be4d8a74c9f89378434bb280c328929b
+Membership Root: be5b782a50dd14322e7080fed0ab837431d6fc9ffd7fa69a6ac40a0036391f1e
+Topology Root: c7a274b74ab4de624e1eca84b2e803c3929a1c0d31dc43531cc6442be5924a57
+Checkpoint Exchange Root: a71b8597eb59c59a88c1122cc6f80849061f4a2a5e65264463a2ce2bc735de77
+Replay Exchange Root: 3c4faa766e672688d29e90a450a5f4a16f5209c24b124205c219ad4718238707
+Settlement Exchange Root: 2c7abf37be387c47fcbed787617b1dba29d606024d4d64e9c17c688dfc10704f
+Civilization Synchronization Root: af0c6b7b995b9d51670e2a14f21a4f8536e9bebba145f5327fb789648ebaceb1
+Recovery Root: 06a1e19751ad40b5d00eb493d41753ca754fcbb5bd46e97280786cf8b93249b8
+Recovered Replay Root: 94017f53095d74d4b57510cb4225522a9ab2630d25a099a649b24c8460a2ba6c
+Recovered Continuity Root: 1fc6f7e19ac26e3b39eedcbe8930a360f0d9bb0c148cb2346ed074084c9b44e0
+
+Multi-Lease Federation Validation: PASS

@@ -1,0 +1,13 @@
+version=multi-lease-federation-runtime-v0.1
+FederationID=everarcade-federation-alpha
+MembershipEpoch=epoch-0001
+Lease.0.ID=lease-a
+Lease.0.NodeID=node-a
+Lease.0.Authority=authority-a
+Lease.1.ID=lease-b
+Lease.1.NodeID=node-b
+Lease.1.Authority=authority-b
+Lease.2.ID=lease-c
+Lease.2.NodeID=node-c
+Lease.2.Authority=authority-c
+IdentityRoot=81dcdefb93fc9e9867392a6c474f23d6be4d8a74c9f89378434bb280c328929b

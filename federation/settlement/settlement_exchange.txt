@@ -1,0 +1,11 @@
+version=multi-lease-federation-runtime-v0.1
+FederationID=everarcade-federation-alpha
+MembershipEpoch=epoch-0001
+Export.lease-a=9bd2f93c8d69585108c8a74c6e736931c99d4eb57825e0c0aa149019bf3bf94e
+Export.lease-b=0ec782d73918e4c021419e40951b86365a00fb98205d271fe28a6f72b450eea2
+Export.lease-c=385c2d0211999ba437bfd881cb2423c42345de740bfee14421b0aa8a4e3ca448
+ImportPolicy=receipt-evidence-only
+SettlementEvidence=PASS
+ReceiptIntegrity=PASS
+AuthorityMatch=PASS
+ReplayExchangeRoot=3c4faa766e672688d29e90a450a5f4a16f5209c24b124205c219ad4718238707
