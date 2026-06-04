@@ -1,0 +1,10 @@
+portal_id=everarcade-developer-portal-v0.1
+version=0.1
+authority=non-authoritative-builder-interface
+ordering=developer-id-project-id-version-action-lexicographic
+settlement_mode=intent-and-observation-only
+private_key_custody=false
+asset=asset-sprite-001|class=assets|surface=renderer-api|custody=none|ownership_observed=true
+asset=inventory-arena-001|class=inventories|surface=runtime-api|custody=none|ownership_observed=true
+asset=vault-relic-001|class=vault-assets|surface=settlement-api|custody=none|ownership_observed=true
+asset=listing-skin-001|class=marketplace-assets|surface=marketplace-api|custody=none|ownership_observed=true

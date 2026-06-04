@@ -1,0 +1,13 @@
+portal_id=everarcade-developer-portal-v0.1
+version=0.1
+authority=non-authoritative-builder-interface
+ordering=developer-id-project-id-version-action-lexicographic
+settlement_mode=intent-and-observation-only
+private_key_custody=false
+project=project-arena|developer=developer-alpha|name=ArenaVanguard|type=game|version=0.1.0|status=published
+project=project-civ|developer=developer-beta|name=CivilizationWorld|type=civilization-tool|version=0.1.0|status=active
+project=project-render|developer=developer-gamma|name=ReplayRenderer|type=renderer-tool|version=0.1.0|status=archived
+project_action=archive|project=project-render|developer=developer-gamma|version=0.1.0
+project_action=create|project=project-arena|developer=developer-alpha|version=0.1.0
+project_action=publish|project=project-arena|developer=developer-alpha|version=0.1.0
+project_action=update|project=project-civ|developer=developer-beta|version=0.1.0

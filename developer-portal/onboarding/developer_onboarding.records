@@ -1,0 +1,13 @@
+portal_id=everarcade-developer-portal-v0.1
+version=0.1
+authority=non-authoritative-builder-interface
+ordering=developer-id-project-id-version-action-lexicographic
+settlement_mode=intent-and-observation-only
+private_key_custody=false
+project_registry_root=6db5f153bd0def79857a296f066d71aed25bf2981139a7b1d8ed8191431603dc
+deployment_root=1bdf09429cf5d7fafdc72d8adf2ae0984d0fc38414e87cc16e175323c57791ab
+onboarding_step=01|name=create-project|surface=project-registry
+onboarding_step=02|name=build|surface=everarcade-cli
+onboarding_step=03|name=validate|surface=validation
+onboarding_step=04|name=deploy|surface=deployment-api
+onboarding_step=05|name=monitor|surface=monitoring-api

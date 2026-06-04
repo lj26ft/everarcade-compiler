@@ -1,0 +1,11 @@
+portal_id=everarcade-developer-portal-v0.1
+version=0.1
+authority=non-authoritative-builder-interface
+ordering=developer-id-project-id-version-action-lexicographic
+settlement_mode=intent-and-observation-only
+private_key_custody=false
+marketplace_item=listing-0001|class=listings|surface=marketplace-settlement|mutates_settlement=false
+marketplace_item=sale-0001|class=sales|surface=marketplace-settlement|mutates_settlement=false
+marketplace_item=royalty-0001|class=royalties|surface=marketplace-settlement|mutates_settlement=false
+marketplace_item=revenue-creator-alpha|class=creator-revenue|surface=marketplace-settlement|mutates_settlement=false
+marketplace_item=settlement-event-0001|class=settlement-events|surface=marketplace-settlement|mutates_settlement=false

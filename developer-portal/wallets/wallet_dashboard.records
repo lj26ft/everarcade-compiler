@@ -1,0 +1,10 @@
+portal_id=everarcade-developer-portal-v0.1
+version=0.1
+authority=non-authoritative-builder-interface
+ordering=developer-id-project-id-version-action-lexicographic
+settlement_mode=intent-and-observation-only
+private_key_custody=false
+wallet=authority-dev-alpha|class=authorities|custody=delegated|private_key_custody=false
+wallet=xrpl-r-dev-alpha|class=xrpl-wallets|custody=non-custodial|private_key_custody=false
+wallet=xaman-link-alpha|class=xaman-connections|custody=non-custodial|private_key_custody=false
+wallet=settlement-account-alpha|class=settlement-accounts|custody=observed|private_key_custody=false

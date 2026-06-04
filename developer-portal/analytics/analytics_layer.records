@@ -1,0 +1,16 @@
+portal_id=everarcade-developer-portal-v0.1
+version=0.1
+authority=non-authoritative-builder-interface
+ordering=developer-id-project-id-version-action-lexicographic
+settlement_mode=intent-and-observation-only
+private_key_custody=false
+deployment_root=1bdf09429cf5d7fafdc72d8adf2ae0984d0fc38414e87cc16e175323c57791ab
+marketplace_root=312bd9ae39c9b3a1a7546bf8507f380a92a38a38bb3332d91453062fa7252d63
+gpu_marketplace_root=a67887e4b4de240a7d77d9a8e82d4c412159e01a54f4cd614a5290f221d1c7ee
+civilization_root=4ed8b3cb9fc30af4d59389d96d492a0f8b175ef2651eb94401bbae5807c496c1
+analytics=metric-deployments|class=deployments|source=derived-observation|authoritative=false
+analytics=metric-players|class=players|source=derived-observation|authoritative=false
+analytics=metric-settlements|class=settlements|source=derived-observation|authoritative=false
+analytics=metric-marketplace|class=marketplace-activity|source=derived-observation|authoritative=false
+analytics=metric-gpu|class=gpu-activity|source=derived-observation|authoritative=false
+analytics=metric-civilization|class=civilization-activity|source=derived-observation|authoritative=false

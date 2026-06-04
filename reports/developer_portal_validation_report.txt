@@ -1,0 +1,32 @@
+Developer Portal Validation Report
+Version: 0.1
+Portal ID: everarcade-developer-portal-v0.1
+Authority: non-authoritative-builder-interface
+Ordering: developer-id-project-id-version-action-lexicographic
+Settlement Mode: intent-and-observation-only
+Private Key Custody: false
+
+Projects: PASS
+Game Creation: PASS
+Deployments: PASS
+Assets: PASS
+Wallets: PASS
+Civilizations: PASS
+Marketplace: PASS
+GPU: PASS
+Analytics: PASS
+Onboarding: PASS
+
+Project Registry Root: 6db5f153bd0def79857a296f066d71aed25bf2981139a7b1d8ed8191431603dc
+Game Creation Root: 901916a79cec89379eceb9958f12e58e5c6eb046cf86882f2e397974b162008a
+Deployment Root: 1bdf09429cf5d7fafdc72d8adf2ae0984d0fc38414e87cc16e175323c57791ab
+Asset Registry Root: 2918f26b1e2ff56c31fdfa3c4229b3610933bfa8165fdfd4ac14d985ad7bea20
+Wallet Root: 51c51f505b7e8778da3e29f5a964a5b961b7608c7489daacadcdf149723d7121
+Civilization Root: 4ed8b3cb9fc30af4d59389d96d492a0f8b175ef2651eb94401bbae5807c496c1
+Marketplace Root: 312bd9ae39c9b3a1a7546bf8507f380a92a38a38bb3332d91453062fa7252d63
+GPU Marketplace Root: a67887e4b4de240a7d77d9a8e82d4c412159e01a54f4cd614a5290f221d1c7ee
+Analytics Root: b88a13f3dd984f10afa1fd8c2fd0c1f6f7e9e73ecb9b0750e780a7809a066e02
+Onboarding Root: 7738a6265aec683e39c3c3e1bcc460746696e82193273c4796873e3acfa02012
+Developer Portal Root: dddc3646548772b91b2ff4d9ec051930296e8de3af2441567803e74a324fc551
+
+Developer Portal Validation: PASS
