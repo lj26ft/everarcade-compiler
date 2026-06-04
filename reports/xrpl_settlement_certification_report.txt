@@ -1,0 +1,19 @@
+Timestamp: 2026-06-04T01:59:09Z
+Settlement Genesis Root: 58fb175aaf6c8b2a604cbfa17310349dbdc4ee98c497b498cb39d9200751f1a7
+Settlement Intent Root: f5f1dbb3dddc70a989b8d755d493bf98c0b9aae6c51b863e3399fd87a87994a5
+Settlement Authorization Root: 17df0eb594105d7f934efeb4a5a63929ec7286c8df576ae932f395d54a5e4c0d
+Settlement Receipt Root: 452d3296716b8041a5cef4bbd2ec6d34fd26688d72513e129cce3cae1d7579e2
+Settlement Root Epoch 0: 559f350647e836007b43189608a3beb42515bfc48ed8e7be35c26af9a98fcbdc
+Settlement Root Epoch 1: 66758a827e646c58b3d45a8a0742f43a7058611b4e31f3869b90a75a8679f32d
+Settlement Root Epoch 2: ffa3865f36a942130334ccbbf1d466bec00ee199666537a6bcb06b3dbe33823a
+Settlement Checkpoint Identifier: checkpoint:f703f016a8e7cf484951c4845c50562cddf157e90af72a365afc519a037a072a
+Settlement Continuity Root: 0f580706178e21e3365d72223b60444b90fbacbd2b2f608e3cf6d99e826bf129
+Replay Settlement Root: 0f580706178e21e3365d72223b60444b90fbacbd2b2f608e3cf6d99e826bf129
+Intent Status: PASS
+Authorization Status: PASS
+Receipt Status: PASS
+Checkpoint Status: PASS
+Restoration Status: PASS
+Replay Status: PASS
+Integrity Status: PASS
+Overall Result: PASS
