@@ -1,0 +1,7 @@
+Evernode Start Report
+Runtime Exists: PASS
+Node Exists: PASS
+HotPocket Layer Exists: PASS
+Runtime Started: PASS
+Checkpoint Created: PASS
+Start: PASS
