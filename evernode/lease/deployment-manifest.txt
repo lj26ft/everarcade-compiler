@@ -1,0 +1,11 @@
+Evernode Deployment Manifest v0.1
+Layer: Evernode-Compatible Deployment Layout
+Protocol Node Appliance: required
+HotPocket Integration Layer: required
+Live Evernode Registration: disabled
+Lease Upload: disabled
+Networking: disabled
+Consensus: disabled
+XRPL RPC: disabled
+Xaman: disabled
+Hooks: disabled
