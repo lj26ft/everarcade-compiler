@@ -1,0 +1,16 @@
+version=xrpl-live-settlement-v0.1
+TransactionType=Payment
+Account=rEverArcadeSender111111111111111111111
+Destination=rEverArcadeRecipient111111111111111111
+Amount=25000000
+Fee=12
+Sequence=1
+LastLedgerSequence=88441199
+Memos.0.Memo.MemoType=657665726172636164652e696e74656e74
+Memos.0.Memo.MemoData=63386561366436353439653661653436313233363462396465366438333730666365326263313231663837316536306561323638646134373837353864333565
+Memos.0.Memo.MemoFormat=746578742f706c61696e
+Reference.intent_id=intent-everarcade-001
+Reference.intent_root=c8ea6d6549e6ae4612364b9de6d8370fce2bc121f871e60ea268da478758d35e
+Reference.runtime_reference=everarcade:runtime-platform:lease-settlement:001
+SigningStatus=unsigned
+transaction.root=f83a33fdc8d0a82314a75747d1b136dcbebadbfa52f2bc9b8d5bddd0ea8e4b60
