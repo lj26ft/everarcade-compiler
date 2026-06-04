@@ -1,0 +1,10 @@
+portal_id=everarcade-developer-portal-v0.1
+version=0.1
+authority=non-authoritative-builder-interface
+ordering=developer-id-project-id-version-action-lexicographic
+settlement_mode=intent-and-observation-only
+private_key_custody=false
+game_creation_root=901916a79cec89379eceb9958f12e58e5c6eb046cf86882f2e397974b162008a
+deployment=deploy-local-0001|type=local|status=running|health=pass|checkpoint=checkpoint-local-42|replay=replay-local-42
+deployment=deploy-lease-0001|type=lease|status=scheduled|health=pass|checkpoint=checkpoint-lease-77|replay=replay-lease-77
+deployment=deploy-federation-0001|type=federation|status=healthy|health=pass|checkpoint=checkpoint-federation-108|replay=replay-federation-108

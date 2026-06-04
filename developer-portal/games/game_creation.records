@@ -1,0 +1,11 @@
+portal_id=everarcade-developer-portal-v0.1
+version=0.1
+authority=non-authoritative-builder-interface
+ordering=developer-id-project-id-version-action-lexicographic
+settlement_mode=intent-and-observation-only
+private_key_custody=false
+project_registry_root=6db5f153bd0def79857a296f066d71aed25bf2981139a7b1d8ed8191431603dc
+game_step=create-project|artifact=project-arena|surface=project-registry|replayable=true
+game_step=create-game|artifact=game-arena|surface=runtime-api|replayable=true
+game_step=runtime-manifest|artifact=runtime-manifest-arena|surface=runtime-api|replayable=true
+game_step=deployment-manifest|artifact=deployment-manifest-arena|surface=deployment-api|replayable=true

@@ -1,0 +1,11 @@
+portal_id=everarcade-developer-portal-v0.1
+version=0.1
+authority=non-authoritative-builder-interface
+ordering=developer-id-project-id-version-action-lexicographic
+settlement_mode=intent-and-observation-only
+private_key_custody=false
+civilization_item=civ-genesis|class=civilizations|surface=civilization-runtime|authoritative=false
+civilization_item=world-genesis|class=worlds|surface=civilization-runtime|authoritative=false
+civilization_item=region-north|class=regions|surface=civilization-runtime|authoritative=false
+civilization_item=governance-council|class=governance|surface=civilization-runtime|authoritative=false
+civilization_item=economy-credit|class=economies|surface=civilization-runtime|authoritative=false
