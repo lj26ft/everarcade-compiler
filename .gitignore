@@ -27,6 +27,8 @@ distributed_receipts/
 vendor/
 dist/vendor.tar.gz
 dist/vendor.tar.gz.sha256
+dist/everarcade-runtime-v0.1.tar.gz
+dist/everarcade-runtime-v0.1.tar.gz.sha256
 everarcade-host/tests/fixtures/counter_world/*.bin
 everarcade-host/tests/fixtures/counter_world/*.wasm
 __pycache__/
