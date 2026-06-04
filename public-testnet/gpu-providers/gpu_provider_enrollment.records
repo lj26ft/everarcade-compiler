@@ -1,0 +1,13 @@
+testnet_id=everarcade-public-testnet-v0.1
+version=0.1
+network=xrpl-testnet-only
+funds=no-production-funds
+ordering=participant-id-record-id-action-lexicographic
+authority=auditable-testnet-operations
+provider=gpu-provider-a|registration=accepted|capability=projection-rendering|capacity=4-jobs|status=active
+provider=gpu-provider-b|registration=accepted|capability=artifact-verification|capacity=2-jobs|status=active
+provider=gpu-provider-c|registration=accepted|capability=renderer-benchmark|capacity=1-job|status=standby
+capability_advertisement=gpu-provider-a|device=deterministic-gpu-class-a|driver=certified-test-stack
+capability_advertisement=gpu-provider-b|device=deterministic-gpu-class-b|driver=certified-test-stack
+capacity_declaration=gpu-provider-a|max_parallel_jobs=4|settlement=intent-only
+capacity_declaration=gpu-provider-b|max_parallel_jobs=2|settlement=intent-only

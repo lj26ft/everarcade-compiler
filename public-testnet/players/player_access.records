@@ -1,0 +1,9 @@
+testnet_id=everarcade-public-testnet-v0.1
+version=0.1
+network=xrpl-testnet-only
+funds=no-production-funds
+ordering=participant-id-record-id-action-lexicographic
+authority=auditable-testnet-operations
+player=player-alpha|project=project-arena|access=open-test|status=active
+player=player-beta|project=project-civ|access=limited-test|status=active
+player=player-gamma|project=project-render|access=closed-test-observer|status=active

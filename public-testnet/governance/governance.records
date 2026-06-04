@@ -1,0 +1,11 @@
+testnet_id=everarcade-public-testnet-v0.1
+version=0.1
+network=xrpl-testnet-only
+funds=no-production-funds
+ordering=participant-id-record-id-action-lexicographic
+authority=auditable-testnet-operations
+proposal=proposal-0001|title=expand-gpu-provider-window|status=passed|policy=policy-gpu-window-v1
+vote=vote-0001|proposal=proposal-0001|voter=developer-alpha|choice=yes|weight=testnet-one
+vote=vote-0002|proposal=proposal-0001|voter=lease-operator-east|choice=yes|weight=testnet-one
+policy=policy-gpu-window-v1|rule_change=allow-standby-provider-burst|status=active-testnet
+rule_change=rule-0001|proposal=proposal-0001|auditable=true|replayable=true
