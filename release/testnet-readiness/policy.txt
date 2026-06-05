@@ -1,0 +1,4 @@
+Public Testnet Readiness Policy
+Version: v0.1-rc1
+Status: PASS
+The public testnet is ready for external developers, operators, GPU providers, creators, and players only when enrollment, deployment, governance, GPU marketplace, settlement, and replay all pass.

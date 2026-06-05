@@ -1,0 +1,4 @@
+Deployment Layout Freeze
+Status: FROZEN
+Surfaces: runtime appliance, node appliance, Evernode package, lease handoff package, portal artifacts
+Rule: distribution package names and handoff manifests are immutable during v0.1 RC.

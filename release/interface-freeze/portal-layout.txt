@@ -1,0 +1,4 @@
+Portal Layout Freeze
+Status: FROZEN
+Sections: onboarding, package upload, deployment status, GPU marketplace, settlement records, replay records, runbooks
+Rule: external developer onboarding links remain stable through v0.1.

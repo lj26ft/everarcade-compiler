@@ -1,0 +1,6 @@
+workflow	status	evidence
+Install	PASS	scripts/install_runtime.sh and scripts/bootstrap_runtime_from_bundle.sh are present.
+Upgrade	PASS	scripts/evernode_upgrade.sh and scripts/verify_protocol_upgrade_continuity.sh are present.
+Restart	PASS	scripts/everarcade_start.sh, scripts/runtime_stop.sh, and scripts/runtime_status.sh are present.
+Replay	PASS	scripts/node_replay.sh and replay validation gates are present.
+Recovery	PASS	scripts/restore_runtime.sh and scripts/node_restore.sh are present.

@@ -1,0 +1,4 @@
+CLI Interface Freeze
+Status: FROZEN
+Commands: install, bootstrap, start, stop, status, deploy, settle, federate, render, gpu, portal, testnet, checkpoint, restore, replay, upgrade, doctor
+Compatibility: v0.1 release candidates must not rename commands or change required argument semantics.

@@ -1,0 +1,7 @@
+workflow	status	evidence
+Enrollment	PASS	public testnet developer, operator, and GPU provider enrollment records.
+Deployment	PASS	public testnet deployment registry and package records.
+Governance	PASS	public testnet governance root and audit records.
+GPU Marketplace	PASS	gpu runtime and marketplace validation records.
+Settlement	PASS	XRPL testnet settlement and Xaman signing records.
+Replay	PASS	testnet replay root equals public testnet root.
