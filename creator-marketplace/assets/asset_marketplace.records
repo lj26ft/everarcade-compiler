@@ -1,0 +1,13 @@
+marketplace_id=everarcade-creator-marketplace-v0.1
+version=0.1
+scope=creator-to-creator
+custody=non-custodial
+payments=royalty-intent-only
+ordering=publisher-id-publication-id-version-event-lexicographic
+publication_registry_root=8d1898c1e1c0f7300009ad3b363519751b94c4b7096f92a21ba52c9e295ffd72
+asset=sprite-heroes|publication=pub-sprite-pack|class=Sprites|version=0.1.0|placeholder=true|status=published
+asset=stone-textures|publication=pub-texture-pack|class=Textures|version=0.1.0|placeholder=true|status=published
+asset=ambient-audio|publication=pub-audio-pack|class=Audio|version=0.1.0|placeholder=true|status=published
+asset=relic-items|publication=pub-item-pack|class=Items|version=0.1.0|placeholder=true|status=published
+asset=settlement-structures|publication=pub-structure-pack|class=Structures|version=0.1.0|placeholder=true|status=published
+asset=villager-npcs|publication=pub-npc-pack|class=NPCs|version=0.1.0|placeholder=true|status=published

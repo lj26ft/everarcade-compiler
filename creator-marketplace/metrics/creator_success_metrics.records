@@ -1,0 +1,12 @@
+marketplace_id=everarcade-creator-marketplace-v0.1
+version=0.1
+scope=creator-to-creator
+custody=non-custodial
+payments=royalty-intent-only
+ordering=publisher-id-publication-id-version-event-lexicographic
+metric=published_assets|value=6|root=dda1488b7570f082f630d500a5054a1e91e7506774384e0a545c87e853c4d04a
+metric=published_templates|value=5|root=36c93e0077f67396f93ac0ef67cad1044fa2a7b4a7c3379261dcbdd36fab01ce
+metric=installs|value=18|root=1da8f7d401a06a723f4ee2b00af322194661ff97f57dd85b734969a22100496f
+metric=usage_events|value=4|root=1da8f7d401a06a723f4ee2b00af322194661ff97f57dd85b734969a22100496f
+metric=royalty_intents|value=2|root=a9f54e68ea9559e82175de6bdd59e9e7d99672d28ce957868f0876565c5e9e1c
+metric=active_creators|value=3|root=5621274a0c99d11c4f4abaf85bf779a316d598697edcb0e704fbedbaa3287b0e

@@ -1,0 +1,13 @@
+marketplace_id=everarcade-creator-marketplace-v0.1
+version=0.1
+scope=creator-to-creator
+custody=non-custodial
+payments=royalty-intent-only
+ordering=publisher-id-publication-id-version-event-lexicographic
+developer_portal_surface=developer-portal/marketplace|integration=records-only|authoritative=false
+portal_action=Publish|surface=creator-sdk/marketplace|replayable=true
+portal_action=Browse|surface=developer-portal/marketplace|replayable=true
+portal_action=Install|surface=creator-sdk/marketplace|replayable=true
+portal_action=Update|surface=creator-sdk/marketplace|replayable=true
+portal_action=Deprecate|surface=creator-sdk/marketplace|replayable=true
+discovery_root=817abe26434d018281b7aec1b31844c51cd3551706f2d2a557310b93cb430500

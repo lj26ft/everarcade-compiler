@@ -1,0 +1,11 @@
+marketplace_id=everarcade-creator-marketplace-v0.1
+version=0.1
+scope=creator-to-creator
+custody=non-custodial
+payments=royalty-intent-only
+ordering=publisher-id-publication-id-version-event-lexicographic
+publication_registry_root=8d1898c1e1c0f7300009ad3b363519751b94c4b7096f92a21ba52c9e295ffd72
+license=free-starter|kind=Free|publication=pub-sandbox-template|creator_defined=true|commercial_use=false|royalty_rate_bps=0
+license=open-remix|kind=Open|publication=pub-ui-pack|creator_defined=true|commercial_use=true|royalty_rate_bps=0
+license=commercial-seat|kind=Commercial|publication=pub-arena-template|creator_defined=true|commercial_use=true|royalty_rate_bps=0
+license=royalty-share|kind=Royalty|publication=pub-civ-template|creator_defined=true|commercial_use=true|royalty_rate_bps=500

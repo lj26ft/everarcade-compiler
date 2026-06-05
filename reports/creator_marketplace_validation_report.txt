@@ -1,0 +1,39 @@
+Creator Marketplace Validation Report
+Version: 0.1
+Marketplace ID: everarcade-creator-marketplace-v0.1
+Scope: creator-to-creator
+Custody: non-custodial
+Payments: royalty-intent-only
+Ordering: publisher-id-publication-id-version-event-lexicographic
+
+Creators: PASS
+Publications: PASS
+Templates: PASS
+Assets: PASS
+Modules: PASS
+Licenses: PASS
+Royalties: PASS
+Usage: PASS
+Discovery: PASS
+Analytics: PASS
+Replay: PASS
+Portal Integration: PASS
+Metrics: PASS
+
+Creator Registry Root: 5621274a0c99d11c4f4abaf85bf779a316d598697edcb0e704fbedbaa3287b0e
+Publication Registry Root: 8d1898c1e1c0f7300009ad3b363519751b94c4b7096f92a21ba52c9e295ffd72
+Template Marketplace Root: 36c93e0077f67396f93ac0ef67cad1044fa2a7b4a7c3379261dcbdd36fab01ce
+Asset Marketplace Root: dda1488b7570f082f630d500a5054a1e91e7506774384e0a545c87e853c4d04a
+Module Marketplace Root: c00cb415a79f60148b0bb7b22be2e074e7d5df1460be5c8253863bced7e18651
+License Root: 294ac36aa4d6a20a79317dadcd9d1322521865eabe524021718ac0c9c34c4457
+Royalty Root: a9f54e68ea9559e82175de6bdd59e9e7d99672d28ce957868f0876565c5e9e1c
+Usage Root: 1da8f7d401a06a723f4ee2b00af322194661ff97f57dd85b734969a22100496f
+Discovery Root: 817abe26434d018281b7aec1b31844c51cd3551706f2d2a557310b93cb430500
+Analytics Root: 94c015a21b688ee8e4092be52abdde4aa2dab8a8d0581b0fc4e37f5eb6c3f180
+Marketplace Replay Root: f2058d2aa0c009dd95a79d32a320ecd69b55d1846768e9656a10ac479c987114
+Portal Integration Root: 3db6027760e5ccff9a9c25817fadfc4c4bf5b8658d47a483953f18e950dfbaef
+Creator Marketplace Metrics Root: 58766eda1d104ae5d9264b06cad0ae57db1f226f2e81a0a9fb326b208df6ecc2
+Marketplace Root: f2058d2aa0c009dd95a79d32a320ecd69b55d1846768e9656a10ac479c987114
+Replay Equals Marketplace: true
+
+Creator Marketplace Validation: PASS

@@ -1,0 +1,9 @@
+marketplace_id=everarcade-creator-marketplace-v0.1
+version=0.1
+scope=creator-to-creator
+custody=non-custodial
+payments=royalty-intent-only
+ordering=publisher-id-publication-id-version-event-lexicographic
+license_root=294ac36aa4d6a20a79317dadcd9d1322521865eabe524021718ac0c9c34c4457
+royalty_intent=royalty-0001|creator=creator-gamma|publication=pub-civ-template|royalty_rate_bps=500|usage_event=use-0001|royalty_event=royalty-event-0001|production_payment=false
+royalty_intent=royalty-0002|creator=creator-alpha|publication=pub-arena-template|royalty_rate_bps=250|usage_event=install-0001|royalty_event=royalty-event-0002|production_payment=false

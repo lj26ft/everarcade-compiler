@@ -1,0 +1,12 @@
+marketplace_id=everarcade-creator-marketplace-v0.1
+version=0.1
+scope=creator-to-creator
+custody=non-custodial
+payments=royalty-intent-only
+ordering=publisher-id-publication-id-version-event-lexicographic
+publication_registry_root=8d1898c1e1c0f7300009ad3b363519751b94c4b7096f92a21ba52c9e295ffd72
+template=arena-vanguard|publication=pub-arena-template|category=Arena Templates|version=1.0.0|status=published
+template=rpg-questline|publication=pub-rpg-template|category=RPG Templates|version=1.0.0|status=published
+template=trading-post|publication=pub-trading-template|category=Trading Templates|version=1.0.0|status=published
+template=civilization-seed|publication=pub-civ-template|category=Civilization Templates|version=1.0.0|status=published
+template=sandbox-builder|publication=pub-sandbox-template|category=Sandbox Templates|version=1.0.0|status=published

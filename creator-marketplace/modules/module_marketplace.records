@@ -1,0 +1,12 @@
+marketplace_id=everarcade-creator-marketplace-v0.1
+version=0.1
+scope=creator-to-creator
+custody=non-custodial
+payments=royalty-intent-only
+ordering=publisher-id-publication-id-version-event-lexicographic
+publication_registry_root=8d1898c1e1c0f7300009ad3b363519751b94c4b7096f92a21ba52c9e295ffd72
+module=inventory-core|publication=pub-inventory-module|class=Inventory Modules|version=0.1.0|status=published
+module=economy-ledger|publication=pub-economy-module|class=Economy Modules|version=0.1.0|status=published
+module=creator-marketplace-client|publication=pub-marketplace-module|class=Marketplace Modules|version=0.1.0|status=published
+module=proposal-governance|publication=pub-governance-module|class=Governance Modules|version=0.1.0|status=published
+module=civilization-scheduler|publication=pub-civilization-module|class=Civilization Modules|version=0.1.0|status=published

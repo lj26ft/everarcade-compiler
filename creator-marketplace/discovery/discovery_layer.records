@@ -1,0 +1,14 @@
+marketplace_id=everarcade-creator-marketplace-v0.1
+version=0.1
+scope=creator-to-creator
+custody=non-custodial
+payments=royalty-intent-only
+ordering=publisher-id-publication-id-version-event-lexicographic
+template_marketplace_root=36c93e0077f67396f93ac0ef67cad1044fa2a7b4a7c3379261dcbdd36fab01ce
+asset_marketplace_root=dda1488b7570f082f630d500a5054a1e91e7506774384e0a545c87e853c4d04a
+module_marketplace_root=c00cb415a79f60148b0bb7b22be2e074e7d5df1460be5c8253863bced7e18651
+discovery=categories|values=templates,assets,modules,quest-packs,npc-packs,ui-packs,economy-packs,civilization-packs
+discovery=tags|values=arena,rpg,trading,civilization,sandbox,economy,governance
+discovery=featured|publications=pub-arena-template,pub-civ-template,pub-inventory-module
+discovery=popular|publications=pub-arena-template,pub-sprite-pack,pub-economy-module
+discovery=recent|publications=pub-sandbox-template,pub-ui-pack,pub-civilization-module
