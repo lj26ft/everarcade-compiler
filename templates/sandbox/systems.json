@@ -1,0 +1,30 @@
+{
+  "world": [
+    "freeform-zones",
+    "entity-spawn",
+    "tags"
+  ],
+  "inventory": [
+    "generic-items",
+    "collections"
+  ],
+  "marketplace": [
+    "optional-listings",
+    "demo-entitlements"
+  ],
+  "economy": [
+    "soft-currency",
+    "reward-hooks"
+  ],
+  "events": [
+    "onJoin",
+    "onInteract",
+    "onReward"
+  ],
+  "extensionPoints": [
+    "systems",
+    "assets",
+    "logic",
+    "content"
+  ]
+}

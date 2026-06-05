@@ -1,0 +1,11 @@
+{
+  "id": "fantasy",
+  "version": "0.1.0",
+  "status": "placeholder-demo",
+  "assets": [
+    "hero-sprite",
+    "forest-tile",
+    "iron-sword",
+    "village-npc"
+  ]
+}

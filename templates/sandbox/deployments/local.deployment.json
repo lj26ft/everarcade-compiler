@@ -1,0 +1,12 @@
+{
+  "template": "sandbox",
+  "target": "local",
+  "creatorSdkFlow": [
+    "create",
+    "build",
+    "test",
+    "deploy",
+    "run"
+  ],
+  "status": "example"
+}

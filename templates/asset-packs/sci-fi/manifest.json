@@ -1,0 +1,11 @@
+{
+  "id": "sci-fi",
+  "version": "0.1.0",
+  "status": "placeholder-demo",
+  "assets": [
+    "pilot-sprite",
+    "station-tile",
+    "laser-rifle",
+    "drone-npc"
+  ]
+}

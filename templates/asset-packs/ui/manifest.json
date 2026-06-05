@@ -1,0 +1,11 @@
+{
+  "id": "ui",
+  "version": "0.1.0",
+  "status": "placeholder-demo",
+  "assets": [
+    "button",
+    "panel",
+    "health-bar",
+    "currency-icon"
+  ]
+}

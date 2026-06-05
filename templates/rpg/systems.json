@@ -1,0 +1,45 @@
+{
+  "characters": [
+    "hero",
+    "stats",
+    "save-slot"
+  ],
+  "equipment": [
+    "weapon",
+    "armor",
+    "trinket"
+  ],
+  "inventory": [
+    "quest-items",
+    "consumables",
+    "materials"
+  ],
+  "npcs": [
+    "quest-giver",
+    "merchant",
+    "trainer"
+  ],
+  "questFramework": [
+    "accept",
+    "progress",
+    "complete",
+    "reward"
+  ],
+  "regions": [
+    "village",
+    "wilds",
+    "dungeon"
+  ],
+  "persistence": [
+    "profile-save",
+    "quest-state"
+  ],
+  "progression": [
+    "levels",
+    "skill-points"
+  ],
+  "marketplaceIntegration": [
+    "cosmetic-listing",
+    "player-trade"
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "id": "rpg",
+  "name": "RPG",
+  "version": "0.1.0",
+  "templateType": "adventure-rpg",
+  "status": "playable-scaffold",
+  "entry": "src/game.js",
+  "creatorSdk": "0.1.0",
+  "sdkModules": [
+    "creator",
+    "deployment",
+    "marketplace",
+    "inventory",
+    "economy"
+  ],
+  "features": [
+    "Characters",
+    "Equipment",
+    "Inventory",
+    "NPCs",
+    "Quest Framework",
+    "Regions"
+  ],
+  "demonstrates": [
+    "Persistence",
+    "Progression",
+    "Marketplace Integration"
+  ],
+  "extensionPoints": [
+    "systems",
+    "assets",
+    "logic",
+    "content"
+  ]
+}

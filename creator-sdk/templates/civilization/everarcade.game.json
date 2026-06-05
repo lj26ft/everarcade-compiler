@@ -4,6 +4,22 @@
   "entry": "src/game.js",
   "runtime": "everarcade-creator-testnet",
   "genre": "civilization",
-  "assets": ["assets/README.md"],
-  "monetization": "demo-only"
+  "assets": [
+    "assets/README.md"
+  ],
+  "monetization": "demo-only",
+  "features": [
+    "Settlements",
+    "Citizens",
+    "Governance",
+    "Economy",
+    "Regions"
+  ],
+  "sdkModules": [
+    "creator-sdk",
+    "deployment-sdk",
+    "marketplace-sdk",
+    "civilization-sdk",
+    "economy-sdk"
+  ]
 }

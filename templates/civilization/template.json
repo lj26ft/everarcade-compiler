@@ -1,0 +1,34 @@
+{
+  "id": "civilization",
+  "name": "Civilization",
+  "version": "0.1.0",
+  "templateType": "civilization",
+  "status": "playable-scaffold",
+  "entry": "src/game.js",
+  "creatorSdk": "0.1.0",
+  "sdkModules": [
+    "creator",
+    "deployment",
+    "marketplace",
+    "civilization",
+    "economy"
+  ],
+  "features": [
+    "Settlements",
+    "Citizens",
+    "Governance",
+    "Economy",
+    "Regions"
+  ],
+  "demonstrates": [
+    "Civilization Runtime",
+    "Governance Runtime",
+    "Federation Runtime"
+  ],
+  "extensionPoints": [
+    "systems",
+    "assets",
+    "logic",
+    "content"
+  ]
+}

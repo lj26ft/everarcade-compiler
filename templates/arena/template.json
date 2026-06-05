@@ -1,0 +1,34 @@
+{
+  "id": "arena",
+  "name": "Arena",
+  "version": "0.1.0",
+  "templateType": "competitive-arena",
+  "status": "playable-scaffold",
+  "entry": "src/game.js",
+  "creatorSdk": "0.1.0",
+  "sdkModules": [
+    "creator",
+    "deployment",
+    "marketplace",
+    "inventory",
+    "economy"
+  ],
+  "features": [
+    "Players",
+    "Combat",
+    "Inventory",
+    "Match Flow",
+    "Score Tracking"
+  ],
+  "demonstrates": [
+    "Renderer",
+    "Physics",
+    "Economy Rewards"
+  ],
+  "extensionPoints": [
+    "systems",
+    "assets",
+    "logic",
+    "content"
+  ]
+}
