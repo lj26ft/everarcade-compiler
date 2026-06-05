@@ -1,0 +1,14 @@
+{
+  "templateUsage": 0,
+  "buildSuccess": "tracked",
+  "deploymentSuccess": "tracked",
+  "timeToFirstPlayable": "tracked",
+  "customizationEvents": "tracked",
+  "templates": [
+    "arena",
+    "rpg",
+    "trading",
+    "civilization",
+    "sandbox"
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "name": "trading",
+  "template": "trading",
+  "entry": "src/game.js",
+  "runtime": "everarcade-creator-testnet",
+  "genre": "trading-world",
+  "assets": [
+    "assets/README.md"
+  ],
+  "monetization": "demo-only",
+  "features": [
+    "Assets",
+    "Inventory",
+    "Marketplace",
+    "Economy",
+    "Vault Integration"
+  ],
+  "sdkModules": [
+    "creator-sdk",
+    "deployment-sdk",
+    "marketplace-sdk",
+    "inventory-sdk",
+    "economy-sdk"
+  ]
+}

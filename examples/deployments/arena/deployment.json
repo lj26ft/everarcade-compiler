@@ -1,0 +1,12 @@
+{
+  "template": "arena",
+  "flow": [
+    "create",
+    "build",
+    "test",
+    "deploy"
+  ],
+  "creatorSdk": "0.1.0",
+  "target": "creator-testnet-local",
+  "status": "pass"
+}

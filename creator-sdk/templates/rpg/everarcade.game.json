@@ -3,7 +3,24 @@
   "template": "rpg",
   "entry": "src/game.js",
   "runtime": "everarcade-creator-testnet",
-  "genre": "rpg",
-  "assets": ["assets/README.md"],
-  "monetization": "demo-only"
+  "genre": "adventure-rpg",
+  "assets": [
+    "assets/README.md"
+  ],
+  "monetization": "demo-only",
+  "features": [
+    "Characters",
+    "Equipment",
+    "Inventory",
+    "NPCs",
+    "Quest Framework",
+    "Regions"
+  ],
+  "sdkModules": [
+    "creator-sdk",
+    "deployment-sdk",
+    "marketplace-sdk",
+    "inventory-sdk",
+    "economy-sdk"
+  ]
 }

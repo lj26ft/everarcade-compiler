@@ -1,0 +1,37 @@
+{
+  "assets": [
+    "demo-sword",
+    "demo-pass",
+    "resource-pack"
+  ],
+  "inventory": [
+    "wallet-linked-bag",
+    "escrow-slots"
+  ],
+  "marketplace": [
+    "fixed-price-listings",
+    "creator-royalty"
+  ],
+  "economy": [
+    "gold",
+    "gems",
+    "fee-preview"
+  ],
+  "vaultIntegration": [
+    "custody-record",
+    "transfer-receipt"
+  ],
+  "creatorMonetization": [
+    "royalty-bps",
+    "premium-bundle"
+  ],
+  "assetOwnership": [
+    "ownership-proof",
+    "transfer-history"
+  ],
+  "settlementFlow": [
+    "quote",
+    "commit",
+    "receipt"
+  ]
+}

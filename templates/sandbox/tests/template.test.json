@@ -1,0 +1,7 @@
+{
+  "create": "pass",
+  "build": "pass",
+  "test": "pass",
+  "deploy": "pass",
+  "run": "pass"
+}

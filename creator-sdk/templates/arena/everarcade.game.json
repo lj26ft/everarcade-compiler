@@ -3,7 +3,23 @@
   "template": "arena",
   "entry": "src/game.js",
   "runtime": "everarcade-creator-testnet",
-  "genre": "arena",
-  "assets": ["assets/README.md"],
-  "monetization": "demo-only"
+  "genre": "competitive-arena",
+  "assets": [
+    "assets/README.md"
+  ],
+  "monetization": "demo-only",
+  "features": [
+    "Players",
+    "Combat",
+    "Inventory",
+    "Match Flow",
+    "Score Tracking"
+  ],
+  "sdkModules": [
+    "creator-sdk",
+    "deployment-sdk",
+    "marketplace-sdk",
+    "inventory-sdk",
+    "economy-sdk"
+  ]
 }

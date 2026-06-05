@@ -1,0 +1,25 @@
+{
+  "name": "sandbox",
+  "template": "sandbox",
+  "entry": "src/game.js",
+  "runtime": "everarcade-creator-testnet",
+  "genre": "sandbox",
+  "assets": [
+    "assets/README.md"
+  ],
+  "monetization": "demo-only",
+  "features": [
+    "World",
+    "Inventory",
+    "Marketplace",
+    "Economy",
+    "Events"
+  ],
+  "sdkModules": [
+    "creator-sdk",
+    "deployment-sdk",
+    "marketplace-sdk",
+    "inventory-sdk",
+    "economy-sdk"
+  ]
+}

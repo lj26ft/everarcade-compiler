@@ -1,0 +1,37 @@
+{
+  "registry": "EverArcade Game Template Library",
+  "version": "0.1.0",
+  "status": "official-v0.1",
+  "templates": [
+    {
+      "id": "arena",
+      "version": "0.1.0",
+      "type": "competitive-arena",
+      "status": "playable-scaffold"
+    },
+    {
+      "id": "rpg",
+      "version": "0.1.0",
+      "type": "adventure-rpg",
+      "status": "playable-scaffold"
+    },
+    {
+      "id": "trading",
+      "version": "0.1.0",
+      "type": "trading-world",
+      "status": "playable-scaffold"
+    },
+    {
+      "id": "civilization",
+      "version": "0.1.0",
+      "type": "civilization",
+      "status": "playable-scaffold"
+    },
+    {
+      "id": "sandbox",
+      "version": "0.1.0",
+      "type": "sandbox",
+      "status": "playable-scaffold"
+    }
+  ]
+}
