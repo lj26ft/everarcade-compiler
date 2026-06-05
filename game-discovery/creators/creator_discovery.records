@@ -1,0 +1,13 @@
+discovery_id=everarcade-game-discovery-network-v0.1
+version=0.1
+scope=player-discovery
+authority=non-authoritative
+ordering=game-id-version-event-lexicographic
+runtime_state_mutation=false
+settlement_bypass=false
+game_modification=false
+marketplace_source=creator-marketplace/records/CREATOR_MARKETPLACE_ROOT
+creator_profile=creator-alpha|published_games=arena-vanguard,trading-post|published_assets=sprite-heroes,relic-items|published_templates=arena-template,trading-template
+creator_profile=creator-beta|published_games=rpg-questline,action-runner|published_assets=stone-textures,ambient-audio|published_templates=rpg-template,action-template
+creator_profile=creator-gamma|published_games=civilization-seed,strategy-frontier|published_assets=settlement-structures|published_templates=civilization-template,strategy-template
+creator_profile=creator-delta|published_games=sandbox-builder,adventure-isles|published_assets=villager-npcs|published_templates=sandbox-template,adventure-template

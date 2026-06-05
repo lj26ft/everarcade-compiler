@@ -1,0 +1,14 @@
+discovery_id=everarcade-game-discovery-network-v0.1
+version=0.1
+scope=player-discovery
+authority=non-authoritative
+ordering=game-id-version-event-lexicographic
+runtime_state_mutation=false
+settlement_bypass=false
+game_modification=false
+launcher_source=player-gateway/launcher/launcher_integration.records
+install_action=Install|game=arena-vanguard|player=player-alpha|record_type=Install Record
+install_action=Update|game=rpg-questline|player=player-beta|record_type=Install Record
+install_action=Remove|game=sandbox-builder|player=player-gamma|record_type=Install Record
+install_action=Launch|game=arena-vanguard|player=player-alpha|record_type=Launch Record
+gateway_integration=Player Gateway Launcher|non_authoritative=true

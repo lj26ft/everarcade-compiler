@@ -1,0 +1,18 @@
+discovery_id=everarcade-game-discovery-network-v0.1
+version=0.1
+scope=player-discovery
+authority=non-authoritative
+ordering=game-id-version-event-lexicographic
+runtime_state_mutation=false
+settlement_bypass=false
+game_modification=false
+catalog_root=b637a2c16ae208434e406dd35967d6c5df0e17bfbbc46d3f7716192668101ddb
+index_root=16fb35338ce2c03f672a1e7b3a6547e92fdf3820830ca42fc20875ea3e501a46
+category_root=5beec3e4dc88b9722b96a96aabcb929f3b374bbcdbda623c72e556a86d943bf9
+search_query=arena combat|mode=keyword|normalized=arena-combat
+search_query=RPG|mode=category|normalized=rpg
+search_query=trade|mode=tag|normalized=trade
+search_result=arena-vanguard|query=arena-combat|rank=1|reason=keyword-category-tag
+search_result=rpg-questline|query=rpg|rank=1|reason=category
+search_result=trading-post|query=trade|rank=1|reason=tag
+search_ranking=deterministic|rule=status-category-tag-game-id|ml=false
