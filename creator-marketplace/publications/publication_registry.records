@@ -1,0 +1,27 @@
+marketplace_id=everarcade-creator-marketplace-v0.1
+version=0.1
+scope=creator-to-creator
+custody=non-custodial
+payments=royalty-intent-only
+ordering=publisher-id-publication-id-version-event-lexicographic
+creator_registry_root=5621274a0c99d11c4f4abaf85bf779a316d598697edcb0e704fbedbaa3287b0e
+publication=pub-arena-template|creator=creator-alpha|type=Template|version=1.0.0|publisher=publisher-alpha|status=published|history=true
+publication=pub-rpg-template|creator=creator-beta|type=Template|version=1.0.0|publisher=publisher-beta|status=published|history=true
+publication=pub-trading-template|creator=creator-alpha|type=Template|version=1.0.0|publisher=publisher-alpha|status=published|history=true
+publication=pub-civ-template|creator=creator-gamma|type=Template|version=1.0.0|publisher=publisher-gamma|status=published|history=true
+publication=pub-sandbox-template|creator=creator-delta|type=Template|version=1.0.0|publisher=publisher-delta|status=published|history=true
+publication=pub-sprite-pack|creator=creator-alpha|type=Asset|version=0.1.0|publisher=publisher-alpha|status=published|history=true
+publication=pub-texture-pack|creator=creator-beta|type=Asset|version=0.1.0|publisher=publisher-beta|status=published|history=true
+publication=pub-audio-pack|creator=creator-beta|type=Asset|version=0.1.0|publisher=publisher-beta|status=published|history=true
+publication=pub-item-pack|creator=creator-alpha|type=Asset|version=0.1.0|publisher=publisher-alpha|status=published|history=true
+publication=pub-structure-pack|creator=creator-gamma|type=Asset|version=0.1.0|publisher=publisher-gamma|status=published|history=true
+publication=pub-npc-pack|creator=creator-beta|type=NPC Pack|version=0.1.0|publisher=publisher-beta|status=published|history=true
+publication=pub-inventory-module|creator=creator-alpha|type=Module|version=0.1.0|publisher=publisher-alpha|status=published|history=true
+publication=pub-economy-module|creator=creator-beta|type=Module|version=0.1.0|publisher=publisher-beta|status=published|history=true
+publication=pub-marketplace-module|creator=creator-alpha|type=Module|version=0.1.0|publisher=publisher-alpha|status=published|history=true
+publication=pub-governance-module|creator=creator-gamma|type=Module|version=0.1.0|publisher=publisher-gamma|status=published|history=true
+publication=pub-civilization-module|creator=creator-gamma|type=Module|version=0.1.0|publisher=publisher-gamma|status=published|history=true
+publication=pub-quest-pack|creator=creator-beta|type=Quest Pack|version=0.1.0|publisher=publisher-beta|status=published|history=true
+publication=pub-ui-pack|creator=creator-delta|type=UI Pack|version=0.1.0|publisher=publisher-delta|status=published|history=true
+publication=pub-economy-pack|creator=creator-beta|type=Economy Pack|version=0.1.0|publisher=publisher-beta|status=published|history=true
+publication=pub-civilization-pack|creator=creator-gamma|type=Civilization Pack|version=0.1.0|publisher=publisher-gamma|status=published|history=true

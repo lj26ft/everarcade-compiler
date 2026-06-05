@@ -1,0 +1,14 @@
+marketplace_id=everarcade-creator-marketplace-v0.1
+version=0.1
+scope=creator-to-creator
+custody=non-custodial
+payments=royalty-intent-only
+ordering=publisher-id-publication-id-version-event-lexicographic
+creator=creator-alpha|publisher=publisher-alpha|profile=profile-arena|status=active|registration_epoch=100|history=true
+creator=creator-beta|publisher=publisher-beta|profile=profile-rpg|status=active|registration_epoch=104|history=true
+creator=creator-gamma|publisher=publisher-gamma|profile=profile-civ|status=suspended|registration_epoch=108|history=true
+creator=creator-delta|publisher=publisher-delta|profile=profile-tools|status=recovered|registration_epoch=112|history=true
+creator_action=recover|creator=creator-delta|epoch=123|replayable=true
+creator_action=register|creator=creator-alpha|epoch=120|replayable=true
+creator_action=suspend|creator=creator-gamma|epoch=122|replayable=true
+creator_action=update|creator=creator-beta|epoch=121|replayable=true
