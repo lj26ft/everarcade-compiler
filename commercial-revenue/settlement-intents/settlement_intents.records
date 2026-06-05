@@ -1,0 +1,10 @@
+commercial_revenue_id=everarcade-commercial-revenue-v0.1
+custody=non-custodial
+distribution_root=30e5bac390beae2f3f0991fa484e46178446b9f8d53a9a636dbf49fe1bedd475
+ordering=epoch-event-id-revenue-type-origin-beneficiary-lexicographic
+payments=intent-only-no-live-settlement
+settlement_intent=settle-distribution-001|kind=Distribution Settlement|distribution_intent=dist-operator-001|rail=xrpl-intent|status=unsigned|epoch=302
+settlement_intent=settle-revenue-001|kind=Revenue Settlement|distribution_intent=dist-creator-001|rail=xrpl-intent|status=unsigned|epoch=300
+settlement_intent=settle-royalty-001|kind=Royalty Settlement|distribution_intent=dist-creator-001|rail=xrpl-intent|status=unsigned|epoch=301
+version=0.1
+xrpl_settlement_integration=xrpl/intent|mode=unsigned-intent-only|live_transfers=false

@@ -1,0 +1,9 @@
+commercial_revenue_id=everarcade-commercial-revenue-v0.1
+custody=non-custodial
+metrics_root=8cf2cb337cbb16a09de2239f10af110a9fbc8184e2d507875ac6ae24c36e2141
+ordering=epoch-event-id-revenue-type-origin-beneficiary-lexicographic
+payments=intent-only-no-live-settlement
+policy=policy-creator-template-default|creator_share=policy-defined|operator_share=policy-defined|gpu_share=policy-defined|civilization_share=policy-defined|protocol_share=policy-defined|hardcoded_production_percentage=false
+policy=policy-marketplace-default|creator_share=policy-defined|operator_share=policy-defined|gpu_share=policy-defined|civilization_share=policy-defined|protocol_share=policy-defined|hardcoded_production_percentage=false
+policy=policy-protocol-sustainability-default|creator_share=policy-defined|operator_share=policy-defined|gpu_share=policy-defined|civilization_share=policy-defined|protocol_share=policy-defined|hardcoded_production_percentage=false
+version=0.1

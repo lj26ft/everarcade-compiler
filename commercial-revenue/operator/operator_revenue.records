@@ -1,0 +1,10 @@
+commercial_revenue_id=everarcade-commercial-revenue-v0.1
+custody=non-custodial
+operator_attribution=operation=Create|event_id=rev-0006|revenue_type=Lease Revenue|origin=evernode/lease|beneficiary=operator-atlas|status=active|epoch=105|distribution_policy=policy-operator-lease-default
+operator_attribution=operation=Create|event_id=rev-0007|revenue_type=Hosting Revenue|origin=runtime/operator-hosting|beneficiary=operator-boreal|status=active|epoch=106|distribution_policy=policy-operator-hosting-default
+operator_attribution=operation=Create|event_id=rev-0008|revenue_type=Federation Revenue|origin=federation/topology|beneficiary=operator-atlas|status=active|epoch=107|distribution_policy=policy-operator-federation-default
+operator_attribution=operation=Create|event_id=rev-0009|revenue_type=Runtime Revenue|origin=everarcade-host|beneficiary=operator-boreal|status=active|epoch=108|distribution_policy=policy-operator-runtime-default
+ordering=epoch-event-id-revenue-type-origin-beneficiary-lexicographic
+payments=intent-only-no-live-settlement
+registry_root=db58d7ed90c017479b8d2fa47fa0093c0c4aa51522d4f876a28488f7e45cfa7a
+version=0.1

@@ -1,0 +1,31 @@
+commercial_revenue_id=everarcade-commercial-revenue-v0.1
+custody=non-custodial
+operation=Archive|event_id=rev-legacy-0000|revenue_type=Legacy Test Revenue|origin=tests/legacy|beneficiary=protocol-network|status=archived|epoch=125|distribution_policy=policy-archived-noop
+operation=Create|event_id=rev-0001|revenue_type=Template Revenue|origin=creator-marketplace/templates|beneficiary=creator-alpha|status=active|epoch=100|distribution_policy=policy-creator-template-default
+operation=Create|event_id=rev-0002|revenue_type=Asset Revenue|origin=creator-marketplace/assets|beneficiary=creator-beta|status=active|epoch=101|distribution_policy=policy-creator-asset-default
+operation=Create|event_id=rev-0003|revenue_type=Marketplace Revenue|origin=marketplace/creator|beneficiary=marketplace-operator|status=active|epoch=102|distribution_policy=policy-marketplace-default
+operation=Create|event_id=rev-0004|revenue_type=Subscription Revenue|origin=creator-sdk/monetization|beneficiary=creator-gamma|status=active|epoch=103|distribution_policy=policy-creator-subscription-default
+operation=Create|event_id=rev-0005|revenue_type=Royalty Revenue|origin=creator-marketplace/royalties|beneficiary=creator-alpha|status=active|epoch=104|distribution_policy=policy-royalty-default
+operation=Create|event_id=rev-0006|revenue_type=Lease Revenue|origin=evernode/lease|beneficiary=operator-atlas|status=active|epoch=105|distribution_policy=policy-operator-lease-default
+operation=Create|event_id=rev-0007|revenue_type=Hosting Revenue|origin=runtime/operator-hosting|beneficiary=operator-boreal|status=active|epoch=106|distribution_policy=policy-operator-hosting-default
+operation=Create|event_id=rev-0008|revenue_type=Federation Revenue|origin=federation/topology|beneficiary=operator-atlas|status=active|epoch=107|distribution_policy=policy-operator-federation-default
+operation=Create|event_id=rev-0009|revenue_type=Runtime Revenue|origin=everarcade-host|beneficiary=operator-boreal|status=active|epoch=108|distribution_policy=policy-operator-runtime-default
+operation=Create|event_id=rev-0010|revenue_type=GPU Job Revenue|origin=gpu/jobs|beneficiary=gpu-provider-nova|status=active|epoch=109|distribution_policy=policy-gpu-job-default
+operation=Create|event_id=rev-0011|revenue_type=Artifact Revenue|origin=gpu/artifacts|beneficiary=gpu-provider-nova|status=active|epoch=110|distribution_policy=policy-gpu-artifact-default
+operation=Create|event_id=rev-0012|revenue_type=Verification Revenue|origin=gpu/verification|beneficiary=gpu-provider-quartz|status=active|epoch=111|distribution_policy=policy-gpu-verification-default
+operation=Create|event_id=rev-0013|revenue_type=Capacity Revenue|origin=gpu/marketplace|beneficiary=gpu-provider-quartz|status=active|epoch=112|distribution_policy=policy-gpu-capacity-default
+operation=Create|event_id=rev-0014|revenue_type=Civilization Treasury|origin=creator-sdk/civilization|beneficiary=civilization-aurora|status=active|epoch=113|distribution_policy=policy-civilization-treasury-default
+operation=Create|event_id=rev-0015|revenue_type=Civilization Fees|origin=game-discovery/civilizations|beneficiary=civilization-aurora|status=active|epoch=114|distribution_policy=policy-civilization-fees-default
+operation=Create|event_id=rev-0016|revenue_type=Civilization Events|origin=examples/civilization-sim|beneficiary=civilization-solstice|status=active|epoch=115|distribution_policy=policy-civilization-events-default
+operation=Create|event_id=rev-0017|revenue_type=Civilization Revenue|origin=developer-portal/civilizations|beneficiary=civilization-solstice|status=active|epoch=116|distribution_policy=policy-civilization-revenue-default
+operation=Create|event_id=rev-0018|revenue_type=Sales|origin=marketplace/sales|beneficiary=marketplace-operator|status=active|epoch=117|distribution_policy=policy-marketplace-sales-default
+operation=Create|event_id=rev-0019|revenue_type=Listings|origin=marketplace/listings|beneficiary=marketplace-operator|status=active|epoch=118|distribution_policy=policy-marketplace-listings-default
+operation=Create|event_id=rev-0020|revenue_type=Royalties|origin=marketplace/royalties|beneficiary=creator-beta|status=active|epoch=119|distribution_policy=policy-marketplace-royalties-default
+operation=Create|event_id=rev-0021|revenue_type=Marketplace Fees|origin=creator-marketplace/metrics|beneficiary=marketplace-operator|status=active|epoch=120|distribution_policy=policy-marketplace-fees-default
+operation=Create|event_id=rev-0022|revenue_type=Protocol Fee Intent|origin=protocol/sustainability|beneficiary=protocol-sustainability-pool|status=intent-only|epoch=121|distribution_policy=policy-protocol-fee-default
+operation=Create|event_id=rev-0023|revenue_type=Protocol Sustainability Intent|origin=economic-ledger/protocol|beneficiary=protocol-sustainability-pool|status=intent-only|epoch=122|distribution_policy=policy-protocol-sustainability-default
+operation=Create|event_id=rev-0024|revenue_type=Network Revenue|origin=wallet-authority/network|beneficiary=protocol-network|status=intent-only|epoch=123|distribution_policy=policy-protocol-network-default
+operation=Update|event_id=rev-0003|field=status|value=active|epoch=124|replayable=true
+ordering=epoch-event-id-revenue-type-origin-beneficiary-lexicographic
+payments=intent-only-no-live-settlement
+version=0.1
