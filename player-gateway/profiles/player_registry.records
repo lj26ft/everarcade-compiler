@@ -1,0 +1,15 @@
+gateway_id=everarcade-player-gateway-v0.1
+version=0.1
+scope=player-facing-non-authoritative
+custody=none
+settlement=observation-only
+ordering=player-id-profile-id-session-id-event-lexicographic
+protocol_complexity=hidden
+player=player-alpha|profile=profile-alpha|status=active|registration_epoch=200|authority_mapping=authority-alpha|portable=true
+player=player-beta|profile=profile-beta|status=active|registration_epoch=204|authority_mapping=authority-beta|portable=true
+player=player-gamma|profile=profile-gamma|status=suspended|registration_epoch=208|authority_mapping=authority-gamma|portable=true
+player=player-delta|profile=profile-delta|status=recovered|registration_epoch=212|authority_mapping=authority-delta|portable=true
+profile_action=register|player=player-alpha|epoch=220|record=session-record-profile-alpha|replayable=true
+profile_action=update|player=player-beta|epoch=221|record=session-record-profile-beta|replayable=true
+profile_action=suspend|player=player-gamma|epoch=222|record=session-record-profile-gamma|replayable=true
+profile_action=recover|player=player-delta|epoch=223|record=session-record-profile-delta|replayable=true

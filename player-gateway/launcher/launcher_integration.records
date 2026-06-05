@@ -1,0 +1,15 @@
+gateway_id=everarcade-player-gateway-v0.1
+version=0.1
+scope=player-facing-non-authoritative
+custody=none
+settlement=observation-only
+ordering=player-id-profile-id-session-id-event-lexicographic
+protocol_complexity=hidden
+game_library_root=f8a2dde6efbe33df394a891721e638b4e9d8184b28e2a9bffbbb49b1a2068aa9
+session_root=b749ab0788a3169889a6d2d3870cbc1fbe73ff270b34843e26e2b271178f54aa
+launcher_action=browse|player=player-alpha|source=game-library|status=available|epoch=320
+launcher_action=install|player=player-beta|game=rpg-questline|version=1.0.0|status=prepared|epoch=321
+launcher_action=launch|player=player-alpha|game=arena-vanguard|session=session-game-alpha|status=prepared|epoch=322
+launcher_action=update|player=player-alpha|game=arena-vanguard|from=1.0.0|to=1.0.1-planned|status=planned|epoch=323
+launcher_action=remove|player=player-beta|game=trading-post|status=prepared|epoch=324
+discovery_network_ready=true|future_game_discovery_network=v0.1

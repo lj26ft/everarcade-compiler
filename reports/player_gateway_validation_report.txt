@@ -1,0 +1,27 @@
+EverArcade Player Gateway Validation Report
+Version: v0.1
+Timestamp: 2026-06-05T13:20:06Z
+
+Profiles: PASS
+Characters: PASS
+Library: PASS
+Sessions: PASS
+Inventory: PASS
+Marketplace: PASS
+Civilizations: PASS
+Social: PASS
+Authority: PASS
+Analytics: PASS
+Replay: PASS
+Launcher: PASS
+Player Success: PASS
+Gateway Layout Root: PASS
+Gateway Root: PASS
+Player Guide: PASS
+Character Guide: PASS
+Inventory Guide: PASS
+Marketplace Guide: PASS
+Game Library Guide: PASS
+Civilization Guide: PASS
+
+Player Gateway Validation: PASS

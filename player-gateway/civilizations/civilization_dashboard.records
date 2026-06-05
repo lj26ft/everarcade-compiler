@@ -1,0 +1,15 @@
+gateway_id=everarcade-player-gateway-v0.1
+version=0.1
+scope=player-facing-non-authoritative
+custody=none
+settlement=observation-only
+ordering=player-id-profile-id-session-id-event-lexicographic
+protocol_complexity=hidden
+player_registry_root=82dcae72d677af921d27786caf33e498b64687a703ae1f24ca02c640ab07c629
+world=world-genesis|civilization=civ-genesis|status=active|observer_only=true
+world=world-arena|civilization=civ-arcade|status=active|observer_only=true
+region=region-north|world=world-genesis|status=active|observer_only=true
+settlement=settlement-rivergate|region=region-north|status=prospering|observer_only=true
+governance=governance-open-council|civilization=civ-genesis|status=open|player_action=observe-only
+event=event-harvest-festival|world=world-genesis|epoch=280|status=scheduled|observer_only=true
+civilization_record=civ-record-alpha|player=player-alpha|activity=world-view|epoch=281|replayable=true

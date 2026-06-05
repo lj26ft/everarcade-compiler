@@ -1,0 +1,17 @@
+gateway_id=everarcade-player-gateway-v0.1
+version=0.1
+scope=player-facing-non-authoritative
+custody=none
+settlement=observation-only
+ordering=player-id-profile-id-session-id-event-lexicographic
+protocol_complexity=hidden
+player_registry_root=82dcae72d677af921d27786caf33e498b64687a703ae1f24ca02c640ab07c629
+inventory_root=d2400a80b2cbdd2deebdd68146cff533dfddb6eddffbb32b31aced5175708f80
+listing=listing-arena-skin|asset=asset-sprite-heroes|seller=creator-alpha|status=visible|live_settlement=false
+listing=listing-relic-item|asset=vault-relic-001|seller=player-delta|status=visible|live_settlement=false
+purchase=purchase-beta-001|buyer=player-beta|listing=listing-arena-skin|status=recorded-intent|settlement=not-executed
+sale=sale-delta-001|seller=player-delta|listing=listing-relic-item|status=recorded-intent|settlement=not-executed
+creator_asset=asset-sprite-heroes|creator=creator-alpha|status=discoverable|player_visible=true
+player_asset=vault-relic-001|player=player-delta|status=discoverable|player_visible=true
+marketplace_record=marketplace-record-beta|player=player-beta|activity=purchase-intent|epoch=270|replayable=true
+marketplace_record=marketplace-record-delta|player=player-delta|activity=sale-intent|epoch=271|replayable=true

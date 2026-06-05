@@ -1,0 +1,16 @@
+gateway_id=everarcade-player-gateway-v0.1
+version=0.1
+scope=player-facing-non-authoritative
+custody=none
+settlement=observation-only
+ordering=player-id-profile-id-session-id-event-lexicographic
+protocol_complexity=hidden
+player_registry_root=82dcae72d677af921d27786caf33e498b64687a703ae1f24ca02c640ab07c629
+character=char-vanguard-alpha|player=player-alpha|game=arena-vanguard|status=active|progression=level-12-xp-8400|authority_mapping=authority-alpha
+character=char-quest-beta|player=player-beta|game=rpg-questline|status=active|progression=chapter-03-renown-210|authority_mapping=authority-beta
+character=char-civ-gamma|player=player-gamma|game=civilization-seed|status=archived|progression=era-02-culture-75|authority_mapping=authority-gamma
+character=char-trader-delta|player=player-delta|game=trading-post|status=restored|progression=rank-05-credit-1300|authority_mapping=authority-delta
+character_action=create|character=char-vanguard-alpha|player=player-alpha|epoch=230|replayable=true
+character_action=archive|character=char-civ-gamma|player=player-gamma|epoch=231|replayable=true
+character_action=transfer|character=char-trader-delta|from=player-gamma|to=player-delta|epoch=232|replayable=true
+character_action=restore|character=char-trader-delta|player=player-delta|epoch=233|replayable=true
