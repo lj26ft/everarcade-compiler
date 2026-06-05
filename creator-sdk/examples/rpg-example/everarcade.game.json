@@ -1,0 +1,9 @@
+{
+  "name": "rpg-example",
+  "template": "rpg-example",
+  "entry": "src/game.js",
+  "runtime": "everarcade-creator-testnet",
+  "genre": "rpg",
+  "assets": ["assets/README.md"],
+  "monetization": "demo-only"
+}

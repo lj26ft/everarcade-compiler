@@ -1,0 +1,19 @@
+EverArcade Creator SDK v0.1
+
+Canonical creator workflow:
+  everarcade new -> everarcade build -> everarcade test -> everarcade deploy -> everarcade publish
+
+Layout:
+  cli/            Creator CLI entrypoint and workflow commands.
+  templates/      Opinionated starter projects.
+  examples/       Complete game examples that build, deploy, and run locally.
+  generators/     Scaffolding helpers consumed by the CLI.
+  assets/         Creator asset catalog APIs and example assets.
+  inventory/      Items, equipment, containers, and vault asset APIs.
+  economy/        Currency, rewards, listings, royalties, and settlement event APIs.
+  civilization/   Regions, worlds, settlements, governance, and local economies APIs.
+  deployment/     Local, lease, and federation deployment descriptors.
+  marketplace/    Creator-facing marketplace publication models.
+  monetization/   Non-production monetization models for royalties and rewards.
+  onboarding/     First-game workflow guidance.
+  success/        Creator success metric definitions.

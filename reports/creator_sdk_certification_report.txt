@@ -1,0 +1,12 @@
+CLI: PASS
+Templates: PASS
+Assets: PASS
+Inventory: PASS
+Economy: PASS
+Civilization: PASS
+Deployment: PASS
+Monetization: PASS
+Examples: PASS
+Onboarding: PASS
+Creator SDK Validation: PASS
+Creator SDK v0.1: PASS

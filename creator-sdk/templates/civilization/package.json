@@ -1,0 +1,11 @@
+{
+  "name": "civilization",
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "build": "node ../../cli/everarcade.mjs build --project .",
+    "test": "node ../../cli/everarcade.mjs test --project .",
+    "deploy": "node ../../cli/everarcade.mjs deploy --project .",
+    "publish": "node ../../cli/everarcade.mjs publish --project ."
+  }
+}

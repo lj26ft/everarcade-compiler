@@ -1,0 +1,7 @@
+{
+  "timeToFirstGameMinutesTarget": 60,
+  "timeToDeploymentMinutesTarget": 90,
+  "templateUsage": ["blank-game", "rpg", "arena", "civilization", "marketplace-demo"],
+  "exampleUsage": ["arena-example", "rpg-example", "trading-example"],
+  "deploymentSuccess": "local deployment artifact created"
+}

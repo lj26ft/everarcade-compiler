@@ -1,0 +1,9 @@
+{
+  "name": "blank-game",
+  "template": "blank-game",
+  "entry": "src/game.js",
+  "runtime": "everarcade-creator-testnet",
+  "genre": "blank",
+  "assets": ["assets/README.md"],
+  "monetization": "demo-only"
+}

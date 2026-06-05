@@ -1,0 +1,2 @@
+Template Root
+Includes blank-game, rpg, arena, civilization, and marketplace-demo. Each template contains an EverArcade manifest, game entrypoint, and local npm scripts backed by the Creator CLI.
