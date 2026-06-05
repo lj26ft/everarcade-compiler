@@ -1,0 +1,14 @@
+discovery_id=everarcade-game-discovery-network-v0.1
+version=0.1
+scope=player-discovery
+authority=non-authoritative
+ordering=game-id-version-event-lexicographic
+runtime_state_mutation=false
+settlement_bypass=false
+game_modification=false
+player_gateway_root=player-gateway/records/GATEWAY_ROOT
+launcher_action=Browse|surface=Player Gateway|player_focused=true
+launcher_action=Install|surface=Player Gateway|player_focused=true
+launcher_action=Launch|surface=Player Gateway|player_focused=true
+launcher_action=Update|surface=Player Gateway|player_focused=true
+launcher_action=Remove|surface=Player Gateway|player_focused=true

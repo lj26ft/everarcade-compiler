@@ -1,0 +1,20 @@
+discovery_id=everarcade-game-discovery-network-v0.1
+version=0.1
+scope=player-discovery
+authority=non-authoritative
+ordering=game-id-version-event-lexicographic
+runtime_state_mutation=false
+settlement_bypass=false
+game_modification=false
+game=arena-vanguard|creator=creator-alpha|version=1.0.0|status=published|category=Arena|tags=combat,runtime,pvp|sovereign=true
+game=rpg-questline|creator=creator-beta|version=1.0.0|status=published|category=RPG|tags=quests,narrative,party|sovereign=true
+game=trading-post|creator=creator-alpha|version=0.9.0|status=updated|category=Trading|tags=economy,market,trade|sovereign=true
+game=civilization-seed|creator=creator-gamma|version=1.0.0|status=deprecated|category=Civilization|tags=world,governance,regions|sovereign=true
+game=sandbox-builder|creator=creator-delta|version=0.8.0|status=archived|category=Sandbox|tags=builder,creative,modding|sovereign=true
+game=strategy-frontier|creator=creator-gamma|version=1.0.0|status=published|category=Strategy|tags=tactics,turns,planning|sovereign=true
+game=action-runner|creator=creator-beta|version=0.7.0|status=published|category=Action|tags=reflex,arcade,runner|sovereign=true
+game=adventure-isles|creator=creator-delta|version=1.0.0|status=published|category=Adventure|tags=exploration,story,islands|sovereign=true
+catalog_action=Archive|record_type=Publication Record|replayable=true
+catalog_action=Deprecate|record_type=Publication Record|replayable=true
+catalog_action=Publish|record_type=Publication Record|replayable=true
+catalog_action=Update|record_type=Publication Record|replayable=true

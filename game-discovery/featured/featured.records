@@ -1,0 +1,15 @@
+discovery_id=everarcade-game-discovery-network-v0.1
+version=0.1
+scope=player-discovery
+authority=non-authoritative
+ordering=game-id-version-event-lexicographic
+runtime_state_mutation=false
+settlement_bypass=false
+game_modification=false
+search_root=2eb1b087d04db421bc6360943561b5466663d96c0a23965ae3925a808a06b005
+featured=arena-vanguard|bucket=Featured|order=001|rule=curated-static
+featured=civilization-seed|bucket=Trending|order=002|rule=views-installs-launches
+featured=rpg-questline|bucket=Popular|order=003|rule=launches-desc-game-id
+featured=adventure-isles|bucket=Recent|order=004|rule=published-epoch-desc-game-id
+featured=action-runner|bucket=New Releases|order=005|rule=version-epoch-desc-game-id
+featured_ordering=deterministic|ties=game-id-lexicographic

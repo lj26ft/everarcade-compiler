@@ -1,0 +1,13 @@
+discovery_id=everarcade-game-discovery-network-v0.1
+version=0.1
+scope=player-discovery
+authority=non-authoritative
+ordering=game-id-version-event-lexicographic
+runtime_state_mutation=false
+settlement_bypass=false
+game_modification=false
+observation_only=true
+world=world-arena|region=arena-prime|civilization=civ-arena|event=arena-season-opened
+world=world-quest|region=old-road|civilization=civ-quest|event=party-arrived
+world=world-market|region=trade-hub|civilization=civ-market|event=market-festival
+world=world-seed|region=riverlands|civilization=civ-seed|event=council-election
