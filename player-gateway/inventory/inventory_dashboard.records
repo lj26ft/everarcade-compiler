@@ -1,0 +1,16 @@
+gateway_id=everarcade-player-gateway-v0.1
+version=0.1
+scope=player-facing-non-authoritative
+custody=none
+settlement=observation-only
+ordering=player-id-profile-id-session-id-event-lexicographic
+protocol_complexity=hidden
+player_registry_root=82dcae72d677af921d27786caf33e498b64687a703ae1f24ca02c640ab07c629
+character_root=a19a9c4370db1596c3814079fbc92f4c32adccedb176c1ce43c41fee8aa70b7a
+item=item-iron-sword|player=player-alpha|character=char-vanguard-alpha|status=owned|source=arena-vanguard
+equipment=equipment-scout-armor|player=player-alpha|slot=armor|status=equipped|runtime_mutation=false
+container=container-beta-pack|player=player-beta|capacity=24|status=available|runtime_mutation=false
+vault_asset=vault-relic-001|player=player-delta|authority_mapping=authority-delta|status=observed|custody=false
+marketplace_asset=asset-sprite-heroes|player=player-beta|listing=list-sprite-heroes|status=available|settlement=none
+inventory_record=inventory-record-alpha|player=player-alpha|activity=equipment-view|epoch=260|replayable=true
+inventory_record=inventory-record-beta|player=player-beta|activity=container-view|epoch=261|replayable=true

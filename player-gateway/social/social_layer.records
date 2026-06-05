@@ -1,0 +1,14 @@
+gateway_id=everarcade-player-gateway-v0.1
+version=0.1
+scope=player-facing-non-authoritative
+custody=none
+settlement=observation-only
+ordering=player-id-profile-id-session-id-event-lexicographic
+protocol_complexity=hidden
+player_registry_root=82dcae72d677af921d27786caf33e498b64687a703ae1f24ca02c640ab07c629
+friendship=friend-alpha-beta|players=player-alpha,player-beta|status=accepted|messaging=false
+friendship=friend-alpha-delta|players=player-alpha,player-delta|status=pending|messaging=false
+guild=guild-vanguard|members=player-alpha,player-beta|status=active|messaging=false
+group=group-civ-observers|members=player-alpha,player-delta|status=active|messaging=false
+contact=contact-creator-alpha|player=player-alpha|target=creator-alpha|status=saved|messaging=false
+social_record=social-record-alpha|player=player-alpha|activity=friend-list-view|epoch=290|replayable=true

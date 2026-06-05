@@ -1,0 +1,15 @@
+gateway_id=everarcade-player-gateway-v0.1
+version=0.1
+scope=player-facing-non-authoritative
+custody=none
+settlement=observation-only
+ordering=player-id-profile-id-session-id-event-lexicographic
+protocol_complexity=hidden
+player_registry_root=82dcae72d677af921d27786caf33e498b64687a703ae1f24ca02c640ab07c629
+authority_status=authority-alpha|player=player-alpha|status=authorized|network=testnet|custody=false
+authority_status=authority-beta|player=player-beta|status=authorized|network=testnet|custody=false
+wallet_mapping=wallet-alpha|player=player-alpha|provider=xaman|status=mapped|private_keys=never
+wallet_mapping=wallet-beta|player=player-beta|provider=xaman|status=mapped|private_keys=never
+settlement_history=settlement-observed-alpha|player=player-alpha|ledger=observed-test-ledger|status=observed|execution=false
+authorization_event=auth-event-beta|player=player-beta|provider=xaman|status=signed-test|epoch=300|replayable=true
+authorization_event=auth-event-delta|player=player-delta|provider=xaman|status=recovered|epoch=301|replayable=true

@@ -1,0 +1,14 @@
+gateway_id=everarcade-player-gateway-v0.1
+version=0.1
+scope=player-facing-non-authoritative
+custody=none
+settlement=observation-only
+ordering=player-id-profile-id-session-id-event-lexicographic
+protocol_complexity=hidden
+registrations=count-4|active=2|suspended=1|recovered=1|source=player-registry
+characters_created=count-4|active=2|archived=1|restored=1|source=character-system
+games_installed=count-2|source=game-library
+games_played=count-5|source=analytics-layer
+marketplace_activity=intents-2|live_settlement=false|source=marketplace-dashboard
+retention=day-1-players-3|day-7-players-2|source=session-records
+player_success_root_scope=registrations-characters-games-marketplace-retention

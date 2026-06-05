@@ -1,0 +1,18 @@
+EverArcade Player Gateway Certification Report
+Version: v0.1
+Timestamp: 2026-06-05T13:20:18Z
+
+Profiles: PASS
+Characters: PASS
+Library: PASS
+Sessions: PASS
+Inventory: PASS
+Marketplace: PASS
+Civilizations: PASS
+Social: PASS
+Authority: PASS
+Analytics: PASS
+Replay: PASS
+Launcher: PASS
+
+Player Gateway v0.1: PASS
