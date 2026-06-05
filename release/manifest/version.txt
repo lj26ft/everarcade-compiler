@@ -1,0 +1,6 @@
+EverArcade Release Candidate Version
+Version: v0.1-rc1
+Release Line: v0.1
+Interface Policy: frozen
+Feature Policy: no-new-major-features
+Reproducibility Policy: source-artifacts-vendor-bundle

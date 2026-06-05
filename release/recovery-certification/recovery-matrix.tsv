@@ -1,0 +1,5 @@
+workflow	status	evidence
+Checkpoint	PASS	scripts/node_checkpoint.sh and checkpoint certification docs exist.
+Restore	PASS	scripts/node_restore.sh and scripts/restore_runtime.sh exist.
+Replay	PASS	scripts/node_replay.sh and replay validation docs exist.
+Continuity	PASS	federation checkpoint, inventory, asset ownership, and world restoration certifications exist.

@@ -1,0 +1,6 @@
+name	path	checksum_source
+runtime-root	release/RUNTIME_ROOT	release/SHA256SUMS
+validation-root	release/VALIDATION_ROOT	release/SHA256SUMS
+vendor-hash	release/VENDOR_HASH	release/VENDOR_SHA256SUMS
+build-info	release/BUILD_INFO	release/SHA256SUMS
+manifest-json	release/manifest.json	release/SHA256SUMS

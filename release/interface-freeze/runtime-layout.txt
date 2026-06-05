@@ -1,0 +1,4 @@
+Runtime Layout Freeze
+Status: FROZEN
+Directories: runtime/, packages/, checkpoints/, receipts/, replay/, config/, logs/
+Rule: operational paths remain stable for v0.1 bootstrap, replay, and recovery.

@@ -1,0 +1,6 @@
+artifact	status	evidence
+Runtime Appliance	PASS	docs/runtime-platform/runtime-appliance-v0.1.md
+Node Appliance	PASS	docs/runtime-platform/protocol-node-appliance-v0.1.md
+Evernode Package	PASS	docs/runtime-platform/evernode-deployment-v0.1.md
+Lease Handoff Package	PASS	docs/runtime-platform/evernode-lease-handoff-v0.1.md
+Portal Artifacts	PASS	docs/runtime-platform/developer-portal-v0.1.md

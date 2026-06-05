@@ -1,0 +1,4 @@
+Upgrade Certification Policy
+Version: v0.1-rc1
+Status: PASS
+The release candidate certifies install, upgrade, restart, replay, and recovery without adding runtime capabilities. Operators must preserve checkpoint and replay records before upgrade and verify continuity roots after restart.

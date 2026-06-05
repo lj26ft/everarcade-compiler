@@ -1,0 +1,4 @@
+Federation Layout Freeze
+Status: FROZEN
+Surfaces: enrollment, governance, checkpoint sync, receipt propagation, replay activation, quarantine record
+Rule: federation records remain deterministic and compatible across v0.1 nodes.

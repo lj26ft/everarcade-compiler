@@ -1,0 +1,4 @@
+Settlement Layout Freeze
+Status: FROZEN
+Surfaces: XRPL testnet settlement proof, Xaman signing request, receipt range, replay root, audit record
+Rule: settlement evidence remains replayable and externally auditable.

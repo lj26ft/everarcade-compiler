@@ -1,0 +1,7 @@
+order	gate	status	root_file
+1	Manifest	PASS	release/manifest/RELEASE_MANIFEST_ROOT
+2	Interface Freeze	PASS	release/interface-freeze/INTERFACE_FREEZE_ROOT
+3	Upgrade	PASS	release/upgrade-certification/UPGRADE_ROOT
+4	Recovery	PASS	release/recovery-certification/RECOVERY_ROOT
+5	Distribution	PASS	release/distribution-certification/DISTRIBUTION_ROOT
+6	Testnet Readiness	PASS	release/testnet-readiness/TESTNET_READINESS_ROOT

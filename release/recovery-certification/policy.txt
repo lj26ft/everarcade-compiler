@@ -1,0 +1,4 @@
+Recovery Certification Policy
+Version: v0.1-rc1
+Status: PASS
+The release candidate certifies checkpoint, restore, replay, and continuity workflows as deterministic operational procedures. Recovery is invalid unless replay roots match the restored checkpoint lineage.
