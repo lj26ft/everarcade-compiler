@@ -1,0 +1,9 @@
+{
+  "name": "arena-example",
+  "template": "arena-example",
+  "entry": "src/game.js",
+  "runtime": "everarcade-creator-testnet",
+  "genre": "arena",
+  "assets": ["assets/README.md"],
+  "monetization": "demo-only"
+}

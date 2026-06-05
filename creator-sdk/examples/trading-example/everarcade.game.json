@@ -1,0 +1,9 @@
+{
+  "name": "trading-example",
+  "template": "trading-example",
+  "entry": "src/game.js",
+  "runtime": "everarcade-creator-testnet",
+  "genre": "trading",
+  "assets": ["assets/README.md"],
+  "monetization": "demo-only"
+}

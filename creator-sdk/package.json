@@ -1,0 +1,13 @@
+{
+  "name": "@everarcade/creator-sdk",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "everarcade": "cli/everarcade.mjs"
+  },
+  "scripts": {
+    "validate": "bash ../scripts/validate_creator_sdk.sh",
+    "certify": "bash ../scripts/certify_creator_sdk.sh"
+  }
+}

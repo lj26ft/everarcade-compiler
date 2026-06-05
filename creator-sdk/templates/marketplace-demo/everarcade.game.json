@@ -1,0 +1,9 @@
+{
+  "name": "marketplace-demo",
+  "template": "marketplace-demo",
+  "entry": "src/game.js",
+  "runtime": "everarcade-creator-testnet",
+  "genre": "marketplace",
+  "assets": ["assets/README.md"],
+  "monetization": "demo-only"
+}

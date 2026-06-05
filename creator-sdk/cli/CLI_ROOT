@@ -1,0 +1,3 @@
+Creator CLI Root
+Commands: new, build, test, deploy, publish
+Models: Project, Build, Package, Deployment, Publication

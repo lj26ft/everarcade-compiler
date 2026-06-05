@@ -1,0 +1,7 @@
+Onboarding Root
+1. Create Project: everarcade new --template arena --name my-arena
+2. Build Project: everarcade build --project my-arena
+3. Run Project: node my-arena/src/game.js
+4. Deploy Project: everarcade deploy --project my-arena --target local
+5. Publish Project: everarcade publish --project my-arena --channel creator-testnet
+Goal: first game in under one hour.

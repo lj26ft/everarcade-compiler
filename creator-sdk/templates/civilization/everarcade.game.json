@@ -1,0 +1,9 @@
+{
+  "name": "civilization",
+  "template": "civilization",
+  "entry": "src/game.js",
+  "runtime": "everarcade-creator-testnet",
+  "genre": "civilization",
+  "assets": ["assets/README.md"],
+  "monetization": "demo-only"
+}
