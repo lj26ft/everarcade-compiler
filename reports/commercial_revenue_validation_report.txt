@@ -1,0 +1,25 @@
+EverArcade Commercial Revenue Validation Report
+Version: 0.1
+Custody: non-custodial
+Payments: intent-only-no-live-settlement
+
+Registry: PASS
+Creator Revenue: PASS
+Operator Revenue: PASS
+GPU Revenue: PASS
+Civilization Revenue: PASS
+Marketplace Revenue: PASS
+Protocol Revenue: PASS
+Distribution: PASS
+Settlement Intents: PASS
+Analytics: PASS
+Replay: PASS
+Portal Integration: PASS
+Metrics: PASS
+Economic Sustainability: PASS
+
+Revenue Root: 945779c0185d8d618c1882ddb91baa7a758d3769af06312e4c321ec56f45a12c
+Distribution Root: 30e5bac390beae2f3f0991fa484e46178446b9f8d53a9a636dbf49fe1bedd475
+Settlement Root: 6742b8bf9f9d274b162c6d8dec8fb25060224de524bfb2e80359de8cd74cd159
+Replay Root: 945779c0185d8d618c1882ddb91baa7a758d3769af06312e4c321ec56f45a12c
+Commercial Revenue Validation: PASS

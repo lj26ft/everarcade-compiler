@@ -1,0 +1,10 @@
+civilization_attribution=operation=Create|event_id=rev-0014|revenue_type=Civilization Treasury|origin=creator-sdk/civilization|beneficiary=civilization-aurora|status=active|epoch=113|distribution_policy=policy-civilization-treasury-default
+civilization_attribution=operation=Create|event_id=rev-0015|revenue_type=Civilization Fees|origin=game-discovery/civilizations|beneficiary=civilization-aurora|status=active|epoch=114|distribution_policy=policy-civilization-fees-default
+civilization_attribution=operation=Create|event_id=rev-0016|revenue_type=Civilization Events|origin=examples/civilization-sim|beneficiary=civilization-solstice|status=active|epoch=115|distribution_policy=policy-civilization-events-default
+civilization_attribution=operation=Create|event_id=rev-0017|revenue_type=Civilization Revenue|origin=developer-portal/civilizations|beneficiary=civilization-solstice|status=active|epoch=116|distribution_policy=policy-civilization-revenue-default
+commercial_revenue_id=everarcade-commercial-revenue-v0.1
+custody=non-custodial
+ordering=epoch-event-id-revenue-type-origin-beneficiary-lexicographic
+payments=intent-only-no-live-settlement
+registry_root=db58d7ed90c017479b8d2fa47fa0093c0c4aa51522d4f876a28488f7e45cfa7a
+version=0.1

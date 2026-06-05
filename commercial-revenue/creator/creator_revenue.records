@@ -1,0 +1,11 @@
+commercial_revenue_id=everarcade-commercial-revenue-v0.1
+creator_attribution=operation=Create|event_id=rev-0001|revenue_type=Template Revenue|origin=creator-marketplace/templates|beneficiary=creator-alpha|status=active|epoch=100|distribution_policy=policy-creator-template-default|attribution=creator-id-origin-policy
+creator_attribution=operation=Create|event_id=rev-0002|revenue_type=Asset Revenue|origin=creator-marketplace/assets|beneficiary=creator-beta|status=active|epoch=101|distribution_policy=policy-creator-asset-default|attribution=creator-id-origin-policy
+creator_attribution=operation=Create|event_id=rev-0003|revenue_type=Marketplace Revenue|origin=marketplace/creator|beneficiary=marketplace-operator|status=active|epoch=102|distribution_policy=policy-marketplace-default|attribution=creator-id-origin-policy
+creator_attribution=operation=Create|event_id=rev-0004|revenue_type=Subscription Revenue|origin=creator-sdk/monetization|beneficiary=creator-gamma|status=active|epoch=103|distribution_policy=policy-creator-subscription-default|attribution=creator-id-origin-policy
+creator_attribution=operation=Create|event_id=rev-0005|revenue_type=Royalty Revenue|origin=creator-marketplace/royalties|beneficiary=creator-alpha|status=active|epoch=104|distribution_policy=policy-royalty-default|attribution=creator-id-origin-policy
+custody=non-custodial
+ordering=epoch-event-id-revenue-type-origin-beneficiary-lexicographic
+payments=intent-only-no-live-settlement
+registry_root=db58d7ed90c017479b8d2fa47fa0093c0c4aa51522d4f876a28488f7e45cfa7a
+version=0.1

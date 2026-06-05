@@ -1,0 +1,12 @@
+analytics_root=532659855d2b9ea249c635e518b1569bf1e1175c2bc231a6db8a8fbb3c51177e
+commercial_revenue_id=everarcade-commercial-revenue-v0.1
+custody=non-custodial
+metric=Civilization Share|basis=policy-weight|value=policy-defined|hardcoded_percentage=false
+metric=Creator Share|basis=policy-weight|value=policy-defined|hardcoded_percentage=false
+metric=GPU Share|basis=policy-weight|value=policy-defined|hardcoded_percentage=false
+metric=Gross Revenue|basis=intent-events|value=deterministic-placeholder|production_amount=false
+metric=Operator Share|basis=policy-weight|value=policy-defined|hardcoded_percentage=false
+metric=Protocol Share|basis=policy-weight|value=policy-defined|hardcoded_percentage=false
+ordering=epoch-event-id-revenue-type-origin-beneficiary-lexicographic
+payments=intent-only-no-live-settlement
+version=0.1

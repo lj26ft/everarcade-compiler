@@ -1,0 +1,11 @@
+commercial_revenue_id=everarcade-commercial-revenue-v0.1
+custody=non-custodial
+gpu_attribution=operation=Create|event_id=rev-0010|revenue_type=GPU Job Revenue|origin=gpu/jobs|beneficiary=gpu-provider-nova|status=active|epoch=109|distribution_policy=policy-gpu-job-default
+gpu_attribution=operation=Create|event_id=rev-0011|revenue_type=Artifact Revenue|origin=gpu/artifacts|beneficiary=gpu-provider-nova|status=active|epoch=110|distribution_policy=policy-gpu-artifact-default
+gpu_attribution=operation=Create|event_id=rev-0012|revenue_type=Verification Revenue|origin=gpu/verification|beneficiary=gpu-provider-quartz|status=active|epoch=111|distribution_policy=policy-gpu-verification-default
+gpu_attribution=operation=Create|event_id=rev-0013|revenue_type=Capacity Revenue|origin=gpu/marketplace|beneficiary=gpu-provider-quartz|status=active|epoch=112|distribution_policy=policy-gpu-capacity-default
+gpu_marketplace_integration=gpu/marketplace|mode=reference-only
+ordering=epoch-event-id-revenue-type-origin-beneficiary-lexicographic
+payments=intent-only-no-live-settlement
+registry_root=db58d7ed90c017479b8d2fa47fa0093c0c4aa51522d4f876a28488f7e45cfa7a
+version=0.1

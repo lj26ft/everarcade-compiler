@@ -1,0 +1,10 @@
+commercial_revenue_id=everarcade-commercial-revenue-v0.1
+custody=non-custodial
+live_fee_collection=false
+ordering=epoch-event-id-revenue-type-origin-beneficiary-lexicographic
+payments=intent-only-no-live-settlement
+protocol_attribution=operation=Create|event_id=rev-0022|revenue_type=Protocol Fee Intent|origin=protocol/sustainability|beneficiary=protocol-sustainability-pool|status=intent-only|epoch=121|distribution_policy=policy-protocol-fee-default
+protocol_attribution=operation=Create|event_id=rev-0023|revenue_type=Protocol Sustainability Intent|origin=economic-ledger/protocol|beneficiary=protocol-sustainability-pool|status=intent-only|epoch=122|distribution_policy=policy-protocol-sustainability-default
+protocol_attribution=operation=Create|event_id=rev-0024|revenue_type=Network Revenue|origin=wallet-authority/network|beneficiary=protocol-network|status=intent-only|epoch=123|distribution_policy=policy-protocol-network-default
+registry_root=db58d7ed90c017479b8d2fa47fa0093c0c4aa51522d4f876a28488f7e45cfa7a
+version=0.1
