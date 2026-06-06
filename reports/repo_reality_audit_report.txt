@@ -1,0 +1,48 @@
+EverArcade Repo Reality Audit Report
+Date: 2026-06-05
+Result: NOT PRODUCTION READY
+
+Method
+- Inspected root README, Cargo workspace, major directories, scripts, records, docs, and scaffold files.
+- Ran local creator-template flow for the arena template.
+- Attempted targeted everarcade-runtime launch with CARGO_BUILD_JOBS=1; build was blocked by incomplete vendored dependencies.
+- Did not run cargo test --workspace.
+
+Classification key
+- Production Ready: implemented, runnable, validated, and clearly safe for intended production use.
+- Functional Prototype: has runnable code or deterministic local behavior, but lacks production integration/ops/security completeness.
+- Certification Scaffold: deterministic transcripts, shell models, fixtures, or PASS reports that demonstrate a model rather than a live subsystem.
+- Documentation Only: explanations, maps, or READMEs without runnable implementation.
+- Obsolete / Duplicate: overlapping or redundant surfaces with unclear continued ownership.
+- Unclear: entrypoint, authority, status, or ownership cannot be determined confidently.
+
+Major area inventory
+
+| Area | Classification | Evidence and reality |
+| --- | --- | --- |
+| execution-core | Functional Prototype | Large Rust crate with extensive modules and tests. It appears to be the deepest protocol implementation surface, but breadth is far beyond proven integration. No top-level README was present before this audit; many modules look model/prototype-level. |
+| everarcade-runtime | Functional Prototype | Small Rust appliance runtime with package validation, lifecycle, journal, receipts, checkpoints, backup/recovery commands. Targeted launch could not be compiled in this clone because vendor/ lacks bincode required by workspace resolution. |
+| runtime appliances | Functional Prototype | Build/install/start/stop scripts exist, but many assume prebuilt appliance layout or emit status text. Production packaging claims depend on vendored dependency completeness and release gates. |
+| node appliance | Certification Scaffold | node/ contains state/log/checkpoint/world directories and .gitkeep files, not a live node service. Runtime-node scripts exist but overlap with runtime appliance scripts. |
+| HotPocket layer | Certification Scaffold | hotpocket/ contains adapter shell files and placeholder directories. It models integration shape, not a verified live HotPocket deployment. |
+| Evernode layer | Functional Prototype | provider-evernode is a Rust workspace member with lease/deployment/health/runtime modules; evernode/ itself is mostly appliance filesystem layout. Live Evernode operation is not proven. |
+| XRPL layer | Certification Scaffold | xrpl/ contains deterministic intent, transaction, receipt, anchor, and verification records and a live_settlement_model.sh. It does not sign, submit, finalize, or verify against live XRPL consensus. |
+| Xaman layer | Certification Scaffold | xaman/ contains deterministic payload/status/receipt tracking model. It does not call Xaman APIs, custody keys, or prove live wallet authorization. |
+| federation | Certification Scaffold | federation/ contains fixtures, deterministic records, shell model, and Rust-like model files. User instruction also says renderer/history/federation are scaffold-level runtime domains. |
+| renderer | Certification Scaffold | renderer/ is README/projection shell model structure; no production renderer service or game renderer launch path is present. |
+| GPU runtime | Certification Scaffold | runtime/gpu-runtime has a crate, while gpu/ is documentation/model records. No live GPU scheduler/provider execution was proven. |
+| GPU marketplace | Certification Scaffold | runtime/gpu-marketplace and gpu/marketplace exist, but marketplace behavior appears deterministic/model-level, not production clearing or fraud-resistant provider marketplace. |
+| developer portal | Certification Scaffold | developer-portal is records and portal_model-style deterministic surfaces. No full production web app/service ownership is clear. |
+| creator SDK | Functional Prototype | Node CLI can create/build/test/deploy/publish template artifacts locally. It does not create runtime-compatible packages or playable hosted sessions. |
+| game templates | Functional Prototype | Arena template runs a simple Node script and exposes game metadata; it is a starter scaffold, not a playable networked game. |
+| player gateway | Certification Scaffold | player-gateway is records/README gateway layout. It is not a live authenticated gateway service. |
+| game discovery | Certification Scaffold | game-discovery contains catalog/discovery records and likely deterministic model output, not a production discovery/search service. |
+| commercial revenue | Certification Scaffold | commercial-revenue contains deterministic revenue records/root files; no billing, payout, tax, ledger, or settlement authority. |
+| scripts | Functional Prototype / Obsolete Duplicate | 496 top-level scripts exist, including many run/certify/validate/verify variants. Useful local automation exists, but duplication and PASS-producing scripts obscure what is truly executed. |
+| docs | Documentation Only / Unclear | 370 docs files exist. Many are valuable, but there is repetition and claims that outpace implementation. |
+| reports | Documentation Only / Certification Scaffold | 68 existing report files plus generated reports. Many PASS reports are certification/model pass statements rather than live execution proof. |
+
+Conclusion
+- The repo is valuable as a deterministic runtime/protocol prototype with many certification models.
+- It is not ready for production launch or open-source public claims of a complete platform.
+- The highest-risk confusion is that scaffold directories, deterministic transcripts, and PASS reports can be mistaken for live services.

@@ -11,3 +11,10 @@ This directory contains the deterministic evidence-exchange runtime for Multi-Le
 - `synchronization/` records civilization epoch synchronization roots.
 - `recovery/` records lease failure, recovery, membership recovery, and checkpoint recovery evidence.
 - `multi_lease_model.sh` is the deterministic root-generation and verification model used by validation and certification scripts.
+
+## Pseudocode authority boundary
+
+- **Input:** member events, identity roots, topology records, checkpoint/replay/settlement exchange records, and recovery evidence.
+- **Output:** deterministic federation roots and equivalence reports.
+- **Authority:** only the deterministic evidence model in this directory; it is not a live Byzantine-fault-tolerant network.
+- **EverArcade fit:** documents and tests how leases could exchange evidence before a production federation exists.

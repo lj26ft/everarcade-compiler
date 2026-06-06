@@ -13,3 +13,10 @@ The GPU Runtime is EverArcade's deterministic, non-authoritative acceleration la
 - `replay/` - deterministic replay render-root regeneration and render-root equivalence checks.
 
 The GPU Runtime never writes protocol state, inventory, economy, governance, settlements, or authority data. All files in this tree are projection consumers or projection-output descriptors.
+
+## Pseudocode authority boundary
+
+- **Input:** renderer projections, GPU job descriptors, worker/device declarations, replay identifiers, and checkpoint references.
+- **Output:** render artifact records, job roots, worker roots, and verification transcripts.
+- **Authority:** none over protocol state, payment eligibility, or marketplace settlement; provider claims require external verification.
+- **EverArcade fit:** a non-authoritative acceleration/marketplace scaffold for future verifiable rendering work.

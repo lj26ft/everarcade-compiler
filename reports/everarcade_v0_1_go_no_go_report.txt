@@ -1,0 +1,50 @@
+EverArcade v0.1 Go / No-Go Report
+Date: 2026-06-05
+Decision: NO-GO FOR PUBLIC PRODUCTION LAUNCH
+Open-source readiness: NOT READY
+
+1. Production readiness summary
+- execution-core and everarcade-runtime are functional prototypes.
+- creator-sdk and templates are functional prototypes for local JSON/script flows.
+- renderer, federation, HotPocket, XRPL, Xaman, GPU marketplace/runtime records, player gateway, game discovery, commercial revenue, node appliance, and many reports are certification scaffolds or documentation/model surfaces.
+- No major platform area should be advertised as production-ready based on this audit.
+
+2. Local game launch result
+- Final classification: Simulated.
+- Arena template create/build/test/deploy and script launch passed.
+- Runtime start/stop was not proven because targeted Cargo execution failed due incomplete vendored dependencies.
+- No real product flow produced authoritative session or renderer/projection records.
+
+3. Scaffold vs real implementation summary
+- Real/prototype: Rust crates, everarcade-runtime package loader/runtime loop, creator-sdk CLI, some frontend/sample code, provider-evernode prototype.
+- Scaffold/model: records trees, root marker files, dry-run certification reports, marketplace/revenue/GPU/XRPL/Xaman/federation/player-gateway/game-discovery directories.
+- Documentation-only: many architecture/runbook/readiness docs unless tied to current runnable commands.
+
+4. Security/adversarial findings
+- Biggest risks: forged deterministic records, fake settlement/wallet evidence, checkpoint poisoning, replay divergence, GPU provider fraud, marketplace spam/fraud, malicious templates, operator misbehavior, DoS, and supply-chain confusion.
+- Abuse controls are not production-ready.
+
+5. Open-source readiness result
+- NOT READY.
+- Missing root license, security policy, contributing guide, and code of conduct.
+- Vendor/dependency policy is broken or incomplete in this clone.
+- Public claims need stronger scaffold labels.
+
+6. Top 10 blockers
+1. Add root LICENSE and decide public reuse terms.
+2. Add SECURITY.md with vulnerability disclosure and no-secrets policy.
+3. Add CONTRIBUTING.md and supported development/test commands.
+4. Add CODE_OF_CONDUCT.md.
+5. Fix offline vendored Cargo dependencies or document a working network build mode.
+6. Build one real supported local game launch path that creates runtime-compatible package, runtime session, and renderer/projection evidence.
+7. Label scaffold/model/PASS reports clearly and remove misleading production wording.
+8. Consolidate or support-bound the 496 scripts.
+9. Add schema/signature/finality controls for checkpoint, replay, settlement, Xaman, marketplace, and GPU-provider evidence.
+10. Clarify ownership of runtime/node/appliance/gateway/portal/frontend directories.
+
+7. Recommended next 5 tasks
+1. Create a canonical `make audit-local-launch` or script that runs one template through a real runtime-compatible package and writes authoritative receipts.
+2. Fix vendored dependencies and add targeted CI for `everarcade-runtime`, creator-sdk CLI, and the reality-audit validator.
+3. Publish a maintained repo map and stub-vs-usable matrix at the top of the README.
+4. Add open-source governance files and remove/ignore generated dependency artifacts as appropriate.
+5. Review and relabel all certification reports with execution class and date.

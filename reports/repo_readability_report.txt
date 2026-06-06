@@ -1,0 +1,47 @@
+Repo Readability / Human Understandability Report
+Date: 2026-06-05
+
+Overall readability result: HARD TO UNDERSTAND WITHOUT A REALITY MAP
+
+Findings
+
+1. Duplicate docs
+- Docs exist for many adjacent concepts: runtime, runtime-platform, release, operators, frontend, player-gateway, game-discovery, creator, creator-sdk, commercial-revenue, xrpl, and architecture.
+- Many docs describe readiness/certification states that are easy to read as production status.
+
+2. Duplicate scripts
+- `scripts/` contains 496 top-level files.
+- Prefix counts include approximately 288 `run*`, 46 `certify*`, 44 `validate*`, and 26 `verify*` scripts.
+- Runtime, node, launch, replay, recovery, federation, deployment, and appliance scripts overlap heavily.
+
+3. Unclear ownership
+- `runtime/`, `node/`, `evernode/`, `provider-evernode/`, `hotpocket/`, `gateway/`, `frontend-gateway/`, `player-gateway/`, and `developer-portal/` all imply operational entrypoints.
+- It is unclear which directories own product launch, local development, production deployment, and external provider operation.
+
+4. Overlapping concepts
+- The terms runtime, appliance, node, host, gateway, portal, renderer, replay, federation, settlement, and marketplace repeat across separate directories.
+- GPU appears in `gpu/`, `runtime/gpu-runtime`, `runtime/gpu-marketplace`, developer portal records, commercial revenue, and public testnet records.
+
+5. Empty scaffolds
+- `node/`, `evernode/`, `hotpocket/`, and several runtime appliance folders include `.gitkeep`-style layout without live service implementation.
+- Records directories often contain root markers and transcripts but no service code.
+
+6. PASS reports without real execution
+- Existing deployment/runtime reports contain `Result: PASS` or PASS tables, but many are dry-run or deterministic model results.
+- Reports should state whether they are live, simulated, dry-run, script-only, or documentation-only.
+
+7. AI-generated repetition
+- Many directories follow repeated root/records/README patterns with similar wording and generated-looking taxonomy.
+- This repetition makes it difficult to distinguish design intent from implemented behavior.
+
+8. Missing README files
+- Missing top-level READMEs were observed for important areas before this audit, including execution-core, runtime/everarcade-runtime, runtime/gpu-marketplace, node, evernode, creator-sdk, game-discovery, and commercial-revenue.
+- This audit added reality notes for creator-sdk and commercial-revenue, but a full README cleanup remains needed.
+
+9. Unclear entrypoints
+- The root README points to release/bootstrap scripts, while the creator SDK has its own CLI, runtime has its own Rust binary, and frontend samples have their own tests.
+- A new contributor cannot easily know which command proves the platform works.
+
+Readability recommendation
+
+Create one canonical `docs/architecture/human-readable-repo-map.md`, keep `docs/stub-vs-usable-matrix.md` current, mark every report with execution class, and consolidate scripts into fewer supported entrypoints.
