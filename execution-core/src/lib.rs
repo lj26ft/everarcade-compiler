@@ -1,3 +1,17 @@
+//! EverArcade execution-core crate surface.
+//!
+//! Pseudocode architecture:
+//! - Authority: deterministic state transitions, canonical hashes, receipts, checkpoints,
+//!   consensus/federation evidence, and validation modules define protocol-side truth.
+//! - Non-authoritative: UI projection, creator convenience flows, settlement descriptions,
+//!   GPU artifacts, and wallet payload metadata must be verified before they affect state.
+//! - Input: package/runtime data, player or operator intents, replay/checkpoint material,
+//!   and external evidence imported through explicit validation boundaries.
+//! - Output: canonical roots, receipts, proofs, replayable state, validation reports, and
+//!   API structs used by the host/runtime layers.
+//! - Fit: this crate is broad and test-heavy; many modules are prototype/certification models,
+//!   so callers must not assume every exported module is production integrated.
+
 pub mod ai_memory;
 pub mod ai_runtime;
 pub mod amendment;

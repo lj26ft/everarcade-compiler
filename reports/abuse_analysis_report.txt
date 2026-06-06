@@ -1,0 +1,35 @@
+Abuse Analysis Report
+Date: 2026-06-05
+Result: HIGH RISK UNTIL SCAFFOLD BOUNDARIES ARE ENFORCED
+
+Covered abuse classes
+- economic abuse
+- marketplace abuse
+- GPU provider fraud
+- fake render artifacts
+- settlement spoofing
+- Xaman payload spoofing
+- replay divergence
+- checkpoint poisoning
+- malicious game templates
+- creator marketplace spam
+- player identity abuse
+- operator misbehavior
+- denial of service
+- supply-chain risks
+- open-source exploitation risks
+
+Top findings
+1. Deterministic records can be forged or misrepresented as production truth.
+2. Revenue and marketplace directories are not payment/clearing systems.
+3. GPU provider and render artifact claims are not independently verified.
+4. XRPL and Xaman layers model boundaries but do not prove live finality or wallet approval.
+5. Replay/checkpoint/federation records need stronger signature, quorum, and anti-poisoning controls.
+6. Creator templates execute JavaScript and need sandboxing/signing before public marketplace use.
+7. Gateway/session/player records are not authenticated service records.
+8. Script sprawl creates accidental attack surface and confusing public claims.
+9. Supply-chain posture is unclear because offline vendor configuration is incomplete in this clone and node_modules exists.
+10. Missing open-source policies make vulnerability reporting and acceptable-use boundaries unclear.
+
+Production recommendation
+Do not launch public economic, marketplace, wallet, GPU-provider, or player-session claims until non-authoritative scaffolds are clearly separated from authoritative systems and the mitigations in docs/security/abuse-and-adversarial-analysis.md are implemented.

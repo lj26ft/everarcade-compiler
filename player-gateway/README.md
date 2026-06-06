@@ -20,3 +20,10 @@ The gateway is intentionally non-authoritative. It observes, launches, displays,
 - `launcher/` — browse, install, launch, update, and remove records for future game discovery.
 - `metrics/` — player success metrics for registrations, characters, installs, play, marketplace activity, and retention.
 - `records/` — gateway layout and aggregate roots.
+
+## Pseudocode authority boundary
+
+- **Input:** player profile records, game catalog records, session records, authority mappings, inventory/marketplace views, and replay evidence.
+- **Output:** player-facing gateway roots and dashboard records.
+- **Authority:** none over runtime state, wallet custody, settlement, marketplace clearing, or inventory ownership.
+- **EverArcade fit:** a portal/gateway scaffold that explains the intended player surface before a production service exists.

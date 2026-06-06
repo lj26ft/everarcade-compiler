@@ -1,0 +1,17 @@
+Pseudocode Annotation Report
+Date: 2026-06-05
+
+Files annotated
+- runtime/everarcade-runtime/src/lib.rs: added crate-level pseudocode explaining authority, non-authoritative consumers, inputs, outputs, and role in EverArcade.
+- execution-core/src/lib.rs: added crate-level pseudocode explaining deterministic/protocol authority, untrusted external evidence, inputs, outputs, and prototype breadth caveat.
+- renderer/README.md: added pseudocode authority boundary for projection inputs/outputs and non-authoritative renderer status.
+- gpu/README.md: added pseudocode authority boundary for GPU jobs/artifacts/provider claims.
+- federation/README.md: added pseudocode authority boundary for federation evidence exchange.
+- xrpl/README.md: added pseudocode authority boundary for XRPL settlement artifacts.
+- xaman/README.md: added pseudocode authority boundary for wallet payload artifacts.
+- player-gateway/README.md: added pseudocode authority boundary for player-facing gateway records.
+- creator-sdk/README.md: added new reality notes and pseudocode explaining the Node CLI/template boundary.
+- commercial-revenue/README.md: added new reality notes and pseudocode explaining revenue records as non-authoritative scaffolds.
+
+Style decision
+Only key entrypoint/README files were annotated to avoid spamming the codebase. No new subsystem or platform feature was added.

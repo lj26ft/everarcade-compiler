@@ -13,3 +13,10 @@ signing transactions, or calling live APIs.
 - `status/` - current payload status summaries and replay validation records.
 - `tracking/` - full authorization-state tracking transcripts.
 - `signing_model.sh` - deterministic model used by validation and certification scripts.
+
+## Pseudocode authority boundary
+
+- **Input:** signable payload descriptions, request metadata, status tracking records, and imported signed receipt evidence.
+- **Output:** deterministic payload IDs, request roots, status records, and receipt-continuity evidence.
+- **Authority:** Xaman/user wallet approval is external; this tree must not be treated as a signer or key store.
+- **EverArcade fit:** a deterministic wallet UX boundary model that future live integrations can validate against.

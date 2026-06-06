@@ -1,0 +1,38 @@
+Local Game Launch Report
+Date: 2026-06-05
+Template selected: creator-sdk/templates/arena
+Final classification: Simulated
+
+Requested flow and result
+
+| Step | Result | Evidence |
+| --- | --- | --- |
+| create | PASS | `node creator-sdk/cli/everarcade.mjs new --template arena --name audit-arena --dir /tmp/everarcade-local-game-launch-proof/audit-arena` printed `Project: PASS (audit-arena)`. |
+| build | PASS | `node creator-sdk/cli/everarcade.mjs build --project /tmp/everarcade-local-game-launch-proof/audit-arena` printed `Build: PASS (audit-arena)` and wrote local dist JSON. |
+| test | PASS | `node creator-sdk/cli/everarcade.mjs test --project /tmp/everarcade-local-game-launch-proof/audit-arena` printed `Test: PASS (audit-arena)`. |
+| deploy local | PASS, simulated | `node creator-sdk/cli/everarcade.mjs deploy --project ... --target local` printed `Deploy: PASS (audit-arena)` and wrote `dist/deployment.json`; no runtime deployment occurred. |
+| start runtime | BLOCKED / not proven | Attempted `CARGO_BUILD_JOBS=1 cargo run -q -p everarcade-runtime --bin runtime -- start ...`; cargo failed because the configured offline vendor source lacks `bincode`, required by workspace package `everarcade-abi`. |
+| launch game | PASS, script-only | `node /tmp/everarcade-local-game-launch-proof/audit-arena/src/game.js` printed `Arena running on EverArcade Creator SDK`. |
+| produce player/session record | SIMULATED | No product launcher created this end-to-end. An audit-only record was written under `/tmp/everarcade-local-game-launch-proof/runtime-root/worlds/audit-arena/sessions/session-0001.json` to document the gap. |
+| produce renderer/projection record | SIMULATED | No renderer pipeline executed. An audit-only record was written under `/tmp/everarcade-local-game-launch-proof/runtime-root/worlds/audit-arena/projections/projection-0001.json` to document the gap. |
+| stop runtime | BLOCKED / not proven | Runtime start did not compile; stop could not prove real runtime lifecycle. |
+
+Command outputs captured
+
+- create: `Project: PASS (audit-arena)`
+- build: `Build: PASS (audit-arena)`
+- test: `Test: PASS (audit-arena)`
+- deploy: `Deploy: PASS (audit-arena)`
+- launch game script: `Arena running on EverArcade Creator SDK`
+- runtime attempt failure: `error: no matching package named bincode found` from the vendored Cargo source.
+
+Honest playability finding
+
+The arena template is not actually playable as a hosted local EverArcade game. It is a creator-template script with metadata and a `start()` function. The creator SDK can simulate create/build/test/deploy/publish JSON artifacts, but those artifacts are not accepted by `runtime/everarcade-runtime`, whose package loader expects `manifest.json`, a wasm payload, hash, signature string, and world metadata. The runtime crate could not be run in this environment due to incomplete vendored dependencies.
+
+Final classification rationale
+
+- Not `Playable`: no interactive player loop, authoritative runtime execution, real session join, renderer, or gateway flow was proven.
+- Not fully `Broken`: the template CLI and game script do run.
+- Better than `Script-only` only in the sense that build/deploy JSON artifacts are produced.
+- Therefore the end-to-end local game launch is **Simulated**.

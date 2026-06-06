@@ -14,3 +14,10 @@ The Renderer Runtime is the non-authoritative player-facing projection layer for
 - `replay/` - checkpoint plus replay-stream equivalence projection checks.
 
 All renderer artifacts are deterministic, read-only projections. Runtime authority remains outside this tree.
+
+## Pseudocode authority boundary
+
+- **Input:** runtime projection records, replay/checkpoint references, and read-only world/entity/inventory/event descriptions.
+- **Output:** deterministic projection roots and render-facing descriptors.
+- **Authority:** none over gameplay, economy, settlement, identity, or replay truth; renderer output is evidence to compare, not state to trust.
+- **EverArcade fit:** lets a player-facing client visualize authoritative state produced elsewhere.
