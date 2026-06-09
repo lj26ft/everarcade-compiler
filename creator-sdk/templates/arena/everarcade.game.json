@@ -21,5 +21,6 @@
     "marketplace-sdk",
     "inventory-sdk",
     "economy-sdk"
-  ]
+  ],
+  "guest_contract": "contracts/arena-proof-contract"
 }

@@ -75,12 +75,13 @@ pub struct ArenaPlayer {
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
 pub struct ArenaState {
     pub session_id: String,
+    pub tick: u64,
     pub players: BTreeMap<String, ArenaPlayer>,
     pub positions: BTreeMap<String, ArenaPosition>,
     pub health: BTreeMap<String, i64>,
     pub scores: BTreeMap<String, i64>,
     pub events: Vec<String>,
-    pub tick: u64,
+    pub player_count: u64,
 }
 
 impl ArenaState {
@@ -93,12 +94,13 @@ impl ArenaState {
         scores.insert("dummy".into(), 0);
         Self {
             session_id: "session-0001".into(),
+            tick: 0,
             players: BTreeMap::new(),
             positions,
             health,
             scores,
             events: vec!["session_started".into()],
-            tick: 0,
+            player_count: 0,
         }
     }
 
@@ -122,6 +124,7 @@ impl ArenaState {
                     .or_insert(ArenaPosition { x: 0, y: 0 });
                 self.health.entry(input.player_id.clone()).or_insert(100);
                 self.scores.entry(input.player_id.clone()).or_insert(0);
+                self.player_count = self.players.len() as u64;
                 self.events.push(format!(
                     "tick {}: {} joined",
                     input.sequence, input.player_id
@@ -186,6 +189,59 @@ pub struct ArenaGameplayInput {
 }
 
 impl ArenaGameplayInput {
+    pub fn multiplayer_inputs() -> Vec<Self> {
+        vec![
+            Self {
+                player_id: "player-a".into(),
+                action: "join".into(),
+                direction: None,
+                target: None,
+                score_delta: None,
+                sequence: 1,
+            },
+            Self {
+                player_id: "player-b".into(),
+                action: "join".into(),
+                direction: None,
+                target: None,
+                score_delta: None,
+                sequence: 2,
+            },
+            Self {
+                player_id: "player-a".into(),
+                action: "move".into(),
+                direction: Some("north".into()),
+                target: None,
+                score_delta: None,
+                sequence: 3,
+            },
+            Self {
+                player_id: "player-b".into(),
+                action: "move".into(),
+                direction: Some("south".into()),
+                target: None,
+                score_delta: None,
+                sequence: 4,
+            },
+            Self {
+                player_id: "player-a".into(),
+                action: "attack".into(),
+                direction: None,
+                target: Some("player-b".into()),
+                score_delta: None,
+                sequence: 5,
+            },
+            Self {
+                player_id: "player-a".into(),
+                action: "score_update".into(),
+                direction: None,
+                target: None,
+                score_delta: Some(5),
+                sequence: 6,
+            },
+        ]
+    }
+
     pub fn canonical_inputs() -> Vec<Self> {
         vec![
             Self {
@@ -270,6 +326,34 @@ pub struct SessionTranscriptEntry {
     pub action: String,
     pub state_root: String,
     pub score: i64,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct MultiplayerLocalSessionProof {
+    pub proof_version: String,
+    pub status: String,
+    pub session_id: String,
+    pub world_id: String,
+    pub tick: u64,
+    pub player_count: u64,
+    pub players: Vec<String>,
+    pub actions: Vec<String>,
+    pub transcript_length: u64,
+    pub state_root: String,
+    pub final_session_root: String,
+    pub replay_root: String,
+    pub replay_verified: bool,
+    pub replay_verification: String,
+    pub player_a_joined: bool,
+    pub player_b_joined: bool,
+    pub player_a_moved: bool,
+    pub player_b_moved: bool,
+    pub health_changed: bool,
+    pub interaction_recorded: bool,
+    pub receipt_count: u64,
+    pub journal_length: u64,
+    pub guest_execution: String,
+    pub guest_hash: String,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -1055,6 +1139,260 @@ impl RuntimeLoop {
                 .reports_dir()
                 .join("playable-local-game-proof.json"),
             proof,
+        )?;
+        Ok(())
+    }
+
+    pub fn execute_multiplayer_local_session(&mut self) -> Result<MultiplayerLocalSessionProof> {
+        if self
+            .package
+            .world_metadata
+            .get("template")
+            .and_then(|v| v.as_str())
+            != Some("arena")
+        {
+            anyhow::bail!(
+                "multiplayer local session proof currently supports the arena template only"
+            );
+        }
+
+        let guest_id = self.package.manifest.package_id.clone();
+        let guest_execution = GuestWasmRunner::execute(&guest_id, &self.package.wasm)?;
+        if guest_execution.guest_hash != self.package.manifest.wasm_hash {
+            anyhow::bail!("guest wasm hash does not match package manifest");
+        }
+
+        let inputs = ArenaGameplayInput::multiplayer_inputs();
+        let previous_state = ArenaState::initial();
+        let mut arena_state = previous_state.clone();
+        let player_a_start = arena_state.positions.get("player-a").cloned();
+        let player_b_start = arena_state.positions.get("player-b").cloned();
+        let player_b_health_start = 100_i64;
+        let mut receipt_count = 0_u64;
+
+        for gameplay_input in &inputs {
+            let payload = gameplay_input.canonical_bytes()?;
+            let input_hash = gameplay_input.stable_hash()?;
+            let input = self.submit_input("arena-multiplayer-local-session-proof", payload)?;
+            if input.payload_hash != input_hash {
+                anyhow::bail!(
+                    "arena multiplayer input hash mismatch at sequence {}",
+                    gameplay_input.sequence
+                );
+            }
+            let queued = self
+                .input_queue
+                .pop()
+                .ok_or_else(|| anyhow::anyhow!("arena multiplayer input queue underflow"))?;
+            if queued.sequence != gameplay_input.sequence || queued.payload_hash != input_hash {
+                anyhow::bail!("arena multiplayer input sequence mismatch");
+            }
+
+            let previous_hash = self.journal.latest_hash()?;
+            arena_state.apply(gameplay_input);
+            let state_root = arena_state.root()?;
+            self.state = serde_json::to_vec(&arena_state)?;
+            let receipt_id = format!("receipt-{:020}", queued.sequence);
+            let tick = gameplay_input.sequence;
+            let timestamp_or_epoch = queued.sequence;
+            let receipt_hash = Self::deterministic_receipt_hash(
+                &receipt_id,
+                tick,
+                &input_hash,
+                &state_root,
+                &self.config.runtime_version,
+                &self.config.world_id,
+                timestamp_or_epoch,
+            );
+            let receipt = RuntimeReceipt {
+                receipt_id: receipt_id.clone(),
+                sequence: queued.sequence,
+                tick,
+                input_id: queued.input_id.clone(),
+                input_hash: input_hash.clone(),
+                state_root: state_root.clone(),
+                receipt_hash: receipt_hash.clone(),
+                runtime_version: self.config.runtime_version.clone(),
+                world_id: self.config.world_id.clone(),
+                timestamp_or_epoch,
+                session_id: Some(arena_state.session_id.clone()),
+                player_count: Some(arena_state.player_count),
+                action: Some(gameplay_input.action.clone()),
+                player_id: Some(gameplay_input.player_id.clone()),
+                guest_id: Some(guest_execution.guest_id.clone()),
+                guest_hash: Some(guest_execution.guest_hash.clone()),
+                guest_output_hash: Some(guest_execution.guest_output_hash.clone()),
+            };
+            self.persistence.write_versioned(
+                self.config
+                    .receipts_dir()
+                    .join(format!("{receipt_id}.json")),
+                &receipt,
+            )?;
+            self.journal.append_gameplay(
+                queued.sequence,
+                previous_hash,
+                state_root.clone(),
+                input_hash,
+                receipt_hash.clone(),
+                gameplay_input.player_id.clone(),
+                gameplay_input.action.clone(),
+                tick,
+                serde_json::to_value(gameplay_input)?,
+            )?;
+            self.metrics.ticks_executed += 1;
+            self.metrics.receipts_generated += 1;
+            self.metrics.input_queue_depth = self.input_queue.depth();
+            self.health.world_root = state_root;
+            self.health.journal_height = queued.sequence;
+            self.health.latest_receipt = Some(receipt_hash);
+            receipt_count += 1;
+        }
+
+        let entries = self.journal.entries()?;
+        let mut transcript = Vec::new();
+        for entry in &entries {
+            let Some(value) = &entry.gameplay_input else {
+                continue;
+            };
+            let input: ArenaGameplayInput = serde_json::from_value(value.clone())?;
+            let replay_entries = entries
+                .iter()
+                .filter(|candidate| candidate.sequence <= entry.sequence)
+                .cloned()
+                .collect::<Vec<_>>();
+            let replay_state = Self::replay_arena_state_from_entries(&replay_entries)?;
+            transcript.push(SessionTranscriptEntry {
+                tick: input.sequence,
+                session_id: replay_state.session_id.clone(),
+                player_id: input.player_id.clone(),
+                action: input.action.clone(),
+                state_root: replay_state.root()?,
+                score: replay_state
+                    .scores
+                    .get(&input.player_id)
+                    .copied()
+                    .unwrap_or(0),
+            });
+        }
+
+        let state_root = arena_state.root()?;
+        let replay_state = Self::replay_arena_state_from_entries(&entries)?;
+        let replay_root = replay_state.root()?;
+        let replay_verified = replay_root == state_root;
+        let checkpoint = self.checkpoints.create(
+            arena_state.tick,
+            &self.config.world_id,
+            &self.config.runtime_version,
+            entries.len() as u64,
+            state_root.clone(),
+            self.state.clone(),
+            self.package.world_metadata.clone(),
+        )?;
+        self.checkpoints.verify_checkpoint(&checkpoint)?;
+        self.metrics.checkpoint_count += 1;
+        self.health.checkpoint_height = checkpoint.manifest.sequence;
+        self.health.world_root = state_root.clone();
+        self.persistence
+            .write_versioned(self.config.runtime_status_path(), &self.health)?;
+
+        let player_a_end = arena_state.positions.get("player-a").cloned();
+        let player_b_end = arena_state.positions.get("player-b").cloned();
+        let player_b_health_end = arena_state.health.get("player-b").copied().unwrap_or(100);
+        let players = arena_state.players.keys().cloned().collect::<Vec<_>>();
+        let proof = MultiplayerLocalSessionProof {
+            proof_version: "multiplayer-local-session-proof-v0.1".into(),
+            status: if replay_verified {
+                "Multiplayer Local Session: PASS".into()
+            } else {
+                "Multiplayer Local Session: FAIL".into()
+            },
+            session_id: arena_state.session_id.clone(),
+            world_id: self.config.world_id.clone(),
+            tick: arena_state.tick,
+            player_count: arena_state.player_count,
+            players,
+            actions: transcript.iter().map(|entry| entry.action.clone()).collect(),
+            transcript_length: transcript.len() as u64,
+            state_root: state_root.clone(),
+            final_session_root: state_root.clone(),
+            replay_root: replay_root.clone(),
+            replay_verified,
+            replay_verification: if replay_verified { "PASS" } else { "FAIL" }.into(),
+            player_a_joined: arena_state.players.contains_key("player-a"),
+            player_b_joined: arena_state.players.contains_key("player-b"),
+            player_a_moved: player_a_end != player_a_start,
+            player_b_moved: player_b_end != player_b_start,
+            health_changed: player_b_health_end != player_b_health_start,
+            interaction_recorded: arena_state
+                .events
+                .iter()
+                .any(|event| event.contains("player-a attacked player-b")),
+            receipt_count,
+            journal_length: entries.len() as u64,
+            guest_execution: "Arena Guest WASM executed before deterministic multiplayer action application; receipts bind each multiplayer action to guest_hash and guest_output_hash".into(),
+            guest_hash: guest_execution.guest_hash.clone(),
+        };
+        self.write_multiplayer_local_session_artifacts(&arena_state, &transcript, &proof)?;
+        Ok(proof)
+    }
+
+    fn write_multiplayer_local_session_artifacts(
+        &self,
+        state: &ArenaState,
+        transcript: &[SessionTranscriptEntry],
+        proof: &MultiplayerLocalSessionProof,
+    ) -> Result<()> {
+        let sessions_dir = self.config.root.join("sessions");
+        let gameplay_dir = self.config.root.join("gameplay");
+        let replay_dir = self.config.root.join("replay");
+        let receipts_dir = self.config.root.join("receipts");
+        let journals_dir = self.config.root.join("journals");
+        self.persistence.ensure_layout(&[
+            sessions_dir.clone(),
+            gameplay_dir.clone(),
+            replay_dir.clone(),
+            receipts_dir.clone(),
+            journals_dir.clone(),
+        ])?;
+        let session = serde_json::json!({
+            "session_id": proof.session_id,
+            "world_id": proof.world_id,
+            "tick": proof.tick,
+            "player_count": proof.player_count,
+            "players": proof.players,
+            "state_root": proof.state_root,
+            "status": "Multiplayer Local Session Proven"
+        });
+        self.persistence
+            .atomic_write_json(sessions_dir.join("session-0001.json"), &session)?;
+        self.persistence.atomic_write_json(
+            self.config.sessions_dir().join("session-0001.json"),
+            &session,
+        )?;
+        self.persistence
+            .atomic_write_json(gameplay_dir.join("arena-state.json"), state)?;
+        self.persistence.atomic_write_json(
+            gameplay_dir.join("multiplayer-session-transcript.json"),
+            &transcript.to_vec(),
+        )?;
+        self.persistence
+            .atomic_write_json(replay_dir.join("multiplayer-replay-proof.json"), proof)?;
+        self.persistence.atomic_write_json(
+            self.config
+                .reports_dir()
+                .join("multiplayer-local-session-proof.json"),
+            proof,
+        )?;
+        for entry in std::fs::read_dir(self.config.receipts_dir())? {
+            let entry = entry?;
+            if entry.file_type()?.is_file() {
+                std::fs::copy(entry.path(), receipts_dir.join(entry.file_name()))?;
+            }
+        }
+        std::fs::copy(
+            self.config.journals_dir().join("journal.jsonl"),
+            journals_dir.join("journal.jsonl"),
         )?;
         Ok(())
     }

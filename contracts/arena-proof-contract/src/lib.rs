@@ -23,7 +23,7 @@ pub extern "C" fn dealloc(ptr: u32, size: u32) {
 
 #[no_mangle]
 pub extern "C" fn everarcade_guest_execute(_input_ptr: u32, _input_len: u32) -> u64 {
-    let output = br#"{"action":"PlayerJoin+PlayerMove+ScoreUpdate","player_id":"player-1","position":{"x":0,"y":1},"score":1}"#;
+    let output = br#"{"action":"PlayerJoin+PlayerJoin+PlayerMove+PlayerMove+PlayerAttack+ScoreUpdate","player_id":"player-a","position":{"x":0,"y":1},"score":15}"#;
     let out_ptr = alloc(output.len() as u32);
     if out_ptr == 0 {
         return 0;
