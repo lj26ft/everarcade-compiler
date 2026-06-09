@@ -1,50 +1,54 @@
 EverArcade v0.1 Go / No-Go Report
 Date: 2026-06-09
 Decision: NO-GO FOR PUBLIC PRODUCTION LAUNCH
-Open-source readiness: NOT READY
+Developer experience classification: Developer Onboarding Proven
+Open-source readiness: CONDITIONAL READY / Open Source Candidate
 
 1. Production readiness summary
-- execution-core and everarcade-runtime are functional prototypes.
-- creator-sdk and templates are functional prototypes for local JSON/script flows.
-- renderer, federation, HotPocket, XRPL, Xaman, GPU marketplace/runtime records, player gateway, game discovery, commercial revenue, node appliance, and many reports are certification scaffolds or documentation/model surfaces.
-- No major platform area should be advertised as production-ready based on this audit.
+- EverArcade remains pre-production.
+- The current milestone improves human comprehension, onboarding, governance, and repository clarity.
+- No public testnet, commercial readiness, multiplayer federation gameplay, XRPL/Xaman settlement, GPU marketplace, or production hosting readiness is claimed.
 
-2. Local game launch result
-- Final classification: Playable Local Game Proven.
-- Arena template create/build/test/package/play-local passes through the Creator SDK and `everarcade-runtime`.
-- Runtime start is proven from a Creator SDK-generated Arena package and writes boot/session/projection evidence; playable local proof now keeps a session alive for join/move/attack/score/heartbeat ticks, mutates Arena state, emits gameplay receipt/journal/transcript/replay evidence, and verifies replay.
-- This is locally playable only: no multiplayer networking, renderer UI, settlement, public testnet operation, or production hosting is proven.
+2. Developer onboarding result
+- Final onboarding classification: Developer Onboarding Proven.
+- The supported contributor path is documented in README.md and docs/onboarding/30-minute-developer-journey.md.
+- scripts/validate_developer_onboarding.sh creates an Arena project, builds it, packages it, runs a playable local session, and verifies replay evidence.
+- This proves a new developer can reach Playable Local Game Proven through documented local commands.
 
-3. Scaffold vs real implementation summary
-- Real/prototype: Rust crates, everarcade-runtime package loader/runtime loop, creator-sdk CLI, some frontend/sample code, provider-evernode prototype.
-- Scaffold/model: records trees, root marker files, dry-run certification reports, marketplace/revenue/GPU/XRPL/Xaman/federation/player-gateway/game-discovery directories.
-- Documentation-only: many architecture/runbook/readiness docs unless tied to current runnable commands.
+3. Local game launch result
+- Runtime classification remains Playable Local Game Proven.
+- Arena template create/build/test/package/play-local passes through the Creator SDK and everarcade-runtime.
+- Runtime evidence includes session state, gameplay state, receipts, journal entries, a transcript, and replay proof with replay verification PASS.
+- This is locally playable only.
 
-4. Security/adversarial findings
-- Biggest risks: forged deterministic records, fake settlement/wallet evidence, checkpoint poisoning, replay divergence, GPU provider fraud, marketplace spam/fraud, malicious templates, operator misbehavior, DoS, and supply-chain confusion.
-- Abuse controls are not production-ready.
+4. Repository clarity and governance
+- Root README.md is now the primary entry point.
+- docs/repository/repository-map.md defines conceptual ownership and maturity for top-level directories.
+- docs/runtime-platform/proof-chain.md is the authoritative runtime proof-chain document.
+- docs/repository/artifact-policy.md defines committed versus generated artifact boundaries.
+- LICENSE, CONTRIBUTING.md, SECURITY.md, and CODE_OF_CONDUCT.md now exist at the repository root.
 
 5. Open-source readiness result
-- NOT READY.
-- Missing root license, security policy, contributing guide, and code of conduct.
-- Vendor/dependency policy is broken or incomplete in this clone.
-- Public claims need stronger scaffold labels.
+- CONDITIONAL READY.
+- Governance and onboarding blockers from the previous audit have been addressed.
+- Remaining condition: offline vendored Cargo builds are not fully proven in this clone because the vendor snapshot is incomplete; the known bincode/vendor issue is documented in docs/build/offline-build-policy.md.
+- node_modules/ exists in the working tree and must not be committed.
 
-6. Top 10 blockers
-1. Add root LICENSE and decide public reuse terms.
-2. Add SECURITY.md with vulnerability disclosure and no-secrets policy.
-3. Add CONTRIBUTING.md and supported development/test commands.
-4. Add CODE_OF_CONDUCT.md.
-5. Fix offline vendored Cargo dependencies or document a working network build mode.
-6. Extend the local playable session proof toward renderer-driven and networked multiplayer gameplay without claiming production readiness.
-7. Label scaffold/model/PASS reports clearly and remove misleading production wording.
-8. Consolidate or support-bound the 496 scripts.
-9. Add schema/signature/finality controls for checkpoint, replay, settlement, Xaman, marketplace, and GPU-provider evidence.
-10. Clarify ownership of runtime/node/appliance/gateway/portal/frontend directories.
+6. Scaffold vs real implementation summary
+- Real/prototype: runtime/everarcade-runtime local runtime proof, Creator SDK CLI, template packaging, deterministic replay evidence, and targeted validation scripts.
+- Scaffold/model: renderer/history/federation, marketplace, GPU, XRPL, Xaman, commercial revenue, public testnet, many gateway/node/operator flows, and many PASS reports not tied to the canonical proof chain.
+- Documentation-only: architecture, roadmap, operations, and readiness docs unless tied to current runnable commands.
 
-7. Recommended next 5 tasks
-1. Extend the proven local playable Arena session toward renderer-driven input and networked multiplayer while preserving deterministic replay.
-2. Fix vendored dependencies and add targeted CI for `everarcade-runtime`, creator-sdk CLI, and the reality-audit validator.
-3. Publish a maintained repo map and stub-vs-usable matrix at the top of the README.
-4. Add open-source governance files and remove/ignore generated dependency artifacts as appropriate.
-5. Review and relabel all certification reports with execution class and date.
+7. Remaining top blockers before stronger readiness claims
+1. Restore and verify a complete vendor artifact, including the missing bincode dependency.
+2. Consolidate duplicate validation/certification scripts and retire unsupported proof flows.
+3. Relabel or archive historical reports that could be mistaken for production evidence.
+4. Expand renderer-driven local gameplay only after preserving deterministic replay guarantees.
+5. Add stronger adversarial controls for checkpoint, replay, package, settlement, marketplace, GPU-provider, and wallet evidence before any production claim.
+
+8. Recommended next tasks
+1. Make vendor restoration reproducible from a clean clone and validate targeted offline builds.
+2. Convert the script consolidation audit into a staged cleanup plan.
+3. Convert the documentation consolidation audit into canonical/deprecated doc front matter.
+4. Add CI entries for git diff --check, developer onboarding validation, open-source readiness validation, and developer-experience certification.
+5. Continue keeping scaffold domains out of the public readiness claim.

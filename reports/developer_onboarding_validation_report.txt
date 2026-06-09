@@ -1,0 +1,8 @@
+Repository Bootstrap: PASS
+Developer Build: PASS
+Creator SDK: PASS
+Runtime Package: PASS
+Playable Local Game: PASS
+Replay Verification: PASS
+
+Developer Onboarding Validation: PASS

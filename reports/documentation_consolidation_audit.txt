@@ -1,0 +1,39 @@
+EverArcade Documentation Consolidation Audit
+Date: 2026-06-09
+
+Inventory
+- docs/ files counted: 385
+
+Findings
+1. Duplicate entry points
+   - README.md, docs/README.md, docs/START_HERE.md, docs/CLI_QUICKSTART.md, docs/repository-navigation.md, and older repository assessment docs all try to orient new users.
+   - Canonical source: README.md for project entry, docs/onboarding/30-minute-developer-journey.md for first successful local proof, docs/repository/repository-map.md for ownership/maturity.
+
+2. Multiple runtime maturity narratives
+   - Runtime audit, capabilities, release, deterministic execution, replay, and public launch docs overlap.
+   - Canonical source: docs/runtime-platform/proof-chain.md for proof progression and maturity interpretation.
+
+3. Generated artifact ambiguity
+   - Several reports and docs reference generated packages, reports, vendor artifacts, runtime roots, and evidence without one policy.
+   - Canonical source: docs/repository/artifact-policy.md.
+
+4. Vendor/offline ambiguity
+   - Existing docs mention vendored builds but do not consistently explain the current incomplete vendor snapshot.
+   - Canonical source: docs/build/offline-build-policy.md.
+
+5. Missing governance documents
+   - Previous audit found missing root LICENSE, CONTRIBUTING.md, SECURITY.md, and CODE_OF_CONDUCT.md.
+   - Status: added for this milestone.
+
+6. Conflicting maturity language
+   - Some historical reports and domain docs imply production or launch readiness more strongly than the current evidence supports.
+   - Recommendation: deprecate production-oriented claims unless backed by current validation and keep the root README classification as the public-facing source.
+
+Recommended migrations
+- README.md becomes the primary entry point.
+- docs/repository/repository-map.md replaces ad hoc repository ownership descriptions.
+- docs/runtime-platform/proof-chain.md replaces overlapping proof-chain explanations.
+- docs/repository/artifact-policy.md replaces one-off artifact retention explanations.
+- docs/build/offline-build-policy.md replaces scattered vendor workaround notes.
+
+No documentation was deleted in this milestone.
