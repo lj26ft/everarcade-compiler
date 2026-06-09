@@ -1,7 +1,7 @@
 Local Game Launch Report
 Date: 2026-06-09
 Template selected: creator-sdk/templates/arena
-Final classification: Multiplayer Local Session Proven
+Final classification: Network Transport & Session Synchronization Proven
 
 Requested flow and result
 
@@ -14,14 +14,14 @@ Requested flow and result
 | start runtime | PASS | `node creator-sdk/cli/everarcade.mjs launch-local --project /tmp/everarcade-local-launch-proof/audit-arena --runtime-root /tmp/everarcade-local-launch-proof/runtime-root` starts `everarcade-runtime` against the generated package. |
 | produce session record | PASS | Runtime writes `runtime-root/worlds/audit-arena-world/sessions/session-0001.json`. |
 | produce projection record | PASS | Runtime writes `runtime-root/worlds/audit-arena-world/projections/projection-0001.json` with `non_authoritative_projection: true`. |
-| multiplayer local session proof | PASS | `node creator-sdk/cli/everarcade.mjs play-local-multiplayer --template arena --project /tmp/everarcade-local-launch-proof/audit-arena --runtime-root /tmp/everarcade-local-launch-proof/runtime-root` keeps an Arena session alive across two joins, independent moves, attack, score update, and replay ticks, mutates state, emits receipts, journal, transcript, and replay proof evidence, and verifies replay. |
+| network transport session proof | PASS | `node creator-sdk/cli/everarcade.mjs play-network-local --template arena --project /tmp/everarcade-local-launch-proof/audit-arena --runtime-root /tmp/everarcade-local-launch-proof/runtime-root` starts local Client A and Client B identities, routes join/move/attack intents through deterministic transport messages, keeps the runtime authoritative, synchronizes client/runtime state roots, propagates receipts, observes the journal, and verifies replay. |
 
 Honest playability finding
 
-The Arena template now proves a local same-session multiplayer EverArcade game session. The Creator SDK can package the Arena template, launch a persistent local session, join Player A and Player B, process independent movement and deterministic attack actions, update score over multiple ticks, emit receipts and journal evidence for both players, write a multiplayer session transcript, and verify replay to the final session root. The runtime still does not prove networked multiplayer, renderer-driven gameplay, public testnet operation, or production hosting.
+The Arena template now proves a local network-style transport and synchronization session. The Creator SDK can package the Arena template, start local Client A and Client B identities, route joins, movement, and deterministic attack actions through a canonical transport layer, keep the runtime authoritative for state mutation, receipts, checkpoints, journals, and replay roots, synchronize both client observations to the runtime state root, and verify replay to the final session root. The runtime still does not prove federation, Evernode deployment, WAN networking, multi-lease coordination, renderer-driven gameplay, public testnet operation, or production hosting.
 
 Final classification rationale
 
-- `Multiplayer Local Session Proven`: a local Arena session persists across two player joins, independent moves, deterministic attack, score update, and replay verification ticks while state evolves and receipts, journal, transcript, and replay proof are produced.
-- Not `Network Multiplayer Proven`: no network transport, federation, renderer-driven gameplay, settlement, public testnet, or production hosting flow was proven.
-- Therefore the end-to-end local game launch classification is **Multiplayer Local Session Proven**.
+- `Network Transport & Session Synchronization Proven`: a local Arena session synchronizes Client A and Client B through deterministic transport messages, authoritative runtime mutation, receipt delivery, journal observation, multi-tick progression, and replay verification.
+- Not `Federation Proven`, not `Evernode Proven`, and not `Production Multiplayer Proven`: no federation, Evernode lease deployment, WAN transport, multi-lease coordination, settlement, public testnet, or production hosting flow was proven.
+- Therefore the end-to-end local game launch classification is **Network Transport & Session Synchronization Proven**.
