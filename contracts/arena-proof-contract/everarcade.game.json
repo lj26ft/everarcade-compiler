@@ -1,0 +1,10 @@
+{
+  "id": "arena-proof-contract",
+  "name": "Arena Proof Contract",
+  "version": "0.1.0",
+  "template": "arena",
+  "entry": "src/lib.rs",
+  "runtime": "everarcade-runtime-v0.1",
+  "world_id": "arena-proof-world",
+  "guest_contract": "contracts/arena-proof-contract"
+}

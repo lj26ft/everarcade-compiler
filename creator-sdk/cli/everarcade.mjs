@@ -102,6 +102,52 @@ function orderedJson(data, keys) {
   return `${JSON.stringify(ordered, null, 2)}\n`;
 }
 
+function guestContractDir(projectDir, manifest) {
+  const configured = manifest.guest_contract ?? manifest.contract;
+  if (configured) return path.resolve(projectDir, configured) === path.resolve(configured)
+    ? path.resolve(configured)
+    : path.resolve(repoRoot, configured);
+  if (fs.existsSync(path.join(projectDir, 'Cargo.toml'))) return projectDir;
+  return path.join(repoRoot, 'contracts', 'arena-proof-contract');
+}
+
+function ensureWasmTarget() {
+  const installed = spawnSync('rustup', ['target', 'list', '--installed'], { encoding: 'utf8' });
+  if (installed.status === 0 && installed.stdout.includes('wasm32-unknown-unknown')) return;
+  const added = spawnSync('rustup', ['target', 'add', 'wasm32-unknown-unknown'], { encoding: 'utf8' });
+  if (added.status !== 0) {
+    throw new Error(`Unable to install wasm32-unknown-unknown target: ${(added.stderr || added.stdout || '').trim()}`);
+  }
+}
+
+function buildGuestWasm(projectDir, manifest) {
+  const contractDir = guestContractDir(projectDir, manifest);
+  const cargoToml = path.join(contractDir, 'Cargo.toml');
+  if (!fs.existsSync(cargoToml)) throw new Error(`Missing guest Cargo.toml at ${cargoToml}`);
+  const cargo = fs.readFileSync(cargoToml, 'utf8');
+  const name = (cargo.match(/name\s*=\s*"([^"]+)"/) || [null, path.basename(contractDir)])[1];
+  const buildRoot = path.join('/tmp', 'everarcade-guest-build', name);
+  fs.rmSync(buildRoot, { recursive: true, force: true });
+  fs.mkdirSync(buildRoot, { recursive: true });
+  fs.copyFileSync(cargoToml, path.join(buildRoot, 'Cargo.toml'));
+  fs.cpSync(path.join(contractDir, 'src'), path.join(buildRoot, 'src'), { recursive: true });
+  ensureWasmTarget();
+  const result = spawnSync('cargo', [
+    'build', '--manifest-path', path.join(buildRoot, 'Cargo.toml'), '--target', 'wasm32-unknown-unknown', '--release'
+  ], {
+    cwd: buildRoot,
+    env: { ...process.env, CARGO_BUILD_JOBS: process.env.CARGO_BUILD_JOBS ?? '1' },
+    encoding: 'utf8'
+  });
+  if (result.status !== 0) {
+    throw new Error(`Guest build failed: ${(result.stderr || result.stdout || '').trim()}`);
+  }
+  const wasmName = `${name.replaceAll('-', '_')}.wasm`;
+  const wasmPath = path.join(buildRoot, 'target', 'wasm32-unknown-unknown', 'release', wasmName);
+  if (!fs.existsSync(wasmPath)) throw new Error(`Guest build did not produce ${wasmPath}`);
+  return { contractDir, wasmPath, crateName: name };
+}
+
 function packageGame(projectDir) {
   const manifest = readManifest(projectDir);
   const dist = path.join(projectDir, 'dist');
@@ -113,39 +159,56 @@ function packageGame(projectDir) {
   fs.rmSync(outDir, { recursive: true, force: true });
   fs.mkdirSync(outDir, { recursive: true });
 
-  const worldMetadata = {
-    world_id: worldId,
-    game_id: gameId,
-    game_name: manifest.name,
-    template: manifest.template,
-    classification: 'deterministic-placeholder-wasm',
-    package_classification: manifest.template === 'arena' ? 'official-template-runtime-package' : 'placeholder-runtime-package',
-    created_by: 'everarcade-creator-sdk',
-    runtime_package_version: '0.1',
-    runtime_compatibility: runtimeVersion
-  };
-
-  const placeholderWasm = {
-    classification: manifest.template === 'arena' ? 'arena-template-gameplay-model' : 'deterministic-placeholder-wasm',
-    entry: manifest.entry ?? 'src/game.js',
-    format: 'everarcade-runtime-placeholder-world-wasm',
-    game_id: gameId,
-    game_name: manifest.name,
-    runtime_compatibility: runtimeVersion,
-    template: manifest.template,
-    world_id: worldId
-  };
-  const deterministicPayload = Buffer.from(orderedJson(placeholderWasm, [
-    'classification',
-    'entry',
-    'format',
-    'game_id',
-    'game_name',
-    'runtime_compatibility',
-    'template',
-    'world_id'
-  ]));
-  const wasmHash = crypto.createHash('sha256').update(deterministicPayload).digest('hex');
+  let wasmBytes;
+  let worldMetadata;
+  const wantsGuest = manifest.guest_contract || fs.existsSync(path.join(projectDir, 'Cargo.toml')) || gameId === 'arena-proof-contract';
+  if (wantsGuest) {
+    const guest = buildGuestWasm(projectDir, manifest);
+    wasmBytes = fs.readFileSync(guest.wasmPath);
+    if (!(wasmBytes[0] === 0x00 && wasmBytes[1] === 0x61 && wasmBytes[2] === 0x73 && wasmBytes[3] === 0x6d)) {
+      throw new Error('Built guest artifact is not a WebAssembly module');
+    }
+    worldMetadata = {
+      world_id: worldId,
+      game_id: gameId,
+      game_name: manifest.name,
+      template: manifest.template,
+      classification: 'wasm-guest-execution-proven-candidate',
+      package_classification: 'wasm-guest-runtime-package',
+      guest_contract: path.relative(repoRoot, guest.contractDir),
+      guest_crate: guest.crateName,
+      guest_entrypoint: 'everarcade_guest_execute',
+      created_by: 'everarcade-creator-sdk',
+      runtime_package_version: '0.1',
+      runtime_compatibility: runtimeVersion
+    };
+  } else {
+    worldMetadata = {
+      world_id: worldId,
+      game_id: gameId,
+      game_name: manifest.name,
+      template: manifest.template,
+      classification: 'deterministic-placeholder-wasm',
+      package_classification: manifest.template === 'arena' ? 'official-template-runtime-package' : 'placeholder-runtime-package',
+      created_by: 'everarcade-creator-sdk',
+      runtime_package_version: '0.1',
+      runtime_compatibility: runtimeVersion
+    };
+    const placeholderWasm = {
+      classification: manifest.template === 'arena' ? 'arena-template-gameplay-model' : 'deterministic-placeholder-wasm',
+      entry: manifest.entry ?? 'src/game.js',
+      format: 'everarcade-runtime-placeholder-world-wasm',
+      game_id: gameId,
+      game_name: manifest.name,
+      runtime_compatibility: runtimeVersion,
+      template: manifest.template,
+      world_id: worldId
+    };
+    wasmBytes = Buffer.from(orderedJson(placeholderWasm, [
+      'classification', 'entry', 'format', 'game_id', 'game_name', 'runtime_compatibility', 'template', 'world_id'
+    ]));
+  }
+  const wasmHash = crypto.createHash('sha256').update(wasmBytes).digest('hex');
   const runtimeManifest = {
     package_id: gameId,
     package_version: gameVersion,
@@ -157,12 +220,13 @@ function packageGame(projectDir) {
   };
   validateRuntimeManifest(runtimeManifest, runtimeVersion);
 
-  fs.writeFileSync(path.join(outDir, 'world.wasm'), deterministicPayload);
+  fs.writeFileSync(path.join(outDir, 'world.wasm'), wasmBytes);
   writeJson(path.join(outDir, 'manifest.json'), runtimeManifest);
   writeJson(path.join(outDir, 'world.json'), worldMetadata);
   console.log(`Runtime Package: PASS (${gameId})`);
   return { manifest: runtimeManifest, worldMetadata, packageDir: outDir };
 }
+
 
 function prepareRuntimeCargoWorkspace() {
   const workspaceRoot = path.join('/tmp', 'everarcade-runtime-launch-workspace');
@@ -303,6 +367,43 @@ function executeTemplate(projectDir) {
   console.log('Template Gameplay Execution: PASS');
 }
 
+function executeGuest(projectDir) {
+  const packaged = packageGame(projectDir);
+  const runtimeRoot = path.resolve(value('--runtime-root', path.join(projectDir, 'dist', 'runtime-root')));
+  const startedAt = new Date().toISOString();
+  const launch = runRuntimeCommand('start', projectDir, runtimeRoot, packaged);
+  if (launch.result.status !== 0) {
+    throw new Error(`Runtime start failed with exit code ${launch.result.status}: ${(launch.result.stderr || launch.result.stdout || '').trim()}`);
+  }
+  const proof = runRuntimeCommand('execute-guest-proof', projectDir, runtimeRoot, packaged);
+  const proofReport = {
+    command: `cargo ${proof.cargoArgs.join(' ')}`,
+    launch_command: `cargo ${launch.cargoArgs.join(' ')}`,
+    project_dir: projectDir,
+    runtime_root: runtimeRoot,
+    runtime_package_dir: packaged.packageDir,
+    runtime_source_dir: path.join(repoRoot, 'runtime', 'everarcade-runtime'),
+    cargo_workspace: proof.cargoWorkspace,
+    world_id: packaged.manifest.world_id,
+    package_id: packaged.manifest.package_id,
+    status: proof.result.status === 0 ? 'PASS' : 'FAIL',
+    started_at: startedAt,
+    completed_at: new Date().toISOString(),
+    stdout: proof.result.stdout ?? '',
+    stderr: proof.result.stderr ?? '',
+    exit_code: proof.result.status
+  };
+  writeJson(path.join(projectDir, 'dist', 'wasm-guest-execution-report.json'), proofReport);
+  if (proof.result.status !== 0) {
+    throw new Error(`Runtime execute-guest-proof failed with exit code ${proof.result.status}: ${(proof.result.stderr || proof.result.stdout || '').trim()}`);
+  }
+  const parsedProof = JSON.parse(proof.result.stdout);
+  if (parsedProof.replay_verification !== 'PASS' || parsedProof.status !== 'WASM Guest Execution: PASS') {
+    throw new Error(`WASM guest execution failed replay verification: ${proof.result.stdout}`);
+  }
+  console.log('WASM Guest Execution: PASS');
+}
+
 function build(projectDir) {
   const manifest = readManifest(projectDir);
   const dist = path.join(projectDir, 'dist');
@@ -383,10 +484,11 @@ try {
   else if (command === 'launch-local') launchLocal(projectDir);
   else if (command === 'execute-local') executeLocal(projectDir);
   else if (command === 'execute-template') executeTemplate(projectDir);
+  else if (command === 'execute-guest') executeGuest(projectDir);
   else if (command === 'deploy') deploy(projectDir);
   else if (command === 'publish') publish(projectDir);
   else {
-    console.log('everarcade <new|build|test|package|launch-local|execute-local|execute-template|deploy|publish> [--project DIR]');
+    console.log('everarcade <new|build|test|package|launch-local|execute-local|execute-template|execute-guest|deploy|publish> [--project DIR]');
     process.exit(command ? 1 : 0);
   }
 } catch (error) {

@@ -1,0 +1,11 @@
+Guest Build: PASS
+Guest Package: PASS
+Guest Load: PASS
+Guest Execute: PASS
+Guest State Mutation: PASS
+Guest Receipt Generation: PASS
+Guest Journal Generation: PASS
+Guest Replay Generation: PASS
+Guest Replay Verification: PASS
+
+WASM Guest Execution Proof v0.1: PASS

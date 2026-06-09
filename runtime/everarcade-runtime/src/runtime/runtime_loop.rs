@@ -21,6 +21,12 @@ pub struct RuntimeReceipt {
     pub action: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub player_id: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub guest_id: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub guest_hash: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub guest_output_hash: Option<String>,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -243,6 +249,48 @@ pub struct DeterministicExecutionProof {
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct GuestRuntimeState {
+    pub guest_id: String,
+    pub guest_hash: String,
+    pub action: String,
+    pub player_id: String,
+    pub position: GuestPosition,
+    pub score: i64,
+    pub guest_output_hash: String,
+}
+
+impl GuestRuntimeState {
+    pub fn root(&self) -> Result<String> {
+        Ok(hex::encode(Sha256::digest(serde_json::to_vec(self)?)))
+    }
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct GuestExecutionProof {
+    pub proof_version: String,
+    pub status: String,
+    pub world_id: String,
+    pub guest_id: String,
+    pub guest_hash: String,
+    pub guest_output_hash: String,
+    pub action: String,
+    pub player_id: String,
+    pub position: GuestPosition,
+    pub score: i64,
+    pub previous_state_root: String,
+    pub state_root: String,
+    pub execution_root: String,
+    pub state_root_changed: bool,
+    pub state_mutation_origin: String,
+    pub receipt_id: String,
+    pub receipt_hash: String,
+    pub journal_length: u64,
+    pub replay_root: String,
+    pub replay_verified: bool,
+    pub replay_verification: String,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct RuntimeBootEvidence {
     pub world_id: String,
     pub package_id: String,
@@ -459,6 +507,9 @@ impl RuntimeLoop {
             timestamp_or_epoch,
             action: None,
             player_id: None,
+            guest_id: None,
+            guest_hash: None,
+            guest_output_hash: None,
         };
         self.persistence.write_versioned(
             self.config
@@ -696,6 +747,9 @@ impl RuntimeLoop {
                 timestamp_or_epoch,
                 action: Some(gameplay_input.action.clone()),
                 player_id: Some(gameplay_input.player_id.clone()),
+                guest_id: None,
+                guest_hash: None,
+                guest_output_hash: None,
             };
             self.persistence.write_versioned(
                 self.config
@@ -810,6 +864,175 @@ impl RuntimeLoop {
             self.config
                 .reports_dir()
                 .join("template-gameplay-execution-proof.json"),
+            proof,
+        )?;
+        for entry in std::fs::read_dir(self.config.receipts_dir())? {
+            let entry = entry?;
+            if entry.file_type()?.is_file() {
+                std::fs::copy(entry.path(), receipts_dir.join(entry.file_name()))?;
+            }
+        }
+        std::fs::copy(
+            self.config.journals_dir().join("journal.jsonl"),
+            journals_dir.join("journal.jsonl"),
+        )?;
+        Ok(())
+    }
+
+    pub fn execute_guest_proof(&mut self) -> Result<GuestExecutionProof> {
+        let guest_id = self.package.manifest.package_id.clone();
+        let previous_state_root = hex::encode(Sha256::digest(&self.state));
+        let execution = GuestWasmRunner::execute(&guest_id, &self.package.wasm)?;
+        if execution.guest_hash != self.package.manifest.wasm_hash {
+            anyhow::bail!("guest wasm hash does not match package manifest");
+        }
+        let previous_hash = self.journal.latest_hash()?;
+        let sequence = 1_u64;
+        let receipt_id = format!("receipt-{:020}", sequence);
+        let guest_state = GuestRuntimeState {
+            guest_id: execution.guest_id.clone(),
+            guest_hash: execution.guest_hash.clone(),
+            action: execution.output.action.clone(),
+            player_id: execution.output.player_id.clone(),
+            position: execution.output.position.clone(),
+            score: execution.output.score,
+            guest_output_hash: execution.guest_output_hash.clone(),
+        };
+        let state_root = guest_state.root()?;
+        self.state = serde_json::to_vec(&guest_state)?;
+        let receipt_hash = Self::deterministic_receipt_hash(
+            &receipt_id,
+            sequence,
+            &execution.guest_output_hash,
+            &state_root,
+            &self.config.runtime_version,
+            &self.config.world_id,
+            sequence,
+        );
+        let receipt = RuntimeReceipt {
+            receipt_id: receipt_id.clone(),
+            sequence,
+            tick: sequence,
+            input_id: "guest-invocation-0001".into(),
+            input_hash: execution.input_hash.clone(),
+            state_root: state_root.clone(),
+            receipt_hash: receipt_hash.clone(),
+            runtime_version: self.config.runtime_version.clone(),
+            world_id: self.config.world_id.clone(),
+            timestamp_or_epoch: sequence,
+            action: Some(execution.output.action.clone()),
+            player_id: Some(execution.output.player_id.clone()),
+            guest_id: Some(execution.guest_id.clone()),
+            guest_hash: Some(execution.guest_hash.clone()),
+            guest_output_hash: Some(execution.guest_output_hash.clone()),
+        };
+        self.persistence.write_versioned(
+            self.config.receipts_dir().join(format!("{receipt_id}.json")),
+            &receipt,
+        )?;
+        self.journal.append_guest(
+            sequence,
+            previous_hash,
+            state_root.clone(),
+            execution.input_hash.clone(),
+            receipt_hash.clone(),
+            execution.guest_id.clone(),
+            execution.guest_hash.clone(),
+            execution.guest_output_hash.clone(),
+            serde_json::to_value(&execution.invocation)?,
+            serde_json::to_value(&execution.output)?,
+        )?;
+        let entries = self.journal.entries()?;
+        let replay_state = Self::replay_guest_state_from_entries(&entries)?;
+        let replay_root = replay_state.root()?;
+        let replay_verified = replay_root == state_root;
+        let checkpoint = self.checkpoints.create(
+            sequence,
+            &self.config.world_id,
+            &self.config.runtime_version,
+            entries.len() as u64,
+            state_root.clone(),
+            self.state.clone(),
+            self.package.world_metadata.clone(),
+        )?;
+        self.checkpoints.verify_checkpoint(&checkpoint)?;
+        self.metrics.ticks_executed += 1;
+        self.metrics.receipts_generated += 1;
+        self.metrics.checkpoint_count += 1;
+        self.health.checkpoint_height = checkpoint.manifest.sequence;
+        self.health.world_root = state_root.clone();
+        self.health.journal_height = entries.len() as u64;
+        self.health.latest_receipt = Some(receipt_hash.clone());
+        self.persistence
+            .write_versioned(self.config.runtime_status_path(), &self.health)?;
+        let proof = GuestExecutionProof {
+            proof_version: "wasm-guest-execution-proof-v0.1".into(),
+            status: if replay_verified { "WASM Guest Execution: PASS" } else { "WASM Guest Execution: FAIL" }.into(),
+            world_id: self.config.world_id.clone(),
+            guest_id: execution.guest_id,
+            guest_hash: execution.guest_hash,
+            guest_output_hash: execution.guest_output_hash,
+            action: execution.output.action,
+            player_id: execution.output.player_id,
+            position: execution.output.position,
+            score: execution.output.score,
+            previous_state_root: previous_state_root.clone(),
+            state_root: state_root.clone(),
+            execution_root: state_root,
+            state_root_changed: receipt.state_root != previous_state_root,
+            state_mutation_origin: "guest_output".into(),
+            receipt_id,
+            receipt_hash,
+            journal_length: entries.len() as u64,
+            replay_root,
+            replay_verified,
+            replay_verification: if replay_verified { "PASS" } else { "FAIL" }.into(),
+        };
+        self.write_guest_execution_artifacts(&guest_state, &proof)?;
+        Ok(proof)
+    }
+
+    fn replay_guest_state_from_entries(entries: &[JournalEntry]) -> Result<GuestRuntimeState> {
+        let entry = entries
+            .iter()
+            .rev()
+            .find(|entry| entry.guest_output.is_some())
+            .ok_or_else(|| anyhow::anyhow!("missing guest output journal entry"))?;
+        let output: GuestOutput = serde_json::from_value(entry.guest_output.clone().unwrap())?;
+        Ok(GuestRuntimeState {
+            guest_id: entry.guest_id.clone().unwrap_or_default(),
+            guest_hash: entry.guest_hash.clone().unwrap_or_default(),
+            action: output.action,
+            player_id: output.player_id,
+            position: output.position,
+            score: output.score,
+            guest_output_hash: entry.guest_output_hash.clone().unwrap_or_default(),
+        })
+    }
+
+    fn write_guest_execution_artifacts(
+        &self,
+        state: &GuestRuntimeState,
+        proof: &GuestExecutionProof,
+    ) -> Result<()> {
+        let guest_dir = self.config.root.join("guest");
+        let replay_dir = self.config.root.join("replay");
+        let receipts_dir = self.config.root.join("receipts");
+        let journals_dir = self.config.root.join("journals");
+        self.persistence.ensure_layout(&[
+            guest_dir.clone(),
+            replay_dir.clone(),
+            receipts_dir.clone(),
+            journals_dir.clone(),
+        ])?;
+        self.persistence
+            .atomic_write_json(guest_dir.join("guest-execution.json"), state)?;
+        self.persistence
+            .atomic_write_json(replay_dir.join("guest-replay-proof.json"), proof)?;
+        self.persistence.atomic_write_json(
+            self.config
+                .reports_dir()
+                .join("wasm-guest-execution-proof.json"),
             proof,
         )?;
         for entry in std::fs::read_dir(self.config.receipts_dir())? {

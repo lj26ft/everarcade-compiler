@@ -10,6 +10,7 @@ members = [
     "contracts/increment-contract",
     "contracts/counter-world",
     "contracts/counter-contract",
+    "contracts/arena-proof-contract",
     "everarcade-host",
     "sdk/everarcade-sdk",
     "sdk/everarcade-world-sdk",
