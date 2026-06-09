@@ -10,10 +10,10 @@ Open-source readiness: NOT READY
 - No major platform area should be advertised as production-ready based on this audit.
 
 2. Local game launch result
-- Final classification: Template Gameplay Proven.
+- Final classification: WASM Guest Execution Proven.
 - Arena template create/build/test/package/launch-local passes through the Creator SDK and `everarcade-runtime`.
 - Runtime start is proven from a Creator SDK-generated Arena package and writes boot/session/projection evidence; template gameplay proof now submits Arena join/move/attack/score inputs, mutates Arena state, emits gameplay receipt/journal/replay evidence, and verifies replay.
-- This is not Playable: no real WASM execution, interactive multiplayer, renderer UI, settlement, or gateway flow is proven.
+- This is not Playable: no interactive multiplayer loop, renderer UI, settlement, or gateway flow is proven.
 
 3. Scaffold vs real implementation summary
 - Real/prototype: Rust crates, everarcade-runtime package loader/runtime loop, creator-sdk CLI, some frontend/sample code, provider-evernode prototype.

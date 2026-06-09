@@ -1,7 +1,7 @@
 Local Game Launch Report
 Date: 2026-06-09
 Template selected: creator-sdk/templates/arena
-Final classification: Template Gameplay Proven
+Final classification: WASM Guest Execution Proven
 
 Requested flow and result
 
@@ -18,10 +18,10 @@ Requested flow and result
 
 Honest playability finding
 
-The arena template is not yet a playable hosted EverArcade game. The bridge proves that Creator SDK output can become a runtime-compatible package, that `everarcade-runtime` can boot that package, and that official Arena template gameplay records can execute through deterministic runtime state mutation with gameplay receipts, journal evidence, and replay verification. The generated `world.wasm` remains a deterministic placeholder, and the runtime does not execute game WASM or provide an interactive multiplayer loop.
+The arena template is not yet a playable hosted EverArcade game. The WASM guest proof now proves that Creator SDK output can become a runtime-compatible package containing real guest `world.wasm`, that `everarcade-runtime` can boot that package, instantiate the guest module, execute the guest entrypoint, use guest output for runtime state mutation, emit receipts and journal evidence, and verify replay. The runtime still does not provide an interactive multiplayer loop.
 
 Final classification rationale
 
-- Not `Playable`: no real WASM execution, interactive player loop, authoritative multiplayer, renderer UI, settlement, or gateway flow was proven.
+- Not `Playable`: no interactive player loop, authoritative multiplayer, renderer UI, settlement, or gateway flow was proven.
 - Stronger than `Simulated`: package validation, boot/session/projection files, receipt, journal, checkpoint, and replay proof files are produced by runtime command paths from a Creator SDK-generated package.
-- Therefore the end-to-end local game launch classification is **Template Gameplay Proven**.
+- Therefore the end-to-end local game launch classification is **WASM Guest Execution Proven**.
