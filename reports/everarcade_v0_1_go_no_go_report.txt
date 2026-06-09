@@ -10,10 +10,10 @@ Open-source readiness: NOT READY
 - No major platform area should be advertised as production-ready based on this audit.
 
 2. Local game launch result
-- Final classification: WASM Guest Execution Proven.
-- Arena template create/build/test/package/launch-local passes through the Creator SDK and `everarcade-runtime`.
-- Runtime start is proven from a Creator SDK-generated Arena package and writes boot/session/projection evidence; template gameplay proof now submits Arena join/move/attack/score inputs, mutates Arena state, emits gameplay receipt/journal/replay evidence, and verifies replay.
-- This is not Playable: no interactive multiplayer loop, renderer UI, settlement, or gateway flow is proven.
+- Final classification: Playable Local Game Proven.
+- Arena template create/build/test/package/play-local passes through the Creator SDK and `everarcade-runtime`.
+- Runtime start is proven from a Creator SDK-generated Arena package and writes boot/session/projection evidence; playable local proof now keeps a session alive for join/move/attack/score/heartbeat ticks, mutates Arena state, emits gameplay receipt/journal/transcript/replay evidence, and verifies replay.
+- This is locally playable only: no multiplayer networking, renderer UI, settlement, public testnet operation, or production hosting is proven.
 
 3. Scaffold vs real implementation summary
 - Real/prototype: Rust crates, everarcade-runtime package loader/runtime loop, creator-sdk CLI, some frontend/sample code, provider-evernode prototype.
@@ -36,14 +36,14 @@ Open-source readiness: NOT READY
 3. Add CONTRIBUTING.md and supported development/test commands.
 4. Add CODE_OF_CONDUCT.md.
 5. Fix offline vendored Cargo dependencies or document a working network build mode.
-6. Replace placeholder WASM with real WASM game execution and an interactive runtime-driven session loop.
+6. Extend the local playable session proof toward renderer-driven and networked multiplayer gameplay without claiming production readiness.
 7. Label scaffold/model/PASS reports clearly and remove misleading production wording.
 8. Consolidate or support-bound the 496 scripts.
 9. Add schema/signature/finality controls for checkpoint, replay, settlement, Xaman, marketplace, and GPU-provider evidence.
 10. Clarify ownership of runtime/node/appliance/gateway/portal/frontend directories.
 
 7. Recommended next 5 tasks
-1. Extend the proven template gameplay execution bridge from deterministic Arena records to real WASM game execution and runtime-driven interactive gameplay sessions.
+1. Extend the proven local playable Arena session toward renderer-driven input and networked multiplayer while preserving deterministic replay.
 2. Fix vendored dependencies and add targeted CI for `everarcade-runtime`, creator-sdk CLI, and the reality-audit validator.
 3. Publish a maintained repo map and stub-vs-usable matrix at the top of the README.
 4. Add open-source governance files and remove/ignore generated dependency artifacts as appropriate.

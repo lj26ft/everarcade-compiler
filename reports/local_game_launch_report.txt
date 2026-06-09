@@ -1,7 +1,7 @@
 Local Game Launch Report
 Date: 2026-06-09
 Template selected: creator-sdk/templates/arena
-Final classification: WASM Guest Execution Proven
+Final classification: Playable Local Game Proven
 
 Requested flow and result
 
@@ -14,14 +14,14 @@ Requested flow and result
 | start runtime | PASS | `node creator-sdk/cli/everarcade.mjs launch-local --project /tmp/everarcade-local-launch-proof/audit-arena --runtime-root /tmp/everarcade-local-launch-proof/runtime-root` starts `everarcade-runtime` against the generated package. |
 | produce session record | PASS | Runtime writes `runtime-root/worlds/audit-arena-world/sessions/session-0001.json`. |
 | produce projection record | PASS | Runtime writes `runtime-root/worlds/audit-arena-world/projections/projection-0001.json` with `non_authoritative_projection: true`. |
-| template gameplay execution proof | PASS | `node creator-sdk/cli/everarcade.mjs execute-template --template arena --project /tmp/everarcade-local-launch-proof/audit-arena --runtime-root /tmp/everarcade-local-launch-proof/runtime-root` submits Arena join/move/attack/score gameplay inputs, mutates Arena state, emits gameplay receipts and journal evidence, and verifies replay. |
+| playable local game proof | PASS | `node creator-sdk/cli/everarcade.mjs play-local --template arena --project /tmp/everarcade-local-launch-proof/audit-arena --runtime-root /tmp/everarcade-local-launch-proof/runtime-root` keeps an Arena session alive across join/move/attack/score/heartbeat ticks, mutates state, emits receipts, journal, transcript, and replay proof evidence, and verifies replay. |
 
 Honest playability finding
 
-The arena template is not yet a playable hosted EverArcade game. The WASM guest proof now proves that Creator SDK output can become a runtime-compatible package containing real guest `world.wasm`, that `everarcade-runtime` can boot that package, instantiate the guest module, execute the guest entrypoint, use guest output for runtime state mutation, emit receipts and journal evidence, and verify replay. The runtime still does not provide an interactive multiplayer loop.
+The Arena template now proves a locally playable EverArcade game session. The Creator SDK can package the Arena template, launch a persistent local session, join a player, process movement and attack actions, update score over five ticks, emit receipts and journal evidence, write a session transcript, and verify replay to the final session root. The runtime still does not prove multiplayer networking, renderer-driven gameplay, public testnet operation, or production hosting.
 
 Final classification rationale
 
-- Not `Playable`: no interactive player loop, authoritative multiplayer, renderer UI, settlement, or gateway flow was proven.
-- Stronger than `Simulated`: package validation, boot/session/projection files, receipt, journal, checkpoint, and replay proof files are produced by runtime command paths from a Creator SDK-generated package.
-- Therefore the end-to-end local game launch classification is **WASM Guest Execution Proven**.
+- `Playable Local Game Proven`: a local Arena session persists across join, move, attack, score update, and heartbeat ticks while state evolves and receipts, journal, transcript, and replay proof are produced.
+- Not `Multiplayer Proven`: no networked multi-client session, federation, renderer-driven gameplay, settlement, public testnet, or production hosting flow was proven.
+- Therefore the end-to-end local game launch classification is **Playable Local Game Proven**.
