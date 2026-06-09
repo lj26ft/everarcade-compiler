@@ -1,7 +1,7 @@
 Local Game Launch Report
 Date: 2026-06-09
 Template selected: creator-sdk/templates/arena
-Final classification: Playable Local Game Proven
+Final classification: Multiplayer Local Session Proven
 
 Requested flow and result
 
@@ -14,14 +14,14 @@ Requested flow and result
 | start runtime | PASS | `node creator-sdk/cli/everarcade.mjs launch-local --project /tmp/everarcade-local-launch-proof/audit-arena --runtime-root /tmp/everarcade-local-launch-proof/runtime-root` starts `everarcade-runtime` against the generated package. |
 | produce session record | PASS | Runtime writes `runtime-root/worlds/audit-arena-world/sessions/session-0001.json`. |
 | produce projection record | PASS | Runtime writes `runtime-root/worlds/audit-arena-world/projections/projection-0001.json` with `non_authoritative_projection: true`. |
-| playable local game proof | PASS | `node creator-sdk/cli/everarcade.mjs play-local --template arena --project /tmp/everarcade-local-launch-proof/audit-arena --runtime-root /tmp/everarcade-local-launch-proof/runtime-root` keeps an Arena session alive across join/move/attack/score/heartbeat ticks, mutates state, emits receipts, journal, transcript, and replay proof evidence, and verifies replay. |
+| multiplayer local session proof | PASS | `node creator-sdk/cli/everarcade.mjs play-local-multiplayer --template arena --project /tmp/everarcade-local-launch-proof/audit-arena --runtime-root /tmp/everarcade-local-launch-proof/runtime-root` keeps an Arena session alive across two joins, independent moves, attack, score update, and replay ticks, mutates state, emits receipts, journal, transcript, and replay proof evidence, and verifies replay. |
 
 Honest playability finding
 
-The Arena template now proves a locally playable EverArcade game session. The Creator SDK can package the Arena template, launch a persistent local session, join a player, process movement and attack actions, update score over five ticks, emit receipts and journal evidence, write a session transcript, and verify replay to the final session root. The runtime still does not prove multiplayer networking, renderer-driven gameplay, public testnet operation, or production hosting.
+The Arena template now proves a local same-session multiplayer EverArcade game session. The Creator SDK can package the Arena template, launch a persistent local session, join Player A and Player B, process independent movement and deterministic attack actions, update score over multiple ticks, emit receipts and journal evidence for both players, write a multiplayer session transcript, and verify replay to the final session root. The runtime still does not prove networked multiplayer, renderer-driven gameplay, public testnet operation, or production hosting.
 
 Final classification rationale
 
-- `Playable Local Game Proven`: a local Arena session persists across join, move, attack, score update, and heartbeat ticks while state evolves and receipts, journal, transcript, and replay proof are produced.
-- Not `Multiplayer Proven`: no networked multi-client session, federation, renderer-driven gameplay, settlement, public testnet, or production hosting flow was proven.
-- Therefore the end-to-end local game launch classification is **Playable Local Game Proven**.
+- `Multiplayer Local Session Proven`: a local Arena session persists across two player joins, independent moves, deterministic attack, score update, and replay verification ticks while state evolves and receipts, journal, transcript, and replay proof are produced.
+- Not `Network Multiplayer Proven`: no network transport, federation, renderer-driven gameplay, settlement, public testnet, or production hosting flow was proven.
+- Therefore the end-to-end local game launch classification is **Multiplayer Local Session Proven**.

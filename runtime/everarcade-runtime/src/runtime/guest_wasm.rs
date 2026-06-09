@@ -39,7 +39,14 @@ impl GuestInvocation {
         Self {
             guest_id: guest_id.into(),
             entrypoint: "everarcade_guest_execute".into(),
-            actions: vec!["PlayerJoin".into(), "PlayerMove".into(), "ScoreUpdate".into()],
+            actions: vec![
+                "PlayerJoin(player-a)".into(),
+                "PlayerJoin(player-b)".into(),
+                "PlayerMove(player-a:north)".into(),
+                "PlayerMove(player-b:south)".into(),
+                "PlayerAttack(player-a->player-b)".into(),
+                "ScoreUpdate(player-a)".into(),
+            ],
         }
     }
 
@@ -86,7 +93,9 @@ impl GuestWasmRunner {
         let alloc = instance.get_typed_func::<i32, i32>(&mut store, "alloc")?;
         let entry = instance
             .get_typed_func::<(i32, i32), i64>(&mut store, "everarcade_guest_execute")
-            .or_else(|_| instance.get_typed_func::<(i32, i32), i64>(&mut store, "everarcade_execute"))?;
+            .or_else(|_| {
+                instance.get_typed_func::<(i32, i32), i64>(&mut store, "everarcade_execute")
+            })?;
 
         let invocation = GuestInvocation::canonical(guest_id);
         let input = invocation.canonical_bytes()?;

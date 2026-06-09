@@ -177,7 +177,6 @@ impl JournalManager {
         Ok(entry)
     }
 
-
     pub fn append_guest(
         &self,
         sequence: u64,

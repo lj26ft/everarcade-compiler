@@ -12,14 +12,14 @@ Open-source readiness: CONDITIONAL READY / Open Source Candidate
 2. Developer onboarding result
 - Final onboarding classification: Developer Onboarding Proven.
 - The supported contributor path is documented in README.md and docs/onboarding/30-minute-developer-journey.md.
-- scripts/validate_developer_onboarding.sh creates an Arena project, builds it, packages it, runs a playable local session, and verifies replay evidence.
-- This proves a new developer can reach Playable Local Game Proven through documented local commands.
+- scripts/validate_developer_onboarding.sh creates an Arena project, builds it, packages it, runs a multiplayer local session, and verifies replay evidence.
+- This proves a new developer can reach Multiplayer Local Session Proven through documented local commands.
 
 3. Local game launch result
-- Runtime classification remains Playable Local Game Proven.
-- Arena template create/build/test/package/play-local passes through the Creator SDK and everarcade-runtime.
+- Runtime classification is now Multiplayer Local Session Proven.
+- Arena template create/build/test/package/play-local-multiplayer passes through the Creator SDK and everarcade-runtime.
 - Runtime evidence includes session state, gameplay state, receipts, journal entries, a transcript, and replay proof with replay verification PASS.
-- This is locally playable only.
+- This is local same-session multiplayer only; it is not Network Multiplayer Proven, Federated Multiplayer Proven, or Production Ready.
 
 4. Repository clarity and governance
 - Root README.md is now the primary entry point.

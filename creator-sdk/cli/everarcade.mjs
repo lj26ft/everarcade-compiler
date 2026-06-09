@@ -402,6 +402,40 @@ function playLocal(projectDir) {
   console.log('Playable Local Game: PASS');
 }
 
+function playLocalMultiplayer(projectDir) {
+  const template = value('--template', null);
+  if (template && template !== 'arena') throw new Error(`Unsupported multiplayer local play template ${template}`);
+  const packaged = packageGame(projectDir);
+  const runtimeRoot = path.resolve(value('--runtime-root', path.join(projectDir, 'dist', 'runtime-root')));
+  const startedAt = new Date().toISOString();
+  const proof = runRuntimeCommand('multiplayer-local-session', projectDir, runtimeRoot, packaged);
+  const playReport = {
+    command: `cargo ${proof.cargoArgs.join(' ')}`,
+    project_dir: projectDir,
+    runtime_root: runtimeRoot,
+    runtime_package_dir: packaged.packageDir,
+    runtime_source_dir: path.join(repoRoot, 'runtime', 'everarcade-runtime'),
+    cargo_workspace: proof.cargoWorkspace,
+    world_id: packaged.manifest.world_id,
+    package_id: packaged.manifest.package_id,
+    status: proof.result.status === 0 ? 'PASS' : 'FAIL',
+    started_at: startedAt,
+    completed_at: new Date().toISOString(),
+    stdout: proof.result.stdout ?? '',
+    stderr: proof.result.stderr ?? '',
+    exit_code: proof.result.status
+  };
+  writeJson(path.join(projectDir, 'dist', 'multiplayer-local-session-report.json'), playReport);
+  if (proof.result.status !== 0) {
+    throw new Error(`Runtime multiplayer-local-session failed with exit code ${proof.result.status}: ${(proof.result.stderr || proof.result.stdout || '').trim()}`);
+  }
+  const parsedProof = JSON.parse(proof.result.stdout);
+  if (parsedProof.replay_verification !== 'PASS' || parsedProof.status !== 'Multiplayer Local Session: PASS') {
+    throw new Error(`Multiplayer local session failed replay verification: ${proof.result.stdout}`);
+  }
+  console.log('Multiplayer Local Session: PASS');
+}
+
 function executeGuest(projectDir) {
   const packaged = packageGame(projectDir);
   const runtimeRoot = path.resolve(value('--runtime-root', path.join(projectDir, 'dist', 'runtime-root')));
@@ -521,10 +555,11 @@ try {
   else if (command === 'execute-template') executeTemplate(projectDir);
   else if (command === 'execute-guest') executeGuest(projectDir);
   else if (command === 'play-local') playLocal(projectDir);
+  else if (command === 'play-local-multiplayer') playLocalMultiplayer(projectDir);
   else if (command === 'deploy') deploy(projectDir);
   else if (command === 'publish') publish(projectDir);
   else {
-    console.log('everarcade <new|build|test|package|launch-local|execute-local|execute-template|execute-guest|play-local|deploy|publish> [--project DIR]');
+    console.log('everarcade <new|build|test|package|launch-local|execute-local|execute-template|execute-guest|play-local|play-local-multiplayer|deploy|publish> [--project DIR]');
     process.exit(command ? 1 : 0);
   }
 } catch (error) {
