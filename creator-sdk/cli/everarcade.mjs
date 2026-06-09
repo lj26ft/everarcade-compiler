@@ -506,6 +506,42 @@ function playFederatedLocal(projectDir) {
   process.stdout.write(result.stdout ?? '');
 }
 
+
+function playMultiLeaseLocal(projectDir) {
+  const template = value('--template', null);
+  if (template && template !== 'civilization') throw new Error(`Unsupported multi-lease local play template ${template}`);
+  const runtimeRoot = path.resolve(value('--runtime-root', path.join(projectDir, 'dist', 'multi-lease-civilization-root')));
+  const proofScript = path.join(repoRoot, 'runtime', 'multi-lease-civilization-proof', 'multi_lease_civilization_proof.mjs');
+  const startedAt = new Date().toISOString();
+  const result = spawnSync('node', [proofScript, '--project', projectDir, '--template', template ?? 'civilization', '--runtime-root', runtimeRoot], {
+    cwd: repoRoot,
+    encoding: 'utf8'
+  });
+  const playReport = {
+    command: `node ${proofScript} --project ${projectDir} --template ${template ?? 'civilization'} --runtime-root ${runtimeRoot}`,
+    project_dir: projectDir,
+    runtime_root: runtimeRoot,
+    proof_script: proofScript,
+    template: template ?? 'civilization',
+    status: result.status === 0 ? 'PASS' : 'FAIL',
+    started_at: startedAt,
+    completed_at: new Date().toISOString(),
+    stdout: result.stdout ?? '',
+    stderr: result.stderr ?? '',
+    exit_code: result.status
+  };
+  writeJson(path.join(projectDir, 'dist', 'multi-lease-civilization-report.json'), playReport);
+  if (result.status !== 0) {
+    throw new Error(`Multi-lease civilization proof failed with exit code ${result.status}: ${(result.stderr || result.stdout || '').trim()}`);
+  }
+  const summaryPath = path.join(runtimeRoot, 'civilization', 'summary.json');
+  const summary = JSON.parse(fs.readFileSync(summaryPath, 'utf8'));
+  if (summary.status !== 'Multi-Lease Civilization Runtime: PASS' || summary.replay_verification !== true) {
+    throw new Error(`Multi-lease civilization proof failed verification: ${JSON.stringify(summary)}`);
+  }
+  process.stdout.write(result.stdout ?? '');
+}
+
 function executeGuest(projectDir) {
   const packaged = packageGame(projectDir);
   const runtimeRoot = path.resolve(value('--runtime-root', path.join(projectDir, 'dist', 'runtime-root')));
@@ -628,10 +664,11 @@ try {
   else if (command === 'play-local-multiplayer') playLocalMultiplayer(projectDir);
   else if (command === 'play-network-local') playNetworkLocal(projectDir);
   else if (command === 'play-federated-local') playFederatedLocal(projectDir);
+  else if (command === 'play-multi-lease-local') playMultiLeaseLocal(projectDir);
   else if (command === 'deploy') deploy(projectDir);
   else if (command === 'publish') publish(projectDir);
   else {
-    console.log('everarcade <new|build|test|package|launch-local|execute-local|execute-template|execute-guest|play-local|play-local-multiplayer|play-network-local|play-federated-local|deploy|publish> [--project DIR]');
+    console.log('everarcade <new|build|test|package|launch-local|execute-local|execute-template|execute-guest|play-local|play-local-multiplayer|play-network-local|play-federated-local|play-multi-lease-local|deploy|publish> [--project DIR]');
     process.exit(command ? 1 : 0);
   }
 } catch (error) {

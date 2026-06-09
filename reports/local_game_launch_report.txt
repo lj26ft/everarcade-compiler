@@ -1,7 +1,7 @@
 Local Game Launch Report
 Date: 2026-06-09
-Template selected: creator-sdk/templates/arena
-Final classification: Federated Runtime Synchronization Proven
+Template selected: creator-sdk/templates/civilization
+Final classification: Multi-Lease Civilization Runtime Proven
 
 Requested flow and result
 
@@ -16,13 +16,14 @@ Requested flow and result
 | produce projection record | PASS | Runtime writes `runtime-root/worlds/audit-arena-world/projections/projection-0001.json` with `non_authoritative_projection: true`. |
 | network transport session proof | PASS | `node creator-sdk/cli/everarcade.mjs play-network-local --template arena --project /tmp/everarcade-local-launch-proof/audit-arena --runtime-root /tmp/everarcade-local-launch-proof/runtime-root` starts local Client A and Client B identities, routes join/move/attack intents through deterministic transport messages, keeps the runtime authoritative, synchronizes client/runtime state roots, propagates receipts, observes the journal, and verifies replay. |
 | federated runtime synchronization proof | PASS | `node creator-sdk/cli/everarcade.mjs play-federated-local --template arena --project /tmp/everarcade-local-launch-proof/audit-arena --runtime-root /tmp/everarcade-local-launch-proof/runtime-root` starts Runtime A and Runtime B identities, exchanges checkpoints, receipts, and journals, synchronizes state roots, detects divergence, recovers behind state, and verifies federation replay. |
+| multi-lease civilization proof | PASS | `node creator-sdk/cli/everarcade.mjs play-multi-lease-local --template civilization --project /tmp/everarcade-local-launch-proof/audit-civilization --runtime-root /tmp/everarcade-local-launch-proof/runtime-root` starts Lease A and Lease B identities, creates civilization genesis, mutates economy and inventory state, exports checkpoint/receipt/journal evidence, imports evidence into Lease B, simulates Lease A failure, recovers state, synchronizes roots, and verifies civilization replay. |
 
 Honest playability finding
 
-The Arena template now proves a local federated runtime synchronization session after the local network-style transport proof. The Creator SDK can package the Arena template, start local Client A and Client B identities, route joins, movement, and deterministic attack actions through a canonical transport layer, keep the runtime authoritative for state mutation, receipts, checkpoints, journals, and replay roots, synchronize both client observations to the runtime state root, and verify replay to the final session root. The runtime still does not prove Evernode deployment, WAN federation, XRPL settlement, production-scale federation, multi-lease gameplay hosting, renderer-driven gameplay, public testnet operation, or production hosting.
+The Creator SDK now proves a local multi-lease civilization session after the local federated synchronization proof. The civilization template path starts deterministic Lease A and Lease B identities, preserves one civilization ID across both leases, evolves population, economy, inventory, territories, and score, exports checkpoint, receipt, and journal evidence from Lease A, reconstructs the civilization under Lease B without memory sharing, simulates Lease A failure, recovers from evidence, synchronizes roots, and verifies replay to the final civilization root. The runtime still does not prove Evernode deployment, WAN federation, XRPL settlement, production-scale federation, production multi-lease gameplay hosting, renderer-driven gameplay, public testnet operation, production civilization hosting, civilization scale, economic finality, or production hosting.
 
 Final classification rationale
 
-- `Federated Runtime Synchronization Proven`: a local Arena session synchronizes Runtime A and Runtime B through checkpoint exchange, receipt exchange, journal exchange, state-root synchronization, divergence detection, recovery, and federation replay verification.
-- Not `Evernode Proven`, not `Production Federation Proven`, not `WAN Federation Proven`, and not `Multi-Lease Gameplay Proven`: no Evernode lease deployment, WAN transport, production-scale federation, multi-lease coordination, settlement, public testnet, or production hosting flow was proven.
-- Therefore the end-to-end local game launch classification is **Federated Runtime Synchronization Proven**.
+- `Multi-Lease Civilization Runtime Proven`: a local civilization survives deterministic transition from Lease A to Lease B with identical civilization ID and continuity root while preserving economy state, inventory state, synchronization, recovery, and replay equivalence.
+- Not `Evernode Proven`, not `Production Civilization Proven`, and not `Civilization Scale Proven`: no Evernode lease deployment, WAN transport, production-scale federation, public-testnet deployment, settlement, production civilization hosting, civilization scale, or production hosting flow was proven.
+- Therefore the end-to-end local game launch classification is **Multi-Lease Civilization Runtime Proven**.

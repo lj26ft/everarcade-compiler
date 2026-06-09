@@ -1,25 +1,25 @@
 EverArcade v0.1 Go / No-Go Report
 Date: 2026-06-09
 Decision: NO-GO FOR PUBLIC PRODUCTION LAUNCH
-Developer experience classification: Federated Runtime Synchronization Proven
+Developer experience classification: Multi-Lease Civilization Runtime Proven
 Open-source readiness: CONDITIONAL READY / Open Source Candidate
 
 1. Production readiness summary
 - EverArcade remains pre-production.
-- The current milestone proves local federated runtime synchronization while preserving deterministic replay equivalence.
-- No public testnet, commercial readiness, multiplayer federation gameplay, XRPL/Xaman settlement, GPU marketplace, or production hosting readiness is claimed.
+- The current milestone proves local multi-lease civilization continuity while preserving deterministic replay equivalence, economy roots, and inventory roots.
+- No public testnet, commercial readiness, production civilization hosting, civilization scale, XRPL/Xaman settlement, GPU marketplace, Evernode deployment, WAN federation, or production hosting readiness is claimed.
 
 2. Developer onboarding result
-- Final onboarding classification: Federated Runtime Synchronization Proven.
+- Final onboarding classification: Multi-Lease Civilization Runtime Proven.
 - The supported contributor path is documented in README.md and docs/onboarding/30-minute-developer-journey.md.
-- scripts/validate_federated_runtime_sync.sh creates an Arena project, runs a local federated two-runtime synchronization proof, verifies checkpoint, receipt, and journal exchange, validates divergence detection and recovery, and verifies replay evidence.
-- This proves a developer can reach Federated Runtime Synchronization Proven through documented local commands.
+- scripts/validate_multi_lease_civilization.sh creates a Civilization project, runs a local two-lease civilization proof, verifies genesis, economy continuity, inventory continuity, checkpoint exchange, synchronization, lease transition, lease failure, recovery, and replay evidence.
+- This proves a developer can reach Multi-Lease Civilization Runtime Proven through documented local commands.
 
 3. Local game launch result
-- Runtime classification is now Federated Runtime Synchronization Proven.
-- Arena template create/play-federated-local passes through the Creator SDK and local federated runtime proof.
-- Runtime evidence includes Runtime A and Runtime B identities, checkpoints, receipt streams, journal streams, sync state, divergence proof, recovery proof, and federation replay proof with replay verification PASS.
-- This is local federation synchronization only; it is not Evernode Proven, Production Federation Proven, WAN Federation Proven, Multi-Lease Gameplay Proven, XRPL settlement, or Production Ready.
+- Runtime classification is now Multi-Lease Civilization Runtime Proven.
+- Civilization template play-multi-lease-local passes through the Creator SDK and local multi-lease civilization proof.
+- Runtime evidence includes Lease A and Lease B identities, civilization genesis, economy and inventory ledgers, checkpoint exchange, lease transition proof, lease failure proof, recovery proof, synchronization proof, and civilization replay proof with replay verification PASS.
+- This is local multi-lease civilization continuity only; it is not Evernode Proven, Production Civilization Proven, Civilization Scale Proven, WAN Federation Proven, XRPL settlement, economic finality, or Production Ready.
 
 4. Repository clarity and governance
 - Root README.md is now the primary entry point.
@@ -35,7 +35,7 @@ Open-source readiness: CONDITIONAL READY / Open Source Candidate
 - node_modules/ exists in the working tree and must not be committed.
 
 6. Scaffold vs real implementation summary
-- Real/prototype: runtime/everarcade-runtime local runtime proof, runtime/federated-runtime-proof local federation synchronization proof, Creator SDK CLI, template packaging, deterministic replay evidence, and targeted validation scripts.
+- Real/prototype: runtime/everarcade-runtime local runtime proof, runtime/federated-runtime-proof local federation synchronization proof, runtime/multi-lease-civilization-proof local civilization continuity proof, Creator SDK CLI, template packaging, deterministic replay evidence, and targeted validation scripts.
 - Scaffold/model: renderer/history/federation, marketplace, GPU, XRPL, Xaman, commercial revenue, public testnet, many gateway/node/operator flows, and many PASS reports not tied to the canonical proof chain.
 - Documentation-only: architecture, roadmap, operations, and readiness docs unless tied to current runnable commands.
 
