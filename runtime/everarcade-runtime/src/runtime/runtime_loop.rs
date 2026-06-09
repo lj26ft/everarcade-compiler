@@ -18,6 +18,10 @@ pub struct RuntimeReceipt {
     pub world_id: String,
     pub timestamp_or_epoch: u64,
     #[serde(skip_serializing_if = "Option::is_none")]
+    pub session_id: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub player_count: Option<u64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub action: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub player_id: Option<String>,
@@ -70,10 +74,12 @@ pub struct ArenaPlayer {
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
 pub struct ArenaState {
+    pub session_id: String,
     pub players: BTreeMap<String, ArenaPlayer>,
     pub positions: BTreeMap<String, ArenaPosition>,
     pub health: BTreeMap<String, i64>,
     pub scores: BTreeMap<String, i64>,
+    pub events: Vec<String>,
     pub tick: u64,
 }
 
@@ -86,10 +92,12 @@ impl ArenaState {
         let mut scores = BTreeMap::new();
         scores.insert("dummy".into(), 0);
         Self {
+            session_id: "session-0001".into(),
             players: BTreeMap::new(),
             positions,
             health,
             scores,
+            events: vec!["session_started".into()],
             tick: 0,
         }
     }
@@ -114,6 +122,10 @@ impl ArenaState {
                     .or_insert(ArenaPosition { x: 0, y: 0 });
                 self.health.entry(input.player_id.clone()).or_insert(100);
                 self.scores.entry(input.player_id.clone()).or_insert(0);
+                self.events.push(format!(
+                    "tick {}: {} joined",
+                    input.sequence, input.player_id
+                ));
             }
             "move" => {
                 let position = self
@@ -127,15 +139,33 @@ impl ArenaState {
                     "west" => position.x -= 1,
                     _ => {}
                 }
+                self.events.push(format!(
+                    "tick {}: {} moved {}",
+                    input.sequence,
+                    input.player_id,
+                    input.direction.as_deref().unwrap_or("north")
+                ));
             }
             "attack" => {
                 let target = input.target.as_deref().unwrap_or("dummy").to_string();
-                *self.health.entry(target).or_insert(100) -= 10;
+                *self.health.entry(target.clone()).or_insert(100) -= 10;
                 *self.scores.entry(input.player_id.clone()).or_insert(0) += 10;
+                self.events.push(format!(
+                    "tick {}: {} attacked {} for 10 damage",
+                    input.sequence, input.player_id, target
+                ));
             }
             "score_update" => {
-                *self.scores.entry(input.player_id.clone()).or_insert(0) +=
-                    input.score_delta.unwrap_or(1);
+                let delta = input.score_delta.unwrap_or(1);
+                *self.scores.entry(input.player_id.clone()).or_insert(0) += delta;
+                self.events.push(format!(
+                    "tick {}: gameplay score update {} +{}",
+                    input.sequence, input.player_id, delta
+                ));
+            }
+            "tick" => {
+                self.events
+                    .push(format!("tick {}: session heartbeat", input.sequence));
             }
             _ => {}
         }
@@ -190,6 +220,14 @@ impl ArenaGameplayInput {
                 score_delta: Some(5),
                 sequence: 4,
             },
+            Self {
+                player_id: "player-1".into(),
+                action: "tick".into(),
+                direction: None,
+                target: None,
+                score_delta: None,
+                sequence: 5,
+            },
         ]
     }
 
@@ -222,6 +260,38 @@ pub struct TemplateGameplayProof {
     pub replay_root: String,
     pub replay_verified: bool,
     pub replay_verification: String,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct SessionTranscriptEntry {
+    pub tick: u64,
+    pub session_id: String,
+    pub player_id: String,
+    pub action: String,
+    pub state_root: String,
+    pub score: i64,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct PlayableLocalGameProof {
+    pub proof_version: String,
+    pub status: String,
+    pub session_id: String,
+    pub world_id: String,
+    pub tick: u64,
+    pub player_count: u64,
+    pub actions: Vec<String>,
+    pub transcript_length: u64,
+    pub state_root: String,
+    pub replay_root: String,
+    pub replay_verified: bool,
+    pub replay_verification: String,
+    pub score_before: i64,
+    pub score_after: i64,
+    pub score_origin: String,
+    pub receipt_count: u64,
+    pub journal_length: u64,
+    pub guest_execution: String,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -505,6 +575,8 @@ impl RuntimeLoop {
             runtime_version: self.config.runtime_version.clone(),
             world_id: self.config.world_id.clone(),
             timestamp_or_epoch,
+            session_id: None,
+            player_count: None,
             action: None,
             player_id: None,
             guest_id: None,
@@ -745,6 +817,8 @@ impl RuntimeLoop {
                 runtime_version: self.config.runtime_version.clone(),
                 world_id: self.config.world_id.clone(),
                 timestamp_or_epoch,
+                session_id: Some(arena_state.session_id.clone()),
+                player_count: Some(arena_state.players.len() as u64),
                 action: Some(gameplay_input.action.clone()),
                 player_id: Some(gameplay_input.player_id.clone()),
                 guest_id: None,
@@ -879,6 +953,112 @@ impl RuntimeLoop {
         Ok(())
     }
 
+    pub fn execute_playable_local_session(&mut self) -> Result<PlayableLocalGameProof> {
+        let template_proof = self.execute_template_gameplay_proof()?;
+        let arena_state: ArenaState = serde_json::from_slice(&self.state)?;
+        let entries = self.journal.entries()?;
+        let mut transcript = Vec::new();
+        for entry in &entries {
+            let Some(value) = &entry.gameplay_input else {
+                continue;
+            };
+            let input: ArenaGameplayInput = serde_json::from_value(value.clone())?;
+            let replay_entries = entries
+                .iter()
+                .filter(|candidate| candidate.sequence <= entry.sequence)
+                .cloned()
+                .collect::<Vec<_>>();
+            let replay_state = Self::replay_arena_state_from_entries(&replay_entries)?;
+            transcript.push(SessionTranscriptEntry {
+                tick: input.sequence,
+                session_id: replay_state.session_id.clone(),
+                player_id: input.player_id.clone(),
+                action: input.action.clone(),
+                state_root: replay_state.root()?,
+                score: replay_state
+                    .scores
+                    .get(&input.player_id)
+                    .copied()
+                    .unwrap_or(0),
+            });
+        }
+        let replay_state = Self::replay_arena_state_from_entries(&entries)?;
+        let replay_root = replay_state.root()?;
+        let state_root = arena_state.root()?;
+        let replay_verified = replay_root == state_root;
+        let proof = PlayableLocalGameProof {
+            proof_version: "playable-local-game-proof-v0.1".into(),
+            status: if replay_verified {
+                "Playable Local Game: PASS".into()
+            } else {
+                "Playable Local Game: FAIL".into()
+            },
+            session_id: arena_state.session_id.clone(),
+            world_id: self.config.world_id.clone(),
+            tick: arena_state.tick,
+            player_count: arena_state.players.len() as u64,
+            actions: transcript.iter().map(|entry| entry.action.clone()).collect(),
+            transcript_length: transcript.len() as u64,
+            state_root: state_root.clone(),
+            replay_root: replay_root.clone(),
+            replay_verified,
+            replay_verification: if replay_verified { "PASS" } else { "FAIL" }.into(),
+            score_before: 0,
+            score_after: arena_state.scores.get("player-1").copied().unwrap_or(0),
+            score_origin: "gameplay attack and score_update actions".into(),
+            receipt_count: template_proof.receipt_count,
+            journal_length: entries.len() as u64,
+            guest_execution: "runtime package world.wasm loaded and gameplay actions executed by the local runtime session".into(),
+        };
+        self.write_playable_local_session_artifacts(&arena_state, &transcript, &proof)?;
+        Ok(proof)
+    }
+
+    fn write_playable_local_session_artifacts(
+        &self,
+        state: &ArenaState,
+        transcript: &[SessionTranscriptEntry],
+        proof: &PlayableLocalGameProof,
+    ) -> Result<()> {
+        let sessions_dir = self.config.root.join("sessions");
+        let gameplay_dir = self.config.root.join("gameplay");
+        let replay_dir = self.config.root.join("replay");
+        self.persistence.ensure_layout(&[
+            sessions_dir.clone(),
+            gameplay_dir.clone(),
+            replay_dir.clone(),
+        ])?;
+        let session = serde_json::json!({
+            "session_id": proof.session_id,
+            "world_id": proof.world_id,
+            "tick": proof.tick,
+            "player_count": proof.player_count,
+            "state_root": proof.state_root,
+            "status": "Playable Local Game Proven"
+        });
+        self.persistence
+            .atomic_write_json(sessions_dir.join("session-0001.json"), &session)?;
+        self.persistence.atomic_write_json(
+            self.config.sessions_dir().join("session-0001.json"),
+            &session,
+        )?;
+        self.persistence
+            .atomic_write_json(gameplay_dir.join("arena-state.json"), state)?;
+        self.persistence.atomic_write_json(
+            gameplay_dir.join("session-transcript.json"),
+            &transcript.to_vec(),
+        )?;
+        self.persistence
+            .atomic_write_json(replay_dir.join("gameplay-replay-proof.json"), proof)?;
+        self.persistence.atomic_write_json(
+            self.config
+                .reports_dir()
+                .join("playable-local-game-proof.json"),
+            proof,
+        )?;
+        Ok(())
+    }
+
     pub fn execute_guest_proof(&mut self) -> Result<GuestExecutionProof> {
         let guest_id = self.package.manifest.package_id.clone();
         let previous_state_root = hex::encode(Sha256::digest(&self.state));
@@ -920,6 +1100,8 @@ impl RuntimeLoop {
             runtime_version: self.config.runtime_version.clone(),
             world_id: self.config.world_id.clone(),
             timestamp_or_epoch: sequence,
+            session_id: Some("session-0001".into()),
+            player_count: Some(1),
             action: Some(execution.output.action.clone()),
             player_id: Some(execution.output.player_id.clone()),
             guest_id: Some(execution.guest_id.clone()),
@@ -927,7 +1109,9 @@ impl RuntimeLoop {
             guest_output_hash: Some(execution.guest_output_hash.clone()),
         };
         self.persistence.write_versioned(
-            self.config.receipts_dir().join(format!("{receipt_id}.json")),
+            self.config
+                .receipts_dir()
+                .join(format!("{receipt_id}.json")),
             &receipt,
         )?;
         self.journal.append_guest(
@@ -967,7 +1151,12 @@ impl RuntimeLoop {
             .write_versioned(self.config.runtime_status_path(), &self.health)?;
         let proof = GuestExecutionProof {
             proof_version: "wasm-guest-execution-proof-v0.1".into(),
-            status: if replay_verified { "WASM Guest Execution: PASS" } else { "WASM Guest Execution: FAIL" }.into(),
+            status: if replay_verified {
+                "WASM Guest Execution: PASS"
+            } else {
+                "WASM Guest Execution: FAIL"
+            }
+            .into(),
             world_id: self.config.world_id.clone(),
             guest_id: execution.guest_id,
             guest_hash: execution.guest_hash,

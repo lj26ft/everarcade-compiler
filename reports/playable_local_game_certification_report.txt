@@ -1,0 +1,20 @@
+Playable Local Game Certification Report
+Validation Report: reports/playable_local_game_validation_report.txt
+Validation Status: PASS
+
+Validation Output:
+Session Started: PASS
+Player Joined: PASS
+Move Applied: PASS
+Attack Applied: PASS
+Score Updated: PASS
+Multi-Tick Progression: PASS
+Receipt Stream Generated: PASS
+Journal Stream Generated: PASS
+Replay Root Generated: PASS
+Replay Verified: PASS
+Session Transcript: PASS
+Gameplay Replay Verification: PASS
+Overall Result: PASS
+
+Playable Local Game Proof v0.1: PASS

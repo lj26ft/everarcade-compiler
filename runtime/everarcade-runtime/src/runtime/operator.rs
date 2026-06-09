@@ -17,6 +17,7 @@ pub enum OperatorCommand {
     ExecuteProof,
     ExecuteTemplateProof,
     ExecuteGuestProof,
+    LocalSession,
     Checkpoint,
     Recover,
     Doctor,
@@ -38,6 +39,7 @@ impl OperatorCommand {
             "execute-proof" => Self::ExecuteProof,
             "execute-template-proof" => Self::ExecuteTemplateProof,
             "execute-guest-proof" => Self::ExecuteGuestProof,
+            "local-session" => Self::LocalSession,
             "checkpoint" => Self::Checkpoint,
             "recover" => Self::Recover,
             "doctor" => Self::Doctor,
@@ -129,6 +131,11 @@ impl RuntimeOperator {
             OperatorCommand::ExecuteGuestProof => {
                 let mut rt = RuntimeLoop::boot(self.config.clone())?;
                 let proof = rt.execute_guest_proof()?;
+                Ok(serde_json::to_string_pretty(&proof)?)
+            }
+            OperatorCommand::LocalSession => {
+                let mut rt = RuntimeLoop::boot(self.config.clone())?;
+                let proof = rt.execute_playable_local_session()?;
                 Ok(serde_json::to_string_pretty(&proof)?)
             }
             OperatorCommand::Checkpoint => {
