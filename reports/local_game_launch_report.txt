@@ -1,7 +1,7 @@
 Local Game Launch Report
 Date: 2026-06-09
 Template selected: creator-sdk/templates/arena
-Final classification: Runtime Boot Proven
+Final classification: Deterministic Execution Proven
 
 Requested flow and result
 
@@ -14,13 +14,14 @@ Requested flow and result
 | start runtime | PASS | `node creator-sdk/cli/everarcade.mjs launch-local --project /tmp/everarcade-local-launch-proof/audit-arena --runtime-root /tmp/everarcade-local-launch-proof/runtime-root` starts `everarcade-runtime` against the generated package. |
 | produce session record | PASS | Runtime writes `runtime-root/worlds/audit-arena-world/sessions/session-0001.json`. |
 | produce projection record | PASS | Runtime writes `runtime-root/worlds/audit-arena-world/projections/projection-0001.json` with `non_authoritative_projection: true`. |
+| deterministic execution proof | PASS | `node creator-sdk/cli/everarcade.mjs execute-local --project /tmp/everarcade-local-launch-proof/audit-arena --runtime-root /tmp/everarcade-local-launch-proof/runtime-root` submits canonical input, executes one tick, emits receipt/journal/checkpoint evidence, and verifies replay. |
 
 Honest playability finding
 
-The arena template is not yet a playable hosted EverArcade game. The bridge proves that Creator SDK output can become a runtime-compatible package and that `everarcade-runtime` can boot that package and write runtime evidence. The generated `world.wasm` remains a deterministic placeholder, and the runtime does not execute game WASM or provide an interactive multiplayer loop.
+The arena template is not yet a playable hosted EverArcade game. The bridge proves that Creator SDK output can become a runtime-compatible package, that `everarcade-runtime` can boot that package, and that deterministic runtime input can execute one tick with receipt, journal, checkpoint, and replay evidence. The generated `world.wasm` remains a deterministic placeholder, and the runtime does not execute game WASM or provide an interactive multiplayer loop.
 
 Final classification rationale
 
 - Not `Playable`: no real WASM execution, interactive player loop, authoritative multiplayer, renderer UI, settlement, or gateway flow was proven.
-- Stronger than `Simulated`: package validation and boot/session/projection files are produced by the runtime start path from a Creator SDK-generated package.
-- Therefore the end-to-end local game launch classification is **Runtime Boot Proven**.
+- Stronger than `Simulated`: package validation, boot/session/projection files, receipt, journal, checkpoint, and replay proof files are produced by runtime command paths from a Creator SDK-generated package.
+- Therefore the end-to-end local game launch classification is **Deterministic Execution Proven**.

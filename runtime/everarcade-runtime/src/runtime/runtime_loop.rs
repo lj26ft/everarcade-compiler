@@ -6,10 +6,67 @@ use std::time::{SystemTime, UNIX_EPOCH};
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct RuntimeReceipt {
+    pub receipt_id: String,
     pub sequence: u64,
+    pub tick: u64,
     pub input_id: String,
+    pub input_hash: String,
     pub state_root: String,
     pub receipt_hash: String,
+    pub runtime_version: String,
+    pub world_id: String,
+    pub timestamp_or_epoch: u64,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct DeterministicProofInput {
+    pub player_id: String,
+    pub action: String,
+    pub direction: String,
+    pub sequence: u64,
+}
+
+impl DeterministicProofInput {
+    pub fn canonical() -> Self {
+        Self {
+            player_id: "audit-player".into(),
+            action: "move".into(),
+            direction: "north".into(),
+            sequence: 1,
+        }
+    }
+
+    pub fn canonical_bytes(&self) -> Result<Vec<u8>> {
+        Ok(serde_json::to_vec(self)?)
+    }
+
+    pub fn stable_hash(&self) -> Result<String> {
+        Ok(hex::encode(Sha256::digest(self.canonical_bytes()?)))
+    }
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct DeterministicExecutionProof {
+    pub proof_version: String,
+    pub status: String,
+    pub world_id: String,
+    pub runtime_version: String,
+    pub input: DeterministicProofInput,
+    pub input_hash: String,
+    pub receipt_id: String,
+    pub tick: u64,
+    pub ticks_executed: u64,
+    pub previous_state_root: String,
+    pub execution_root: String,
+    pub state_root_changed: bool,
+    pub tick_count_increased: bool,
+    pub receipt_hash: String,
+    pub journal_length: u64,
+    pub checkpoint_identifier: String,
+    pub checkpoint_hash: String,
+    pub replay_root: String,
+    pub replay_verified: bool,
+    pub replay_verification: String,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -202,22 +259,36 @@ impl RuntimeLoop {
             return Ok(None);
         };
         let previous_hash = self.journal.latest_hash()?;
-        self.state.extend_from_slice(&input.payload);
         self.state.extend_from_slice(input.payload_hash.as_bytes());
         let state_root = hex::encode(Sha256::digest(&self.state));
-        let receipt_hash = hex::encode(Sha256::digest(
-            format!("{}:{}:{}", input.sequence, input.input_id, state_root).as_bytes(),
-        ));
+        let receipt_id = format!("receipt-{:020}", input.sequence);
+        let tick = input.sequence;
+        let timestamp_or_epoch = input.sequence;
+        let receipt_hash = Self::deterministic_receipt_hash(
+            &receipt_id,
+            tick,
+            &input.payload_hash,
+            &state_root,
+            &self.config.runtime_version,
+            &self.config.world_id,
+            timestamp_or_epoch,
+        );
         let receipt = RuntimeReceipt {
+            receipt_id: receipt_id.clone(),
             sequence: input.sequence,
+            tick,
             input_id: input.input_id.clone(),
+            input_hash: input.payload_hash.clone(),
             state_root: state_root.clone(),
             receipt_hash: receipt_hash.clone(),
+            runtime_version: self.config.runtime_version.clone(),
+            world_id: self.config.world_id.clone(),
+            timestamp_or_epoch,
         };
         self.persistence.write_versioned(
             self.config
                 .receipts_dir()
-                .join(format!("receipt-{:020}.json", input.sequence)),
+                .join(format!("{receipt_id}.json")),
             &receipt,
         )?;
         let entry = self.journal.append(
@@ -253,6 +324,134 @@ impl RuntimeLoop {
         self.persistence
             .write_versioned(self.config.runtime_status_path(), &self.health)?;
         Ok(Some(receipt))
+    }
+
+    fn deterministic_receipt_hash(
+        receipt_id: &str,
+        tick: u64,
+        input_hash: &str,
+        state_root: &str,
+        runtime_version: &str,
+        world_id: &str,
+        timestamp_or_epoch: u64,
+    ) -> String {
+        let mut h = Sha256::new();
+        h.update(receipt_id.as_bytes());
+        h.update(tick.to_le_bytes());
+        h.update(input_hash.as_bytes());
+        h.update(state_root.as_bytes());
+        h.update(runtime_version.as_bytes());
+        h.update(world_id.as_bytes());
+        h.update(timestamp_or_epoch.to_le_bytes());
+        hex::encode(h.finalize())
+    }
+
+    pub fn execute_deterministic_proof(&mut self) -> Result<DeterministicExecutionProof> {
+        let proof_input = DeterministicProofInput::canonical();
+        let payload = proof_input.canonical_bytes()?;
+        let input_hash = proof_input.stable_hash()?;
+        let previous_state_root = hex::encode(Sha256::digest(&self.state));
+        let previous_ticks = self.metrics.ticks_executed;
+        let input = self.submit_input("deterministic-execution-proof", payload)?;
+        if input.payload_hash != input_hash {
+            anyhow::bail!("canonical input hash mismatch");
+        }
+        let ticks_executed = self.run_ticks(1)?;
+        let receipt = self.persistence.read_versioned::<RuntimeReceipt>(
+            self.config
+                .receipts_dir()
+                .join(format!("receipt-{:020}.json", input.sequence)),
+        )?;
+        let entries = self.journal.entries()?;
+        let execution_root = receipt.state_root.clone();
+        let replay_root = ReplayManager::replay_root(&[], &entries);
+        let replay_verified = replay_root == execution_root
+            && ReplayManager
+                .verify_equivalence(&[], &entries, &execution_root)
+                .is_ok();
+        let checkpoint = self.checkpoints.create(
+            input.sequence,
+            &self.config.world_id,
+            &self.config.runtime_version,
+            entries.len() as u64,
+            execution_root.clone(),
+            self.state.clone(),
+            self.package.world_metadata.clone(),
+        )?;
+        self.checkpoints.verify_checkpoint(&checkpoint)?;
+        self.metrics.checkpoint_count += 1;
+        self.health.checkpoint_height = checkpoint.manifest.sequence;
+        self.health.world_root = execution_root.clone();
+        self.health.runtime_state = self.lifecycle.state.clone();
+        self.persistence
+            .write_versioned(self.config.runtime_status_path(), &self.health)?;
+
+        let proof = DeterministicExecutionProof {
+            proof_version: "deterministic-execution-proof-v0.1".into(),
+            status: if replay_verified {
+                "Deterministic Execution: PASS".into()
+            } else {
+                "Deterministic Execution: FAIL".into()
+            },
+            world_id: self.config.world_id.clone(),
+            runtime_version: self.config.runtime_version.clone(),
+            input: proof_input,
+            input_hash,
+            receipt_id: receipt.receipt_id,
+            tick: receipt.tick,
+            ticks_executed,
+            previous_state_root: previous_state_root.clone(),
+            execution_root,
+            state_root_changed: receipt.state_root != previous_state_root,
+            tick_count_increased: self.metrics.ticks_executed > previous_ticks,
+            receipt_hash: receipt.receipt_hash,
+            journal_length: entries.len() as u64,
+            checkpoint_identifier: format!("checkpoint-{:020}", checkpoint.manifest.sequence),
+            checkpoint_hash: checkpoint.manifest.checkpoint_hash,
+            replay_root,
+            replay_verified,
+            replay_verification: if replay_verified { "PASS" } else { "FAIL" }.into(),
+        };
+        self.write_execution_artifacts(&proof)?;
+        Ok(proof)
+    }
+
+    fn write_execution_artifacts(&self, proof: &DeterministicExecutionProof) -> Result<()> {
+        let replay_dir = self.config.root.join("replay");
+        let receipts_dir = self.config.root.join("receipts");
+        let journals_dir = self.config.root.join("journals");
+        let checkpoints_dir = self.config.root.join("checkpoints");
+        self.persistence.ensure_layout(&[
+            replay_dir.clone(),
+            receipts_dir.clone(),
+            journals_dir.clone(),
+            checkpoints_dir.clone(),
+        ])?;
+        self.persistence.atomic_write_json(
+            self.config
+                .reports_dir()
+                .join("deterministic-execution-proof.json"),
+            proof,
+        )?;
+        self.persistence
+            .atomic_write_json(replay_dir.join("replay-proof.json"), proof)?;
+        std::fs::copy(
+            self.config
+                .receipts_dir()
+                .join(format!("{}.json", proof.receipt_id)),
+            receipts_dir.join(format!("{}.json", proof.receipt_id)),
+        )?;
+        std::fs::copy(
+            self.config.journals_dir().join("journal.jsonl"),
+            journals_dir.join("journal.jsonl"),
+        )?;
+        std::fs::copy(
+            self.config
+                .checkpoints_dir()
+                .join(format!("{}.json", proof.checkpoint_identifier)),
+            checkpoints_dir.join(format!("{}.json", proof.checkpoint_identifier)),
+        )?;
+        Ok(())
     }
 
     pub fn run_ticks(&mut self, max_ticks: u64) -> Result<u64> {

@@ -177,22 +177,32 @@ function prepareRuntimeCargoWorkspace() {
   return workspaceRoot;
 }
 
-function launchLocal(projectDir) {
-  const packaged = fs.existsSync(path.join(runtimePackageDir(projectDir), 'manifest.json'))
-    ? { manifest: JSON.parse(fs.readFileSync(path.join(runtimePackageDir(projectDir), 'manifest.json'), 'utf8')), packageDir: runtimePackageDir(projectDir) }
-    : packageGame(projectDir);
-  const runtimeRoot = path.resolve(value('--runtime-root', path.join(projectDir, 'dist', 'runtime-root')));
+
+function runRuntimeCommand(commandName, projectDir, runtimeRoot, packaged) {
   const cargoArgs = [
     'run', '-q', '-p', 'everarcade-runtime', '--bin', 'runtime', '--',
-    'start', runtimeRoot, packaged.manifest.world_id, packaged.packageDir
+    commandName, runtimeRoot, packaged.manifest.world_id, packaged.packageDir
   ];
-  const startedAt = new Date().toISOString();
   const cargoWorkspace = prepareRuntimeCargoWorkspace();
   const result = spawnSync('cargo', cargoArgs, {
     cwd: cargoWorkspace,
     env: { ...process.env, CARGO_BUILD_JOBS: process.env.CARGO_BUILD_JOBS ?? '1' },
     encoding: 'utf8'
   });
+  return { cargoArgs, cargoWorkspace, result };
+}
+
+function ensurePackaged(projectDir) {
+  return fs.existsSync(path.join(runtimePackageDir(projectDir), 'manifest.json'))
+    ? { manifest: JSON.parse(fs.readFileSync(path.join(runtimePackageDir(projectDir), 'manifest.json'), 'utf8')), packageDir: runtimePackageDir(projectDir) }
+    : packageGame(projectDir);
+}
+
+function launchLocal(projectDir) {
+  const packaged = ensurePackaged(projectDir);
+  const runtimeRoot = path.resolve(value('--runtime-root', path.join(projectDir, 'dist', 'runtime-root')));
+  const startedAt = new Date().toISOString();
+  const { cargoArgs, cargoWorkspace, result } = runRuntimeCommand('start', projectDir, runtimeRoot, packaged);
   const report = {
     command: `cargo ${cargoArgs.join(' ')}`,
     project_dir: projectDir,
@@ -214,6 +224,43 @@ function launchLocal(projectDir) {
     throw new Error(`Runtime start failed with exit code ${result.status}: ${(result.stderr || result.stdout || '').trim()}`);
   }
   console.log(`Local Runtime Launch: PASS (${packaged.manifest.world_id})`);
+}
+
+function executeLocal(projectDir) {
+  const packaged = ensurePackaged(projectDir);
+  const runtimeRoot = path.resolve(value('--runtime-root', path.join(projectDir, 'dist', 'runtime-root')));
+  const startedAt = new Date().toISOString();
+  const launch = runRuntimeCommand('start', projectDir, runtimeRoot, packaged);
+  if (launch.result.status !== 0) {
+    throw new Error(`Runtime start failed with exit code ${launch.result.status}: ${(launch.result.stderr || launch.result.stdout || '').trim()}`);
+  }
+  const proof = runRuntimeCommand('execute-proof', projectDir, runtimeRoot, packaged);
+  const proofReport = {
+    command: `cargo ${proof.cargoArgs.join(' ')}`,
+    launch_command: `cargo ${launch.cargoArgs.join(' ')}`,
+    project_dir: projectDir,
+    runtime_root: runtimeRoot,
+    runtime_package_dir: packaged.packageDir,
+    runtime_source_dir: path.join(repoRoot, 'runtime', 'everarcade-runtime'),
+    cargo_workspace: proof.cargoWorkspace,
+    world_id: packaged.manifest.world_id,
+    package_id: packaged.manifest.package_id,
+    status: proof.result.status === 0 ? 'PASS' : 'FAIL',
+    started_at: startedAt,
+    completed_at: new Date().toISOString(),
+    stdout: proof.result.stdout ?? '',
+    stderr: proof.result.stderr ?? '',
+    exit_code: proof.result.status
+  };
+  writeJson(path.join(projectDir, 'dist', 'deterministic-execution-report.json'), proofReport);
+  if (proof.result.status !== 0) {
+    throw new Error(`Runtime execute-proof failed with exit code ${proof.result.status}: ${(proof.result.stderr || proof.result.stdout || '').trim()}`);
+  }
+  const parsedProof = JSON.parse(proof.result.stdout);
+  if (parsedProof.replay_verification !== 'PASS' || parsedProof.status !== 'Deterministic Execution: PASS') {
+    throw new Error(`Deterministic execution failed replay verification: ${proof.result.stdout}`);
+  }
+  console.log('Deterministic Execution: PASS');
 }
 
 function build(projectDir) {
@@ -294,10 +341,11 @@ try {
   else if (command === 'test') test(projectDir);
   else if (command === 'package') packageGame(projectDir);
   else if (command === 'launch-local') launchLocal(projectDir);
+  else if (command === 'execute-local') executeLocal(projectDir);
   else if (command === 'deploy') deploy(projectDir);
   else if (command === 'publish') publish(projectDir);
   else {
-    console.log('everarcade <new|build|test|package|launch-local|deploy|publish> [--project DIR]');
+    console.log('everarcade <new|build|test|package|launch-local|execute-local|deploy|publish> [--project DIR]');
     process.exit(command ? 1 : 0);
   }
 } catch (error) {

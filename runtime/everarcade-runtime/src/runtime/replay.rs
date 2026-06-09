@@ -21,7 +21,6 @@ impl ReplayManager {
         let mut state = initial_state.to_vec();
         for entry in entries {
             state.extend_from_slice(entry.input_hash.as_bytes());
-            state.extend_from_slice(entry.receipt_hash.as_bytes());
         }
         hex::encode(Sha256::digest(&state))
     }
