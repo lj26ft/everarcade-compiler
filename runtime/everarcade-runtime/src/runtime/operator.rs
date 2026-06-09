@@ -19,6 +19,7 @@ pub enum OperatorCommand {
     ExecuteGuestProof,
     LocalSession,
     MultiplayerLocalSession,
+    NetworkLocalSession,
     Checkpoint,
     Recover,
     Doctor,
@@ -42,6 +43,7 @@ impl OperatorCommand {
             "execute-guest-proof" => Self::ExecuteGuestProof,
             "local-session" => Self::LocalSession,
             "multiplayer-local-session" => Self::MultiplayerLocalSession,
+            "network-local-session" => Self::NetworkLocalSession,
             "checkpoint" => Self::Checkpoint,
             "recover" => Self::Recover,
             "doctor" => Self::Doctor,
@@ -143,6 +145,11 @@ impl RuntimeOperator {
             OperatorCommand::MultiplayerLocalSession => {
                 let mut rt = RuntimeLoop::boot(self.config.clone())?;
                 let proof = rt.execute_multiplayer_local_session()?;
+                Ok(serde_json::to_string_pretty(&proof)?)
+            }
+            OperatorCommand::NetworkLocalSession => {
+                let mut rt = RuntimeLoop::boot(self.config.clone())?;
+                let proof = rt.execute_network_transport_session()?;
                 Ok(serde_json::to_string_pretty(&proof)?)
             }
             OperatorCommand::Checkpoint => {
