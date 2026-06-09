@@ -46,6 +46,15 @@ impl RuntimeConfiguration {
     pub fn receipts_dir(&self) -> PathBuf {
         self.world_dir().join("receipts")
     }
+    pub fn sessions_dir(&self) -> PathBuf {
+        self.world_dir().join("sessions")
+    }
+    pub fn projections_dir(&self) -> PathBuf {
+        self.world_dir().join("projections")
+    }
+    pub fn reports_dir(&self) -> PathBuf {
+        self.root.join("reports")
+    }
     pub fn backups_dir(&self) -> PathBuf {
         self.world_dir().join("backups")
     }

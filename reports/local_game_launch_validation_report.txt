@@ -1,0 +1,29 @@
+Local Game Launch Validation Report
+Classification: Runtime Boot Proven
+Proof root: /tmp/everarcade-local-launch-proof
+
+Creator Create: PASS
+Project: PASS (audit-arena)
+
+Creator Build: PASS
+Build: PASS (audit-arena)
+
+Creator Test: PASS
+Test: PASS (audit-arena)
+
+Runtime Package: PASS
+Runtime Package: PASS (audit-arena)
+
+Runtime Start: PASS
+Local Runtime Launch: PASS (audit-arena-world)
+
+Manifest Evidence: PASS (/tmp/everarcade-local-launch-proof/audit-arena/dist/runtime-package/manifest.json)
+WASM Evidence: PASS (/tmp/everarcade-local-launch-proof/audit-arena/dist/runtime-package/world.wasm)
+World Metadata Evidence: PASS (/tmp/everarcade-local-launch-proof/audit-arena/dist/runtime-package/world.json)
+Launch Report Evidence: PASS (/tmp/everarcade-local-launch-proof/audit-arena/dist/local-launch-report.json)
+Runtime Start Report: PASS (/tmp/everarcade-local-launch-proof/runtime-root/reports/runtime_start_report.json)
+Session Evidence: PASS (/tmp/everarcade-local-launch-proof/runtime-root/worlds/audit-arena-world/sessions/session-0001.json)
+Projection Evidence: PASS (/tmp/everarcade-local-launch-proof/runtime-root/worlds/audit-arena-world/projections/projection-0001.json)
+Runtime Evidence Fields: PASS
+
+Local Game Launch Validation: PASS

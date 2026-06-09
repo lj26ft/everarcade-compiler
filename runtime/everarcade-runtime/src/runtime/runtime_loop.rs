@@ -2,6 +2,7 @@ use crate::runtime::*;
 use anyhow::Result;
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
+use std::time::{SystemTime, UNIX_EPOCH};
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct RuntimeReceipt {
@@ -9,6 +10,41 @@ pub struct RuntimeReceipt {
     pub input_id: String,
     pub state_root: String,
     pub receipt_hash: String,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct RuntimeBootEvidence {
+    pub world_id: String,
+    pub package_id: String,
+    pub package_hash: String,
+    pub runtime_version: String,
+    pub status: String,
+    pub classification: String,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct RuntimeSessionEvidence {
+    pub world_id: String,
+    pub package_id: String,
+    pub package_hash: String,
+    pub runtime_version: String,
+    pub status: String,
+    pub classification: String,
+    pub session_id: String,
+    pub created_at_ms: u128,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct RuntimeProjectionEvidence {
+    pub world_id: String,
+    pub package_id: String,
+    pub package_hash: String,
+    pub runtime_version: String,
+    pub status: String,
+    pub classification: String,
+    pub projection_id: String,
+    pub non_authoritative_projection: bool,
+    pub created_at_ms: u128,
 }
 
 pub struct RuntimeLoop {
@@ -33,7 +69,10 @@ impl RuntimeLoop {
             config.journals_dir(),
             config.checkpoints_dir(),
             config.receipts_dir(),
+            config.sessions_dir(),
+            config.projections_dir(),
             config.backups_dir(),
+            config.reports_dir(),
         ])?;
         let mut lifecycle = RuntimeLifecycle::boot();
         lifecycle.transition(
@@ -67,7 +106,7 @@ impl RuntimeLoop {
         health.package_version = package.manifest.package_version.clone();
         health.runtime_state = RuntimeState::Running;
         lifecycle.transition(RuntimeState::Running, "runtime ready");
-        Ok(Self {
+        let runtime = Self {
             config,
             lifecycle,
             health,
@@ -78,7 +117,74 @@ impl RuntimeLoop {
             checkpoints,
             persistence,
             state,
-        })
+        };
+        runtime.write_boot_evidence()?;
+        Ok(runtime)
+    }
+
+    fn classification(&self) -> String {
+        self.package
+            .world_metadata
+            .get("package_classification")
+            .or_else(|| self.package.world_metadata.get("classification"))
+            .and_then(|v| v.as_str())
+            .unwrap_or("runtime-package")
+            .to_string()
+    }
+
+    fn evidence_base(&self) -> RuntimeBootEvidence {
+        RuntimeBootEvidence {
+            world_id: self.config.world_id.clone(),
+            package_id: self.package.manifest.package_id.clone(),
+            package_hash: self.package.package_hash.clone(),
+            runtime_version: self.config.runtime_version.clone(),
+            status: "Runtime Boot Proven".into(),
+            classification: self.classification(),
+        }
+    }
+
+    fn write_boot_evidence(&self) -> Result<()> {
+        let base = self.evidence_base();
+        self.persistence.atomic_write_json(
+            self.config.reports_dir().join("runtime_start_report.json"),
+            &base,
+        )?;
+        let created_at_ms = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap_or_default()
+            .as_millis();
+        let session = RuntimeSessionEvidence {
+            world_id: base.world_id.clone(),
+            package_id: base.package_id.clone(),
+            package_hash: base.package_hash.clone(),
+            runtime_version: base.runtime_version.clone(),
+            status: base.status.clone(),
+            classification: base.classification.clone(),
+            session_id: "session-0001".into(),
+            created_at_ms,
+        };
+        self.persistence.atomic_write_json(
+            self.config.sessions_dir().join("session-0001.json"),
+            &session,
+        )?;
+        let projection = RuntimeProjectionEvidence {
+            world_id: base.world_id,
+            package_id: base.package_id,
+            package_hash: base.package_hash,
+            runtime_version: base.runtime_version,
+            status: base.status,
+            classification: base.classification,
+            projection_id: "projection-0001".into(),
+            non_authoritative_projection: true,
+            created_at_ms,
+        };
+        self.persistence.atomic_write_json(
+            self.config.projections_dir().join("projection-0001.json"),
+            &projection,
+        )?;
+        self.persistence
+            .write_versioned(self.config.runtime_status_path(), &self.health)?;
+        Ok(())
     }
 
     pub fn submit_input(

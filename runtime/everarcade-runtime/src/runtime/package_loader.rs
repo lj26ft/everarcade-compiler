@@ -72,7 +72,10 @@ impl PackageLoader {
         if manifest.runtime_compatibility != self.required_runtime {
             return Err(anyhow!("runtime compatibility mismatch"));
         }
-        if manifest.wasm_path.trim().is_empty() || manifest.wasm_hash.len() != 64 {
+        if manifest.wasm_path.trim().is_empty()
+            || manifest.wasm_hash.len() != 64
+            || !manifest.wasm_hash.chars().all(|c| c.is_ascii_hexdigit())
+        {
             return Err(anyhow!("invalid wasm reference"));
         }
         if manifest.signature.trim().is_empty() {

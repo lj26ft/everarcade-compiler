@@ -1,0 +1,11 @@
+Local Game Launch Certification Report
+Classification: Runtime Boot Proven
+
+Creator Create: PASS
+Creator Build: PASS
+Creator Test: PASS
+Runtime Package: PASS
+Runtime Start: PASS
+Session Evidence: PASS
+Projection Evidence: PASS
+Local Game Launch: RUNTIME BOOT PROVEN
