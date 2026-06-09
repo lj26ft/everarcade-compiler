@@ -1,5 +1,5 @@
 EverArcade v0.1 Go / No-Go Report
-Date: 2026-06-05
+Date: 2026-06-09
 Decision: NO-GO FOR PUBLIC PRODUCTION LAUNCH
 Open-source readiness: NOT READY
 
@@ -10,10 +10,10 @@ Open-source readiness: NOT READY
 - No major platform area should be advertised as production-ready based on this audit.
 
 2. Local game launch result
-- Final classification: Simulated.
-- Arena template create/build/test/deploy and script launch passed.
-- Runtime start/stop was not proven because targeted Cargo execution failed due incomplete vendored dependencies.
-- No real product flow produced authoritative session or renderer/projection records.
+- Final classification: Runtime Boot Proven.
+- Arena template create/build/test/package/launch-local passes through the Creator SDK and `everarcade-runtime`.
+- Runtime start is proven from a Creator SDK-generated package and writes boot/session/projection evidence.
+- This is not Playable: no real WASM execution, interactive multiplayer, renderer UI, settlement, or gateway flow is proven.
 
 3. Scaffold vs real implementation summary
 - Real/prototype: Rust crates, everarcade-runtime package loader/runtime loop, creator-sdk CLI, some frontend/sample code, provider-evernode prototype.
@@ -36,14 +36,14 @@ Open-source readiness: NOT READY
 3. Add CONTRIBUTING.md and supported development/test commands.
 4. Add CODE_OF_CONDUCT.md.
 5. Fix offline vendored Cargo dependencies or document a working network build mode.
-6. Build one real supported local game launch path that creates runtime-compatible package, runtime session, and renderer/projection evidence.
+6. Replace placeholder WASM with real WASM game execution and an interactive runtime-driven session loop.
 7. Label scaffold/model/PASS reports clearly and remove misleading production wording.
 8. Consolidate or support-bound the 496 scripts.
 9. Add schema/signature/finality controls for checkpoint, replay, settlement, Xaman, marketplace, and GPU-provider evidence.
 10. Clarify ownership of runtime/node/appliance/gateway/portal/frontend directories.
 
 7. Recommended next 5 tasks
-1. Create a canonical `make audit-local-launch` or script that runs one template through a real runtime-compatible package and writes authoritative receipts.
+1. Extend the proven local launch bridge from placeholder-runtime-package boot to real WASM game execution and runtime-driven input/session receipts.
 2. Fix vendored dependencies and add targeted CI for `everarcade-runtime`, creator-sdk CLI, and the reality-audit validator.
 3. Publish a maintained repo map and stub-vs-usable matrix at the top of the README.
 4. Add open-source governance files and remove/ignore generated dependency artifacts as appropriate.
