@@ -1,50 +1,127 @@
-# EverArcade Compiler (v0.1.x)
+# EverArcade
 
-EverArcade is a deterministic runtime/appliance toolchain for packaging and validating reproducible game/world execution artifacts.
+EverArcade is a deterministic game-runtime and creator-tooling repository for packaging, running, and auditing local game execution. The current repository proves that a template game can be created, packaged, executed by the local runtime, and replay-verified on a developer machine.
 
-## Maturity level
+EverArcade is **not production ready**, **not public-testnet ready**, and **not commercial ready**. The current classification is:
 
-- **Current status:** v0.1.x pre-production hardening.
-- **Production-useful today:** deterministic runtime packaging/validation flows, offline vendored Rust builds, release validation scripts.
-- **Prototype/stub areas:** several SDK and higher-level gameplay/docs surfaces still evolving; use `docs/stub-vs-usable-matrix.md` as the current source of truth.
-
-## Quickstart (fresh clone)
-
-```bash
-git clone <repo>
-cd everarcade-compiler
-bash scripts/vendor_deps.sh
-cargo fmt --all --check
-CARGO_BUILD_JOBS=1 cargo check -p everarcade-cli -p everarcade-host -p runtime-client -p renderer-client
-bash scripts/build_runtime_release.sh
-bash scripts/validate_clean_vm_bootstrap.sh
+```text
+Developer Onboarding Proven
+Open Source Candidate
 ```
 
-## Offline/vendor requirement
+## Project Overview
 
-This repository is configured for vendored Cargo dependencies via `.cargo/config.toml`. You must generate `vendor/` first:
+EverArcade exists to make game execution reproducible enough that runtime state, receipts, journals, and replay evidence can be inspected after a session. The repository combines:
+
+- a Rust runtime prototype in `runtime/everarcade-runtime/`;
+- a Node-based Creator SDK in `creator-sdk/`;
+- template games and sample packages;
+- validation and certification scripts under `scripts/`;
+- reports and documentation that explain which claims are proven and which are only scaffolded.
+
+The immediate purpose of v0.1 is developer comprehension and local proof, not live multiplayer, settlement, marketplace operation, or production hosting.
+
+## Architecture Overview
+
+At a high level, EverArcade has four practical layers:
+
+1. **Creator layer**: `creator-sdk/` creates a game project, validates its manifest, builds local artifacts, and packages a runtime bundle.
+2. **Runtime package layer**: generated packages contain `manifest.json`, `world.json`, and `world.wasm` or a deterministic placeholder world artifact.
+3. **Local runtime layer**: `runtime/everarcade-runtime/` starts local sessions, writes receipts, journals, gameplay state, and replay proof material.
+4. **Evidence layer**: `reports/`, runtime roots, and generated validation outputs document what happened and whether replay verification passed.
+
+Many other directories are intentionally less mature. Treat renderer, history, federation, marketplace, GPU, XRPL, Xaman, public-testnet, and commercial-revenue areas as scaffold-level or experimental unless a current validation script and proof-chain document say otherwise. See `docs/repository/repository-map.md` for subsystem ownership and maturity.
+
+## Current Status
+
+### What currently works
+
+- Creating a local Arena game from the Creator SDK.
+- Building and validating the Creator SDK project manifest.
+- Packaging a local runtime package.
+- Running a playable local Arena session through `everarcade-runtime`.
+- Producing local session, gameplay, receipt, journal, transcript, and replay verification evidence.
+- Running open-source readiness and developer-experience certification scripts.
+
+### What does not work yet
+
+- Production hosting or public testnet operation.
+- Real multiplayer federation gameplay.
+- Renderer-driven end-user gameplay as the canonical proof path.
+- XRPL settlement, Xaman signing, GPU marketplace, commercial revenue, and marketplace workflows as production systems.
+- A fully resolved offline vendor snapshot in this clone; the known missing `bincode` vendor issue is documented in `docs/build/offline-build-policy.md`.
+
+## Quick Start
+
+Prerequisites:
+
+- Node.js 18+ for the Creator SDK CLI.
+- Rust/Cargo for the local runtime proof.
+- Network access may be required until the vendor snapshot is restored.
+
+Run the developer onboarding validation:
 
 ```bash
-bash scripts/vendor_deps.sh
+CARGO_BUILD_JOBS=1 bash scripts/validate_developer_onboarding.sh
 ```
 
-Build/test/release scripts intentionally fail fast if `vendor/` is missing and do not silently fall back to network mode.
+Run the open-source readiness audit:
 
-## Runtime packaging flow
+```bash
+bash scripts/validate_open_source_readiness.sh
+```
 
-1. Generate vendored dependencies (`scripts/vendor_deps.sh`).
-2. Build runtime release bundle (`scripts/build_runtime_release.sh`).
-3. Validate a clean bootstrap from packaged runtime (`scripts/validate_clean_vm_bootstrap.sh`).
-4. Optionally run release gate checks (`scripts/release_validate.sh`).
+Run developer-experience certification:
 
-## Deterministic appliance model
+```bash
+bash scripts/certify_developer_experience.sh
+```
 
-EverArcade packages binaries, runtime config, and a manifest into a deterministic runtime appliance (`dist/everarcade-runtime...`). Validation scripts exercise bootstrap/start/validate/shutdown in a reproducible path intended for clean Linux VM onboarding.
+## Playable Local Game
 
-## Where to start as a new developer
+Manual flow:
 
-- Start with `docs/CLI_QUICKSTART.md` for the fastest source install, create, run, replay, and package loop.
-- Use `docs/START_HERE.md` for the quickest operator/bootstrap path.
-- Use `docs/README.md` for the docs map.
-- Review `docs/stub-vs-usable-matrix.md` before building new features.
-- For local reproducibility and audit context, read `docs/onboarding-audit.md` and `docs/v0.1.0-runtime-audit.md`.
+```bash
+TMPDIR="$(mktemp -d)"
+PROJECT="$TMPDIR/arena-demo"
+RUNTIME_ROOT="$TMPDIR/runtime-root"
+
+node creator-sdk/cli/everarcade.mjs new --template arena --name arena-demo --dir "$PROJECT"
+node creator-sdk/cli/everarcade.mjs build --project "$PROJECT"
+node creator-sdk/cli/everarcade.mjs test --project "$PROJECT"
+node creator-sdk/cli/everarcade.mjs package --project "$PROJECT"
+CARGO_BUILD_JOBS=1 node creator-sdk/cli/everarcade.mjs play-local --project "$PROJECT" --template arena --runtime-root "$RUNTIME_ROOT"
+```
+
+Expected result:
+
+```text
+Playable Local Game: PASS
+```
+
+The runtime root should contain session state, gameplay state, receipts, a journal stream, a session transcript, and `replay/gameplay-replay-proof.json` with replay verification set to `PASS`.
+
+For a guided 30-minute path, use `docs/onboarding/30-minute-developer-journey.md`.
+
+## Roadmap
+
+Near-term roadmap:
+
+1. Keep the root README, repository map, proof chain, artifact policy, and onboarding guide as canonical entry points.
+2. Consolidate duplicate scripts and proof reports without deleting historical evidence prematurely.
+3. Restore a complete vendor artifact and document the supported offline build process.
+4. Expand renderer-driven local gameplay only after the current CLI-based playable local proof remains stable.
+5. Continue labeling federation, marketplace, XRPL, Xaman, GPU, and commercial-revenue domains honestly as scaffold or experimental until proven otherwise.
+
+## Contributing
+
+Start with `CONTRIBUTING.md`, then run:
+
+```bash
+git diff --check
+CARGO_BUILD_JOBS=1 bash scripts/validate_developer_onboarding.sh
+bash scripts/validate_open_source_readiness.sh
+bash scripts/certify_developer_experience.sh
+```
+
+Do not claim production readiness from local PASS reports. PASS means the named local proof succeeded under the documented conditions.

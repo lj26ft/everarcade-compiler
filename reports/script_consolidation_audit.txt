@@ -1,0 +1,36 @@
+EverArcade Script Consolidation Audit
+Date: 2026-06-09
+
+Inventory
+- scripts/ files sampled/count: 507
+- validate* scripts: 51
+- certify* scripts: 51
+- run* scripts: 295
+
+Findings
+1. Duplicate proof layers
+   - validate_* and certify_* pairs often wrap the same proof with only report-format differences.
+   - Recommendation: KEEP validation scripts as executable truth, MERGE certification wrappers where they only re-run one validation and append a final line.
+
+2. Runtime proof overlap
+   - validate_runtime_platform.sh, validate_runtime_appliance.sh, validate_runtime_distribution.sh, validate_clean_vm_bootstrap.sh, certify_runtime_bootstrap.sh, certify_runtime_appliance.sh, and release validation scripts overlap in boot/package/release checks.
+   - Recommendation: KEEP one canonical runtime proof chain in docs/runtime-platform/proof-chain.md; MERGE boot/package checks into fewer maintained entry points.
+
+3. Creator/local gameplay overlap
+   - validate_creator_sdk.sh, validate_game_templates.sh, validate_template_gameplay_execution.sh, validate_playable_local_game.sh, certify_template_gameplay_execution.sh, and certify_playable_local_game.sh share Creator SDK/template setup work.
+   - Recommendation: KEEP validate_developer_onboarding.sh as the contributor path; KEEP validate_playable_local_game.sh as the runtime proof; MERGE duplicate template setup code later.
+
+4. Obsolete or high-risk claim surfaces
+   - public-testnet, XRPL, Xaman, GPU marketplace, commercial revenue, federation, and marketplace scripts produce proof/model reports that may be mistaken for production readiness.
+   - Recommendation: KEEP for historical audit only; MARK as scaffold; REMOVE or archive only after maintainers approve a migration plan.
+
+5. Redundant validation layers
+   - run_* scripts frequently call validation/certification scripts and produce differently named reports.
+   - Recommendation: KEEP only where they are CI entry points; MERGE into canonical validate_* scripts where possible.
+
+Recommended action table
+- KEEP: validate_developer_onboarding.sh, validate_open_source_readiness.sh, certify_developer_experience.sh, validate_playable_local_game.sh, validate_deterministic_execution.sh, validate_template_gameplay_execution.sh, validate_wasm_guest_execution.sh.
+- MERGE: duplicate runtime boot/appliance/distribution release wrappers; duplicate Creator SDK template setup flows; certify wrappers that only restate validation output.
+- REMOVE LATER: stale run_* proof flows with no current documentation owner, after they are mapped to canonical docs or archived.
+
+No removals were performed in this milestone.
