@@ -16,6 +16,14 @@ pub struct JournalEntry {
     pub receipt_hash: String,
     pub timestamp_ms: u128,
     pub entry_hash: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub player_id: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub action: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub tick: Option<u64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub gameplay_input: Option<serde_json::Value>,
 }
 
 #[derive(Clone, Debug)]
@@ -57,6 +65,10 @@ impl JournalManager {
             receipt_hash,
             timestamp_ms,
             entry_hash,
+            player_id: None,
+            action: None,
+            tick: None,
+            gameplay_input: None,
         };
         self.persistence
             .append_line_fsync(&self.path, &serde_json::to_string(&entry)?)?;
@@ -104,6 +116,45 @@ impl JournalManager {
             .verify()?
             .map(|e| e.entry_hash)
             .unwrap_or_else(|| GENESIS_HASH.to_string()))
+    }
+
+    pub fn append_gameplay(
+        &self,
+        sequence: u64,
+        previous_hash: String,
+        state_root: String,
+        input_hash: String,
+        receipt_hash: String,
+        player_id: String,
+        action: String,
+        tick: u64,
+        gameplay_input: serde_json::Value,
+    ) -> Result<JournalEntry> {
+        let timestamp_ms = sequence as u128;
+        let entry_hash = Self::hash_fields(
+            sequence,
+            &previous_hash,
+            &state_root,
+            &input_hash,
+            &receipt_hash,
+            timestamp_ms,
+        );
+        let entry = JournalEntry {
+            sequence,
+            previous_hash,
+            state_root,
+            input_hash,
+            receipt_hash,
+            timestamp_ms,
+            entry_hash,
+            player_id: Some(player_id),
+            action: Some(action),
+            tick: Some(tick),
+            gameplay_input: Some(gameplay_input),
+        };
+        self.persistence
+            .append_line_fsync(&self.path, &serde_json::to_string(&entry)?)?;
+        Ok(entry)
     }
 
     pub fn hash_fields(
