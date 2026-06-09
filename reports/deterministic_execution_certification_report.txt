@@ -1,0 +1,25 @@
+Deterministic Execution Certification Report
+Validation Report: reports/deterministic_execution_validation_report.txt
+Validation Status: PASS
+
+Validation Output:
+Deterministic Execution Validation Report
+Work Dir: /tmp/everarcade-deterministic-execution-validation
+Runtime Root: /tmp/everarcade-deterministic-execution-validation/runtime-root
+Proof Path: /tmp/everarcade-deterministic-execution-validation/runtime-root/replay/replay-proof.json
+Receipt Path: /tmp/everarcade-deterministic-execution-validation/runtime-root/receipts/receipt-00000000000000000001.json
+Journal Path: /tmp/everarcade-deterministic-execution-validation/runtime-root/journals/journal.jsonl
+Checkpoint Path: /tmp/everarcade-deterministic-execution-validation/runtime-root/checkpoints/checkpoint-00000000000000000001.json
+Creator Execute Output: Deterministic Execution: PASS
+
+Input Submitted: PASS
+Tick Executed: PASS
+State Mutation: PASS
+Receipt Generated: PASS
+Journal Generated: PASS
+Checkpoint Generated: PASS
+Replay Root Generated: PASS
+Replay Verified: PASS
+Overall Result: PASS
+
+Deterministic Execution Proof v0.1: PASS

@@ -14,6 +14,7 @@ pub enum OperatorCommand {
     ReplayVerify,
     ReplayReport,
     ReplayRoot,
+    ExecuteProof,
     Checkpoint,
     Recover,
     Doctor,
@@ -32,6 +33,7 @@ impl OperatorCommand {
             "replay-verify" => Self::ReplayVerify,
             "replay-report" => Self::ReplayReport,
             "replay-root" => Self::ReplayRoot,
+            "execute-proof" => Self::ExecuteProof,
             "checkpoint" => Self::Checkpoint,
             "recover" => Self::Recover,
             "doctor" => Self::Doctor,
@@ -109,6 +111,11 @@ impl RuntimeOperator {
                 let rt = RuntimeLoop::boot(self.config.clone())?;
                 let entries = rt.journal.entries()?;
                 Ok(ReplayManager::replay_root(&[], &entries))
+            }
+            OperatorCommand::ExecuteProof => {
+                let mut rt = RuntimeLoop::boot(self.config.clone())?;
+                let proof = rt.execute_deterministic_proof()?;
+                Ok(serde_json::to_string_pretty(&proof)?)
             }
             OperatorCommand::Checkpoint => {
                 let rt = RuntimeLoop::boot(self.config.clone())?;
