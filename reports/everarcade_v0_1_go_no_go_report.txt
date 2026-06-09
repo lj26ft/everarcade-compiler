@@ -10,9 +10,9 @@ Open-source readiness: NOT READY
 - No major platform area should be advertised as production-ready based on this audit.
 
 2. Local game launch result
-- Final classification: Deterministic Execution Proven.
+- Final classification: Template Gameplay Proven.
 - Arena template create/build/test/package/launch-local passes through the Creator SDK and `everarcade-runtime`.
-- Runtime start is proven from a Creator SDK-generated package and writes boot/session/projection evidence; deterministic execution proof now submits canonical input, executes one tick, mutates state, emits receipt/journal/checkpoint evidence, and verifies replay.
+- Runtime start is proven from a Creator SDK-generated Arena package and writes boot/session/projection evidence; template gameplay proof now submits Arena join/move/attack/score inputs, mutates Arena state, emits gameplay receipt/journal/replay evidence, and verifies replay.
 - This is not Playable: no real WASM execution, interactive multiplayer, renderer UI, settlement, or gateway flow is proven.
 
 3. Scaffold vs real implementation summary
@@ -43,7 +43,7 @@ Open-source readiness: NOT READY
 10. Clarify ownership of runtime/node/appliance/gateway/portal/frontend directories.
 
 7. Recommended next 5 tasks
-1. Extend the proven deterministic execution bridge from placeholder-runtime-package input/tick/replay evidence to real WASM game execution and runtime-driven gameplay sessions.
+1. Extend the proven template gameplay execution bridge from deterministic Arena records to real WASM game execution and runtime-driven interactive gameplay sessions.
 2. Fix vendored dependencies and add targeted CI for `everarcade-runtime`, creator-sdk CLI, and the reality-audit validator.
 3. Publish a maintained repo map and stub-vs-usable matrix at the top of the README.
 4. Add open-source governance files and remove/ignore generated dependency artifacts as appropriate.
