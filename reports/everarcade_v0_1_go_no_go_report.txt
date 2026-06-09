@@ -1,25 +1,25 @@
 EverArcade v0.1 Go / No-Go Report
 Date: 2026-06-09
 Decision: NO-GO FOR PUBLIC PRODUCTION LAUNCH
-Developer experience classification: Network Transport & Session Synchronization Proven
+Developer experience classification: Federated Runtime Synchronization Proven
 Open-source readiness: CONDITIONAL READY / Open Source Candidate
 
 1. Production readiness summary
 - EverArcade remains pre-production.
-- The current milestone proves local network-style transport and session synchronization while preserving deterministic replay equivalence.
+- The current milestone proves local federated runtime synchronization while preserving deterministic replay equivalence.
 - No public testnet, commercial readiness, multiplayer federation gameplay, XRPL/Xaman settlement, GPU marketplace, or production hosting readiness is claimed.
 
 2. Developer onboarding result
-- Final onboarding classification: Network Transport & Session Synchronization Proven.
+- Final onboarding classification: Federated Runtime Synchronization Proven.
 - The supported contributor path is documented in README.md and docs/onboarding/30-minute-developer-journey.md.
-- scripts/validate_network_transport_session.sh creates an Arena project, builds it, packages it, runs a local network transport session, verifies client/runtime synchronization, validates receipt delivery and journal observation, and verifies replay evidence.
-- This proves a developer can reach Network Transport & Session Synchronization Proven through documented local commands.
+- scripts/validate_federated_runtime_sync.sh creates an Arena project, runs a local federated two-runtime synchronization proof, verifies checkpoint, receipt, and journal exchange, validates divergence detection and recovery, and verifies replay evidence.
+- This proves a developer can reach Federated Runtime Synchronization Proven through documented local commands.
 
 3. Local game launch result
-- Runtime classification is now Network Transport & Session Synchronization Proven.
-- Arena template create/build/test/package/play-network-local passes through the Creator SDK and everarcade-runtime.
-- Runtime evidence includes client state observations, runtime state, transport log, session transcript, receipt delivery records, journal entries, and replay proof with replay verification PASS.
-- This is local network-style transport only; it is not Federation Proven, Evernode Proven, Production Multiplayer Proven, WAN networking, multi-lease coordination, or Production Ready.
+- Runtime classification is now Federated Runtime Synchronization Proven.
+- Arena template create/play-federated-local passes through the Creator SDK and local federated runtime proof.
+- Runtime evidence includes Runtime A and Runtime B identities, checkpoints, receipt streams, journal streams, sync state, divergence proof, recovery proof, and federation replay proof with replay verification PASS.
+- This is local federation synchronization only; it is not Evernode Proven, Production Federation Proven, WAN Federation Proven, Multi-Lease Gameplay Proven, XRPL settlement, or Production Ready.
 
 4. Repository clarity and governance
 - Root README.md is now the primary entry point.
@@ -35,7 +35,7 @@ Open-source readiness: CONDITIONAL READY / Open Source Candidate
 - node_modules/ exists in the working tree and must not be committed.
 
 6. Scaffold vs real implementation summary
-- Real/prototype: runtime/everarcade-runtime local runtime proof, Creator SDK CLI, template packaging, deterministic replay evidence, and targeted validation scripts.
+- Real/prototype: runtime/everarcade-runtime local runtime proof, runtime/federated-runtime-proof local federation synchronization proof, Creator SDK CLI, template packaging, deterministic replay evidence, and targeted validation scripts.
 - Scaffold/model: renderer/history/federation, marketplace, GPU, XRPL, Xaman, commercial revenue, public testnet, many gateway/node/operator flows, and many PASS reports not tied to the canonical proof chain.
 - Documentation-only: architecture, roadmap, operations, and readiness docs unless tied to current runnable commands.
 

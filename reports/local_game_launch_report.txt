@@ -1,7 +1,7 @@
 Local Game Launch Report
 Date: 2026-06-09
 Template selected: creator-sdk/templates/arena
-Final classification: Network Transport & Session Synchronization Proven
+Final classification: Federated Runtime Synchronization Proven
 
 Requested flow and result
 
@@ -15,13 +15,14 @@ Requested flow and result
 | produce session record | PASS | Runtime writes `runtime-root/worlds/audit-arena-world/sessions/session-0001.json`. |
 | produce projection record | PASS | Runtime writes `runtime-root/worlds/audit-arena-world/projections/projection-0001.json` with `non_authoritative_projection: true`. |
 | network transport session proof | PASS | `node creator-sdk/cli/everarcade.mjs play-network-local --template arena --project /tmp/everarcade-local-launch-proof/audit-arena --runtime-root /tmp/everarcade-local-launch-proof/runtime-root` starts local Client A and Client B identities, routes join/move/attack intents through deterministic transport messages, keeps the runtime authoritative, synchronizes client/runtime state roots, propagates receipts, observes the journal, and verifies replay. |
+| federated runtime synchronization proof | PASS | `node creator-sdk/cli/everarcade.mjs play-federated-local --template arena --project /tmp/everarcade-local-launch-proof/audit-arena --runtime-root /tmp/everarcade-local-launch-proof/runtime-root` starts Runtime A and Runtime B identities, exchanges checkpoints, receipts, and journals, synchronizes state roots, detects divergence, recovers behind state, and verifies federation replay. |
 
 Honest playability finding
 
-The Arena template now proves a local network-style transport and synchronization session. The Creator SDK can package the Arena template, start local Client A and Client B identities, route joins, movement, and deterministic attack actions through a canonical transport layer, keep the runtime authoritative for state mutation, receipts, checkpoints, journals, and replay roots, synchronize both client observations to the runtime state root, and verify replay to the final session root. The runtime still does not prove federation, Evernode deployment, WAN networking, multi-lease coordination, renderer-driven gameplay, public testnet operation, or production hosting.
+The Arena template now proves a local federated runtime synchronization session after the local network-style transport proof. The Creator SDK can package the Arena template, start local Client A and Client B identities, route joins, movement, and deterministic attack actions through a canonical transport layer, keep the runtime authoritative for state mutation, receipts, checkpoints, journals, and replay roots, synchronize both client observations to the runtime state root, and verify replay to the final session root. The runtime still does not prove Evernode deployment, WAN federation, XRPL settlement, production-scale federation, multi-lease gameplay hosting, renderer-driven gameplay, public testnet operation, or production hosting.
 
 Final classification rationale
 
-- `Network Transport & Session Synchronization Proven`: a local Arena session synchronizes Client A and Client B through deterministic transport messages, authoritative runtime mutation, receipt delivery, journal observation, multi-tick progression, and replay verification.
-- Not `Federation Proven`, not `Evernode Proven`, and not `Production Multiplayer Proven`: no federation, Evernode lease deployment, WAN transport, multi-lease coordination, settlement, public testnet, or production hosting flow was proven.
-- Therefore the end-to-end local game launch classification is **Network Transport & Session Synchronization Proven**.
+- `Federated Runtime Synchronization Proven`: a local Arena session synchronizes Runtime A and Runtime B through checkpoint exchange, receipt exchange, journal exchange, state-root synchronization, divergence detection, recovery, and federation replay verification.
+- Not `Evernode Proven`, not `Production Federation Proven`, not `WAN Federation Proven`, and not `Multi-Lease Gameplay Proven`: no Evernode lease deployment, WAN transport, production-scale federation, multi-lease coordination, settlement, public testnet, or production hosting flow was proven.
+- Therefore the end-to-end local game launch classification is **Federated Runtime Synchronization Proven**.

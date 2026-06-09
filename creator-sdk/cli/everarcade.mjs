@@ -470,6 +470,42 @@ function playNetworkLocal(projectDir) {
   console.log('Network Transport Session: PASS');
 }
 
+
+function playFederatedLocal(projectDir) {
+  const template = value('--template', null);
+  if (template && template !== 'arena') throw new Error(`Unsupported federated local play template ${template}`);
+  const runtimeRoot = path.resolve(value('--runtime-root', path.join(projectDir, 'dist', 'federated-runtime-root')));
+  const proofScript = path.join(repoRoot, 'runtime', 'federated-runtime-proof', 'federated_runtime_proof.mjs');
+  const startedAt = new Date().toISOString();
+  const result = spawnSync('node', [proofScript, '--project', projectDir, '--template', template ?? 'arena', '--runtime-root', runtimeRoot], {
+    cwd: repoRoot,
+    encoding: 'utf8'
+  });
+  const playReport = {
+    command: `node ${proofScript} --project ${projectDir} --template ${template ?? 'arena'} --runtime-root ${runtimeRoot}`,
+    project_dir: projectDir,
+    runtime_root: runtimeRoot,
+    proof_script: proofScript,
+    template: template ?? 'arena',
+    status: result.status === 0 ? 'PASS' : 'FAIL',
+    started_at: startedAt,
+    completed_at: new Date().toISOString(),
+    stdout: result.stdout ?? '',
+    stderr: result.stderr ?? '',
+    exit_code: result.status
+  };
+  writeJson(path.join(projectDir, 'dist', 'federated-runtime-synchronization-report.json'), playReport);
+  if (result.status !== 0) {
+    throw new Error(`Federated local runtime proof failed with exit code ${result.status}: ${(result.stderr || result.stdout || '').trim()}`);
+  }
+  const summaryPath = path.join(runtimeRoot, 'federation', 'summary.json');
+  const summary = JSON.parse(fs.readFileSync(summaryPath, 'utf8'));
+  if (summary.status !== 'Federated Runtime Synchronization: PASS' || summary.replay_verification !== true) {
+    throw new Error(`Federated local runtime proof failed verification: ${JSON.stringify(summary)}`);
+  }
+  process.stdout.write(result.stdout ?? '');
+}
+
 function executeGuest(projectDir) {
   const packaged = packageGame(projectDir);
   const runtimeRoot = path.resolve(value('--runtime-root', path.join(projectDir, 'dist', 'runtime-root')));
@@ -591,10 +627,11 @@ try {
   else if (command === 'play-local') playLocal(projectDir);
   else if (command === 'play-local-multiplayer') playLocalMultiplayer(projectDir);
   else if (command === 'play-network-local') playNetworkLocal(projectDir);
+  else if (command === 'play-federated-local') playFederatedLocal(projectDir);
   else if (command === 'deploy') deploy(projectDir);
   else if (command === 'publish') publish(projectDir);
   else {
-    console.log('everarcade <new|build|test|package|launch-local|execute-local|execute-template|execute-guest|play-local|play-local-multiplayer|play-network-local|deploy|publish> [--project DIR]');
+    console.log('everarcade <new|build|test|package|launch-local|execute-local|execute-template|execute-guest|play-local|play-local-multiplayer|play-network-local|play-federated-local|deploy|publish> [--project DIR]');
     process.exit(command ? 1 : 0);
   }
 } catch (error) {
