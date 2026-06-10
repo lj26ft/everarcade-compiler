@@ -1,0 +1,13 @@
+Network Failure Behavior Report
+Delayed Client Request: PASS
+Duplicate Action HTTP: 409
+Out Of Order HTTP: 409
+Invalid Action HTTP: 409
+Dropped Action Gap Rejection: PASS
+Gap Resolution HTTP: 200
+State Root Before Resolution: 9407db799448a5c967d68a92ac820dee166c3111c3eee521d330e5baaf3bf7ce
+State Root After Resolution: de43ec0ec52d52cc4922fe326d7c608846cb06ffdb9b67e162371bca9fc1089d
+Invalid Input Rejected: PASS
+Duplicate Input Rejected Or Safely Ignored: PASS
+State Deterministic: PASS
+Network Failure Probe: PASS

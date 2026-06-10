@@ -1,0 +1,8 @@
+Frontend Access Report
+Frontend Reachable: PASS
+Runtime Status Endpoint: PASS
+State Fetch: PASS
+Action Submit: PASS
+Outside VM Route: PASS
+Outside VM Note: bound to 0.0.0.0 and validated through local interface in this lease-style container; true Internet reachability depends on lease firewall/NAT.
+Frontend Access: PASS
