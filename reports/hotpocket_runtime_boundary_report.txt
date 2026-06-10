@@ -1,0 +1,8 @@
+HotPocket Runtime Boundary Check Report
+Runtime Start: PASS
+Inputs Accepted: PASS
+Outputs Exported: PASS
+Checkpoints Written: PASS
+Replay Evidence Exported: PASS
+Consensus Claims: none
+HotPocket Boundary: PASS

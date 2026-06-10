@@ -1,0 +1,7 @@
+Live Session Recovery Report
+State Root Before Stop: d784406f4ca049575c13b15788bd06f00c8a94c1adb73d4a63268509b8544eef
+State Root After Restart: d784406f4ca049575c13b15788bd06f00c8a94c1adb73d4a63268509b8544eef
+Replay Root After Restart: d784406f4ca049575c13b15788bd06f00c8a94c1adb73d4a63268509b8544eef
+Checkpoint Restore: PASS
+Replay Verification: PASS
+Live Session Recovery: PASS

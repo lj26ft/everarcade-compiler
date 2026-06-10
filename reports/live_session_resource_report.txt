@@ -1,0 +1,13 @@
+Live Session Resource Report
+Disk Before KB: 107608
+Disk After KB: 107680
+Memory Available Before KB: 18184124
+Memory Available After KB: 18180512
+CPU Sample Percent: 55.7
+Runtime Process ID: 6691
+Runtime RSS KB: 62220
+Log Size Bytes: 118
+Receipt Count: 4
+Journal Size Bytes: 1304
+Checkpoint Size Bytes: 1010
+Resource Monitoring: PASS

@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EverArcade Arena Live Client</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main>
+    <h1>EverArcade Arena Live Client</h1>
+    <p class="note">Minimal remote client for the Evernode Live Gameplay Deployment Proof v0.1.</p>
+    <label>Runtime URL <input id="runtimeUrl" value="http://127.0.0.1:8787"></label>
+    <label>Player ID <input id="playerId" value="player-a"></label>
+    <section class="controls">
+      <button id="joinBtn">Join</button>
+      <button id="moveBtn">Move North</button>
+      <button id="attackBtn">Attack</button>
+      <button id="refreshBtn">Refresh State</button>
+    </section>
+    <section class="grid">
+      <article><h2>Players</h2><pre id="players">[]</pre></article>
+      <article><h2>Health</h2><pre id="health">{}</pre></article>
+      <article><h2>Score</h2><pre id="score">{}</pre></article>
+      <article><h2>Tick</h2><output id="tick">0</output></article>
+      <article><h2>State Root</h2><code id="stateRoot">unknown</code></article>
+      <article><h2>Replay Status</h2><output id="replayStatus">unknown</output></article>
+    </section>
+    <h2>Last Receipt</h2>
+    <pre id="receipt">No action submitted.</pre>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>

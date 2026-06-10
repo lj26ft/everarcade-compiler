@@ -1,0 +1,70 @@
+Evernode Environment Probe Report
+Generated At: 2026-06-09T23:43:03Z
+Hostname: 853bb1f490a4
+Kernel: Linux 853bb1f490a4 6.12.47 #1 SMP Mon Oct 27 10:01:15 UTC 2025 x86_64 x86_64 x86_64 GNU/Linux
+Working Directory: /workspace/everarcade-compiler
+
+Disk:
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/vda         63G   32G   29G  53% /
+
+Memory:
+               total        used        free      shared  buff/cache   available
+Mem:           18361         600       16737           5        1220       17760
+Swap:              0           0           0
+
+CPU:
+3
+model name	: Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz
+cpu cores	: 3
+model name	: Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz
+cpu cores	: 3
+
+Ports:
+port listing unavailable
+
+Network Interfaces:
+interface listing unavailable
+
+Process Limits:
+real-time non-blocking time  (microseconds, -R) unlimited
+core file size              (blocks, -c) 0
+data seg size               (kbytes, -d) unlimited
+scheduling priority                 (-e) 0
+file size                   (blocks, -f) unlimited
+pending signals                     (-i) 7896
+max locked memory           (kbytes, -l) 8192
+max memory size             (kbytes, -m) unlimited
+open files                          (-n) 1048576
+pipe size                (512 bytes, -p) 8
+POSIX message queues         (bytes, -q) 819200
+real-time priority                  (-r) 0
+stack size                  (kbytes, -s) 8192
+cpu time                   (seconds, -t) unlimited
+max user processes                  (-u) 7896
+virtual memory              (kbytes, -v) unlimited
+file locks                          (-x) unlimited
+
+Filesystem Permissions:
+reports writable: yes
+repo root writable: yes
+
+Available Tools:
+bash: yes (/usr/bin/bash)
+node: yes (/root/.nvm/versions/node/v24.15.0/bin/node)
+npm: yes (/root/.nvm/versions/node/v24.15.0/bin/npm)
+curl: yes (/usr/bin/curl)
+tar: yes (/usr/bin/tar)
+gzip: yes (/usr/bin/gzip)
+sha256sum: yes (/usr/bin/sha256sum)
+ps: yes (/usr/bin/ps)
+awk: yes (/usr/bin/awk)
+sed: yes (/usr/bin/sed)
+df: yes (/usr/bin/df)
+free: yes (/usr/bin/free)
+ss: no
+ip: no
+netstat: no
+python3: yes (/root/.pyenv/shims/python3)
+
+Environment Probe: PASS
