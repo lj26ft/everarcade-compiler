@@ -1,0 +1,18 @@
+{
+  "anchor_id": "anchor-0002",
+  "anchor_hash": "2d8c2e2f3a0a2cc692e248db986ed94ac55418c7a5f0b47fcbacdbaeeab93601",
+  "payload": {
+    "protocol_version": "everarcade-continuity-anchor-v0.1",
+    "world_id": "hotpocket-runtime-proof-world",
+    "execution_epoch": 2,
+    "state_root": "6dd7ca63efcfc53998928329886efd9446a259b53f391c5bcc621301385f08ee",
+    "checkpoint_root": "5b17bdc92500f26532f798e7f5075f0418d256168b1f2962c15a1ce01db41d35",
+    "journal_root": "c6736a818f08265e445eb9c91b9307c1026ebc77e1ec9a2701d85a1816bb29ee",
+    "receipt_root": "cf4c534b67c2321da9fcda9bc1dbb5bc5395d2f6b0ecea87d5792716f719c0fb",
+    "replay_root": "6dd7ca63efcfc53998928329886efd9446a259b53f391c5bcc621301385f08ee",
+    "continuity_root": "f09a530ffa1f30800d8938b00c6e566acfb3078161efe36252f0b29793463829",
+    "timestamp": 2,
+    "previous_anchor_hash": "d23e30b28b44d4284b696484e3f816c3bbf053d5fc5290feeea64af65954542f"
+  },
+  "source": "migration-restored"
+}

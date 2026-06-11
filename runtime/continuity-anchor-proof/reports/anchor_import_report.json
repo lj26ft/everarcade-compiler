@@ -1,0 +1,12 @@
+{
+  "schema": "everarcade.continuity-anchor.import.v0.1",
+  "receipt_import": "PASS",
+  "journal_import": "PASS",
+  "checkpoint_import": "PASS",
+  "state_root": "6dd7ca63efcfc53998928329886efd9446a259b53f391c5bcc621301385f08ee",
+  "replay_root": "6dd7ca63efcfc53998928329886efd9446a259b53f391c5bcc621301385f08ee",
+  "receipt_root": "cf4c534b67c2321da9fcda9bc1dbb5bc5395d2f6b0ecea87d5792716f719c0fb",
+  "journal_root": "c6736a818f08265e445eb9c91b9307c1026ebc77e1ec9a2701d85a1816bb29ee",
+  "checkpoint_root": "5b17bdc92500f26532f798e7f5075f0418d256168b1f2962c15a1ce01db41d35",
+  "status": "PASS"
+}

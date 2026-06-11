@@ -1,0 +1,5 @@
+EverArcade Anchor Replay Equivalence Report
+live_anchor_hash: 6804bd19f5925132daf9bfcf295552ca5cb133738423424a43107401261cfe1f
+replayed_anchor_hash: 6804bd19f5925132daf9bfcf295552ca5cb133738423424a43107401261cfe1f
+replayed_root: 6dd7ca63efcfc53998928329886efd9446a259b53f391c5bcc621301385f08ee
+Replay Equivalence Proof: PASS

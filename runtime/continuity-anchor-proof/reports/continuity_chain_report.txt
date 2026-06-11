@@ -1,0 +1,6 @@
+EverArcade Continuity Anchor Chain Report
+anchor-0000: source=runtime-live hash=6804bd19f5925132daf9bfcf295552ca5cb133738423424a43107401261cfe1f previous=genesis hash=PASS link=PASS
+anchor-0001: source=migration-pre hash=d23e30b28b44d4284b696484e3f816c3bbf053d5fc5290feeea64af65954542f previous=6804bd19f5925132daf9bfcf295552ca5cb133738423424a43107401261cfe1f hash=PASS link=PASS
+anchor-0002: source=migration-restored hash=2d8c2e2f3a0a2cc692e248db986ed94ac55418c7a5f0b47fcbacdbaeeab93601 previous=d23e30b28b44d4284b696484e3f816c3bbf053d5fc5290feeea64af65954542f hash=PASS link=PASS
+anchor-0003: source=migration-post hash=cae9ad5e8d114fe0502743aa683db1cec81be59cd4d1cf72d4b07b8d78539aae previous=2d8c2e2f3a0a2cc692e248db986ed94ac55418c7a5f0b47fcbacdbaeeab93601 hash=PASS link=PASS
+Hash-linked continuity: PASS

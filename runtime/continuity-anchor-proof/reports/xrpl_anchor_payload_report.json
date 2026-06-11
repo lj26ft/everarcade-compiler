@@ -1,0 +1,12 @@
+{
+  "schema": "everarcade.xrpl.anchor-payload.v0.1",
+  "payload": {
+    "world_id": "hotpocket-runtime-proof-world",
+    "state_root": "beda699c7354bbcdf1d2a6941560b679c1d9de1822afdf7250c92aa02836f37e",
+    "continuity_root": "668b537d207481fd8063fd8d396210b34d5eec4cce8f32cb2f27c6e647eec1f2",
+    "anchor_hash": "cae9ad5e8d114fe0502743aa683db1cec81be59cd4d1cf72d4b07b8d78539aae"
+  },
+  "payload_hash": "cf69b86b0cf02d84a93e204ff5f436d2c04d118d5445df4c145b199636cacd36",
+  "submission": "not-submitted",
+  "status": "PASS"
+}

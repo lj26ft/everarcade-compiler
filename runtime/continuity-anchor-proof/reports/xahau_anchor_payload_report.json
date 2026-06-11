@@ -1,0 +1,16 @@
+{
+  "schema": "everarcade.xahau.hook-anchor-payload.v0.1",
+  "payload": {
+    "hook_namespace": "everarcade.continuity.anchor.v0.1",
+    "hook_parameters": {
+      "world_id": "hotpocket-runtime-proof-world",
+      "execution_epoch": 3,
+      "continuity_root": "668b537d207481fd8063fd8d396210b34d5eec4cce8f32cb2f27c6e647eec1f2",
+      "previous_anchor_hash": "2d8c2e2f3a0a2cc692e248db986ed94ac55418c7a5f0b47fcbacdbaeeab93601",
+      "anchor_hash": "cae9ad5e8d114fe0502743aa683db1cec81be59cd4d1cf72d4b07b8d78539aae"
+    }
+  },
+  "payload_hash": "9d7eb70f75422cbd550982d3c79500a377f059b858b9cf28ccd1bca09ba8c84c",
+  "deployment": "not-deployed",
+  "status": "PASS"
+}
