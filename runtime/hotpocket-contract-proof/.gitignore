@@ -1,0 +1,5 @@
+node_modules/
+.state/
+reports/*.json
+reports/*.txt
+!reports/.gitkeep
