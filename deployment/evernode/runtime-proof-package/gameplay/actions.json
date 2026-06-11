@@ -1,0 +1,4 @@
+[
+  { "sequence": 1, "action": "join_player", "player_id": "alice" },
+  { "sequence": 2, "action": "move_player", "player_id": "alice", "x": 10, "y": 20 }
+]

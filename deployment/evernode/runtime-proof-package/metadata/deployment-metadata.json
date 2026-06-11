@@ -1,0 +1,13 @@
+{
+  "schema": "everarcade.evernode.runtime-proof.deployment-metadata.v0.1",
+  "package_role": "lease-execution-certification",
+  "operator_inputs": [
+    "EVERNODE_LEASE_ID",
+    "EVERNODE_HOST_ID",
+    "EVERNODE_SSH_TARGET",
+    "XRPL_TESTNET_SEED",
+    "XRPL_TESTNET_DESTINATION"
+  ],
+  "manual_editing_required": false,
+  "certification_rule": "The final PASS line is emitted only after real lease execution, artifact generation, XRPL Testnet tesSUCCESS, retrieval verification, and deterministic replay equivalence."
+}
