@@ -1,0 +1,13 @@
+{
+  "name": "everarcade-hotpocket-deployment-variant-d",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Variant D: package shape emitted by the EverArcade HotPocket adapter.",
+  "type": "commonjs",
+  "main": "contract.js",
+  "scripts": {
+    "start": "node contract.js",
+    "hotpocket:start": "node contract.js --adapter"
+  },
+  "dependencies": {}
+}

@@ -1,0 +1,13 @@
+{
+  "name": "everarcade-hotpocket-deployment-variant-c",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Variant C: package shape emitted by the EverArcade Creator SDK HotPocket template.",
+  "type": "commonjs",
+  "main": "contract.js",
+  "scripts": {
+    "start": "node contract.js",
+    "hotpocket:start": "node contract.js --creator-sdk"
+  },
+  "dependencies": {}
+}

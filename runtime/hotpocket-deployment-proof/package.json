@@ -1,0 +1,18 @@
+{
+  "name": "@everarcade/hotpocket-deployment-proof",
+  "version": "0.1.0",
+  "private": true,
+  "description": "HotPocket deployment compatibility proof harness for EverArcade contract packages.",
+  "type": "commonjs",
+  "scripts": {
+    "inspect": "node validation/hotpocket-deployment-proof.js inspect",
+    "deploy": "node validation/hotpocket-deployment-proof.js deploy",
+    "executable": "node validation/hotpocket-deployment-proof.js executable",
+    "dependencies": "node validation/hotpocket-deployment-proof.js dependencies",
+    "launch": "node validation/hotpocket-deployment-proof.js launch",
+    "proposal": "node validation/hotpocket-deployment-proof.js proposal",
+    "validate": "node validation/hotpocket-deployment-proof.js validate",
+    "certify": "node validation/hotpocket-deployment-proof.js certify"
+  },
+  "dependencies": {}
+}
