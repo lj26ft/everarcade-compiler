@@ -68,3 +68,7 @@ validation_logs.tar.gz
 deployment/everarcade-validation-reports-20260601-1328.tar.gz
 deployment/reports/everarcade-validation-reports-20260601-1325.tar.gz
 *.txt
+
+# Generated HotPocket adapter proof state
+/deployment/evernode/runtime/packages.sha256
+/validation/hotpocket/*-state/

@@ -1,0 +1,10 @@
+HotPocket Package Deployment Report
+everarcade-runtime-package: PASS
+Adapter Deployment: PASS
+Manual Patching: none
+Manual Container Edits: none
+Manual bin_path Edits: none
+Package Hash Verification: PASS
+Start Script Execution: PASS
+Classification: HotPocket Package Deployment Proven
+HotPocket Package Deployment Proof: PASS

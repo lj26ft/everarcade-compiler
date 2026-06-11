@@ -1,0 +1,17 @@
+{
+  "name": "@everarcade/hotpocket-adapter",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Canonical deterministic HotPocket adapter layer for EverArcade proof v0.1.",
+  "type": "commonjs",
+  "main": "src/index.js",
+  "bin": {
+    "everarcade-hotpocket-adapter": "bin/everarcade-hotpocket-adapter.js",
+    "everarcade-hotpocket-discover": "bin/discover-hotpocket-sdk.js"
+  },
+  "scripts": {
+    "validate": "node bin/everarcade-hotpocket-adapter.js validate",
+    "discover": "node bin/discover-hotpocket-sdk.js"
+  },
+  "dependencies": {}
+}

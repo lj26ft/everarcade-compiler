@@ -1,0 +1,9 @@
+HotPocket Execution Proof Report
+Client Connected: PASS
+Input Accepted: PASS
+Consensus Finalized: PASS
+Contract Executed: PASS
+Response Returned: PASS
+Response: {"status":"ok"}
+Classification: HotPocket Contract Execution Proven
+HotPocket Contract Execution Proof: PASS

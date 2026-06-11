@@ -1,0 +1,50 @@
+{
+  "schema": "everarcade.hotpocket.sdk-discovery.v0.1",
+  "generated_at": "1970-01-01T00:00:00.000Z",
+  "node": "v24.15.0",
+  "platform": "linux",
+  "arch": "x64",
+  "cwd": "/workspace/everarcade-compiler",
+  "packages": [
+    {
+      "name": "hotpocket-js-client",
+      "available": false,
+      "error": "Cannot find module 'hotpocket-js-client'\nRequire stack:\n- /workspace/everarcade-compiler/runtime/hotpocket-adapter/bin/discover-hotpocket-sdk.js"
+    },
+    {
+      "name": "hotpocket-nodejs-contract",
+      "available": false,
+      "error": "Cannot find module 'hotpocket-nodejs-contract'\nRequire stack:\n- /workspace/everarcade-compiler/runtime/hotpocket-adapter/bin/discover-hotpocket-sdk.js"
+    },
+    {
+      "name": "hotpocket-contract-js",
+      "available": false,
+      "error": "Cannot find module 'hotpocket-contract-js'\nRequire stack:\n- /workspace/everarcade-compiler/runtime/hotpocket-adapter/bin/discover-hotpocket-sdk.js"
+    },
+    {
+      "name": "hotpocket",
+      "available": false,
+      "error": "Cannot find module 'hotpocket'\nRequire stack:\n- /workspace/everarcade-compiler/runtime/hotpocket-adapter/bin/discover-hotpocket-sdk.js"
+    }
+  ],
+  "callback_signature_hypotheses": [
+    "contract.init(ctx) / contract.execute(ctx) lifecycle style",
+    "server.on('input', (ctx, input) => ...) event style",
+    "HotPocketContract(...) callback registration style"
+  ],
+  "client_event_surface_hypotheses": [
+    "connect",
+    "disconnect",
+    "ledger",
+    "contractOutput",
+    "submissionStatus"
+  ],
+  "consensus_configuration_probe": {
+    "env": {},
+    "required_local_nodes": 3
+  },
+  "runtime_environment_metadata": {
+    "deterministic_clock": "1970-01-01T00:00:00.000Z",
+    "adapter_state_dir": "validation/hotpocket/execution-state"
+  }
+}
