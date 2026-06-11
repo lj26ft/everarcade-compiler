@@ -1,0 +1,10 @@
+HotPocket Gameplay State Root Report
+state before hash: 18bdb9779f445ffb915d40922d566127515c4403fe063cbc6ffa30bc0f7c544b
+state after hash: a24c81142c1729f53ecb124c72054390a5ed41ce29a07759d87055c33e26be69
+action hash: d302e6755c4c20b369e0963b15652b7e58cec6b77ac2b884f2e61b18c02886ac
+receipt hash: e228a686cd0f6f31f24851eb0a018c3f164ee15215e927876f04ea2ec58791d6
+canonical serialization: PASS
+stable ordering: PASS
+replay reproducible: PASS
+validator independent: PASS
+HotPocket Gameplay State Root Proof: PASS
