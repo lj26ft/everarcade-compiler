@@ -1,0 +1,22 @@
+{
+  "name": "@everarcade/hotpocket-contract-proof",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Live HotPocket contract execution proof for EverArcade v0.1.",
+  "type": "commonjs",
+  "main": "contract/index.js",
+  "scripts": {
+    "discover": "node validation/hotpocket-proof.js discover",
+    "self-test": "node validation/hotpocket-proof.js self-test",
+    "client": "node client/roundtrip-client.js",
+    "validate": "node validation/hotpocket-proof.js validate",
+    "certify": "node validation/hotpocket-proof.js certify"
+  },
+  "dependencies": {
+    "hotpocket-js-client": "0.5.7",
+    "hotpocket-nodejs-contract": "0.7.4"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
