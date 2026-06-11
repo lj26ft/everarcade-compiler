@@ -1,0 +1,99 @@
+{
+  "schema": "everarcade.hotpocket.runtime.execution.v0.1",
+  "actions": [
+    {
+      "action": "join_player",
+      "player_id": "alice"
+    },
+    {
+      "action": "move_player",
+      "player_id": "alice",
+      "x": 10,
+      "y": 20
+    }
+  ],
+  "validators": [
+    {
+      "validator": "node1",
+      "mode": "deterministic-consensus-projection",
+      "state_root": "6dd7ca63efcfc53998928329886efd9446a259b53f391c5bcc621301385f08ee",
+      "execution_hash": "25e95af52d9845e45e6ace24a7649855d9e08e771a675dde25886a0b90457c78",
+      "output": {
+        "accepted": true,
+        "action": "move_player",
+        "runtime_action": "move",
+        "player_id": "alice",
+        "state_root": "6dd7ca63efcfc53998928329886efd9446a259b53f391c5bcc621301385f08ee",
+        "tick": 2,
+        "players": [
+          "alice"
+        ],
+        "positions": {
+          "dummy": {
+            "x": 0,
+            "y": 1
+          },
+          "alice": {
+            "x": 10,
+            "y": 20
+          }
+        }
+      }
+    },
+    {
+      "validator": "node2",
+      "mode": "deterministic-consensus-projection",
+      "state_root": "6dd7ca63efcfc53998928329886efd9446a259b53f391c5bcc621301385f08ee",
+      "execution_hash": "25e95af52d9845e45e6ace24a7649855d9e08e771a675dde25886a0b90457c78",
+      "output": {
+        "accepted": true,
+        "action": "move_player",
+        "runtime_action": "move",
+        "player_id": "alice",
+        "state_root": "6dd7ca63efcfc53998928329886efd9446a259b53f391c5bcc621301385f08ee",
+        "tick": 2,
+        "players": [
+          "alice"
+        ],
+        "positions": {
+          "dummy": {
+            "x": 0,
+            "y": 1
+          },
+          "alice": {
+            "x": 10,
+            "y": 20
+          }
+        }
+      }
+    },
+    {
+      "validator": "node3",
+      "mode": "deterministic-consensus-projection",
+      "state_root": "6dd7ca63efcfc53998928329886efd9446a259b53f391c5bcc621301385f08ee",
+      "execution_hash": "25e95af52d9845e45e6ace24a7649855d9e08e771a675dde25886a0b90457c78",
+      "output": {
+        "accepted": true,
+        "action": "move_player",
+        "runtime_action": "move",
+        "player_id": "alice",
+        "state_root": "6dd7ca63efcfc53998928329886efd9446a259b53f391c5bcc621301385f08ee",
+        "tick": 2,
+        "players": [
+          "alice"
+        ],
+        "positions": {
+          "dummy": {
+            "x": 0,
+            "y": 1
+          },
+          "alice": {
+            "x": 10,
+            "y": 20
+          }
+        }
+      }
+    }
+  ],
+  "status": "PASS"
+}

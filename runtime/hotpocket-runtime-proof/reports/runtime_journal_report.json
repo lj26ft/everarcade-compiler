@@ -1,0 +1,63 @@
+{
+  "append_only_entries": [
+    {
+      "sequence": 1,
+      "previous_hash": "genesis",
+      "state_root": "559e0fdf2fcc793d38c99de90ea721b9f23e069330083b4a496f740473bb8b3f",
+      "input_hash": "50d46b827c8c3e6314bfc5f82191134d63878981f904e30dbbfb7f2e4183f514",
+      "receipt_hash": "d0c46691f397882c4e2bcc0b93f5dbe68427cea9e8cd1c86cb2891f5d5700eed",
+      "timestamp_ms": 1,
+      "player_id": "alice",
+      "action": "join",
+      "tick": 1,
+      "gameplay_input": {
+        "player_id": "alice",
+        "action": "join",
+        "sequence": 1
+      },
+      "entry_hash": "d92c0ad1ed8716fea69d1d902f730b8d3e7ff7493ba8af611cf59bc71b11f457"
+    },
+    {
+      "sequence": 2,
+      "previous_hash": "d92c0ad1ed8716fea69d1d902f730b8d3e7ff7493ba8af611cf59bc71b11f457",
+      "state_root": "6dd7ca63efcfc53998928329886efd9446a259b53f391c5bcc621301385f08ee",
+      "input_hash": "d5788c28de19b8d5d10b3bcfb661e2702e428ffb3ed92a500952c3511f71589f",
+      "receipt_hash": "7fd9f1d3eadc5b84da48311ad0ed5b400b5fe7ef33cfbb2d7cae6a1a1783d199",
+      "timestamp_ms": 2,
+      "player_id": "alice",
+      "action": "move",
+      "tick": 2,
+      "gameplay_input": {
+        "player_id": "alice",
+        "action": "move",
+        "x": 10,
+        "y": 20,
+        "sequence": 2
+      },
+      "entry_hash": "ba4f187b648ffb32dbc3d77bbb69a7bd0a6266216920420954376842f1f442ab"
+    }
+  ],
+  "deterministic_ordering": [
+    1,
+    2
+  ],
+  "canonical_hashes": [
+    "d92c0ad1ed8716fea69d1d902f730b8d3e7ff7493ba8af611cf59bc71b11f457",
+    "ba4f187b648ffb32dbc3d77bbb69a7bd0a6266216920420954376842f1f442ab"
+  ],
+  "validator_journal_hashes": [
+    {
+      "validator": "node1",
+      "hash": "c6736a818f08265e445eb9c91b9307c1026ebc77e1ec9a2701d85a1816bb29ee"
+    },
+    {
+      "validator": "node2",
+      "hash": "c6736a818f08265e445eb9c91b9307c1026ebc77e1ec9a2701d85a1816bb29ee"
+    },
+    {
+      "validator": "node3",
+      "hash": "c6736a818f08265e445eb9c91b9307c1026ebc77e1ec9a2701d85a1816bb29ee"
+    }
+  ],
+  "status": "PASS"
+}

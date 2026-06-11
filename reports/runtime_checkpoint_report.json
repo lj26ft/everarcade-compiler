@@ -1,0 +1,32 @@
+{
+  "checkpoint_generation": {
+    "sequence": 2,
+    "created_at_ms": 2,
+    "world_id": "hotpocket-runtime-proof-world",
+    "runtime_version": "everarcade-runtime-v0.1",
+    "journal_position": 2,
+    "state_root": "6dd7ca63efcfc53998928329886efd9446a259b53f391c5bcc621301385f08ee",
+    "checkpoint_hash": "5b17bdc92500f26532f798e7f5075f0418d256168b1f2962c15a1ce01db41d35"
+  },
+  "checkpoint_root": "5b17bdc92500f26532f798e7f5075f0418d256168b1f2962c15a1ce01db41d35",
+  "checkpoint_metadata": {
+    "world_id": "hotpocket-runtime-proof-world",
+    "runtime_version": "everarcade-runtime-v0.1",
+    "journal_position": 2
+  },
+  "validator_checkpoint_roots": [
+    {
+      "validator": "node1",
+      "root": "5b17bdc92500f26532f798e7f5075f0418d256168b1f2962c15a1ce01db41d35"
+    },
+    {
+      "validator": "node2",
+      "root": "5b17bdc92500f26532f798e7f5075f0418d256168b1f2962c15a1ce01db41d35"
+    },
+    {
+      "validator": "node3",
+      "root": "5b17bdc92500f26532f798e7f5075f0418d256168b1f2962c15a1ce01db41d35"
+    }
+  ],
+  "status": "PASS"
+}
