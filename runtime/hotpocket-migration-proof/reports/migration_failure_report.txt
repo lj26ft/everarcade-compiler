@@ -1,0 +1,10 @@
+EverArcade HotPocket Migration Failure Inspection Report
+replay mismatch: PASS
+restore mismatch: PASS
+root mismatch: PASS
+validator disagreement: PASS
+checkpoint divergence: PASS
+journal divergence: PASS
+receipt divergence: PASS
+continuation failure: PASS
+Migration Failure Inspection: PASS

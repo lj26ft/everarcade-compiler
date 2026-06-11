@@ -1,0 +1,6 @@
+EverArcade HotPocket Replay After Migration Report
+Replay start: genesis
+Replay journal: full restored journal plus post-migration continuation entry
+replayed_root: beda699c7354bbcdf1d2a6941560b679c1d9de1822afdf7250c92aa02836f37e
+continued_root: beda699c7354bbcdf1d2a6941560b679c1d9de1822afdf7250c92aa02836f37e
+Replay After Migration Proof: PASS

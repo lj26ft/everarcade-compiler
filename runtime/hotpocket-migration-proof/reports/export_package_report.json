@@ -1,0 +1,28 @@
+{
+  "schema": "everarcade.hotpocket.migration.export-package.v0.1",
+  "export_root": "f9de498316344a98cfb42775937419d3dd38c70eeec9d590b4177f7925f16c1b",
+  "manifest_hash": "sha256:bec448892b9340db7b7e385b65cbc38e99c6205721151ce374b0fb4b5162fdf9",
+  "artifacts": {
+    "world.bin": "sha256:dc7d774ed21d0fe8cfa73a9b33508945356e823dbbfda5aa3c1c65a587dde6fe",
+    "checkpoint.bin": "sha256:518428f3dda1f9b5b458ba9a15b7e1432c23b0a28d3261cd6db3a28dc4ec18cb",
+    "journal.bin": "sha256:61b2966a016780111067d50e00d7c9bbc1c8c424d67cc756e6f73b433aebc894",
+    "receipts.bin": "sha256:9a3dc1400efe7ae3d5b54cb8a8f4261eb7045a6bc5bc4325a0c8c768a507787e"
+  },
+  "deterministic_order": [
+    "world.bin",
+    "checkpoint.bin",
+    "journal.bin",
+    "receipts.bin",
+    "manifest.json"
+  ],
+  "version_metadata": {
+    "proof_version": "everarcade-sovereign-runtime-migration-proof-v0.1",
+    "export_version": "everarcade-sovereign-export-v0.1"
+  },
+  "runtime_compatibility": {
+    "runtime": "everarcade-runtime-v0.1",
+    "hotpocket_consensus": "three-validator-deterministic-projection",
+    "requires_shared_runtime_state": false
+  },
+  "status": "PASS"
+}
