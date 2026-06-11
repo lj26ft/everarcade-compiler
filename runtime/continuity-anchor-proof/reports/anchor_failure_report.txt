@@ -1,0 +1,10 @@
+EverArcade Continuity Anchor Failure Inspection Report
+anchor mismatch: PASS
+replay mismatch: PASS
+restore mismatch: PASS
+migration mismatch: PASS
+continuity break: PASS
+root mismatch: PASS
+hash mismatch: PASS
+payload mismatch: PASS
+Failure Inspection: PASS

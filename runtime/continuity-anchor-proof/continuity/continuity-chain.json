@@ -1,0 +1,77 @@
+{
+  "schema": "everarcade.continuity-anchor.chain.v0.1",
+  "anchors": [
+    {
+      "anchor_id": "anchor-0000",
+      "anchor_hash": "6804bd19f5925132daf9bfcf295552ca5cb133738423424a43107401261cfe1f",
+      "payload": {
+        "protocol_version": "everarcade-continuity-anchor-v0.1",
+        "world_id": "hotpocket-runtime-proof-world",
+        "execution_epoch": 0,
+        "state_root": "6dd7ca63efcfc53998928329886efd9446a259b53f391c5bcc621301385f08ee",
+        "checkpoint_root": "5b17bdc92500f26532f798e7f5075f0418d256168b1f2962c15a1ce01db41d35",
+        "journal_root": "c6736a818f08265e445eb9c91b9307c1026ebc77e1ec9a2701d85a1816bb29ee",
+        "receipt_root": "cf4c534b67c2321da9fcda9bc1dbb5bc5395d2f6b0ecea87d5792716f719c0fb",
+        "replay_root": "6dd7ca63efcfc53998928329886efd9446a259b53f391c5bcc621301385f08ee",
+        "continuity_root": "f977f6015f4cf7ef35e5290129163c2d30a264e5badbbb841278b1cbe67356a3",
+        "timestamp": 0,
+        "previous_anchor_hash": "genesis"
+      },
+      "source": "runtime-live"
+    },
+    {
+      "anchor_id": "anchor-0001",
+      "anchor_hash": "d23e30b28b44d4284b696484e3f816c3bbf053d5fc5290feeea64af65954542f",
+      "payload": {
+        "protocol_version": "everarcade-continuity-anchor-v0.1",
+        "world_id": "hotpocket-runtime-proof-world",
+        "execution_epoch": 1,
+        "state_root": "6dd7ca63efcfc53998928329886efd9446a259b53f391c5bcc621301385f08ee",
+        "checkpoint_root": "5b17bdc92500f26532f798e7f5075f0418d256168b1f2962c15a1ce01db41d35",
+        "journal_root": "c6736a818f08265e445eb9c91b9307c1026ebc77e1ec9a2701d85a1816bb29ee",
+        "receipt_root": "cf4c534b67c2321da9fcda9bc1dbb5bc5395d2f6b0ecea87d5792716f719c0fb",
+        "replay_root": "6dd7ca63efcfc53998928329886efd9446a259b53f391c5bcc621301385f08ee",
+        "continuity_root": "339c4d135e03a7158f5b67786f22523df8b78adceebea0e12a7089fec0cc5fca",
+        "timestamp": 1,
+        "previous_anchor_hash": "6804bd19f5925132daf9bfcf295552ca5cb133738423424a43107401261cfe1f"
+      },
+      "source": "migration-pre"
+    },
+    {
+      "anchor_id": "anchor-0002",
+      "anchor_hash": "2d8c2e2f3a0a2cc692e248db986ed94ac55418c7a5f0b47fcbacdbaeeab93601",
+      "payload": {
+        "protocol_version": "everarcade-continuity-anchor-v0.1",
+        "world_id": "hotpocket-runtime-proof-world",
+        "execution_epoch": 2,
+        "state_root": "6dd7ca63efcfc53998928329886efd9446a259b53f391c5bcc621301385f08ee",
+        "checkpoint_root": "5b17bdc92500f26532f798e7f5075f0418d256168b1f2962c15a1ce01db41d35",
+        "journal_root": "c6736a818f08265e445eb9c91b9307c1026ebc77e1ec9a2701d85a1816bb29ee",
+        "receipt_root": "cf4c534b67c2321da9fcda9bc1dbb5bc5395d2f6b0ecea87d5792716f719c0fb",
+        "replay_root": "6dd7ca63efcfc53998928329886efd9446a259b53f391c5bcc621301385f08ee",
+        "continuity_root": "f09a530ffa1f30800d8938b00c6e566acfb3078161efe36252f0b29793463829",
+        "timestamp": 2,
+        "previous_anchor_hash": "d23e30b28b44d4284b696484e3f816c3bbf053d5fc5290feeea64af65954542f"
+      },
+      "source": "migration-restored"
+    },
+    {
+      "anchor_id": "anchor-0003",
+      "anchor_hash": "cae9ad5e8d114fe0502743aa683db1cec81be59cd4d1cf72d4b07b8d78539aae",
+      "payload": {
+        "protocol_version": "everarcade-continuity-anchor-v0.1",
+        "world_id": "hotpocket-runtime-proof-world",
+        "execution_epoch": 3,
+        "state_root": "beda699c7354bbcdf1d2a6941560b679c1d9de1822afdf7250c92aa02836f37e",
+        "checkpoint_root": "5656e1d36c58dd43f637eed39bc48622775472bb968eaf15864d45bc99e5f6f9",
+        "journal_root": "8c2480b8dc92afd15ad95ebbf696fb77066e933d744595814117af6aa6a43276",
+        "receipt_root": "f822dd8b49fe642a762af16854bdd64811505c2b3d00a2015799a3af504422e0",
+        "replay_root": "beda699c7354bbcdf1d2a6941560b679c1d9de1822afdf7250c92aa02836f37e",
+        "continuity_root": "668b537d207481fd8063fd8d396210b34d5eec4cce8f32cb2f27c6e647eec1f2",
+        "timestamp": 3,
+        "previous_anchor_hash": "2d8c2e2f3a0a2cc692e248db986ed94ac55418c7a5f0b47fcbacdbaeeab93601"
+      },
+      "source": "migration-post"
+    }
+  ]
+}

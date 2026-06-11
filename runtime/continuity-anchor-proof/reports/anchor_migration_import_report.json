@@ -1,0 +1,10 @@
+{
+  "schema": "everarcade.continuity-anchor.migration-import.v0.1",
+  "export_state_root": "6dd7ca63efcfc53998928329886efd9446a259b53f391c5bcc621301385f08ee",
+  "import_state_root": "6dd7ca63efcfc53998928329886efd9446a259b53f391c5bcc621301385f08ee",
+  "continued_state_root": "beda699c7354bbcdf1d2a6941560b679c1d9de1822afdf7250c92aa02836f37e",
+  "export_migration_root": "cc650fa846ffcff4bad25ae94e8210a2731cf5b47626c7015a078f467e47b6a3",
+  "import_migration_root": "cc650fa846ffcff4bad25ae94e8210a2731cf5b47626c7015a078f467e47b6a3",
+  "continued_migration_root": "3edb57d5e8da2128b42c1cda1e58c225e972317559d0ed2ace7c029abaef3908",
+  "status": "PASS"
+}

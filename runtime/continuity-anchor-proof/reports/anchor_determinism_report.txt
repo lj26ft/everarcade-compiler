@@ -1,0 +1,5 @@
+EverArcade Anchor Determinism Report
+first_anchor_hash: 6804bd19f5925132daf9bfcf295552ca5cb133738423424a43107401261cfe1f
+second_anchor_hash: 6804bd19f5925132daf9bfcf295552ca5cb133738423424a43107401261cfe1f
+third_anchor_hash: 6804bd19f5925132daf9bfcf295552ca5cb133738423424a43107401261cfe1f
+Anchor Determinism Proof: PASS
