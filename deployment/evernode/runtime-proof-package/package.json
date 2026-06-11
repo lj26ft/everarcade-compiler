@@ -1,0 +1,13 @@
+{
+  "name": "everarcade-evernode-runtime-proof-package",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "bash scripts/start-runtime.sh",
+    "publish:xrpl": "node scripts/xrpl-publish-testnet.mjs"
+  },
+  "dependencies": {
+    "xrpl": "^4.4.0"
+  }
+}

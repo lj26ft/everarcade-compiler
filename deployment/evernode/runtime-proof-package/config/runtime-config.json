@@ -1,0 +1,12 @@
+{
+  "schema": "everarcade.evernode.runtime-proof.config.v0.1",
+  "world_id": "everarcade-runtime-proof-world",
+  "session_id": "evernode-lease-proof-session-0001",
+  "validator_count": 3,
+  "deterministic_clock": "1970-01-01T00:00:00.000Z",
+  "state_root_algorithm": "sha256(canonical-json)",
+  "checkpoint_policy": "after-proof-action-sequence",
+  "continuity_anchor_algorithm": "sha256(canonical-json-continuity-payload)",
+  "xrpl_network": "testnet",
+  "xrpl_endpoint": "wss://s.altnet.rippletest.net:51233"
+}
