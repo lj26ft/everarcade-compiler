@@ -1,0 +1,10 @@
+{
+  "name": "everarcade-xrpl-anchor-proof",
+  "version": "0.1.0",
+  "private": true,
+  "description": "XRPL / Xahau Anchor Publication Proof v0.1",
+  "type": "commonjs",
+  "scripts": {
+    "validate": "node validation/xrpl-anchor-proof.js validate"
+  }
+}
