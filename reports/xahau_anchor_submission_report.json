@@ -1,0 +1,25 @@
+{
+  "schema": "everarcade.xahau.anchor-submission-report.v0.1",
+  "network": "xahau",
+  "payload_preparation": "PASS",
+  "transaction_construction": "PASS",
+  "submission": "PASS",
+  "acceptance": "PASS",
+  "retrieval": "PASS",
+  "hash_verification": "PASS",
+  "payload": {
+    "protocol_version": "everarcade-xrpl-xahau-anchor-publication-proof-v0.1",
+    "world_id": "hotpocket-runtime-proof-world",
+    "state_root": "beda699c7354bbcdf1d2a6941560b679c1d9de1822afdf7250c92aa02836f37e",
+    "replay_root": "beda699c7354bbcdf1d2a6941560b679c1d9de1822afdf7250c92aa02836f37e",
+    "restore_root": "6dd7ca63efcfc53998928329886efd9446a259b53f391c5bcc621301385f08ee",
+    "continuity_root": "668b537d207481fd8063fd8d396210b34d5eec4cce8f32cb2f27c6e647eec1f2",
+    "previous_anchor_hash": "2d8c2e2f3a0a2cc692e248db986ed94ac55418c7a5f0b47fcbacdbaeeab93601",
+    "anchor_hash": "cae9ad5e8d114fe0502743aa683db1cec81be59cd4d1cf72d4b07b8d78539aae"
+  },
+  "payload_hash": "dcdee4c98e0008e4142348356079a3ca138d8805645b2b0555323734aa2f099b",
+  "transaction_hash": "825bcbb525a02b615c9781b52229de37b96c23512a528e1b947b718c880c242e",
+  "engine_result": "tesSUCCESS",
+  "ledger_index": 1,
+  "status": "PASS"
+}

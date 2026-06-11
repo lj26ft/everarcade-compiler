@@ -1,0 +1,8 @@
+{
+  "schema": "everarcade.xrpl-xahau.anchor-publication.dependencies.v0.1",
+  "hotpocket_gameplay_proof": "PASS",
+  "runtime_integration_proof": "PASS",
+  "migration_proof": "PASS",
+  "continuity_anchor_proof": "PASS",
+  "status": "PASS"
+}

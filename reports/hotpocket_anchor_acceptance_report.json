@@ -1,0 +1,27 @@
+{
+  "schema": "everarcade.hotpocket.anchor-acceptance-proof.v0.1",
+  "validators": [
+    {
+      "validator": "validator-1",
+      "accepted_anchor_hash": "cae9ad5e8d114fe0502743aa683db1cec81be59cd4d1cf72d4b07b8d78539aae",
+      "vote": "ACCEPT",
+      "round": 1
+    },
+    {
+      "validator": "validator-2",
+      "accepted_anchor_hash": "cae9ad5e8d114fe0502743aa683db1cec81be59cd4d1cf72d4b07b8d78539aae",
+      "vote": "ACCEPT",
+      "round": 2
+    },
+    {
+      "validator": "validator-3",
+      "accepted_anchor_hash": "cae9ad5e8d114fe0502743aa683db1cec81be59cd4d1cf72d4b07b8d78539aae",
+      "vote": "ACCEPT",
+      "round": 3
+    }
+  ],
+  "quorum": "3/3",
+  "accepted_anchor_hash": "cae9ad5e8d114fe0502743aa683db1cec81be59cd4d1cf72d4b07b8d78539aae",
+  "acceptance_hash": "899782e7bf76a95d29b02085d8c272feadbe7bdde13e9a132372abd627c72080",
+  "status": "PASS"
+}

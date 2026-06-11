@@ -1,0 +1,64 @@
+{
+  "schema": "everarcade.xrpl-xahau.anchor-hash-verification-report.v0.1",
+  "runtime_anchor_hash": "cae9ad5e8d114fe0502743aa683db1cec81be59cd4d1cf72d4b07b8d78539aae",
+  "continuity_proof_hash": "cae9ad5e8d114fe0502743aa683db1cec81be59cd4d1cf72d4b07b8d78539aae",
+  "hotpocket_acceptance_proof_hash": "cae9ad5e8d114fe0502743aa683db1cec81be59cd4d1cf72d4b07b8d78539aae",
+  "payload_hash": "dcdee4c98e0008e4142348356079a3ca138d8805645b2b0555323734aa2f099b",
+  "xrpl": {
+    "network": "xrpl",
+    "reconstructed_payload_hash": "dcdee4c98e0008e4142348356079a3ca138d8805645b2b0555323734aa2f099b",
+    "runtime_anchor_hash": "cae9ad5e8d114fe0502743aa683db1cec81be59cd4d1cf72d4b07b8d78539aae",
+    "continuity_proof_hash": "cae9ad5e8d114fe0502743aa683db1cec81be59cd4d1cf72d4b07b8d78539aae",
+    "hotpocket_acceptance_hash": "cae9ad5e8d114fe0502743aa683db1cec81be59cd4d1cf72d4b07b8d78539aae",
+    "checks": {
+      "publication": true,
+      "retrieval": true,
+      "payload_mutation_absent": true,
+      "anchor_hash": true,
+      "continuity_hash": true,
+      "hotpocket_acceptance_hash": true,
+      "replay": true,
+      "runtime_state_root": true,
+      "migration": true,
+      "gameplay": true,
+      "previous_anchor_hash": true,
+      "continuity_root": true
+    },
+    "status": "PASS"
+  },
+  "xahau": {
+    "network": "xahau",
+    "reconstructed_payload_hash": "dcdee4c98e0008e4142348356079a3ca138d8805645b2b0555323734aa2f099b",
+    "runtime_anchor_hash": "cae9ad5e8d114fe0502743aa683db1cec81be59cd4d1cf72d4b07b8d78539aae",
+    "continuity_proof_hash": "cae9ad5e8d114fe0502743aa683db1cec81be59cd4d1cf72d4b07b8d78539aae",
+    "hotpocket_acceptance_hash": "cae9ad5e8d114fe0502743aa683db1cec81be59cd4d1cf72d4b07b8d78539aae",
+    "checks": {
+      "publication": true,
+      "retrieval": true,
+      "payload_mutation_absent": true,
+      "anchor_hash": true,
+      "continuity_hash": true,
+      "hotpocket_acceptance_hash": true,
+      "replay": true,
+      "runtime_state_root": true,
+      "migration": true,
+      "gameplay": true,
+      "previous_anchor_hash": true,
+      "continuity_root": true
+    },
+    "status": "PASS"
+  },
+  "failure_gates": {
+    "schema": "everarcade.xrpl-xahau.anchor-publication.failure-gates.v0.1",
+    "gates": {
+      "anchor_hash_mismatch": false,
+      "payload_mutation": false,
+      "retrieval_mismatch": false,
+      "publication_failure": false,
+      "replay_mismatch": false,
+      "continuity_mismatch": false
+    },
+    "status": "PASS"
+  },
+  "status": "PASS"
+}
