@@ -1,0 +1,13 @@
+{
+  "name": "everarcade-hotpocket-deployment-variant-b",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Variant B: Node.js HotPocket contract with executable wrapper.",
+  "type": "commonjs",
+  "main": "contract.js",
+  "scripts": {
+    "start": "./contract",
+    "hotpocket:start": "./contract --hotpocket"
+  },
+  "dependencies": {}
+}

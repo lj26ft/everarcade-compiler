@@ -1,0 +1,13 @@
+{
+  "name": "everarcade-hotpocket-deployment-variant-a",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Variant A: direct Node.js HotPocket contract entrypoint.",
+  "type": "commonjs",
+  "main": "contract.js",
+  "scripts": {
+    "start": "node contract.js",
+    "hotpocket:start": "node contract.js"
+  },
+  "dependencies": {}
+}
