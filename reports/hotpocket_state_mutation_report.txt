@@ -1,0 +1,14 @@
+HotPocket State Mutation Report
+Action: join_player
+Mutation: player_count += 1
+Receipt Generated: PASS
+Journal Generated: PASS
+Checkpoint Generated: PASS
+Replay Proof Generated: PASS
+Deterministic Equivalence: PASS
+State Root: 3924af73b2e2a990791a3d1978e6186073ac0990e6dfd8708a7b50ad65b4db3d
+Receipt Root: c047ea594f0ef8afdcd6cb80aeb9cb593c47dcd30b6437e9205d03e22b48b18a
+Journal Root: fde3dbb13d27103a48a13c8135f2667e858f34c1246f97655c55bdca4702d70f
+Replay Root: 4a5b47e92a678683d6413aaa2cc69df236093150a5ab0ff4e95e30c1f235c1df
+Classification: HotPocket State Mutation Proven
+HotPocket State Mutation Proof: PASS

@@ -1,0 +1,12 @@
+HotPocket Replay Proof Report
+Identical Input Sequence Runs: PASS
+state_root_a == state_root_b: PASS
+receipt_root_a == receipt_root_b: PASS
+journal_root_a == journal_root_b: PASS
+replay_root_a == replay_root_b: PASS
+State Root: 80d4ecc546cb11a436f04cab641c0f1fe3b29674c501e6c486f31bf0318fb3bb
+Receipt Root: be7ebeda0bc5ac06049be6ed6e7805d9a7a44048ea8eb4d296d0a60c80e92cd8
+Journal Root: 9696abaaeacb7614e42ac547d5b26faa0f18ece6e7c88f251344d415524caada
+Replay Root: 3085bda468135c096054b2fadfa9221939e8ce525e50170e7200e4cd68265e1b
+Classification: HotPocket Deterministic Replay Proven
+HotPocket Replay Proof: PASS

@@ -1,0 +1,13 @@
+{
+  "name": "everarcade-hotpocket-adapter-template",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Creator template for a canonical EverArcade HotPocket adapter contract.",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node contract.js",
+    "ping": "node contract.js '{\"action\":\"ping\"}'",
+    "join-player": "node contract.js '{\"action\":\"join_player\",\"player_id\":\"template-player\",\"nonce\":\"template-join-1\"}'"
+  },
+  "dependencies": {}
+}
