@@ -1,0 +1,21 @@
+{
+  "state_before": "fb658cfc316e834f56a47aee24ecb593c3e79636b280f1f6c85ea2c3c051199e",
+  "state_after": "6dd7ca63efcfc53998928329886efd9446a259b53f391c5bcc621301385f08ee",
+  "state_root": "6dd7ca63efcfc53998928329886efd9446a259b53f391c5bcc621301385f08ee",
+  "execution_hash": "25e95af52d9845e45e6ace24a7649855d9e08e771a675dde25886a0b90457c78",
+  "validator_state_roots": [
+    {
+      "validator": "node1",
+      "state_root": "6dd7ca63efcfc53998928329886efd9446a259b53f391c5bcc621301385f08ee"
+    },
+    {
+      "validator": "node2",
+      "state_root": "6dd7ca63efcfc53998928329886efd9446a259b53f391c5bcc621301385f08ee"
+    },
+    {
+      "validator": "node3",
+      "state_root": "6dd7ca63efcfc53998928329886efd9446a259b53f391c5bcc621301385f08ee"
+    }
+  ],
+  "status": "PASS"
+}

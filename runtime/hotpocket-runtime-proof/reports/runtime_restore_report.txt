@@ -1,0 +1,8 @@
+EverArcade Runtime Restore Report
+checkpoint_root: 5b17bdc92500f26532f798e7f5075f0418d256168b1f2962c15a1ce01db41d35
+restore runtime: PASS
+continue execution: PASS
+original_root: 6dd7ca63efcfc53998928329886efd9446a259b53f391c5bcc621301385f08ee
+restored_root: 6dd7ca63efcfc53998928329886efd9446a259b53f391c5bcc621301385f08ee
+restored_root == original_root: PASS
+EverArcade Runtime Restore Proof: PASS

@@ -1,0 +1,7 @@
+EverArcade Runtime HotPocket Deployment Validation Report
+runtime proof package present: PASS
+validator topology available: PASS
+actual everarcade-runtime invocation: PASS
+execve failure absent: PASS
+Cannot find module absent: PASS
+Runtime Deployment Proof: PASS

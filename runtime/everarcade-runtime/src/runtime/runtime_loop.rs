@@ -135,19 +135,28 @@ impl ArenaState {
                     .positions
                     .entry(input.player_id.clone())
                     .or_insert(ArenaPosition { x: 0, y: 0 });
-                match input.direction.as_deref().unwrap_or("north") {
-                    "north" => position.y += 1,
-                    "south" => position.y -= 1,
-                    "east" => position.x += 1,
-                    "west" => position.x -= 1,
-                    _ => {}
+                if let (Some(x), Some(y)) = (input.x, input.y) {
+                    position.x = x;
+                    position.y = y;
+                    self.events.push(format!(
+                        "tick {}: {} moved to {},{}",
+                        input.sequence, input.player_id, x, y
+                    ));
+                } else {
+                    match input.direction.as_deref().unwrap_or("north") {
+                        "north" => position.y += 1,
+                        "south" => position.y -= 1,
+                        "east" => position.x += 1,
+                        "west" => position.x -= 1,
+                        _ => {}
+                    }
+                    self.events.push(format!(
+                        "tick {}: {} moved {}",
+                        input.sequence,
+                        input.player_id,
+                        input.direction.as_deref().unwrap_or("north")
+                    ));
                 }
-                self.events.push(format!(
-                    "tick {}: {} moved {}",
-                    input.sequence,
-                    input.player_id,
-                    input.direction.as_deref().unwrap_or("north")
-                ));
             }
             "attack" => {
                 let target = input.target.as_deref().unwrap_or("dummy").to_string();
@@ -182,6 +191,10 @@ pub struct ArenaGameplayInput {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub direction: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
+    pub x: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub y: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub target: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub score_delta: Option<i64>,
@@ -195,6 +208,8 @@ impl ArenaGameplayInput {
                 player_id: "player-a".into(),
                 action: "join".into(),
                 direction: None,
+                x: None,
+                y: None,
                 target: None,
                 score_delta: None,
                 sequence: 1,
@@ -203,6 +218,8 @@ impl ArenaGameplayInput {
                 player_id: "player-b".into(),
                 action: "join".into(),
                 direction: None,
+                x: None,
+                y: None,
                 target: None,
                 score_delta: None,
                 sequence: 2,
@@ -211,6 +228,8 @@ impl ArenaGameplayInput {
                 player_id: "player-a".into(),
                 action: "move".into(),
                 direction: Some("north".into()),
+                x: None,
+                y: None,
                 target: None,
                 score_delta: None,
                 sequence: 3,
@@ -219,6 +238,8 @@ impl ArenaGameplayInput {
                 player_id: "player-b".into(),
                 action: "move".into(),
                 direction: Some("south".into()),
+                x: None,
+                y: None,
                 target: None,
                 score_delta: None,
                 sequence: 4,
@@ -227,6 +248,8 @@ impl ArenaGameplayInput {
                 player_id: "player-a".into(),
                 action: "attack".into(),
                 direction: None,
+                x: None,
+                y: None,
                 target: Some("player-b".into()),
                 score_delta: None,
                 sequence: 5,
@@ -235,6 +258,8 @@ impl ArenaGameplayInput {
                 player_id: "player-a".into(),
                 action: "score_update".into(),
                 direction: None,
+                x: None,
+                y: None,
                 target: None,
                 score_delta: Some(5),
                 sequence: 6,
@@ -248,6 +273,8 @@ impl ArenaGameplayInput {
                 player_id: "player-1".into(),
                 action: "join".into(),
                 direction: None,
+                x: None,
+                y: None,
                 target: None,
                 score_delta: None,
                 sequence: 1,
@@ -256,6 +283,8 @@ impl ArenaGameplayInput {
                 player_id: "player-1".into(),
                 action: "move".into(),
                 direction: Some("north".into()),
+                x: None,
+                y: None,
                 target: None,
                 score_delta: None,
                 sequence: 2,
@@ -264,6 +293,8 @@ impl ArenaGameplayInput {
                 player_id: "player-1".into(),
                 action: "attack".into(),
                 direction: None,
+                x: None,
+                y: None,
                 target: Some("dummy".into()),
                 score_delta: None,
                 sequence: 3,
@@ -272,6 +303,8 @@ impl ArenaGameplayInput {
                 player_id: "player-1".into(),
                 action: "score_update".into(),
                 direction: None,
+                x: None,
+                y: None,
                 target: None,
                 score_delta: Some(5),
                 sequence: 4,
@@ -280,6 +313,8 @@ impl ArenaGameplayInput {
                 player_id: "player-1".into(),
                 action: "tick".into(),
                 direction: None,
+                x: None,
+                y: None,
                 target: None,
                 score_delta: None,
                 sequence: 5,
@@ -572,6 +607,51 @@ pub struct RuntimeProjectionEvidence {
     pub projection_id: String,
     pub non_authoritative_projection: bool,
     pub created_at_ms: u128,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct HotPocketRuntimeAction {
+    pub action: String,
+    pub player_id: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub x: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub y: Option<i64>,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct HotPocketRuntimeExecution {
+    pub sequence: u64,
+    pub client_action: HotPocketRuntimeAction,
+    pub runtime_input: ArenaGameplayInput,
+    pub canonical_input: String,
+    pub state_before: String,
+    pub state_after: String,
+    pub receipt: RuntimeReceipt,
+    pub journal_entry: JournalEntry,
+    pub output: serde_json::Value,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct HotPocketRuntimeIntegrationProof {
+    pub proof_version: String,
+    pub status: String,
+    pub world_id: String,
+    pub runtime_version: String,
+    pub world_identifier: String,
+    pub actions: Vec<HotPocketRuntimeAction>,
+    pub state_before: String,
+    pub state_after: String,
+    pub state_root: String,
+    pub execution_hash: String,
+    pub executions: Vec<HotPocketRuntimeExecution>,
+    pub receipts: Vec<RuntimeReceipt>,
+    pub journal: Vec<JournalEntry>,
+    pub checkpoint: CheckpointManifest,
+    pub replay_root: String,
+    pub replay_verified: bool,
+    pub restored_root: String,
+    pub restore_verified: bool,
 }
 
 pub struct RuntimeLoop {
@@ -1079,6 +1159,213 @@ impl RuntimeLoop {
             replay_verification: if replay_verified { "PASS" } else { "FAIL" }.into(),
         };
         self.write_template_gameplay_artifacts(&arena_state, &proof)?;
+        Ok(proof)
+    }
+
+    pub fn execute_hotpocket_runtime_actions(
+        &mut self,
+        actions: Vec<HotPocketRuntimeAction>,
+    ) -> Result<HotPocketRuntimeIntegrationProof> {
+        if actions.is_empty() {
+            anyhow::bail!("hotpocket runtime proof requires at least one action");
+        }
+        let state_before = ArenaState::initial().root()?;
+        let mut arena_state = ArenaState::initial();
+        let mut executions = Vec::new();
+        let mut receipts = Vec::new();
+
+        for (index, action) in actions.iter().enumerate() {
+            let sequence = (index as u64) + 1;
+            let runtime_input = match action.action.as_str() {
+                "join_player" => ArenaGameplayInput {
+                    player_id: action.player_id.clone(),
+                    action: "join".into(),
+                    direction: None,
+                    x: None,
+                    y: None,
+                    target: None,
+                    score_delta: None,
+                    sequence,
+                },
+                "move_player" => {
+                    let x = action
+                        .x
+                        .ok_or_else(|| anyhow::anyhow!("move_player requires x"))?;
+                    let y = action
+                        .y
+                        .ok_or_else(|| anyhow::anyhow!("move_player requires y"))?;
+                    ArenaGameplayInput {
+                        player_id: action.player_id.clone(),
+                        action: "move".into(),
+                        direction: None,
+                        x: Some(x),
+                        y: Some(y),
+                        target: None,
+                        score_delta: None,
+                        sequence,
+                    }
+                }
+                other => anyhow::bail!("unsupported hotpocket runtime action: {other}"),
+            };
+
+            let state_before_action = arena_state.root()?;
+            let payload = runtime_input.canonical_bytes()?;
+            let canonical_input = String::from_utf8(payload.clone())?;
+            let input_hash = runtime_input.stable_hash()?;
+            let input = self.submit_input("hotpocket-runtime-proof", payload)?;
+            if input.payload_hash != input_hash {
+                anyhow::bail!("hotpocket runtime input hash mismatch at sequence {sequence}");
+            }
+            let queued = self
+                .input_queue
+                .pop()
+                .ok_or_else(|| anyhow::anyhow!("hotpocket runtime input queue underflow"))?;
+            if queued.sequence != sequence || queued.payload_hash != input_hash {
+                anyhow::bail!("hotpocket runtime input sequence mismatch");
+            }
+
+            let previous_hash = self.journal.latest_hash()?;
+            arena_state.apply(&runtime_input);
+            let state_after_action = arena_state.root()?;
+            self.state = serde_json::to_vec(&arena_state)?;
+            let receipt_id = format!("receipt-{sequence:020}");
+            let tick = sequence;
+            let timestamp_or_epoch = sequence;
+            let receipt_hash = Self::deterministic_receipt_hash(
+                &receipt_id,
+                tick,
+                &input_hash,
+                &state_after_action,
+                &self.config.runtime_version,
+                &self.config.world_id,
+                timestamp_or_epoch,
+            );
+            let receipt = RuntimeReceipt {
+                receipt_id: receipt_id.clone(),
+                sequence,
+                tick,
+                input_id: queued.input_id.clone(),
+                input_hash: input_hash.clone(),
+                state_root: state_after_action.clone(),
+                receipt_hash: receipt_hash.clone(),
+                runtime_version: self.config.runtime_version.clone(),
+                world_id: self.config.world_id.clone(),
+                timestamp_or_epoch,
+                session_id: Some(arena_state.session_id.clone()),
+                player_count: Some(arena_state.players.len() as u64),
+                action: Some(runtime_input.action.clone()),
+                player_id: Some(runtime_input.player_id.clone()),
+                guest_id: None,
+                guest_hash: None,
+                guest_output_hash: None,
+            };
+            self.persistence.write_versioned(
+                self.config
+                    .receipts_dir()
+                    .join(format!("{receipt_id}.json")),
+                &receipt,
+            )?;
+            let journal_entry = self.journal.append_gameplay(
+                sequence,
+                previous_hash,
+                state_after_action.clone(),
+                input_hash,
+                receipt_hash.clone(),
+                runtime_input.player_id.clone(),
+                runtime_input.action.clone(),
+                tick,
+                serde_json::to_value(&runtime_input)?,
+            )?;
+            self.metrics.ticks_executed += 1;
+            self.metrics.receipts_generated += 1;
+            self.metrics.input_queue_depth = self.input_queue.depth();
+            self.health.world_root = state_after_action.clone();
+            self.health.journal_height = sequence;
+            self.health.latest_receipt = Some(receipt_hash);
+            let output = serde_json::json!({
+                "accepted": true,
+                "action": action.action.clone(),
+                "runtime_action": runtime_input.action,
+                "player_id": action.player_id.clone(),
+                "state_root": state_after_action,
+                "tick": tick,
+                "players": arena_state.players.keys().cloned().collect::<Vec<_>>(),
+                "positions": arena_state.positions.clone(),
+            });
+            executions.push(HotPocketRuntimeExecution {
+                sequence,
+                client_action: action.clone(),
+                runtime_input,
+                canonical_input,
+                state_before: state_before_action,
+                state_after: receipt.state_root.clone(),
+                receipt: receipt.clone(),
+                journal_entry,
+                output,
+            });
+            receipts.push(receipt);
+        }
+
+        let journal = self.journal.entries()?;
+        let state_after = arena_state.root()?;
+        let checkpoint = self.checkpoints.create(
+            arena_state.tick,
+            &self.config.world_id,
+            &self.config.runtime_version,
+            journal.len() as u64,
+            state_after.clone(),
+            self.state.clone(),
+            self.package.world_metadata.clone(),
+        )?;
+        self.checkpoints.verify_checkpoint(&checkpoint)?;
+        self.metrics.checkpoint_count += 1;
+        self.health.checkpoint_height = checkpoint.manifest.sequence;
+        self.health.world_root = state_after.clone();
+        self.persistence
+            .write_versioned(self.config.runtime_status_path(), &self.health)?;
+
+        let replay_state = Self::replay_arena_state_from_entries(&journal)?;
+        let replay_root = replay_state.root()?;
+        let restored_root = hex::encode(Sha256::digest(&checkpoint.state_snapshot));
+        let execution_hash = hex::encode(Sha256::digest(serde_json::to_vec(&serde_json::json!({
+            "actions": actions.clone(),
+            "checkpoint_root": checkpoint.manifest.checkpoint_hash,
+            "journal": journal,
+            "receipts": receipts,
+            "state_root": state_after,
+        }))?));
+        let replay_verified = replay_root == state_after;
+        let restore_verified = restored_root == state_after;
+        let proof = HotPocketRuntimeIntegrationProof {
+            proof_version: "hotpocket-runtime-integration-proof-v0.1".into(),
+            status: if replay_verified && restore_verified {
+                "EverArcade Runtime ↔ HotPocket Integration Proof v0.1: PASS".into()
+            } else {
+                "EverArcade Runtime ↔ HotPocket Integration Proof v0.1: FAIL".into()
+            },
+            world_id: self.config.world_id.clone(),
+            runtime_version: self.config.runtime_version.clone(),
+            world_identifier: self.config.world_id.clone(),
+            actions: actions.clone(),
+            state_before,
+            state_after: state_after.clone(),
+            state_root: state_after,
+            execution_hash,
+            executions,
+            receipts,
+            journal,
+            checkpoint: checkpoint.manifest,
+            replay_root,
+            replay_verified,
+            restored_root,
+            restore_verified,
+        };
+        self.persistence.atomic_write_json(
+            self.config
+                .reports_dir()
+                .join("hotpocket-runtime-integration-proof.json"),
+            &proof,
+        )?;
         Ok(proof)
     }
 

@@ -20,6 +20,7 @@ pub enum OperatorCommand {
     LocalSession,
     MultiplayerLocalSession,
     NetworkLocalSession,
+    HotPocketRuntimeProof,
     Checkpoint,
     Recover,
     Doctor,
@@ -44,6 +45,7 @@ impl OperatorCommand {
             "local-session" => Self::LocalSession,
             "multiplayer-local-session" => Self::MultiplayerLocalSession,
             "network-local-session" => Self::NetworkLocalSession,
+            "hotpocket-runtime-proof" => Self::HotPocketRuntimeProof,
             "checkpoint" => Self::Checkpoint,
             "recover" => Self::Recover,
             "doctor" => Self::Doctor,
@@ -150,6 +152,17 @@ impl RuntimeOperator {
             OperatorCommand::NetworkLocalSession => {
                 let mut rt = RuntimeLoop::boot(self.config.clone())?;
                 let proof = rt.execute_network_transport_session()?;
+                Ok(serde_json::to_string_pretty(&proof)?)
+            }
+            OperatorCommand::HotPocketRuntimeProof => {
+                let actions_path = std::env::var("EVERARCADE_HOTPOCKET_RUNTIME_ACTIONS_FILE")
+                    .map_err(|_| {
+                        anyhow!("EVERARCADE_HOTPOCKET_RUNTIME_ACTIONS_FILE is required")
+                    })?;
+                let actions: Vec<HotPocketRuntimeAction> =
+                    serde_json::from_slice(&std::fs::read(actions_path)?)?;
+                let mut rt = RuntimeLoop::boot(self.config.clone())?;
+                let proof = rt.execute_hotpocket_runtime_actions(actions)?;
                 Ok(serde_json::to_string_pretty(&proof)?)
             }
             OperatorCommand::Checkpoint => {

@@ -1,0 +1,6 @@
+EverArcade Runtime Replay Report
+actions persisted: join_player, move_player
+live_state_root: 6dd7ca63efcfc53998928329886efd9446a259b53f391c5bcc621301385f08ee
+replayed_state_root: 6dd7ca63efcfc53998928329886efd9446a259b53f391c5bcc621301385f08ee
+replayed_state_root == live_state_root: PASS
+EverArcade Runtime Replay Proof: PASS

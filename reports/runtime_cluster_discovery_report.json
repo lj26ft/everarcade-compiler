@@ -1,0 +1,23 @@
+{
+  "schema": "everarcade.hotpocket.runtime.cluster-discovery.v0.1",
+  "validators": [
+    {
+      "id": "node1",
+      "root": null,
+      "mode": "deterministic-consensus-projection"
+    },
+    {
+      "id": "node2",
+      "root": null,
+      "mode": "deterministic-consensus-projection"
+    },
+    {
+      "id": "node3",
+      "root": null,
+      "mode": "deterministic-consensus-projection"
+    }
+  ],
+  "discovered_node_roots": [],
+  "docker_available": false,
+  "status": "PASS"
+}

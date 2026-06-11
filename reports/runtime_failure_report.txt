@@ -1,0 +1,14 @@
+EverArcade Runtime Failure Detection Report
+Contract process execve() failed: PASS
+Cannot find module: PASS
+votes:1 needed:3: PASS
+votes:2 needed:3: PASS
+Not enough peers proposing: PASS
+receipt mismatch: PASS
+journal mismatch: PASS
+checkpoint mismatch: PASS
+state-root mismatch: PASS
+replay mismatch: PASS
+restore mismatch: PASS
+missing output: PASS
+Failure Inspection: PASS

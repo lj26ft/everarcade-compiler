@@ -1,0 +1,10 @@
+{
+  "name": "everarcade-hotpocket-runtime-proof",
+  "version": "0.1.0",
+  "private": true,
+  "description": "EverArcade runtime to HotPocket integration proof v0.1",
+  "scripts": {
+    "validate": "node validation/hotpocket-runtime-proof.js validate",
+    "client": "node client/runtime-client.js"
+  }
+}
