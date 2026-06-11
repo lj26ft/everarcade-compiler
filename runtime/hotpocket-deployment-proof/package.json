@@ -12,7 +12,8 @@
     "launch": "node validation/hotpocket-deployment-proof.js launch",
     "proposal": "node validation/hotpocket-deployment-proof.js proposal",
     "validate": "node validation/hotpocket-deployment-proof.js validate",
-    "certify": "node validation/hotpocket-deployment-proof.js certify"
+    "certify": "node validation/hotpocket-deployment-proof.js certify",
+    "discovery": "node validation/hotpocket-deployment-proof.js discovery"
   },
   "dependencies": {}
 }
