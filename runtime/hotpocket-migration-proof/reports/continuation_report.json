@@ -1,0 +1,137 @@
+{
+  "schema": "everarcade.hotpocket.migration.continuation.v0.1",
+  "action": {
+    "action": "move_player",
+    "player_id": "alice",
+    "x": 15,
+    "y": 25
+  },
+  "new_receipt": {
+    "receipt_id": "receipt-00000000000000000003",
+    "sequence": 3,
+    "tick": 3,
+    "input_id": "input-00000000000000000003",
+    "input_hash": "4d1a1bc7bc9b1c92327108c2b8d1f5bfe810ff69bc5adf2dbdde6f86b7812119",
+    "state_root": "beda699c7354bbcdf1d2a6941560b679c1d9de1822afdf7250c92aa02836f37e",
+    "receipt_hash": "204c9ce183aef87403572130831c38889571eb65e68fe3ae1ee5de863ab314f7",
+    "runtime_version": "everarcade-runtime-v0.1",
+    "world_id": "hotpocket-runtime-proof-world",
+    "timestamp_or_epoch": 3,
+    "session_id": "session-0001",
+    "player_count": 1,
+    "action": "move",
+    "player_id": "alice"
+  },
+  "new_journal_entry": {
+    "sequence": 3,
+    "previous_hash": "ba4f187b648ffb32dbc3d77bbb69a7bd0a6266216920420954376842f1f442ab",
+    "state_root": "beda699c7354bbcdf1d2a6941560b679c1d9de1822afdf7250c92aa02836f37e",
+    "input_hash": "4d1a1bc7bc9b1c92327108c2b8d1f5bfe810ff69bc5adf2dbdde6f86b7812119",
+    "receipt_hash": "204c9ce183aef87403572130831c38889571eb65e68fe3ae1ee5de863ab314f7",
+    "timestamp_ms": 3,
+    "player_id": "alice",
+    "action": "move",
+    "tick": 3,
+    "gameplay_input": {
+      "player_id": "alice",
+      "action": "move",
+      "x": 15,
+      "y": 25,
+      "sequence": 3
+    },
+    "entry_hash": "77ce75552bec342a8919b025d7cdfe55839dde287df7ae419fa43eba1b922077"
+  },
+  "new_checkpoint": {
+    "sequence": 3,
+    "created_at_ms": 3,
+    "world_id": "hotpocket-runtime-proof-world",
+    "runtime_version": "everarcade-runtime-v0.1",
+    "journal_position": 3,
+    "state_root": "beda699c7354bbcdf1d2a6941560b679c1d9de1822afdf7250c92aa02836f37e",
+    "checkpoint_hash": "5656e1d36c58dd43f637eed39bc48622775472bb968eaf15864d45bc99e5f6f9"
+  },
+  "validators": [
+    {
+      "validator": "cluster-b-validator1",
+      "receipt_hash": "204c9ce183aef87403572130831c38889571eb65e68fe3ae1ee5de863ab314f7",
+      "journal_entry_hash": "77ce75552bec342a8919b025d7cdfe55839dde287df7ae419fa43eba1b922077",
+      "checkpoint_root": "5656e1d36c58dd43f637eed39bc48622775472bb968eaf15864d45bc99e5f6f9",
+      "state_root": "beda699c7354bbcdf1d2a6941560b679c1d9de1822afdf7250c92aa02836f37e",
+      "roots": {
+        "state_root": "beda699c7354bbcdf1d2a6941560b679c1d9de1822afdf7250c92aa02836f37e",
+        "replay_root": "beda699c7354bbcdf1d2a6941560b679c1d9de1822afdf7250c92aa02836f37e",
+        "checkpoint_root": "5656e1d36c58dd43f637eed39bc48622775472bb968eaf15864d45bc99e5f6f9",
+        "receipt_root": "f822dd8b49fe642a762af16854bdd64811505c2b3d00a2015799a3af504422e0",
+        "journal_root": "8c2480b8dc92afd15ad95ebbf696fb77066e933d744595814117af6aa6a43276",
+        "world_root": "b43267e89060cba982ee07eb33723398baef1977c1247c495cda4305f8d7d9d2"
+      }
+    },
+    {
+      "validator": "cluster-b-validator2",
+      "receipt_hash": "204c9ce183aef87403572130831c38889571eb65e68fe3ae1ee5de863ab314f7",
+      "journal_entry_hash": "77ce75552bec342a8919b025d7cdfe55839dde287df7ae419fa43eba1b922077",
+      "checkpoint_root": "5656e1d36c58dd43f637eed39bc48622775472bb968eaf15864d45bc99e5f6f9",
+      "state_root": "beda699c7354bbcdf1d2a6941560b679c1d9de1822afdf7250c92aa02836f37e",
+      "roots": {
+        "state_root": "beda699c7354bbcdf1d2a6941560b679c1d9de1822afdf7250c92aa02836f37e",
+        "replay_root": "beda699c7354bbcdf1d2a6941560b679c1d9de1822afdf7250c92aa02836f37e",
+        "checkpoint_root": "5656e1d36c58dd43f637eed39bc48622775472bb968eaf15864d45bc99e5f6f9",
+        "receipt_root": "f822dd8b49fe642a762af16854bdd64811505c2b3d00a2015799a3af504422e0",
+        "journal_root": "8c2480b8dc92afd15ad95ebbf696fb77066e933d744595814117af6aa6a43276",
+        "world_root": "b43267e89060cba982ee07eb33723398baef1977c1247c495cda4305f8d7d9d2"
+      }
+    },
+    {
+      "validator": "cluster-b-validator3",
+      "receipt_hash": "204c9ce183aef87403572130831c38889571eb65e68fe3ae1ee5de863ab314f7",
+      "journal_entry_hash": "77ce75552bec342a8919b025d7cdfe55839dde287df7ae419fa43eba1b922077",
+      "checkpoint_root": "5656e1d36c58dd43f637eed39bc48622775472bb968eaf15864d45bc99e5f6f9",
+      "state_root": "beda699c7354bbcdf1d2a6941560b679c1d9de1822afdf7250c92aa02836f37e",
+      "roots": {
+        "state_root": "beda699c7354bbcdf1d2a6941560b679c1d9de1822afdf7250c92aa02836f37e",
+        "replay_root": "beda699c7354bbcdf1d2a6941560b679c1d9de1822afdf7250c92aa02836f37e",
+        "checkpoint_root": "5656e1d36c58dd43f637eed39bc48622775472bb968eaf15864d45bc99e5f6f9",
+        "receipt_root": "f822dd8b49fe642a762af16854bdd64811505c2b3d00a2015799a3af504422e0",
+        "journal_root": "8c2480b8dc92afd15ad95ebbf696fb77066e933d744595814117af6aa6a43276",
+        "world_root": "b43267e89060cba982ee07eb33723398baef1977c1247c495cda4305f8d7d9d2"
+      }
+    }
+  ],
+  "continued_root": "beda699c7354bbcdf1d2a6941560b679c1d9de1822afdf7250c92aa02836f37e",
+  "state_evolution": {
+    "session_id": "session-0001",
+    "tick": 3,
+    "players": {
+      "alice": {
+        "player_id": "alice",
+        "joined_tick": 1
+      }
+    },
+    "positions": {
+      "dummy": {
+        "x": 0,
+        "y": 1
+      },
+      "alice": {
+        "x": 15,
+        "y": 25
+      }
+    },
+    "health": {
+      "dummy": 100,
+      "alice": 100
+    },
+    "scores": {
+      "dummy": 0,
+      "alice": 0
+    },
+    "events": [
+      "session_started",
+      "tick 1: alice joined",
+      "tick 2: alice moved to 10,20",
+      "tick 3: alice moved to 15,25"
+    ],
+    "player_count": 1
+  },
+  "status": "PASS"
+}

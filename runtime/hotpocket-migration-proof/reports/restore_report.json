@@ -1,0 +1,154 @@
+{
+  "schema": "everarcade.hotpocket.migration.restore.v0.1",
+  "cluster": "B",
+  "restored_exclusively_from_export": true,
+  "manifest_hashes_verified": true,
+  "validators": [
+    {
+      "validator": "cluster-b-validator1",
+      "state": {
+        "session_id": "session-0001",
+        "tick": 2,
+        "players": {
+          "alice": {
+            "player_id": "alice",
+            "joined_tick": 1
+          }
+        },
+        "positions": {
+          "dummy": {
+            "x": 0,
+            "y": 1
+          },
+          "alice": {
+            "x": 10,
+            "y": 20
+          }
+        },
+        "health": {
+          "dummy": 100,
+          "alice": 100
+        },
+        "scores": {
+          "dummy": 0,
+          "alice": 0
+        },
+        "events": [
+          "session_started",
+          "tick 1: alice joined",
+          "tick 2: alice moved to 10,20"
+        ],
+        "player_count": 1
+      },
+      "roots": {
+        "state_root": "6dd7ca63efcfc53998928329886efd9446a259b53f391c5bcc621301385f08ee",
+        "replay_root": "6dd7ca63efcfc53998928329886efd9446a259b53f391c5bcc621301385f08ee",
+        "checkpoint_root": "5b17bdc92500f26532f798e7f5075f0418d256168b1f2962c15a1ce01db41d35",
+        "receipt_root": "cf4c534b67c2321da9fcda9bc1dbb5bc5395d2f6b0ecea87d5792716f719c0fb",
+        "journal_root": "c6736a818f08265e445eb9c91b9307c1026ebc77e1ec9a2701d85a1816bb29ee",
+        "world_root": "48c7d03b05740164739fd3534ed5bcff1a453f484da9888c71222b6378abd12c"
+      },
+      "checkpoint_ok": true,
+      "hash_ok": true
+    },
+    {
+      "validator": "cluster-b-validator2",
+      "state": {
+        "session_id": "session-0001",
+        "tick": 2,
+        "players": {
+          "alice": {
+            "player_id": "alice",
+            "joined_tick": 1
+          }
+        },
+        "positions": {
+          "dummy": {
+            "x": 0,
+            "y": 1
+          },
+          "alice": {
+            "x": 10,
+            "y": 20
+          }
+        },
+        "health": {
+          "dummy": 100,
+          "alice": 100
+        },
+        "scores": {
+          "dummy": 0,
+          "alice": 0
+        },
+        "events": [
+          "session_started",
+          "tick 1: alice joined",
+          "tick 2: alice moved to 10,20"
+        ],
+        "player_count": 1
+      },
+      "roots": {
+        "state_root": "6dd7ca63efcfc53998928329886efd9446a259b53f391c5bcc621301385f08ee",
+        "replay_root": "6dd7ca63efcfc53998928329886efd9446a259b53f391c5bcc621301385f08ee",
+        "checkpoint_root": "5b17bdc92500f26532f798e7f5075f0418d256168b1f2962c15a1ce01db41d35",
+        "receipt_root": "cf4c534b67c2321da9fcda9bc1dbb5bc5395d2f6b0ecea87d5792716f719c0fb",
+        "journal_root": "c6736a818f08265e445eb9c91b9307c1026ebc77e1ec9a2701d85a1816bb29ee",
+        "world_root": "48c7d03b05740164739fd3534ed5bcff1a453f484da9888c71222b6378abd12c"
+      },
+      "checkpoint_ok": true,
+      "hash_ok": true
+    },
+    {
+      "validator": "cluster-b-validator3",
+      "state": {
+        "session_id": "session-0001",
+        "tick": 2,
+        "players": {
+          "alice": {
+            "player_id": "alice",
+            "joined_tick": 1
+          }
+        },
+        "positions": {
+          "dummy": {
+            "x": 0,
+            "y": 1
+          },
+          "alice": {
+            "x": 10,
+            "y": 20
+          }
+        },
+        "health": {
+          "dummy": 100,
+          "alice": 100
+        },
+        "scores": {
+          "dummy": 0,
+          "alice": 0
+        },
+        "events": [
+          "session_started",
+          "tick 1: alice joined",
+          "tick 2: alice moved to 10,20"
+        ],
+        "player_count": 1
+      },
+      "roots": {
+        "state_root": "6dd7ca63efcfc53998928329886efd9446a259b53f391c5bcc621301385f08ee",
+        "replay_root": "6dd7ca63efcfc53998928329886efd9446a259b53f391c5bcc621301385f08ee",
+        "checkpoint_root": "5b17bdc92500f26532f798e7f5075f0418d256168b1f2962c15a1ce01db41d35",
+        "receipt_root": "cf4c534b67c2321da9fcda9bc1dbb5bc5395d2f6b0ecea87d5792716f719c0fb",
+        "journal_root": "c6736a818f08265e445eb9c91b9307c1026ebc77e1ec9a2701d85a1816bb29ee",
+        "world_root": "48c7d03b05740164739fd3534ed5bcff1a453f484da9888c71222b6378abd12c"
+      },
+      "checkpoint_ok": true,
+      "hash_ok": true
+    }
+  ],
+  "state_root": "6dd7ca63efcfc53998928329886efd9446a259b53f391c5bcc621301385f08ee",
+  "replay_root": "6dd7ca63efcfc53998928329886efd9446a259b53f391c5bcc621301385f08ee",
+  "world_root": "48c7d03b05740164739fd3534ed5bcff1a453f484da9888c71222b6378abd12c",
+  "checkpoint_root": "5b17bdc92500f26532f798e7f5075f0418d256168b1f2962c15a1ce01db41d35",
+  "status": "PASS"
+}

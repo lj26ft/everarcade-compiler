@@ -1,0 +1,6 @@
+EverArcade HotPocket Post-Migration Validator Agreement Report
+Receipts agree: PASS
+Journals agree: PASS
+Checkpoints agree: PASS
+State roots agree: PASS
+Post-Migration Validator Agreement Proof: PASS

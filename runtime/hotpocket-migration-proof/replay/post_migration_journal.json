@@ -1,0 +1,57 @@
+[
+  {
+    "action": "join",
+    "entry_hash": "d92c0ad1ed8716fea69d1d902f730b8d3e7ff7493ba8af611cf59bc71b11f457",
+    "gameplay_input": {
+      "action": "join",
+      "player_id": "alice",
+      "sequence": 1
+    },
+    "input_hash": "50d46b827c8c3e6314bfc5f82191134d63878981f904e30dbbfb7f2e4183f514",
+    "player_id": "alice",
+    "previous_hash": "genesis",
+    "receipt_hash": "d0c46691f397882c4e2bcc0b93f5dbe68427cea9e8cd1c86cb2891f5d5700eed",
+    "sequence": 1,
+    "state_root": "559e0fdf2fcc793d38c99de90ea721b9f23e069330083b4a496f740473bb8b3f",
+    "tick": 1,
+    "timestamp_ms": 1
+  },
+  {
+    "action": "move",
+    "entry_hash": "ba4f187b648ffb32dbc3d77bbb69a7bd0a6266216920420954376842f1f442ab",
+    "gameplay_input": {
+      "action": "move",
+      "player_id": "alice",
+      "sequence": 2,
+      "x": 10,
+      "y": 20
+    },
+    "input_hash": "d5788c28de19b8d5d10b3bcfb661e2702e428ffb3ed92a500952c3511f71589f",
+    "player_id": "alice",
+    "previous_hash": "d92c0ad1ed8716fea69d1d902f730b8d3e7ff7493ba8af611cf59bc71b11f457",
+    "receipt_hash": "7fd9f1d3eadc5b84da48311ad0ed5b400b5fe7ef33cfbb2d7cae6a1a1783d199",
+    "sequence": 2,
+    "state_root": "6dd7ca63efcfc53998928329886efd9446a259b53f391c5bcc621301385f08ee",
+    "tick": 2,
+    "timestamp_ms": 2
+  },
+  {
+    "sequence": 3,
+    "previous_hash": "ba4f187b648ffb32dbc3d77bbb69a7bd0a6266216920420954376842f1f442ab",
+    "state_root": "beda699c7354bbcdf1d2a6941560b679c1d9de1822afdf7250c92aa02836f37e",
+    "input_hash": "4d1a1bc7bc9b1c92327108c2b8d1f5bfe810ff69bc5adf2dbdde6f86b7812119",
+    "receipt_hash": "204c9ce183aef87403572130831c38889571eb65e68fe3ae1ee5de863ab314f7",
+    "timestamp_ms": 3,
+    "player_id": "alice",
+    "action": "move",
+    "tick": 3,
+    "gameplay_input": {
+      "player_id": "alice",
+      "action": "move",
+      "x": 15,
+      "y": 25,
+      "sequence": 3
+    },
+    "entry_hash": "77ce75552bec342a8919b025d7cdfe55839dde287df7ae419fa43eba1b922077"
+  }
+]
