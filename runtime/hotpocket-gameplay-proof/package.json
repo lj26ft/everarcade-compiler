@@ -1,0 +1,19 @@
+{
+  "name": "@everarcade/hotpocket-gameplay-proof",
+  "version": "0.1.0",
+  "private": true,
+  "description": "HotPocket consensus gameplay proof harness for deterministic EverArcade actions.",
+  "type": "commonjs",
+  "main": "contract/index.js",
+  "scripts": {
+    "client": "node client/gameplay-client.js",
+    "validate": "node validation/hotpocket-gameplay-proof.js validate"
+  },
+  "dependencies": {
+    "hotpocket-js-client": "0.5.7",
+    "hotpocket-nodejs-contract": "0.7.4"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

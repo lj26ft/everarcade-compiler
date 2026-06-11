@@ -1,0 +1,12 @@
+HotPocket Gameplay Failure Detection Report
+votes:1 needed:3: PASS
+votes:2 needed:3: PASS
+Not enough peers proposing: PASS
+execve failure: PASS
+Contract process execve() failed: PASS
+Cannot find module: PASS
+inconsistent state roots: PASS
+inconsistent receipts: PASS
+replay mismatch: PASS
+missing client outputs: PASS
+Failure Inspection: PASS

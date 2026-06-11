@@ -1,0 +1,6 @@
+HotPocket Gameplay Replay Report
+actions persisted: 2
+live_state_root: a24c81142c1729f53ecb124c72054390a5ed41ce29a07759d87055c33e26be69
+replayed_state_root: a24c81142c1729f53ecb124c72054390a5ed41ce29a07759d87055c33e26be69
+replayed_state_root == live_state_root: PASS
+HotPocket Gameplay Replay Proof: PASS

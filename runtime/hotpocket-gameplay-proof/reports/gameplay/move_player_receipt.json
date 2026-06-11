@@ -1,0 +1,26 @@
+{
+  "schema": "everarcade.hotpocket.consensus-gameplay-proof.v0.1.receipt",
+  "execution_id": "gameplay-exec-000002",
+  "sequence": 2,
+  "status": "accepted",
+  "generated_at": "1970-01-01T00:00:00.000Z",
+  "validator_independent": true,
+  "action_hash": "d302e6755c4c20b369e0963b15652b7e58cec6b77ac2b884f2e61b18c02886ac",
+  "state_before_hash": "8194f6af297e668489fe9fcf41b3cbfa1a2e63a5f882fc54c9b7ba1432762584",
+  "state_after_hash": "a24c81142c1729f53ecb124c72054390a5ed41ce29a07759d87055c33e26be69",
+  "state_root": "a24c81142c1729f53ecb124c72054390a5ed41ce29a07759d87055c33e26be69",
+  "output": {
+    "accepted": true,
+    "action": "move_player",
+    "mutation": "player_moved",
+    "state_root": "a24c81142c1729f53ecb124c72054390a5ed41ce29a07759d87055c33e26be69",
+    "tick": 2,
+    "players": {
+      "alice": {
+        "x": 10,
+        "y": 20
+      }
+    }
+  },
+  "receipt_hash": "e228a686cd0f6f31f24851eb0a018c3f164ee15215e927876f04ea2ec58791d6"
+}

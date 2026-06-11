@@ -1,0 +1,12 @@
+[
+  {
+    "action": "join_player",
+    "player_id": "alice"
+  },
+  {
+    "action": "move_player",
+    "player_id": "alice",
+    "x": 10,
+    "y": 20
+  }
+]
