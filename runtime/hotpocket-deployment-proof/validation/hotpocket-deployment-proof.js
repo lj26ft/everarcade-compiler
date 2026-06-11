@@ -502,6 +502,415 @@ function proposal() {
 
 
 
+function parseConfigFile(file) {
+  const text = readText(file);
+  const trimmed = text.trim();
+  if (!trimmed) return {};
+  try {
+    const parsed = JSON.parse(trimmed);
+    return parsed && typeof parsed === 'object' ? parsed : {};
+  } catch (_error) {
+    return parsePatchCfg(text);
+  }
+}
+
+function deepEntries(value, prefix = '') {
+  if (!value || typeof value !== 'object') return [];
+  const entries = [];
+  for (const [key, child] of Object.entries(value)) {
+    const next = prefix ? `${prefix}.${key}` : key;
+    entries.push([next, child]);
+    if (child && typeof child === 'object' && !Array.isArray(child)) entries.push(...deepEntries(child, next));
+  }
+  return entries;
+}
+
+function firstConfigValue(config, patterns) {
+  for (const [key, value] of deepEntries(config)) {
+    if (patterns.some((pattern) => pattern.test(key))) return normalizeCfgValue(value);
+  }
+  return '';
+}
+
+function shortPath(file) {
+  if (!file) return null;
+  const absolute = path.resolve(file);
+  return absolute.startsWith(REPO_ROOT) ? path.relative(REPO_ROOT, absolute) : absolute;
+}
+
+function listDirSafe(dir) {
+  try { return fs.readdirSync(dir, { withFileTypes: true }); } catch (_error) { return []; }
+}
+
+function collectFiles(startDirs, predicate, limit = 500) {
+  const found = [];
+  const seen = new Set();
+  const queue = uniqueExistingDirs(startDirs);
+  while (queue.length > 0 && found.length < limit) {
+    const dir = queue.shift();
+    if (seen.has(dir)) continue;
+    seen.add(dir);
+    for (const entry of listDirSafe(dir)) {
+      const full = path.join(dir, entry.name);
+      if (entry.isDirectory()) {
+        if (!['node_modules', '.git', 'target', 'vendor'].includes(entry.name)) queue.push(full);
+      } else if (predicate(full, entry.name)) {
+        found.push(full);
+      }
+    }
+  }
+  return found;
+}
+
+function findDirs(startDirs, predicate, limit = 100) {
+  const found = [];
+  const seen = new Set();
+  const queue = uniqueExistingDirs(startDirs);
+  while (queue.length > 0 && found.length < limit) {
+    const dir = queue.shift();
+    if (seen.has(dir)) continue;
+    seen.add(dir);
+    if (predicate(dir)) found.push(dir);
+    for (const entry of listDirSafe(dir)) {
+      if (!entry.isDirectory()) continue;
+      if (['node_modules', '.git', 'target', 'vendor'].includes(entry.name)) continue;
+      queue.push(path.join(dir, entry.name));
+    }
+  }
+  return found;
+}
+
+function dockerTable(formatArgs) {
+  if (!commandExists('docker')) return [];
+  const lines = dockerLines(formatArgs);
+  return lines.map((line) => {
+    try { return JSON.parse(line); } catch (_error) { return null; }
+  }).filter(Boolean);
+}
+
+function inspectContainer(id) {
+  const inspected = dockerJson(['inspect', id]);
+  return Array.isArray(inspected) ? inspected[0] : null;
+}
+
+function normalizeContainerRow(row, inspect) {
+  const ports = row.Ports || row.Ports === '' ? row.Ports : '';
+  return {
+    id: row.ID || row.IDs || (inspect && inspect.Id ? inspect.Id.slice(0, 12) : ''),
+    name: row.Names || row.Name || (inspect && inspect.Name ? inspect.Name.replace(/^\//, '') : ''),
+    status: row.Status || (inspect && inspect.State && inspect.State.Status) || '',
+    image: row.Image || (inspect && inspect.Config && inspect.Config.Image) || '',
+    ports,
+    state: inspect && inspect.State ? inspect.State : null,
+    labels: inspect && inspect.Config ? inspect.Config.Labels || {} : {},
+    mounts: ((inspect && inspect.Mounts) || []).map((mount) => ({
+      type: mount.Type || null,
+      name: mount.Name || null,
+      source: mount.Source || null,
+      destination: mount.Destination || null,
+      driver: mount.Driver || null,
+      mode: mount.Mode || null,
+      rw: mount.RW == null ? null : mount.RW
+    })),
+    network_settings: inspect && inspect.NetworkSettings ? inspect.NetworkSettings : null
+  };
+}
+
+function isHotPocketContainer(container) {
+  const text = `${container.name} ${container.image} ${JSON.stringify(container.labels || {})} ${JSON.stringify(container.mounts || [])}`.toLowerCase();
+  return /hpdevkit|hotpocket|default_node_\d+|deploymgr/.test(text);
+}
+
+function dockerEnvironmentDiscovery() {
+  const ps = dockerTable(['ps', '--format', '{{json .}}']);
+  const psAll = dockerTable(['ps', '-a', '--format', '{{json .}}']);
+  const volumesRaw = dockerTable(['volume', 'ls', '--format', '{{json .}}']);
+  const networksRaw = dockerTable(['network', 'ls', '--format', '{{json .}}']);
+  const containers = psAll.map((row) => normalizeContainerRow(row, inspectContainer(row.ID))).filter(isHotPocketContainer);
+  const activeContainers = containers.filter((container) => (container.state && container.state.Running) || /^up\b/i.test(container.status));
+  const expected = ['hpdevkit_default_node_1', 'hpdevkit_default_node_2', 'hpdevkit_default_node_3', 'hpdevkit_default_deploymgr'];
+  const activeNames = new Set(activeContainers.map((container) => container.name));
+  const expectedFound = expected.filter((name) => activeNames.has(name));
+  const nodeCount = activeContainers.filter((container) => /node[_-]?\d+/i.test(container.name)).length;
+  const deployMgrFound = activeContainers.some((container) => /deploymgr/i.test(container.name));
+  const status = expectedFound.length === expected.length || (nodeCount >= 3 && deployMgrFound) ? 'PASS' : 'FAIL';
+  const report = {
+    schema: 'everarcade.hotpocket.docker-environment-discovery.v0.1',
+    generated_at: DEFAULT_TIME,
+    docker_available: Boolean(commandExists('docker')),
+    docker_ps: ps,
+    docker_ps_a: psAll,
+    docker_volume_ls: volumesRaw,
+    docker_network_ls: networksRaw,
+    hotpocket_containers: containers,
+    active_hotpocket_containers: activeContainers,
+    expected_active_container_names: expected,
+    expected_active_containers_found: expectedFound,
+    status
+  };
+  mirrorJson('hotpocket_docker_discovery_report.json', report);
+  return report;
+}
+
+function hpdevkitVolumeDiscovery(dockerReport = dockerEnvironmentDiscovery()) {
+  const volumeNames = new Set();
+  const mounts = [];
+  for (const container of dockerReport.hotpocket_containers || []) {
+    for (const mount of container.mounts || []) {
+      const text = `${mount.name || ''} ${mount.source || ''} ${mount.destination || ''}`;
+      if (/\/hpdevkit_vol\b|hpdevkit|hotpocket|default_node_/i.test(text)) {
+        if (mount.name) volumeNames.add(mount.name);
+        mounts.push({ container: container.name, container_id: container.id, volume_name: mount.name, host_path: mount.source, container_path: mount.destination, type: mount.type });
+      }
+    }
+  }
+  for (const row of dockerTable(['volume', 'ls', '--format', '{{json .}}'])) {
+    const name = row.Name || row.NameOrID || '';
+    if (/hpdevkit|hotpocket|default_node_|node_\d+/i.test(name)) volumeNames.add(name);
+  }
+  const volumes = [...volumeNames].sort().map((name) => {
+    const inspected = dockerJson(['volume', 'inspect', name]);
+    const item = Array.isArray(inspected) ? inspected[0] : null;
+    return { name, driver: item && item.Driver ? item.Driver : null, mountpoint: item && item.Mountpoint ? item.Mountpoint : null, labels: item && item.Labels ? item.Labels : {} };
+  });
+  const roots = uniqueExistingDirs([...mounts.map((mount) => mount.host_path), ...volumes.map((volume) => volume.mountpoint)]);
+  const report = {
+    schema: 'everarcade.hotpocket.volume-discovery.v0.1',
+    generated_at: DEFAULT_TIME,
+    hpdevkit_volume_path: '/hpdevkit_vol',
+    mounts,
+    volumes,
+    host_paths: roots,
+    status: roots.length > 0 && mounts.some((mount) => mount.container_path === '/hpdevkit_vol' || /hpdevkit_vol/.test(mount.container_path || '')) ? 'PASS' : 'FAIL'
+  };
+  mirrorJson('hotpocket_volume_discovery_report.json', report);
+  return report;
+}
+
+function nodeNameFromPath(dir) {
+  const base = path.basename(dir).toLowerCase();
+  const match = base.match(/node[_-]?(\d+)/);
+  return match ? `node${match[1]}` : base;
+}
+
+function nodeRootDiscovery(volumeReport = hpdevkitVolumeDiscovery()) {
+  const explicitRoots = [process.env.HOTPOCKET_CLUSTER_ROOT, process.env.HPDEVKIT_CLUSTER_ROOT, process.env.EVERARCADE_HOTPOCKET_CLUSTER_ROOT].filter(Boolean);
+  const candidateBases = uniqueExistingDirs([...explicitRoots, ...(volumeReport.host_paths || [])]);
+  const nodeRoots = findDirs(candidateBases, (dir) => ['cfg', 'contract_fs', 'ledger_fs', 'log'].every((name) => fs.existsSync(path.join(dir, name)) && fs.statSync(path.join(dir, name)).isDirectory()), 20)
+    .map((root) => ({
+      node: nodeNameFromPath(root),
+      root,
+      cfg: path.join(root, 'cfg'),
+      contract_fs: path.join(root, 'contract_fs'),
+      ledger_fs: path.join(root, 'ledger_fs'),
+      log: path.join(root, 'log'),
+      required_dirs_present: ['cfg', 'contract_fs', 'ledger_fs', 'log'].every((name) => fs.existsSync(path.join(root, name)))
+    }))
+    .sort((a, b) => a.node.localeCompare(b.node));
+  const expected = ['node1', 'node2', 'node3'];
+  const foundNames = new Set(nodeRoots.map((node) => node.node));
+  const report = {
+    schema: 'everarcade.hotpocket.node-root-discovery.v0.1',
+    generated_at: DEFAULT_TIME,
+    search_roots: candidateBases,
+    node_roots: nodeRoots,
+    expected_nodes: expected,
+    expected_nodes_found: expected.filter((node) => foundNames.has(node)),
+    status: expected.every((node) => foundNames.has(node)) && nodeRoots.every((node) => node.required_dirs_present) ? 'PASS' : 'FAIL'
+  };
+  mirrorJson('hotpocket_node_root_discovery_report.json', report);
+  return report;
+}
+
+function hpCfgDiscovery(nodeReport = nodeRootDiscovery()) {
+  const configs = [];
+  for (const node of nodeReport.node_roots || []) {
+    const hpCfg = path.join(node.cfg, 'hp.cfg');
+    const present = fs.existsSync(hpCfg);
+    const parsed = present ? parseConfigFile(hpCfg) : {};
+    const binPath = firstConfigValue(parsed, [/^bin_path$/i, /bin[_-]?path$/i, /executable$/i]) || parsed.bin_path || '';
+    const binArgs = firstConfigValue(parsed, [/^bin_args$/i, /bin[_-]?args$/i, /arguments$/i]) || parsed.bin_args || '';
+    const placeholderAbsent = Boolean(binPath && binPath !== PLACEHOLDER && !String(binPath).includes('your contract binary') && !String(binArgs).includes(PLACEHOLDER));
+    const publicKey = firstConfigValue(parsed, [/public.*key/i, /pub.*key/i, /^pubkey$/i]);
+    const contractId = firstConfigValue(parsed, [/contract.*id/i, /^contract$/i]);
+    const consensusConfig = Object.fromEntries(deepEntries(parsed).filter(([key]) => /consensus|round|quorum|npl|unl|threshold/i.test(key)).slice(0, 50));
+    configs.push({ node: node.node, file: hpCfg, public_key: publicKey, contract_id: contractId, consensus_config: consensusConfig, bin_path: binPath, bin_args: binArgs, placeholder_absent: placeholderAbsent, status: present && placeholderAbsent ? 'PASS' : 'FAIL' });
+  }
+  const report = { schema: 'everarcade.hotpocket.hp-cfg-discovery.v0.1', generated_at: DEFAULT_TIME, configs, status: configs.length >= 3 && configs.every((item) => item.status === 'PASS') ? 'PASS' : 'FAIL' };
+  mirrorJson('hotpocket_hp_cfg_discovery_report.json', report);
+  return report;
+}
+
+function contractDiscovery(nodeReport = nodeRootDiscovery()) {
+  const contracts = [];
+  for (const node of nodeReport.node_roots || []) {
+    const files = findFiles([node.contract_fs], ['contract.js', 'package.json', 'patch.cfg']);
+    const byName = Object.fromEntries(files.map((file) => [path.basename(file), file]));
+    const packageJson = byName['package.json'] ? readJson(byName['package.json'], {}) : {};
+    const patch = byName['patch.cfg'] ? parseConfigFile(byName['patch.cfg']) : {};
+    contracts.push({
+      node: node.node,
+      contract_root: node.contract_fs,
+      contract_js: byName['contract.js'] || null,
+      package_json: byName['package.json'] || null,
+      patch_cfg: byName['patch.cfg'] || null,
+      node_modules: fs.existsSync(path.join(node.contract_fs, 'node_modules')) ? path.join(node.contract_fs, 'node_modules') : null,
+      package_name: packageJson.name || '',
+      dependencies: packageJson.dependencies || {},
+      launch_metadata: { bin_path: patch.bin_path || firstConfigValue(patch, [/bin.*path/i]), bin_args: patch.bin_args || firstConfigValue(patch, [/bin.*args/i]) },
+      status: byName['contract.js'] && byName['package.json'] && byName['patch.cfg'] ? 'PASS' : 'FAIL'
+    });
+  }
+  const report = { schema: 'everarcade.hotpocket.contract-filesystem-discovery.v0.1', generated_at: DEFAULT_TIME, contracts, status: contracts.length >= 3 && contracts.every((item) => item.status === 'PASS') ? 'PASS' : 'FAIL' };
+  mirrorJson('hotpocket_contract_discovery_report.json', report);
+  return report;
+}
+
+function ledgerDiscovery(nodeReport = nodeRootDiscovery()) {
+  const ledgers = (nodeReport.node_roots || []).map((node) => {
+    const all = collectFiles([node.ledger_fs], (file, name) => /\.(db|sqlite|sqlite3)$/i.test(name) || /continuity|unl/i.test(file)).map((file) => path.resolve(file));
+    const sqliteFiles = all.filter((file) => /\.(db|sqlite|sqlite3)$/i.test(file));
+    const continuityFiles = all.filter((file) => /continuity|unl/i.test(file));
+    const shards = listDirSafe(node.ledger_fs).filter((entry) => entry.isDirectory()).map((entry) => path.join(node.ledger_fs, entry.name));
+    return { node: node.node, ledger_root: node.ledger_fs, shards, sqlite_files: sqliteFiles, continuity_files: continuityFiles, status: fs.existsSync(node.ledger_fs) ? 'PASS' : 'FAIL' };
+  });
+  const report = { schema: 'everarcade.hotpocket.ledger-discovery.v0.1', generated_at: DEFAULT_TIME, ledgers, status: ledgers.length >= 3 && ledgers.every((item) => item.status === 'PASS') ? 'PASS' : 'FAIL' };
+  mirrorJson('hotpocket_ledger_discovery_report.json', report);
+  return report;
+}
+
+function logDiscovery(nodeReport = nodeRootDiscovery()) {
+  const logs = [];
+  for (const node of nodeReport.node_roots || []) {
+    const files = findFiles([node.log], ['hp.log', 'contract.log']);
+    const text = files.map(readText).join('\n');
+    logs.push({ node: node.node, files, validator_startup: /validator|hotpocket|server|listening|started/i.test(text), contract_startup: /contract|spawn|launch|started/i.test(text), proposal_activity: /proposal|consensus|round|ledger|vote/i.test(text), errors: (text.match(/\berror\b|exception|failed/i) || []).length });
+  }
+  const ok = logs.length >= 3 && logs.every((item) => item.files.length > 0);
+  mirrorText('hotpocket_log_discovery_report.txt', [
+    'HotPocket Log Discovery Report',
+    ...logs.flatMap((item) => [`${item.node}: files=${item.files.map(shortPath).join(', ') || 'none'}`, `  validator startup: ${item.validator_startup ? 'PASS' : 'NOT_OBSERVED'} contract startup: ${item.contract_startup ? 'PASS' : 'NOT_OBSERVED'} proposal activity: ${item.proposal_activity ? 'PASS' : 'NOT_OBSERVED'} errors: ${item.errors}`]),
+    `HotPocket Log Discovery Proof: ${ok ? 'PASS' : 'FAIL'}`
+  ]);
+  return { schema: 'everarcade.hotpocket.log-discovery.v0.1', generated_at: DEFAULT_TIME, logs, status: ok ? 'PASS' : 'FAIL' };
+}
+
+function hostForBinding(binding) {
+  return binding && binding.HostIp && binding.HostIp !== '0.0.0.0' && binding.HostIp !== '::' ? binding.HostIp : '127.0.0.1';
+}
+
+function checkTcpReachable(host, port, websocket) {
+  const script = websocket ? `const net=require('net');const s=net.connect(${Number(port)},${JSON.stringify(host)},()=>{s.write('GET / HTTP/1.1\\r\\nHost: ${host}:${port}\\r\\nUpgrade: websocket\\r\\nConnection: Upgrade\\r\\nSec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==\\r\\nSec-WebSocket-Version: 13\\r\\n\\r\\n')});let d='';s.setTimeout(1500);s.on('data',c=>{d+=c.toString();if(d.includes('\\r\\n\\r\\n')){console.log(/^HTTP\\/1\\.1 101/.test(d)?'OK':'TCP_ONLY');process.exit(/^HTTP\\/1\\.1 101/.test(d)?0:2)}});s.on('timeout',()=>process.exit(3));s.on('error',()=>process.exit(1));` : `const net=require('net');const s=net.connect(${Number(port)},${JSON.stringify(host)},()=>{process.exit(0)});s.setTimeout(1000);s.on('timeout',()=>process.exit(2));s.on('error',()=>process.exit(1));`;
+  const result = childProcess.spawnSync(process.execPath, ['-e', script], { encoding: 'utf8', timeout: 2500 });
+  return { ok: result.status === 0, exit_code: result.status, stdout: result.stdout || '', stderr: result.stderr || '' };
+}
+
+function endpointDiscovery(dockerReport = dockerEnvironmentDiscovery()) {
+  const endpoints = [];
+  for (const container of dockerReport.active_hotpocket_containers || []) {
+    const ports = (container.network_settings && container.network_settings.Ports) || {};
+    for (const [containerPort, bindings] of Object.entries(ports)) {
+      if (!bindings) continue;
+      for (const binding of bindings) {
+        const host = hostForBinding(binding);
+        const port = Number(binding.HostPort);
+        if (!port) continue;
+        const tcp = checkTcpReachable(host, port, false);
+        const ws = checkTcpReachable(host, port, true);
+        endpoints.push({ container: container.name, container_port: containerPort, host, port, protocol: 'ws', endpoint: `ws://${host}:${port}`, tcp_reachable: tcp.ok, websocket_reachable: ws.ok });
+      }
+    }
+  }
+  const report = { schema: 'everarcade.hotpocket.endpoint-discovery.v0.1', generated_at: DEFAULT_TIME, endpoints, status: endpoints.length >= 3 && endpoints.every((item) => item.tcp_reachable && item.websocket_reachable) ? 'PASS' : 'FAIL' };
+  mirrorJson('hotpocket_endpoint_discovery_report.json', report);
+  return report;
+}
+
+function buildAttachmentMap(nodeReport, dockerReport, hpCfgReport, contractReport, ledgerReport, logReport, endpointReport) {
+  const map = {};
+  for (const node of nodeReport.node_roots || []) {
+    const num = (node.node.match(/\d+/) || [''])[0];
+    const container = (dockerReport.active_hotpocket_containers || []).find((item) => num && new RegExp(`node[_-]?${num}\\b`, 'i').test(item.name));
+    const hpCfg = (hpCfgReport.configs || []).find((item) => item.node === node.node);
+    const contract = (contractReport.contracts || []).find((item) => item.node === node.node);
+    const ledger = (ledgerReport.ledgers || []).find((item) => item.node === node.node);
+    const logs = (logReport.logs || []).find((item) => item.node === node.node);
+    const endpoint = (endpointReport.endpoints || []).find((item) => container && item.container === container.name);
+    map[node.node] = {
+      container: container ? container.name : null,
+      container_id: container ? container.id : null,
+      hp_cfg: hpCfg ? hpCfg.file : null,
+      log: logs && logs.files[0] ? logs.files[0] : null,
+      contract_root: contract ? contract.contract_root : null,
+      ledger_root: ledger ? ledger.ledger_root : null,
+      endpoint: endpoint ? endpoint.endpoint : null
+    };
+  }
+  return map;
+}
+
+function stableDiscoverySignature(snapshot) {
+  const names = (items, getter) => [...new Set((items || []).map(getter).filter(Boolean))].sort();
+  return {
+    containers: names(snapshot.docker.active_hotpocket_containers, (item) => item.name),
+    node_roots: names(snapshot.nodes.node_roots, (item) => item.root),
+    hp_cfg_files: names(snapshot.hp_cfg.configs, (item) => item.file),
+    contract_roots: names(snapshot.contracts.contracts, (item) => item.contract_root),
+    endpoints: names(snapshot.endpoints.endpoints, (item) => item.endpoint)
+  };
+}
+
+function runClusterDiscoverySnapshot() {
+  const docker = dockerEnvironmentDiscovery();
+  const volumes = hpdevkitVolumeDiscovery(docker);
+  const nodes = nodeRootDiscovery(volumes);
+  const hpCfg = hpCfgDiscovery(nodes);
+  const contracts = contractDiscovery(nodes);
+  const ledgers = ledgerDiscovery(nodes);
+  const logs = logDiscovery(nodes);
+  const endpoints = endpointDiscovery(docker);
+  const attachment = buildAttachmentMap(nodes, docker, hpCfg, contracts, ledgers, logs, endpoints);
+  const attachmentOk = Object.keys(attachment).length >= 3 && Object.values(attachment).every((item) => item.container && item.hp_cfg && item.log && item.contract_root && item.ledger_root && item.endpoint);
+  mirrorJson('hotpocket_cluster_attachment_report.json', { schema: 'everarcade.hotpocket.cluster-attachment.v0.1', generated_at: DEFAULT_TIME, attachment_map: attachment, status: attachmentOk ? 'PASS' : 'FAIL' });
+  return { docker, volumes, nodes, hp_cfg: hpCfg, contracts, ledgers, logs, endpoints, attachment_status: attachmentOk ? 'PASS' : 'FAIL' };
+}
+
+function clusterDiscoveryProof() {
+  const first = runClusterDiscoverySnapshot();
+  const second = runClusterDiscoverySnapshot();
+  const firstSignature = stableDiscoverySignature(first);
+  const secondSignature = stableDiscoverySignature(second);
+  const same = JSON.stringify(firstSignature) === JSON.stringify(secondSignature);
+  mirrorText('hotpocket_discovery_consistency_report.txt', [
+    'HotPocket Discovery Consistency Report',
+    `same containers: ${JSON.stringify(firstSignature.containers) === JSON.stringify(secondSignature.containers) ? 'PASS' : 'FAIL'}`,
+    `same node roots: ${JSON.stringify(firstSignature.node_roots) === JSON.stringify(secondSignature.node_roots) ? 'PASS' : 'FAIL'}`,
+    `same hp.cfg files: ${JSON.stringify(firstSignature.hp_cfg_files) === JSON.stringify(secondSignature.hp_cfg_files) ? 'PASS' : 'FAIL'}`,
+    `same contract roots: ${JSON.stringify(firstSignature.contract_roots) === JSON.stringify(secondSignature.contract_roots) ? 'PASS' : 'FAIL'}`,
+    `same endpoints: ${JSON.stringify(firstSignature.endpoints) === JSON.stringify(secondSignature.endpoints) ? 'PASS' : 'FAIL'}`,
+    `HotPocket Discovery Consistency Proof: ${same ? 'PASS' : 'FAIL'}`
+  ]);
+  const checks = [first.docker.status, first.volumes.status, first.nodes.status, first.hp_cfg.status, first.contracts.status, first.ledgers.status, first.logs.status, first.endpoints.status, first.attachment_status];
+  const ok = checks.every((status) => status === 'PASS') && same;
+  mirrorText('hotpocket_cluster_discovery_and_attachment_certification_report.txt', [
+    'HotPocket Cluster Discovery & Attachment Proof v0.1 Certification',
+    'Explicit Non-Claims: contract execution, gameplay, consensus success, multiplayer, federation, Evernode deployment',
+    `containers discovered: ${first.docker.status}`,
+    `volumes discovered: ${first.volumes.status}`,
+    `node roots discovered: ${first.nodes.status}`,
+    `hp.cfg discovered: ${first.hp_cfg.status}`,
+    `contract roots discovered: ${first.contracts.status}`,
+    `ledger roots discovered: ${first.ledgers.status}`,
+    `logs discovered: ${first.logs.status}`,
+    `endpoints discovered: ${first.endpoints.status}`,
+    `cluster attachment generated: ${first.attachment_status}`,
+    `discovery reproducible: ${same ? 'PASS' : 'FAIL'}`,
+    `HotPocket Cluster Discovery & Attachment Proof v0.1: ${ok ? 'PASS' : 'FAIL'}`
+  ]);
+  return ok;
+}
+
+
 function discoverClientServers() {
   const env = (process.env.HOTPOCKET_SERVERS || process.env.HP_SERVERS || '').split(',').map((item) => item.trim()).filter(Boolean);
   const docker = [];
@@ -586,7 +995,7 @@ function certify() {
 
 function main() {
   const command = process.argv[2] || 'validate';
-  const commands = { inspect, deploy, executable, dependencies, launch, proposal, clientRoundtrip, validate, certify };
+  const commands = { inspect, deploy, executable, dependencies, launch, proposal, clientRoundtrip, clusterDiscoveryProof, discovery: clusterDiscoveryProof, validate, certify };
   if (!commands[command]) throw new Error(`unknown command: ${command}`);
   process.exit(commands[command]() ? 0 : 1);
 }
