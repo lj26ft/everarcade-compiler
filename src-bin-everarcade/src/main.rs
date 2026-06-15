@@ -3,6 +3,7 @@ mod config;
 mod lease;
 mod product;
 mod runtime_snapshot;
+mod world;
 use std::env;
 
 fn main() {
