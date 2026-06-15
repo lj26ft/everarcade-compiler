@@ -1,0 +1,11 @@
+{
+  "command": "world-deploy",
+  "success": true,
+  "package_hash": null,
+  "bundle_hash": "1c4f8877e2aa7eb687227c6ef81753561396efe5954d75046537d2d78522efd9",
+  "world_id": "world-example",
+  "world_version": "0.1.0",
+  "lease_id": "offline-lease",
+  "continuity_root": "cf359b15f4a37f8f8f3ab8f3624a44fdeebf035ad358a186c66e488e11f9de2b",
+  "status": "verified, bundled, deployed, started, health checked"
+}

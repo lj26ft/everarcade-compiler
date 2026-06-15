@@ -1,0 +1,12 @@
+{
+  "runtime_binary": "dist/everarcade-runtime",
+  "runtime_hash": "9a80fcb3d7d0734dbeb1ade840968f6ab00d3bc47763eef7669ba984adda5b5b",
+  "supports": [
+    "MutationEnvelope",
+    "receipt_generation",
+    "state_root",
+    "replay_root",
+    "continuity_root",
+    "health"
+  ]
+}

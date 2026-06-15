@@ -189,6 +189,7 @@ fn save_all(
     status: &str,
 ) -> Result<(), String> {
     fs::create_dir_all(report_dir()).map_err(|e| e.to_string())?;
+    fs::create_dir_all("reports/live").map_err(|e| e.to_string())?;
     fs::write(
         record_path(),
         serde_json::to_vec_pretty(record).map_err(|e| e.to_string())?,
@@ -200,6 +201,18 @@ fn save_all(
         serde_json::to_vec_pretty(&report).map_err(|e| e.to_string())?,
     )
     .map_err(|e| e.to_string())?;
+    let live_name = match name {
+        "lease-acquire" => Some("acquire-lease.json"),
+        "lease-health" => Some("lease-health.json"),
+        _ => None,
+    };
+    if let Some(live_name) = live_name {
+        fs::write(
+            PathBuf::from("reports/live").join(live_name),
+            serde_json::to_vec_pretty(&report).map_err(|e| e.to_string())?,
+        )
+        .map_err(|e| e.to_string())?;
+    }
     println!("{name}: {status}");
     Ok(())
 }

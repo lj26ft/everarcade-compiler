@@ -1,0 +1,17 @@
+{
+  "command": "release-package",
+  "manifest": {
+    "cli_hash": "2ff1e5acdfa349458f2d82ccb959aed505fd1e1dac9f34e0cb9c8e73569151c9",
+    "created_at": "1781541810",
+    "git_commit": "4596843b91843cfa1edd5ecc49db9f4440a9c8db",
+    "protocol": "everarcade-release-v0.1",
+    "release_id": "everarcade-4596843b9184",
+    "runtime_bundle_hash": "bfa821391e0a6ed4fa624fedbb83d9106aea847f5bb80912f200456c9790001d",
+    "runtime_hash": "9a80fcb3d7d0734dbeb1ade840968f6ab00d3bc47763eef7669ba984adda5b5b",
+    "vendor_hash": "96251664163b9e2062da8fb37e3cdfa055d2d58916e0f9d525e226be411cf01c",
+    "version": "0.1.0",
+    "world_package_hash": "d5a207da4fd481307917c87c48df8eff63a4ca85373fe8c08ed78e954f2b2be5"
+  },
+  "release_hash": "5f9fb82bc87751e06e0b96d8aa1126634b012775d6d07600c9d82e6d9b568f73",
+  "success": true
+}

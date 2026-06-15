@@ -1,0 +1,15 @@
+{
+  "bundle_hash": "bfa821391e0a6ed4fa624fedbb83d9106aea847f5bb80912f200456c9790001d",
+  "command": "runtime-bundle",
+  "includes": [
+    "HotPocket adapter entrypoint",
+    "canonical transport bridge",
+    "real EverArcade runtime binary",
+    "world manifest",
+    "genesis state",
+    "schemas",
+    "verification metadata"
+  ],
+  "lease_id": "offline-lease",
+  "success": true
+}
