@@ -1,17 +1,21 @@
 Open Source Readiness Report
-Date: 2026-06-09
+Date: 2026-06-15
 
 Checks
 README: PASS
-README Project Overview: PASS
-README Quick Start: PASS
-README Playable Local Game: PASS
+README purpose: PASS
+README capability summary: PASS
+README documentation links: PASS
 LICENSE: PASS
 CONTRIBUTING: PASS
 SECURITY: PASS
 CODE_OF_CONDUCT: PASS
 Onboarding docs: PASS
 Repository map: PASS
+Maturity classification: PASS
+Documentation portal root: PASS
+Documentation policy: PASS
+Open source readiness audit: PASS
 Proof chain: PASS
 Artifact policy: PASS
 Offline build policy: PASS

@@ -1,85 +1,43 @@
 # EverArcade
 
-EverArcade is a deterministic game-runtime and creator-tooling repository for packaging, running, and auditing local game execution. The current repository proves that a template game can be created, packaged, executed by the local runtime, and replay-verified on a developer machine.
+EverArcade is an open-source deterministic game-runtime and creator-tooling repository. It focuses on packaging worlds, running them locally, recording execution evidence, and replay-verifying deterministic outcomes.
 
-EverArcade is **not production ready**, **not public-testnet ready**, and **not commercial ready**. The current classification is:
+EverArcade is currently an **open-source candidate** with a proven local developer onboarding path. It is **not production ready**, **not public-testnet ready**, and **not commercial ready**.
 
-```text
-Developer Onboarding Proven
-Open Source Candidate
-```
+## Why does EverArcade exist?
 
-## Project Overview
+Games and persistent worlds are hard to audit after they run. EverArcade explores a runtime model where world packages produce receipts, journals, checkpoints, and replay evidence so execution can be inspected and verified later.
 
-EverArcade exists to make game execution reproducible enough that runtime state, receipts, journals, and replay evidence can be inspected after a session. The repository combines:
+The current goal is clarity and local proof, not live multiplayer federation, public settlement, commercial hosting, or production marketplace operation.
 
-- a Rust runtime prototype in `runtime/everarcade-runtime/`;
-- a Node-based Creator SDK in `creator-sdk/`;
-- template games and sample packages;
-- validation and certification scripts under `scripts/`;
-- reports and documentation that explain which claims are proven and which are only scaffolded.
+## What can I do today?
 
-The immediate purpose of v0.1 is developer comprehension and local proof, not live multiplayer, settlement, marketplace operation, or production hosting.
+You can:
 
-## Architecture Overview
+- create a local game from the Creator SDK;
+- build and validate its manifest;
+- package a local runtime bundle;
+- run a playable local Arena session;
+- inspect generated receipts, journals, state, transcript, and replay proof material;
+- use the documentation to understand which subsystems are alpha, experimental, scaffold, or planned.
 
-At a high level, EverArcade has four practical layers:
+Treat renderer, history, federation, XRPL settlement, Xahau hooks, GPU marketplace, public testnet, and commercial revenue areas as scaffold or experimental unless `MATURITY.md` says otherwise.
 
-1. **Creator layer**: `creator-sdk/` creates a game project, validates its manifest, builds local artifacts, and packages a runtime bundle.
-2. **Runtime package layer**: generated packages contain `manifest.json`, `world.json`, and `world.wasm` or a deterministic placeholder world artifact.
-3. **Local runtime layer**: `runtime/everarcade-runtime/` starts local sessions, writes receipts, journals, gameplay state, and replay proof material.
-4. **Evidence layer**: `reports/`, runtime roots, and generated validation outputs document what happened and whether replay verification passed.
-
-Many other directories are intentionally less mature. Treat renderer, history, federation, marketplace, GPU, XRPL, Xaman, public-testnet, and commercial-revenue areas as scaffold-level or experimental unless a current validation script and proof-chain document say otherwise. See `docs/repository/repository-map.md` for subsystem ownership and maturity.
-
-## Current Status
-
-### What currently works
-
-- Creating a local Arena game from the Creator SDK.
-- Building and validating the Creator SDK project manifest.
-- Packaging a local runtime package.
-- Running a playable local Arena session through `everarcade-runtime`.
-- Producing local session, gameplay, receipt, journal, transcript, and replay verification evidence.
-- Running open-source readiness and developer-experience certification scripts.
-
-### What does not work yet
-
-- Production hosting or public testnet operation.
-- Real multiplayer federation gameplay.
-- Renderer-driven end-user gameplay as the canonical proof path.
-- XRPL settlement, Xaman signing, GPU marketplace, commercial revenue, and marketplace workflows as production systems.
-- A fully resolved offline vendor snapshot in this clone; the known missing `bincode` vendor issue is documented in `docs/build/offline-build-policy.md`.
-
-## Quick Start
+## Quick start
 
 Prerequisites:
 
-- Node.js 18+ for the Creator SDK CLI.
-- Rust/Cargo for the local runtime proof.
-- Network access may be required until the vendor snapshot is restored.
+- Node.js 18+
+- Rust/Cargo
+- Network access until offline vendor artifacts are fully restored
 
-Run the developer onboarding validation:
+Run the targeted developer onboarding validation:
 
 ```bash
 CARGO_BUILD_JOBS=1 bash scripts/validate_developer_onboarding.sh
 ```
 
-Run the open-source readiness audit:
-
-```bash
-bash scripts/validate_open_source_readiness.sh
-```
-
-Run developer-experience certification:
-
-```bash
-bash scripts/certify_developer_experience.sh
-```
-
-## Playable Local Game
-
-Manual flow:
+Manual local flow:
 
 ```bash
 TMPDIR="$(mktemp -d)"
@@ -99,29 +57,25 @@ Expected result:
 Playable Local Game: PASS
 ```
 
-The runtime root should contain session state, gameplay state, receipts, a journal stream, a session transcript, and `replay/gameplay-replay-proof.json` with replay verification set to `PASS`.
+## Where are the docs?
 
-For a guided 30-minute path, use `docs/onboarding/30-minute-developer-journey.md`.
-
-## Roadmap
-
-Near-term roadmap:
-
-1. Keep the root README, repository map, proof chain, artifact policy, and onboarding guide as canonical entry points.
-2. Consolidate duplicate scripts and proof reports without deleting historical evidence prematurely.
-3. Restore a complete vendor artifact and document the supported offline build process.
-4. Expand renderer-driven local gameplay only after the current CLI-based playable local proof remains stable.
-5. Continue labeling federation, marketplace, XRPL, Xaman, GPU, and commercial-revenue domains honestly as scaffold or experimental until proven otherwise.
+- Documentation root: [`docs/index.md`](docs/index.md)
+- Documentation policy: [`docs/DOCUMENTATION_POLICY.md`](docs/DOCUMENTATION_POLICY.md)
+- Maturity classifications: [`MATURITY.md`](MATURITY.md)
+- Repository map: [`REPOSITORY_MAP.md`](REPOSITORY_MAP.md)
+- Contributor guide: [`docs/contributor-guide/index.md`](docs/contributor-guide/index.md)
+- Open-source readiness audit: [`OPEN_SOURCE_READINESS.md`](OPEN_SOURCE_READINESS.md)
 
 ## Contributing
 
-Start with `CONTRIBUTING.md`, then run:
+Start with [`CONTRIBUTING.md`](CONTRIBUTING.md), then read the contributor guide under `docs/`. Prefer targeted validation scripts over full workspace test runs unless a change requires broader validation.
+
+Useful checks:
 
 ```bash
 git diff --check
 CARGO_BUILD_JOBS=1 bash scripts/validate_developer_onboarding.sh
 bash scripts/validate_open_source_readiness.sh
-bash scripts/certify_developer_experience.sh
 ```
 
-Do not claim production readiness from local PASS reports. PASS means the named local proof succeeded under the documented conditions.
+Do not claim production readiness from local PASS reports. PASS means the named local proof succeeded under the documented local conditions.
