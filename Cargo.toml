@@ -1,6 +1,7 @@
 [workspace]
 members = [
     "everarcade-abi",
+    "crates/transport-core",
     "execution-core",
     "contract-api",
     "control-plane",
