@@ -22,3 +22,9 @@
 .cardPanel { border: 1px solid var(--everarcade-border); border-radius: 16px; padding: 1.25rem; background: var(--everarcade-panel); height: 100%; }
 .sectionBand { padding: 3rem 0; }
 .kicker { color: var(--ifm-color-primary-light); font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
+.heroStatement { font-size: 1.25rem; font-weight: 600; margin: 1rem auto 0; max-width: 760px; }
+.cardPanel h3 { margin-top: 0; }
+.cardPanel:hover { text-decoration: none; border-color: var(--ifm-color-primary-light); transform: translateY(-2px); transition: border-color .15s ease, transform .15s ease; }
+.sectionBand:nth-of-type(even) { background: color-mix(in srgb, var(--everarcade-panel) 72%, transparent); }
+.markdown h1:first-child { letter-spacing: -0.03em; }
+.markdown h2 { margin-top: 2.25rem; }

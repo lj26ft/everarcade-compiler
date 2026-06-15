@@ -1,22 +1,31 @@
 # Operators
 
-Operators run worlds, preserve continuity, and make world history independently recoverable.
+Operators are the stewards who keep EverArcade worlds online, recoverable, and independently checkable.
 
-## What do operators do?
+## What operators do
 
-Operators host world packages, execute world updates, retain checkpoints and proof bundles, and coordinate with other infrastructure participants when a world spans multiple nodes.
+Operators host world packages, run world updates, retain checkpoints, publish receipts, and coordinate recovery when a world needs to move or continue after an incident.
 
-## How are worlds hosted and verified?
+## Why operators matter
 
-Worlds are packaged with their rules and metadata. Operators run those packages, publish receipts, retain replay material, and support restoration from checkpoints when recovery is needed.
+A persistent world needs more than launch-day hosting. It needs continuity over upgrades, outages, migrations, and community growth. Operators provide the infrastructure layer that lets worlds keep their memory.
 
-## Replay proofs and federation
+## How worlds are hosted
 
-Replay proofs let another participant verify a history window. Federation lets operators coordinate world execution, synchronization, and recovery without turning one machine into the permanent source of truth.
+Worlds are packaged with their rules, metadata, and operating expectations. An operator can run that package, preserve recovery material, and expose the world to players and tools.
 
-## Required links
+## How verification works
 
-- [Runtime Operations](/docs/13-runtime-operations-manual)
-- [Federation](/docs/architecture/federation/federation-runtime)
-- [Proof Bundles](/docs/runtime/replay_verification)
-- [Recovery Procedures](/docs/operator-recovery)
+Verification means another participant can inspect a history window and confirm that the world continued correctly. Public messaging calls this **Independent Verification**; technical docs still describe replay, receipts, and recovery material.
+
+## How federation supports continuity
+
+Federation lets operators coordinate instead of making one machine the permanent source of truth. It supports continuity by spreading operational responsibility and preserving paths for recovery.
+
+## Operator documentation
+
+- [Runtime operations manual](/docs/13-runtime-operations-manual)
+- [Linux VM operator quickstart](/docs/linux-vm-operator-quickstart)
+- [Operator recovery](/docs/operator-recovery)
+- [Operator coordination](/docs/operator-coordination)
+- [Federation runtime](/docs/06-federation-runtime)
