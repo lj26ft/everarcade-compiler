@@ -15,7 +15,10 @@
   ],
   "scripts": {
     "test": "node --test frontend/tests/run_frontend_integration_tests.mjs",
-    "frontend:validate": "bash scripts/run_frontend_validation.sh"
+    "frontend:validate": "bash scripts/run_frontend_validation.sh",
+    "docs:start": "docusaurus start",
+    "docs:build": "docusaurus build",
+    "docs:serve": "docusaurus serve"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "latest",
@@ -23,5 +26,12 @@
     "vite": "latest",
     "react": "latest",
     "react-dom": "latest"
+  },
+  "dependencies": {
+    "@docusaurus/core": "^3.8.1",
+    "@docusaurus/preset-classic": "^3.8.1",
+    "@docusaurus/theme-mermaid": "^3.8.1",
+    "clsx": "^2.1.1",
+    "@easyops-cn/docusaurus-search-local": "^0.52.1"
   }
 }
