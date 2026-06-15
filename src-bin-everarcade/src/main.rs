@@ -1,5 +1,6 @@
 mod commands;
 mod config;
+mod lease;
 mod product;
 mod runtime_snapshot;
 use std::env;
