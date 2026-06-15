@@ -1,30 +1,54 @@
 # Developers
 
-Build worlds, not just matches. EverArcade gives developers a path from local experiments to portable world packages.
+Build worlds, not just matches. EverArcade gives developers a path from a local idea to a portable world that operators can run and communities can verify.
 
-## What can I build?
+## The journey
 
-You can build persistent worlds with inventories, economies, quests, governance, and shared history. The runtime keeps world state authoritative while clients, tools, and renderers stay replaceable.
+### 1. Create
 
-## How do I create a world?
+Start with a world concept: rules, places, resources, player actions, and the history you want the world to remember.
 
-1. Start with the [Creator SDK](/docs/creator-sdk/quick-start).
-2. Pick or adapt a [template](/docs/game-templates/).
-3. Define world rules in a [World Contract](/docs/world-contracts/).
-4. Use [RustRigs](/docs/rustrigs/) for common gameplay mutations.
-5. Run locally with the [developer quickstart](/docs/developer/quickstart).
-6. Package and deploy with the [deployment guide](/docs/creator-sdk/deploy-first-game).
+- [Creator SDK](/docs/08-sdk-development)
+- [Game developer start](/docs/GAME_DEVELOPER_START)
+- [Reference world guide](/docs/reference-world-guide)
 
-## Key developer concepts
+### 2. Deploy
 
-- **World Contracts** are the rulebooks for sovereign worlds.
-- **RustRigs** are canonical gameplay mutation libraries such as `combat.attack()`, `inventory.transfer()`, `market.trade()`, and `quest.complete()`.
-- **Runtime packages** bundle the world, contract, assets, and metadata needed to run elsewhere.
+Package the world so it can move from local development to hosted operation without becoming trapped in one interface.
 
-## Required links
+- [Canonical package format](/docs/canonical-package-format)
+- [Game package format](/docs/GAME_PACKAGE_FORMAT)
+- [Evernode deployment](/docs/evernode-deployment)
 
-- [Creator SDK](/docs/creator-sdk/quick-start)
-- [Templates](/docs/game-templates/)
-- [Runtime Packages](/docs/canonical-package-format)
-- [World Contracts](/docs/world-contracts/)
-- [RustRigs](/docs/rustrigs/)
+### 3. Verify
+
+Make world history checkable. Verification is how players, operators, and future maintainers can trust continuity without depending on memory or screenshots.
+
+- [Replay verification](/docs/replay-verification)
+- [Runtime release integrity](/docs/runtime-release-integrity)
+
+### 4. Operate
+
+Work with operators who host worlds, preserve recovery material, and help continuity survive upgrades and incidents.
+
+- [Runtime operations manual](/docs/13-runtime-operations-manual)
+- [Linux VM operator quickstart](/docs/linux-vm-operator-quickstart)
+
+### 5. Scale
+
+Use templates, reusable modules, and federation patterns as the world grows.
+
+- [World runtime](/docs/05-world-runtime)
+- [Federation runtime](/docs/06-federation-runtime)
+- [Workload partitioning](/docs/workload-partitioning)
+
+## Core building blocks
+
+- **Creator SDK** — the developer entry point for authoring and packaging worlds.
+- **World Contracts** — the shared rule layer that defines how a world changes.
+- **RustRigs** — reusable gameplay modules and patterns for common world actions.
+- **Documentation** — implementation details stay in `/docs`; the website stays focused on orientation.
+
+## Next step
+
+Read [Build your first world](/docs/GAME_DEVELOPER_START) or explore the [Founding Developers](/founding-developers) program.

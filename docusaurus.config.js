@@ -38,22 +38,24 @@ const config = {
     navbar: {
       title: 'EverArcade',
       items: [
-        { to: '/concepts', label: 'Concepts', position: 'left' },
+        { to: '/', label: 'Home', position: 'left' },
+        { to: '/worlds', label: 'Worlds', position: 'left' },
         { to: '/developers', label: 'Developers', position: 'left' },
         { to: '/operators', label: 'Operators', position: 'left' },
         { to: '/players', label: 'Players', position: 'left' },
-        { to: '/architecture', label: 'Architecture', position: 'left' },
+        { to: '/continuity-engine', label: 'Continuity Engine', position: 'left' },
         { to: '/docs', label: 'Documentation', position: 'left' },
-        { to: '/docs/architecture/roadmap/v1-roadmap', label: 'Roadmap', position: 'left' },
+        { to: '/roadmap', label: 'Roadmap', position: 'left' },
         { href: 'https://github.com/everarcade/everarcade-compiler', label: 'GitHub', position: 'right' },
+        { to: '/community', label: 'Community', position: 'right' },
       ],
     },
     footer: {
       style: 'dark',
       links: [
-        { title: 'Start', items: [{ label: 'Get Started', to: '/docs/getting-started/' }, { label: 'Concepts', to: '/concepts' }] },
+        { title: 'Start', items: [{ label: 'Explore Worlds', to: '/worlds' }, { label: 'Founding Developers', to: '/founding-developers' }] },
         { title: 'Paths', items: [{ label: 'Developers', to: '/developers' }, { label: 'Operators', to: '/operators' }, { label: 'Players', to: '/players' }, { label: 'Contributors', to: '/contributors' }] },
-        { title: 'Reference', items: [{ label: 'Architecture', to: '/architecture' }, { label: 'Whitepaper Archive', to: '/docs/archive/whitepaper/' }, { label: 'GitHub', href: 'https://github.com/everarcade/everarcade-compiler' }] },
+        { title: 'Reference', items: [{ label: 'Continuity Engine', to: '/continuity-engine' }, { label: 'Roadmap', to: '/roadmap' }, { label: 'GitHub', href: 'https://github.com/everarcade/everarcade-compiler' }] },
       ],
       copyright: `Copyright © ${new Date().getFullYear()} EverArcade. Built as source-controlled documentation.`,
     }
