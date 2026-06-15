@@ -19,21 +19,25 @@ warnings=0
 
 cat >> "$REPORT" <<'HEADER'
 Open Source Readiness Report
-Date: 2026-06-09
+Date: 2026-06-15
 
 Checks
 HEADER
 
 require_file README.md "README"
-require_text README.md "Project Overview" "README Project Overview"
-require_text README.md "Quick Start" "README Quick Start"
-require_text README.md "Playable Local Game" "README Playable Local Game"
+require_text README.md "Why does EverArcade exist" "README purpose"
+require_text README.md "What can I do today" "README capability summary"
+require_text README.md "Where are the docs" "README documentation links"
 require_file LICENSE "LICENSE"
 require_file CONTRIBUTING.md "CONTRIBUTING"
 require_file SECURITY.md "SECURITY"
 require_file CODE_OF_CONDUCT.md "CODE_OF_CONDUCT"
 require_file docs/onboarding/30-minute-developer-journey.md "Onboarding docs"
-require_file docs/repository/repository-map.md "Repository map"
+require_file REPOSITORY_MAP.md "Repository map"
+require_file MATURITY.md "Maturity classification"
+require_file docs/index.md "Documentation portal root"
+require_file docs/DOCUMENTATION_POLICY.md "Documentation policy"
+require_file OPEN_SOURCE_READINESS.md "Open source readiness audit"
 require_file docs/runtime-platform/proof-chain.md "Proof chain"
 require_file docs/repository/artifact-policy.md "Artifact policy"
 require_file docs/build/offline-build-policy.md "Offline build policy"
