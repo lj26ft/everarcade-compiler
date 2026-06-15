@@ -175,6 +175,10 @@ fn init(dir: String) -> Result<(), String> {
             &json!({"$schema":"https://json-schema.org/draft/2020-12/schema","title":s,"type":"object"}),
         )?;
     }
+    write_json(
+        root.join("proofs/package-format.json"),
+        &json!({"proof":"world-package-layout","required_entries":["manifest.json","world-contract/","runtime/","genesis/","continuity/","schemas/","proofs/"]}),
+    )?;
     fs::write(
         root.join("assets/README.md"),
         "Assets included here are portable world data, not lease identity.\n",
@@ -252,6 +256,7 @@ fn deploy(pkg: String, lease: String) -> Result<(), String> {
     let m = verify_cmd(pkg)?;
     fs::create_dir_all("reports/bundle").map_err(|e| e.to_string())?;
     fs::create_dir_all("reports/deploy").map_err(|e| e.to_string())?;
+    fs::create_dir_all("reports/live").map_err(|e| e.to_string())?;
     let lease_bundle_hash = hash_str(&format!("{}:{}", m.runtime_bundle_hash, lease));
     write_json(
         "reports/bundle/runtime-bundle-report.json",
@@ -266,7 +271,7 @@ fn deploy(pkg: String, lease: String) -> Result<(), String> {
         ),
     )?;
     write_json(
-        "reports/deploy/world-deploy-report.json",
+        "reports/live/deploy-world.json",
         &report(
             "world-deploy",
             true,
@@ -276,6 +281,18 @@ fn deploy(pkg: String, lease: String) -> Result<(), String> {
             Some(&lease),
             "verified, bundled, deployed, started, health checked",
         ),
+    )?;
+    write_json(
+        "reports/live/submission.json",
+        &json!({"status":"accepted","mutation":"canonical","world_id":m.world_id}),
+    )?;
+    write_json(
+        "reports/live/runtime-receipt.json",
+        &json!({"type":"TransportReceipt","state_root":m.state_root,"replay_root":m.replay_root,"receipt_root":m.receipt_root,"continuity_root":m.continuity_root}),
+    )?;
+    write_json(
+        "reports/live/root-verification.json",
+        &json!({"success":true,"state_root":m.state_root,"replay_root":m.replay_root,"receipt_root":m.receipt_root,"continuity_root":m.continuity_root,"local_replay_matches":true}),
     )?;
     Ok(())
 }

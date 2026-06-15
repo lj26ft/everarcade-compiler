@@ -1,0 +1,30 @@
+{
+  "command": "lease-acquire",
+  "timestamp": 1781541877,
+  "lease_metadata": {
+    "lease_id": "lease-c5dfb5c6c4b0",
+    "host_account": "offline-host",
+    "tenant_account": "offline-tenant",
+    "instance_name": "everarcade-world",
+    "instance_pubkey": "pubkey-1239f7b212da",
+    "contract_id": "everarcade-contract",
+    "domain": "localhost",
+    "peer_port": 22861,
+    "user_port": 8080,
+    "gp_tcp_port": null,
+    "gp_udp_port": null,
+    "outbound_ip": null,
+    "created_timestamp": 1781541877,
+    "expiry_timestamp": null,
+    "state": "Acquired"
+  },
+  "host_account": "offline-host",
+  "tenant_account": "offline-tenant",
+  "instance_pubkey": "pubkey-1239f7b212da",
+  "bundle_hash": null,
+  "transport_protocol_version": "everarcade.transport.hotpocket.v0.1",
+  "receipt_root": null,
+  "success": true,
+  "status": "acquired offline canonical lease record",
+  "world_continuity_note": "Lease provides temporary compute only; world continuity root, replay history, state root, receipt root, package, and governance metadata remain sovereign."
+}

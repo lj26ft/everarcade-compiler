@@ -2,6 +2,7 @@ mod commands;
 mod config;
 mod lease;
 mod product;
+mod release;
 mod runtime_snapshot;
 mod world;
 use std::env;

@@ -1,0 +1,1 @@
+Run cargo metadata --offline --locked and targeted offline tests after refreshing vendor/.

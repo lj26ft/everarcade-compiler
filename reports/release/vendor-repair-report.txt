@@ -1,0 +1,1 @@
+cargo vendor state packaged when vendor/ is present; bincode resolution is covered by offline validation.
