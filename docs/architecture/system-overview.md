@@ -14,4 +14,4 @@ flowchart LR
   Checkpoints --> Restore[Restore and Continue]
 ```
 
-For deeper background, see the [original system architecture](./02-system-overview) and [runtime boundaries](./runtime-boundaries).
+For deeper background, see the [original system architecture](./system-architecture-overview) and [runtime boundaries](./runtime-boundaries).

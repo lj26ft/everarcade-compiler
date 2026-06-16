@@ -8,7 +8,7 @@ Build worlds, not just matches. EverArcade gives developers a path from a local 
 
 Start with a world concept: rules, places, resources, player actions, and the history you want the world to remember.
 
-- [Creator SDK](/docs/08-sdk-development)
+- [Creator SDK](/docs/sdk-development)
 - [Game developer start](/docs/GAME_DEVELOPER_START)
 - [Reference world guide](/docs/reference-world-guide)
 
@@ -31,15 +31,15 @@ Make world history checkable. Verification is how players, operators, and future
 
 Work with operators who host worlds, preserve recovery material, and help continuity survive upgrades and incidents.
 
-- [Runtime operations manual](/docs/13-runtime-operations-manual)
+- [Runtime operations manual](/docs/runtime-operations-manual)
 - [Linux VM operator quickstart](/docs/linux-vm-operator-quickstart)
 
 ### 5. Scale
 
 Use templates, reusable modules, and federation patterns as the world grows.
 
-- [World runtime](/docs/05-world-runtime)
-- [Federation runtime](/docs/06-federation-runtime)
+- [World runtime](/docs/world-runtime)
+- [Federation runtime](/docs/federation-runtime)
 - [Workload partitioning](/docs/workload-partitioning)
 
 ## Core building blocks
