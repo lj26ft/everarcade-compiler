@@ -1,12 +1,13 @@
-# World Lifecycle
+# World Lifecycle Diagram
 
 ```mermaid
 flowchart TD
-  Create[Create world] --> Package[Package world]
-  Package --> Deploy[Deploy locally or to operator boundary]
-  Deploy --> Execute[Execute]
-  Execute --> Checkpoint[Checkpoint]
-  Checkpoint --> Archive[Archive proof and state]
-  Archive --> Restore[Restore]
-  Restore --> Continue[Continue]
+  Idea[World Idea] --> Contract[World Contract]
+  Contract --> Package[World Package]
+  Package --> Local[Local Run]
+  Local --> Deploy[Operator Deployment]
+  Deploy --> Live[Living World]
+  Live --> Upgrade[Governed Upgrade]
+  Upgrade --> Live
+  Live --> Archive[Historical Archive]
 ```

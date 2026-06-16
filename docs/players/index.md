@@ -1,13 +1,19 @@
-# Player Concepts
+# Players
 
-Players interact with worlds rather than repository internals.
+EverArcade worlds are places that remember what happened.
 
-## Topics
+## What is a world?
 
-- What is a world: [world runtime](../architecture/world/world-runtime.md)
-- Ownership model: [asset ownership continuity](../runtime-platform/asset-ownership-continuity.md)
-- Identity model: [wallet authority certification notes](../runtime-platform/wallet-authority-certification.md)
-- World continuity: [civilization continuity model](../runtime/civilization-continuity-model.md), [world restoration model](../runtime/world-restoration-model.md)
-- Marketplace concepts: [player gateway guide](../player-gateway/player-guide.md), [marketplace guide](../player-gateway/marketplace-guide.md)
+A world is a persistent digital place with people, places, items, economies, rules, and history. It can grow beyond a single release cycle because its continuity is part of the world itself.
 
-Current player-facing marketplace, settlement, and public-network experiences are not production systems.
+## What makes EverArcade different?
+
+Traditional game worlds often reset, disappear, or depend entirely on one operator. EverArcade is designed so worlds can persist, move, and be verified over time.
+
+## What does ownership mean?
+
+Ownership means world history, state, and community value are not locked into a single fragile service boundary. The world can remain meaningful even as clients, operators, and versions change.
+
+## What is continuity?
+
+Continuity is the promise that worlds accumulate history rather than resetting every patch cycle: buildings age, economies evolve, institutions persist, and cultures emerge.

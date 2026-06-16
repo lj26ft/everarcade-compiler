@@ -1,0 +1,30 @@
+:root {
+  --ifm-color-primary: #6457ff;
+  --ifm-color-primary-dark: #4739ff;
+  --ifm-color-primary-darker: #3828ff;
+  --ifm-color-primary-darkest: #1e0fdb;
+  --ifm-color-primary-light: #8175ff;
+  --ifm-color-primary-lighter: #9086ff;
+  --ifm-color-primary-lightest: #bdb7ff;
+  --ifm-background-surface-color: #ffffff;
+  --everarcade-panel: #f6f7fb;
+  --everarcade-border: #dfe3f0;
+}
+[data-theme='dark'] {
+  --ifm-background-color: #080a12;
+  --ifm-background-surface-color: #101422;
+  --everarcade-panel: #11172a;
+  --everarcade-border: #26304a;
+}
+.heroBanner { padding: 5rem 0; background: radial-gradient(circle at top left, rgba(100,87,255,.35), transparent 32rem), linear-gradient(135deg, #0a0d18 0%, #111832 55%, #1a1242 100%); color: white; }
+.heroActions { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; margin-top: 2rem; }
+.valueGrid, .pathGrid, .linkGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1rem; margin: 2rem 0; }
+.cardPanel { border: 1px solid var(--everarcade-border); border-radius: 16px; padding: 1.25rem; background: var(--everarcade-panel); height: 100%; }
+.sectionBand { padding: 3rem 0; }
+.kicker { color: var(--ifm-color-primary-light); font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
+.heroStatement { font-size: 1.25rem; font-weight: 600; margin: 1rem auto 0; max-width: 760px; }
+.cardPanel h3 { margin-top: 0; }
+.cardPanel:hover { text-decoration: none; border-color: var(--ifm-color-primary-light); transform: translateY(-2px); transition: border-color .15s ease, transform .15s ease; }
+.sectionBand:nth-of-type(even) { background: color-mix(in srgb, var(--everarcade-panel) 72%, transparent); }
+.markdown h1:first-child { letter-spacing: -0.03em; }
+.markdown h2 { margin-top: 2.25rem; }

@@ -1,12 +1,11 @@
-# Runtime Flow
+# Run → Replay → Verify → Restore → Continue
 
 ```mermaid
-flowchart TD
-  Run[Run world session] --> Record[Record inputs, receipts, journal, state]
-  Record --> Replay[Replay]
-  Replay --> Verify[Verify deterministic outcome]
-  Verify --> Checkpoint[Checkpoint]
-  Checkpoint --> Restore[Restore]
-  Restore --> Continue[Continue execution]
-  Verify -- mismatch --> Quarantine[Quarantine evidence and investigate]
+flowchart LR
+  Run[Run World] --> Record[Record Inputs and Receipts]
+  Record --> Replay[Replay History Window]
+  Replay --> Verify[Verify World History]
+  Verify --> Restore[Restore From Checkpoint]
+  Restore --> Continue[Continue World]
+  Continue --> Run
 ```
