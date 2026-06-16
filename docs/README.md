@@ -1,3 +1,7 @@
+---
+slug: /docs/readme
+---
+
 # EverArcade Documentation
 
 EverArcade documentation is now organized around a canonical platform documentation set. Historical reports and subsystem notes remain evidence, but new engineers should not need them for onboarding.

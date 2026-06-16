@@ -7,8 +7,12 @@ const config = {
   organizationName: 'everarcade',
   projectName: 'everarcade-compiler',
   onBrokenLinks: 'throw',
-  onBrokenMarkdownLinks: 'warn',
-  markdown: { mermaid: true },
+  markdown: {
+    mermaid: true,
+    hooks: {
+      onBrokenMarkdownLinks: 'warn',
+    },
+  },
   themes: ['@docusaurus/theme-mermaid'],
   presets: [
     [

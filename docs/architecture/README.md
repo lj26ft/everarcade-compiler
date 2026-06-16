@@ -1,3 +1,7 @@
+---
+slug: /docs/architecture/readme
+---
+
 # Historical Architecture Evidence
 
 The authoritative architecture set now lives in the numbered documents at the root of `docs/`:

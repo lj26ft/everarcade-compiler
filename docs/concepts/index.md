@@ -10,7 +10,7 @@ Core EverArcade concepts:
 
 Useful references:
 
-- [System architecture](../architecture/02-system-overview.md)
+- [System architecture](../architecture/system-overview.md)
 - [World runtime](../architecture/world/world-runtime.md)
 - [Runtime capabilities](../runtime-capabilities.md)
 - [Settlement boundary](../runtime/settlement_boundary.md)

@@ -24,8 +24,8 @@ Federation lets operators coordinate instead of making one machine the permanent
 
 ## Operator documentation
 
-- [Runtime operations manual](/docs/13-runtime-operations-manual)
+- [Runtime operations manual](/docs/runtime-operations-manual)
 - [Linux VM operator quickstart](/docs/linux-vm-operator-quickstart)
 - [Operator recovery](/docs/operator-recovery)
 - [Operator coordination](/docs/operator-coordination)
-- [Federation runtime](/docs/06-federation-runtime)
+- [Federation runtime](/docs/federation-runtime)

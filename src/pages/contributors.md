@@ -4,7 +4,7 @@ EverArcade is organized as a source-controlled runtime, SDK, tooling, and docume
 
 ## Repository orientation
 
-Start with the [repository map](/docs/architecture/03-repository-map) and the [human-readable repository map](/docs/architecture/human-readable-repo-map) to find runtime, SDK, frontend, operator, and documentation areas.
+Start with the [repository map](/docs/architecture/repository-map) and the [human-readable repository map](/docs/architecture/human-readable-repo-map) to find runtime, SDK, frontend, operator, and documentation areas.
 
 ## How to contribute
 
