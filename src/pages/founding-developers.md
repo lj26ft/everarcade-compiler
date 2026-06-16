@@ -34,6 +34,6 @@ Early builders matter because persistent-world platforms are shaped by real worl
 
 ## How to participate
 
-Start by reading the [Developer journey](/developers), checking the [Capability Matrix](/developers/capabilities), and following the [Technical Overview](/developers/technical-overview). Then use the implementation docs from the [documentation portal](/docs). For now, use GitHub issues and discussions as the placeholder participation channel.
+Start by reading the [Developer journey](/developers), checking the [Capability Matrix](/developers/capabilities), and following the [Technical Overview](/developers/technical-overview). Then use the implementation docs from the [documentation portal](/docs). For now, follow the documentation and roadmap while the repository completes its security, license, and release audit.
 
-[Open GitHub](https://github.com/everarcade/everarcade-compiler)
+[Open Source Repo — Coming Soon](/open-source)

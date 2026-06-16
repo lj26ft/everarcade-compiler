@@ -29,4 +29,4 @@ flowchart LR
 
 - [Founding Developers](/founding-developers)
 - [Operators](/operators)
-- [GitHub](https://github.com/everarcade/everarcade-compiler)
+- [Open Source Repo — Coming Soon](/open-source)

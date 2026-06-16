@@ -198,3 +198,133 @@ details > summary,
   background: var(--ifm-background-surface-color);
   border-radius: 12px;
 }
+
+/* Homepage and generated CTA contrast polish. Bright amber/yellow surfaces use
+ * dark text; outline/violet surfaces keep light text with explicit states. */
+:root,
+html[data-theme='light'],
+[data-theme='dark'] {
+  --everarcade-button-text: #120914;
+  --everarcade-button-bg: #f7c948;
+  --everarcade-button-bg-hover: #ffd86a;
+  --everarcade-button-bg-active: #d99a22;
+  --everarcade-button-border: #f7c948;
+  --everarcade-button-secondary-text: #fff3dc;
+  --everarcade-button-secondary-bg: #2b1746;
+  --everarcade-button-secondary-bg-hover: #3a1f61;
+  --everarcade-button-secondary-bg-active: #1b102b;
+  --everarcade-button-secondary-border: #f0b64b;
+  --everarcade-button-disabled-text: #766b5d;
+  --everarcade-button-disabled-bg: #27222e;
+  --everarcade-button-disabled-border: #51465e;
+  --everarcade-focus-ring: #1df2a4;
+}
+
+.button,
+.button:visited {
+  text-decoration: none;
+}
+
+.button.button--primary,
+.button.button--primary:visited {
+  color: var(--everarcade-button-text) !important;
+  background-color: var(--everarcade-button-bg);
+  border-color: var(--everarcade-button-border);
+}
+
+.button.button--primary:hover,
+.button.button--primary:focus {
+  color: var(--everarcade-button-text) !important;
+  background-color: var(--everarcade-button-bg-hover);
+  border-color: var(--everarcade-button-bg-hover);
+}
+
+.button.button--primary:active,
+.button.button--primary.button--active {
+  color: var(--everarcade-button-text) !important;
+  background-color: var(--everarcade-button-bg-active);
+  border-color: var(--everarcade-button-bg-active);
+}
+
+.button.button--secondary,
+.button.button--secondary:visited,
+.button.button--outline,
+.button.button--outline:visited {
+  color: var(--everarcade-button-secondary-text) !important;
+  background-color: var(--everarcade-button-secondary-bg);
+  border-color: var(--everarcade-button-secondary-border);
+}
+
+.button.button--secondary:hover,
+.button.button--secondary:focus,
+.button.button--outline:hover,
+.button.button--outline:focus {
+  color: #ffffff !important;
+  background-color: var(--everarcade-button-secondary-bg-hover);
+  border-color: var(--everarcade-button-bg-hover);
+}
+
+.button.button--secondary:active,
+.button.button--secondary.button--active,
+.button.button--outline:active,
+.button.button--outline.button--active {
+  color: var(--everarcade-button-secondary-text) !important;
+  background-color: var(--everarcade-button-secondary-bg-active);
+  border-color: var(--everarcade-button-bg-active);
+}
+
+.button:focus,
+.button:focus-visible {
+  outline: 3px solid var(--everarcade-focus-ring);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 5px rgba(29, 242, 164, .18);
+}
+
+.button:disabled,
+.button.disabled,
+.button.button--disabled,
+.button[aria-disabled='true'] {
+  color: var(--everarcade-button-disabled-text) !important;
+  background-color: var(--everarcade-button-disabled-bg) !important;
+  border-color: var(--everarcade-button-disabled-border) !important;
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+.sovereigntyBand {
+  background:
+    radial-gradient(circle at 8% 0%, rgba(29, 242, 164, .11), transparent 22rem),
+    radial-gradient(circle at 92% 18%, rgba(240, 182, 75, .16), transparent 26rem),
+    linear-gradient(180deg, rgba(12, 8, 18, .94), rgba(23, 12, 38, .92));
+  border-top: 1px solid rgba(240, 182, 75, .24);
+  border-bottom: 1px solid rgba(240, 182, 75, .24);
+}
+
+.sovereigntyLead {
+  color: #fff3dc;
+  font-size: 1.2rem;
+  font-weight: 700;
+  max-width: 880px;
+}
+
+.sovereigntyStatement {
+  border: 1px solid rgba(240, 182, 75, .38);
+  border-radius: 18px;
+  background: rgba(10, 7, 13, .58);
+  color: #f8efe3;
+  display: grid;
+  gap: .45rem;
+  margin: 1.5rem 0 2rem;
+  padding: 1.25rem;
+}
+
+.sovereigntyStatement p {
+  margin: 0;
+}
+
+.outcomeTags li {
+  color: #120914;
+  background: #f7c948;
+  border-color: #ffd86a;
+  font-weight: 800;
+}
