@@ -65,3 +65,136 @@ html[data-theme='light'] {
 .tagList { display: flex; flex-wrap: wrap; gap: .75rem; list-style: none; padding: 0; }
 .tagList li { border: 1px solid rgba(29,242,164,.42); color: #c9ffe8; border-radius: 999px; padding: .45rem .75rem; background: rgba(29,242,164,.08); }
 table { background: var(--ifm-background-surface-color); }
+
+/* Documentation contrast hardening.
+ * Keep Docusaurus-generated UI readable in both the intentionally dark
+ * EverArcade light theme and the darker theme variant. */
+:root,
+html[data-theme='light'],
+[data-theme='dark'] {
+  --ifm-color-content: var(--ifm-font-color-base);
+  --ifm-color-content-secondary: #d8ccbb;
+  --ifm-heading-color: #fff3dc;
+  --ifm-link-color: var(--ifm-color-primary-light);
+  --ifm-link-hover-color: var(--ifm-color-primary-lighter);
+  --ifm-navbar-background-color: var(--everarcade-panel-strong);
+  --ifm-navbar-link-color: #f6ead7;
+  --ifm-navbar-link-hover-color: var(--ifm-color-primary-lighter);
+  --ifm-footer-background-color: #09070d;
+  --ifm-footer-color: #f3ecdf;
+  --ifm-footer-link-color: #ffe3a8;
+  --ifm-footer-title-color: #fff3dc;
+  --ifm-table-background: var(--ifm-background-surface-color);
+  --ifm-table-stripe-background: rgba(255,255,255,.045);
+  --ifm-table-border-color: var(--everarcade-border);
+  --ifm-code-background: rgba(240,182,75,.16);
+  --ifm-code-color: #ffe3a8;
+  --ifm-code-border-radius: .35rem;
+  --ifm-blockquote-color: #e7dccb;
+  --ifm-blockquote-border-color: var(--ifm-color-primary-dark);
+  --ifm-toc-link-color: #e6d8c3;
+  --ifm-menu-color: #e6d8c3;
+  --ifm-menu-color-active: #ffe3a8;
+  --ifm-tabs-color: #e6d8c3;
+  --ifm-tabs-color-active: #ffe3a8;
+  --docusaurus-highlighted-code-line-bg: rgba(240,182,75,.12);
+}
+
+.markdown,
+.theme-doc-markdown,
+.theme-doc-sidebar-container,
+.theme-doc-toc-mobile,
+.table-of-contents,
+.navbar,
+.footer {
+  color: var(--ifm-font-color-base);
+}
+
+.markdown a:not(.button),
+.table-of-contents__link,
+.menu__link,
+.footer a {
+  color: var(--ifm-link-color);
+}
+
+.markdown a:not(.button):hover,
+.table-of-contents__link:hover,
+.menu__link:hover,
+.footer a:hover {
+  color: var(--ifm-link-hover-color);
+}
+
+.markdown table,
+.markdown th,
+.markdown td {
+  color: var(--ifm-font-color-base);
+  border-color: var(--ifm-table-border-color);
+}
+
+.markdown th {
+  background: color-mix(in srgb, var(--everarcade-panel) 82%, #fff 18%);
+  color: #fff3dc;
+}
+
+.markdown code:not([class*='language-']) {
+  color: var(--ifm-code-color);
+  background: var(--ifm-code-background);
+  border: 1px solid rgba(240,182,75,.28);
+}
+
+.badge,
+[class*='badge'],
+.tag,
+[class*='tag'],
+.pill,
+[class*='pill'] {
+  color: #120f17 !important;
+  background-color: var(--ifm-color-primary-lighter) !important;
+  border-color: var(--ifm-color-primary-dark) !important;
+}
+
+.alert,
+.admonition,
+div[class*='admonition'],
+details,
+.details_node_modules-\@docusaurus-theme-classic-lib-theme-Details-styles-module,
+.tabs-container,
+.theme-code-block,
+.card,
+.cardPanel {
+  color: var(--ifm-font-color-base);
+  background-color: var(--ifm-background-surface-color);
+  border-color: var(--everarcade-border);
+}
+
+details > summary,
+.tabs__item,
+.tabs__item--active {
+  color: #fff3dc;
+}
+
+.button.button--primary {
+  color: #120f17;
+  background-color: var(--ifm-color-primary-light);
+  border-color: var(--ifm-color-primary-light);
+}
+
+.button.button--secondary,
+.button.button--outline {
+  color: #fff3dc;
+  border-color: var(--ifm-color-primary-light);
+}
+
+.mermaid,
+.docusaurus-mermaid-container,
+.markdown svg text,
+.markdown svg tspan {
+  color: var(--ifm-font-color-base);
+  fill: currentColor;
+}
+
+.docusaurus-mermaid-container svg,
+.mermaid svg {
+  background: var(--ifm-background-surface-color);
+  border-radius: 12px;
+}
