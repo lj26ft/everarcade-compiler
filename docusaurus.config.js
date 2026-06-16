@@ -22,7 +22,6 @@ const config = {
           path: 'docs',
           routeBasePath: 'docs',
           sidebarPath: require.resolve('./sidebars.js'),
-          editUrl: 'https://github.com/everarcade/everarcade-compiler/tree/main/',
           showLastUpdateTime: true,
           showLastUpdateAuthor: true,
         },
@@ -50,7 +49,7 @@ const config = {
         { to: '/continuity-engine', label: 'Continuity Engine', position: 'left' },
         { to: '/docs', label: 'Documentation', position: 'left' },
         { to: '/roadmap', label: 'Roadmap', position: 'left' },
-        { href: 'https://github.com/everarcade/everarcade-compiler', label: 'GitHub', position: 'right' },
+        { to: '/open-source', label: 'Open Source Repo — Coming Soon', position: 'right' },
         { to: '/community', label: 'Community', position: 'right' },
       ],
     },
@@ -59,7 +58,7 @@ const config = {
       links: [
         { title: 'Start', items: [{ label: 'Explore Worlds', to: '/worlds' }, { label: 'Founding Developers', to: '/founding-developers' }] },
         { title: 'Paths', items: [{ label: 'Developers', to: '/developers' }, { label: 'Operators', to: '/operators' }, { label: 'Players', to: '/players' }, { label: 'Contributors', to: '/contributors' }] },
-        { title: 'Reference', items: [{ label: 'Continuity Engine', to: '/continuity-engine' }, { label: 'Roadmap', to: '/roadmap' }, { label: 'GitHub', href: 'https://github.com/everarcade/everarcade-compiler' }] },
+        { title: 'Reference', items: [{ label: 'Continuity Engine', to: '/continuity-engine' }, { label: 'Roadmap', to: '/roadmap' }, { label: 'Open Source Repo — Coming Soon', to: '/open-source' }] },
       ],
       copyright: `Copyright © ${new Date().getFullYear()} EverArcade. Built as source-controlled documentation.`,
     }

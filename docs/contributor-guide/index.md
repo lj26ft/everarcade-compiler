@@ -1,10 +1,10 @@
 # Contributor Guide
 
-Start with the root [`CONTRIBUTING.md`](https://github.com/everarcade/everarcade-compiler/blob/main/CONTRIBUTING.md), then use this page for repository-specific orientation.
+Start with the public docs and roadmap while the repository completes its security, license, and release audit. Repository-specific contribution instructions will be published with the open-source release.
 
 ## Topics
 
-- Repository structure: [`REPOSITORY_MAP.md`](https://github.com/everarcade/everarcade-compiler/blob/main/REPOSITORY_MAP.md)
+- Repository structure: coming with the open-source repository release.
 - Build instructions: [offline build policy](../build/offline-build-policy.md), [CLI quickstart](../CLI_QUICKSTART.md)
 - Testing: prefer targeted crate or script validation; do not run full workspace tests unless required.
 - Pull request workflow: keep documentation updates with behavior changes and cite maturity changes in `MATURITY.md`.
