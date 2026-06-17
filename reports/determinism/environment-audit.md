@@ -6,7 +6,7 @@ No `process.env`, `process.cwd()`, or `process.argv` values are used by `applyAr
 
 ## Runtime Configuration Path
 
-- `hotpocket-arena-wrapper/src/runtime.mjs`: `defaultPaths(root = process.cwd())` selects persistence file locations only. Paths are not hashed into state, receipts, journal hashes, world hashes, or continuity roots.
+- `hotpocket-arena-wrapper/src/runtime.mjs`: `defaultPaths(root)` requires callers to provide an explicit runtime root for persistence file locations. Paths are not hashed into state, receipts, journal hashes, world hashes, or continuity roots.
 - `hotpocket-arena-wrapper/contract/index.mjs`: `EVERARCADE_REPO_ROOT`, `process.cwd()`, and `PORT` configure storage root and HTTP listener. They remain outside consensus commitments.
 - `hotpocket-arena-wrapper/contract/index.mjs`: `process.argv[1]` is used only for direct-execution detection.
 - `hotpocket-arena-wrapper/validation/verify-live-path.mjs`: `EVERARCADE_REPO_ROOT` and `process.cwd()` select report and test artifact paths for validation tooling only.

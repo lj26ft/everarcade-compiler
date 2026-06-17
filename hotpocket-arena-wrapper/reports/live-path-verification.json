@@ -1,0 +1,169 @@
+{
+  "schema": "everarcade.hotpocket.arena-wrapper.validation.v0.1",
+  "sequence": [
+    {
+      "action": "join",
+      "player": "player-1"
+    },
+    {
+      "action": "join",
+      "player": "player-2"
+    },
+    {
+      "action": "move",
+      "player": "player-1",
+      "direction": "north"
+    },
+    {
+      "action": "attack",
+      "player": "player-1",
+      "target": "player-2"
+    }
+  ],
+  "outputs": [
+    {
+      "accepted": true,
+      "action": "join",
+      "mutation": "player_joined",
+      "tick": 1,
+      "players": {
+        "player-1": {
+          "id": "player-1",
+          "x": 0,
+          "y": 0,
+          "health": 100,
+          "connected": true,
+          "score": 0
+        }
+      },
+      "combat_events": [],
+      "state_root": "39c3e00c2b6612df35088e3568938d72ae2f5ad1b7bd10fcb904ac4fa527e6b7",
+      "receipt_root": "0b2ca4e58bd47cbf1251f86ae1b6e518831c9995492c27e19297c978a5e03770",
+      "world_hash": "a5d107f5d526a138dfdbc39373834d3edbc0fe1519afce43feb08b109e115ba8",
+      "continuity_root": "a26216597675a15856f8a6f7a7d8253b1af63523522dc46f954b701002d15b5c"
+    },
+    {
+      "accepted": true,
+      "action": "join",
+      "mutation": "player_joined",
+      "tick": 2,
+      "players": {
+        "player-1": {
+          "id": "player-1",
+          "x": 0,
+          "y": 0,
+          "health": 100,
+          "connected": true,
+          "score": 0
+        },
+        "player-2": {
+          "id": "player-2",
+          "x": 0,
+          "y": 0,
+          "health": 100,
+          "connected": true,
+          "score": 0
+        }
+      },
+      "combat_events": [],
+      "state_root": "7403cf7c92912be86cdf60a9bd6ffdcb58f848e67ee3506fefdbe8591e882f11",
+      "receipt_root": "7f99141f358aa1109bfe726f7bf1983149fb70c884f9ce3cf25decb08bd598a3",
+      "world_hash": "74f94776c8c7181d830df0946df98bdbe6680715aa0ae5eeace99dd02dec7db2",
+      "continuity_root": "800733eeb9e0c505438345e491b55cc09bc492e16695aab1b93cba13ed886a2f"
+    },
+    {
+      "accepted": true,
+      "action": "move",
+      "mutation": "player_moved",
+      "tick": 3,
+      "players": {
+        "player-1": {
+          "id": "player-1",
+          "x": 0,
+          "y": -1,
+          "health": 100,
+          "connected": true,
+          "score": 0
+        },
+        "player-2": {
+          "id": "player-2",
+          "x": 0,
+          "y": 0,
+          "health": 100,
+          "connected": true,
+          "score": 0
+        }
+      },
+      "combat_events": [],
+      "state_root": "18ebbf8d3e0a3109179aa187f36fbe4e82e3705b44db8e3886e96a5e67619ef8",
+      "receipt_root": "c0657fc6ba9290a60e5010a2f802c76a41f4d002deaf61c0ca40d049109cc241",
+      "world_hash": "20d23ce41e2078fbec40983d8bd5dad6d5815d7229b85b9a7c236992605953f8",
+      "continuity_root": "0c73fe8e154086765c17a1c54439a07ab309fda33e827a87009d95636ae75afc"
+    },
+    {
+      "accepted": true,
+      "action": "attack",
+      "mutation": "player_attacked",
+      "tick": 4,
+      "players": {
+        "player-1": {
+          "id": "player-1",
+          "x": 0,
+          "y": -1,
+          "health": 100,
+          "connected": true,
+          "score": 10
+        },
+        "player-2": {
+          "id": "player-2",
+          "x": 0,
+          "y": 0,
+          "health": 75,
+          "connected": true,
+          "score": 0
+        }
+      },
+      "combat_events": [
+        {
+          "tick": 4,
+          "attacker": "player-1",
+          "target": "player-2",
+          "damage": 25,
+          "target_health": 75
+        }
+      ],
+      "state_root": "1f1820aa06ee09d48d41c4bff8810e24008b9df3556f976bfd82613c8d69c941",
+      "receipt_root": "6822935aad41204c0bbe0e889bd46a1ba74cb4de46442298025c1924fef4edad",
+      "world_hash": "54d6127e24fa0a40694c733301663f3cc0396e43b560e801a5ac609ee3315220",
+      "continuity_root": "5c397d8b4126d83ec209965c5ad367a8f22a8c1d90d3f8c831346f808720cbc1"
+    }
+  ],
+  "checks": {
+    "join": true,
+    "move": true,
+    "attack": true,
+    "journal": true,
+    "state_root": true,
+    "receipt_root": true,
+    "world_hash": true,
+    "continuity_root": true
+  },
+  "verification": {
+    "ok": true,
+    "live": {
+      "tick": 4,
+      "state_root": "1f1820aa06ee09d48d41c4bff8810e24008b9df3556f976bfd82613c8d69c941",
+      "receipt_root": "6822935aad41204c0bbe0e889bd46a1ba74cb4de46442298025c1924fef4edad",
+      "world_hash": "54d6127e24fa0a40694c733301663f3cc0396e43b560e801a5ac609ee3315220",
+      "continuity_root": "5c397d8b4126d83ec209965c5ad367a8f22a8c1d90d3f8c831346f808720cbc1"
+    },
+    "replayed": {
+      "tick": 4,
+      "state_root": "1f1820aa06ee09d48d41c4bff8810e24008b9df3556f976bfd82613c8d69c941",
+      "receipt_root": "6822935aad41204c0bbe0e889bd46a1ba74cb4de46442298025c1924fef4edad",
+      "world_hash": "54d6127e24fa0a40694c733301663f3cc0396e43b560e801a5ac609ee3315220",
+      "continuity_root": "5c397d8b4126d83ec209965c5ad367a8f22a8c1d90d3f8c831346f808720cbc1"
+    }
+  },
+  "status": "PASS"
+}

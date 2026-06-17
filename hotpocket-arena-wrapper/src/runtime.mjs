@@ -112,5 +112,8 @@ export class ArenaHotPocketRuntime {
   verify() { const replayed = replayJournal(this.journal); const live = this.state.commitments.at(-1) || commitFor(this.state, this.receipts); const ok = ['state_root', 'receipt_root', 'world_hash', 'continuity_root'].every((key) => replayed.commitments[key] === live[key]); return { ok, live, replayed: replayed.commitments } }
 }
 
-export function defaultPaths(root = process.cwd()) { return { statePath: join(root, 'evernode/hotpocket/arena-wrapper-state.json'), journalPath: join(root, 'evernode/journals/arena-hotpocket-journal.json') }; }
+export function defaultPaths(root) {
+  if (typeof root !== 'string' || root.length === 0) throw new Error('defaultPaths requires an explicit runtime root path');
+  return { statePath: join(root, 'evernode/hotpocket/arena-wrapper-state.json'), journalPath: join(root, 'evernode/journals/arena-hotpocket-journal.json') };
+}
 export function inputId(envelope) { return `arena-${canonicalHash(envelope)}`; }
