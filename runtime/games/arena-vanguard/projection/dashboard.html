@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Arena Vanguard Live Projection</title>
+  <link rel="stylesheet" href="./projection.css">
+</head>
+<body>
+  <header class="hero">
+    <div>
+      <p class="eyebrow">EverArcade World Projection</p>
+      <h1>Arena Vanguard Live</h1>
+      <p class="subtitle">Read-only visualization of the authoritative deterministic runtime.</p>
+    </div>
+    <div class="connection-card" aria-live="polite">
+      <span id="connectionDot" class="dot dot-warn"></span>
+      <div>
+        <strong id="connectionStatus">Connecting</strong>
+        <small id="lastRefresh">Waiting for /state and /verify</small>
+      </div>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="panel arena-panel">
+      <div class="panel-header">
+        <div>
+          <p class="eyebrow">Authoritative World</p>
+          <h2>Top-down Arena</h2>
+        </div>
+        <div class="legend">
+          <span><i class="legend-player"></i> Connected</span>
+          <span><i class="legend-offline"></i> Disconnected</span>
+          <span><i class="legend-enemy"></i> Hostile</span>
+        </div>
+      </div>
+      <canvas id="arenaCanvas" width="960" height="640" aria-label="Arena Vanguard world projection"></canvas>
+    </section>
+
+    <aside class="stack">
+      <section class="panel verification" id="verificationPanel">
+        <div class="panel-header compact">
+          <div>
+            <p class="eyebrow">Verification</p>
+            <h2 id="verifyBadge">Checking…</h2>
+          </div>
+        </div>
+        <div class="roots" id="roots"></div>
+      </section>
+
+      <section class="panel runtime-info">
+        <p class="eyebrow">Runtime</p>
+        <div class="metric-grid">
+          <div><span>Tick</span><strong id="tickValue">—</strong></div>
+          <div><span>Journal Entries</span><strong id="journalSize">—</strong></div>
+          <div><span>Replay</span><strong id="replayStatus">—</strong></div>
+          <div><span>Players</span><strong id="playerCount">—</strong></div>
+        </div>
+      </section>
+
+      <section class="panel players-panel">
+        <div class="panel-header compact">
+          <div>
+            <p class="eyebrow">Players</p>
+            <h2>Live Roster</h2>
+          </div>
+        </div>
+        <div id="playerList" class="player-list"></div>
+      </section>
+    </aside>
+
+    <section class="panel combat-panel">
+      <div class="panel-header compact">
+        <div>
+          <p class="eyebrow">Combat</p>
+          <h2>Combat Log</h2>
+        </div>
+      </div>
+      <ol id="combatLog" class="event-list"></ol>
+    </section>
+
+    <section class="panel timeline-panel">
+      <div class="panel-header compact">
+        <div>
+          <p class="eyebrow">Journal</p>
+          <h2>World Timeline</h2>
+        </div>
+      </div>
+      <ol id="timeline" class="timeline"></ol>
+    </section>
+
+    <section class="panel commitments-panel">
+      <div class="panel-header compact">
+        <div>
+          <p class="eyebrow">Commitments</p>
+          <h2>Root Evolution</h2>
+        </div>
+      </div>
+      <div id="commitmentHistory" class="commitments"></div>
+    </section>
+  </main>
+
+  <template id="copyRootTemplate">
+    <div class="root-row">
+      <span></span>
+      <code></code>
+      <button type="button">Copy</button>
+    </div>
+  </template>
+
+  <script src="./projection.js"></script>
+</body>
+</html>

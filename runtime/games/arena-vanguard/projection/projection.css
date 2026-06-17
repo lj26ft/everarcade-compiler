@@ -1,0 +1,78 @@
+:root {
+  color-scheme: dark;
+  --bg: #07111f;
+  --panel: rgba(12, 24, 42, 0.92);
+  --panel-strong: #10243f;
+  --text: #eef6ff;
+  --muted: #91a6bf;
+  --line: rgba(139, 178, 219, 0.22);
+  --green: #35e48a;
+  --red: #ff5b6e;
+  --yellow: #ffd166;
+  --blue: #60a5fa;
+  --purple: #b48cff;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: radial-gradient(circle at top left, rgba(50, 100, 190, 0.25), transparent 34rem), var(--bg);
+  color: var(--text);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+.hero, .layout { width: min(1440px, calc(100% - 24px)); margin: 0 auto; }
+.hero { display: flex; justify-content: space-between; gap: 1rem; align-items: center; padding: 24px 0 16px; }
+h1, h2, p { margin: 0; }
+h1 { font-size: clamp(2rem, 5vw, 4.5rem); letter-spacing: -0.06em; }
+h2 { font-size: 1.05rem; }
+.eyebrow { color: var(--blue); text-transform: uppercase; letter-spacing: 0.16em; font-size: 0.72rem; font-weight: 800; }
+.subtitle { margin-top: 0.4rem; color: var(--muted); }
+.connection-card, .panel { border: 1px solid var(--line); background: var(--panel); box-shadow: 0 18px 70px rgba(0,0,0,0.32); backdrop-filter: blur(18px); }
+.connection-card { border-radius: 18px; padding: 14px 16px; min-width: 245px; display: flex; align-items: center; gap: 12px; }
+.connection-card small { color: var(--muted); display: block; margin-top: 2px; }
+.dot { width: 13px; height: 13px; border-radius: 999px; display: inline-block; box-shadow: 0 0 24px currentColor; }
+.dot-ok { color: var(--green); background: var(--green); }
+.dot-fail { color: var(--red); background: var(--red); }
+.dot-warn { color: var(--yellow); background: var(--yellow); }
+.layout { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(320px, 0.8fr); gap: 16px; padding-bottom: 24px; }
+.panel { border-radius: 24px; padding: 16px; overflow: hidden; }
+.panel-header { display: flex; justify-content: space-between; gap: 1rem; align-items: start; margin-bottom: 12px; }
+.compact { margin-bottom: 10px; }
+.arena-panel { min-height: 520px; }
+#arenaCanvas { width: 100%; aspect-ratio: 3 / 2; display: block; border-radius: 18px; background: #081827; border: 1px solid var(--line); }
+.legend { display: flex; gap: 10px; flex-wrap: wrap; color: var(--muted); font-size: 0.78rem; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 999px; margin-right: 4px; }
+.legend-player { background: var(--green); } .legend-offline { background: #64748b; } .legend-enemy { background: var(--red); }
+.stack { display: grid; gap: 16px; }
+.metric-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.metric-grid div, .player-card, .root-row, details { background: rgba(255,255,255,0.045); border: 1px solid var(--line); border-radius: 14px; padding: 10px; }
+.metric-grid span, .player-card span { display: block; color: var(--muted); font-size: 0.76rem; }
+.metric-grid strong { font-size: 1.35rem; }
+#verifyBadge.verified { color: var(--green); } #verifyBadge.failed { color: var(--red); }
+.roots { display: grid; gap: 8px; }
+.root-row { display: grid; grid-template-columns: 110px minmax(0, 1fr) auto; gap: 8px; align-items: center; }
+.root-row span { color: var(--muted); font-size: 0.78rem; }
+code { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #dbeafe; }
+button { border: 1px solid var(--line); background: var(--panel-strong); color: var(--text); border-radius: 10px; padding: 7px 10px; cursor: pointer; }
+button:hover { border-color: var(--blue); }
+.player-list { display: grid; gap: 8px; max-height: 330px; overflow: auto; }
+.player-card { display: grid; gap: 8px; }
+.player-card.offline { opacity: 0.62; border-style: dashed; }
+.bars { height: 8px; border-radius: 999px; background: #1f2937; overflow: hidden; }
+.bars i { display: block; height: 100%; background: linear-gradient(90deg, var(--red), var(--yellow), var(--green)); }
+.combat-panel, .timeline-panel, .commitments-panel { min-height: 260px; }
+.event-list, .timeline { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; max-height: 420px; overflow: auto; }
+.event-list li, .timeline li { border-left: 3px solid var(--purple); background: rgba(255,255,255,0.045); border-radius: 12px; padding: 10px; color: #d9e7f7; }
+.event-list small, .timeline small { color: var(--muted); display: block; margin-top: 4px; }
+.commitments { display: grid; gap: 8px; max-height: 420px; overflow: auto; }
+details summary { cursor: pointer; color: #dbeafe; }
+details dl { display: grid; gap: 6px; margin: 10px 0 0; }
+details div { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 8px; }
+details dt { color: var(--muted); }
+details dd { margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+@media (max-width: 900px) {
+  .hero { align-items: stretch; flex-direction: column; }
+  .layout { grid-template-columns: 1fr; }
+  .root-row { grid-template-columns: 1fr; }
+  .arena-panel { min-height: auto; }
+}
