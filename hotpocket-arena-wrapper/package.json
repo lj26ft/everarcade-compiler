@@ -9,7 +9,8 @@
   "scripts": {
     "start": "node contract/index.mjs",
     "submit": "node bin/arena-submit.mjs",
-    "validate": "node validation/verify-live-path.mjs"
+    "validate": "node validation/verify-live-path.mjs",
+    "validate:consensus": "node validation/verify-multi-node-consensus.mjs"
   },
   "engines": { "node": ">=18" }
 }

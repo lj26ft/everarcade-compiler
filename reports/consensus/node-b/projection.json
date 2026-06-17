@@ -1,0 +1,37 @@
+{
+  "players": {
+    "player-1": {
+      "id": "player-1",
+      "x": 1,
+      "y": 0,
+      "health": 100,
+      "connected": true,
+      "score": 20
+    },
+    "player-2": {
+      "id": "player-2",
+      "x": -1,
+      "y": 0,
+      "health": 50,
+      "connected": true,
+      "score": 0
+    }
+  },
+  "combat_events": [
+    {
+      "tick": 5,
+      "attacker": "player-1",
+      "target": "player-2",
+      "damage": 25,
+      "target_health": 75
+    },
+    {
+      "tick": 7,
+      "attacker": "player-1",
+      "target": "player-2",
+      "damage": 25,
+      "target_health": 50
+    }
+  ],
+  "tick": 7
+}
