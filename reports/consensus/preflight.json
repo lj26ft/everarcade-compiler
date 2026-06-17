@@ -1,0 +1,20 @@
+{
+  "node-a": {
+    "genesis_hash": "dccbc8f1e044909ce5d1ea491d32f392f3b0b84a22d5347d6223454fd41449fc",
+    "package_hash": "6cb908af11a51f5eaa2f1701ed182c90fc68a0efb2ee9807e3889dca056682e2",
+    "contract_hash": "582f1e8fc783320fb64ea0fc8bcac1f8fdeaff387b0e177e3442f3a103c083ac",
+    "runtime_hash": "7ea2468f49257b416870e22181a6d9dc6274ade8b1f00aebebbd4f08168c9b56"
+  },
+  "node-b": {
+    "genesis_hash": "dccbc8f1e044909ce5d1ea491d32f392f3b0b84a22d5347d6223454fd41449fc",
+    "package_hash": "6cb908af11a51f5eaa2f1701ed182c90fc68a0efb2ee9807e3889dca056682e2",
+    "contract_hash": "582f1e8fc783320fb64ea0fc8bcac1f8fdeaff387b0e177e3442f3a103c083ac",
+    "runtime_hash": "7ea2468f49257b416870e22181a6d9dc6274ade8b1f00aebebbd4f08168c9b56"
+  },
+  "node-c": {
+    "genesis_hash": "dccbc8f1e044909ce5d1ea491d32f392f3b0b84a22d5347d6223454fd41449fc",
+    "package_hash": "6cb908af11a51f5eaa2f1701ed182c90fc68a0efb2ee9807e3889dca056682e2",
+    "contract_hash": "582f1e8fc783320fb64ea0fc8bcac1f8fdeaff387b0e177e3442f3a103c083ac",
+    "runtime_hash": "7ea2468f49257b416870e22181a6d9dc6274ade8b1f00aebebbd4f08168c9b56"
+  }
+}
