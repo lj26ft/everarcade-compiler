@@ -9,6 +9,7 @@ async function refreshState() {
   renderJson('players', players.map((player) => ({ id: player.id, x: player.x, y: player.y })));
   renderJson('health', Object.fromEntries(players.map((player) => [player.id, player.health])));
   renderJson('score', Object.fromEntries(players.map((player) => [player.id, player.score])));
+  renderJson('combatEvents', state.combat_events || []);
   $('tick').textContent = state.tick ?? 0;
   $('stateRoot').textContent = state.state_root || 'unknown';
   $('replayStatus').textContent = state.replay_status || 'unknown';
@@ -16,8 +17,8 @@ async function refreshState() {
 }
 async function action(actionType, extra = {}) {
   sequence += 1;
-  const payload = { action_id: `${playerId()}-${actionType}-${sequence}-${Date.now()}`, player_id: playerId(), action_type: actionType, sequence, ...extra };
-  const response = await fetch(`${runtimeUrl()}/action`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(payload) });
+  const payload = actionType === 'attack' ? { action: actionType, player: playerId(), target: extra.target || 'player-2' } : { action: actionType, player: playerId(), ...extra };
+  const response = await fetch(`${runtimeUrl()}/input`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(payload) });
   const receipt = await response.json();
   renderJson('receipt', receipt);
   await refreshState();

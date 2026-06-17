@@ -1,0 +1,15 @@
+{
+  "name": "hotpocket-arena-wrapper",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "HotPocket contract wrapper and live input tooling for Arena Vanguard.",
+  "main": "contract/index.mjs",
+  "bin": { "arena-submit": "bin/arena-submit.mjs" },
+  "scripts": {
+    "start": "node contract/index.mjs",
+    "submit": "node bin/arena-submit.mjs",
+    "validate": "node validation/verify-live-path.mjs"
+  },
+  "engines": { "node": ">=18" }
+}
