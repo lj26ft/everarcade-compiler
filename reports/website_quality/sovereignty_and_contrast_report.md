@@ -36,5 +36,7 @@
 
 ## Remaining visual issues
 
+- Fixed the homepage `tagList` container regression so the EverArcade Worlds pills remain transparent/green instead of becoming a bright yellow box with unreadable inherited text.
+- No known white-on-bright-yellow button or homepage tag text remains in the homepage styles.
 - No known white-on-bright-yellow button text remains in the homepage styles.
 - A full browser screenshot pass was not captured in this report; the Docusaurus build should be used as the first regression gate for broken routes and generated docs.

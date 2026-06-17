@@ -328,3 +328,26 @@ html[data-theme='light'],
   border-color: #ffd86a;
   font-weight: 800;
 }
+
+/* The generated-Docusaurus tag hardening above intentionally targets badges and
+ * tags, but the homepage uses `tagList` as a custom class name. Keep that
+ * container transparent so the EverArcade Worlds pills never become a bright
+ * yellow box with inherited light text. */
+.tagList {
+  background: transparent !important;
+  color: inherit !important;
+  border: 0 !important;
+}
+
+.tagList li,
+.accentPanel .tagList li {
+  color: #c9ffe8 !important;
+  background: rgba(29,242,164,.08) !important;
+  border-color: rgba(29,242,164,.42) !important;
+}
+
+.outcomeTags li {
+  color: #120914 !important;
+  background: #f7c948 !important;
+  border-color: #ffd86a !important;
+}
