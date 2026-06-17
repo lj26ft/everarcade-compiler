@@ -1,3 +1,4 @@
+use crate::arena_vanguard;
 use crate::config::{games_root, runtime_root};
 use sha2::{Digest, Sha256};
 use std::{
@@ -53,7 +54,17 @@ pub fn dispatch_legacy(args: &[String]) -> Result<(), String> {
         "creator-dashboard" => creator_command("creator-dashboard"),
         "visualize-simulation" => creator_command("visualize-simulation"),
         "run-local-federation" => start_game("2d-arena"),
-        "replay-world" => verify_replay_frame(),
+        "run-arena-local" => arena_vanguard::run_local(),
+        "replay-world" => {
+            if runtime_root()
+                .join("games/arena-vanguard/journal.json")
+                .is_file()
+            {
+                arena_vanguard::replay()
+            } else {
+                verify_replay_frame()
+            }
+        }
         "inspect-simulation" => inspect_simulation(),
         "diagnostics" => diagnostics(),
         "runtime-public-api-status" => runtime_public_api_status(),
@@ -148,7 +159,7 @@ pub fn dispatch_legacy(args: &[String]) -> Result<(), String> {
 pub fn print_help() {
     crate::product::print_product_help();
     println!();
-    println!("everarcade <release|world|lease|install-game|list-games|inspect-game|run-game|start-game|asset-register|asset-build|asset-verify|start|init-game|build-game|package-game|run-local-federation|replay-world|inspect-simulation|runtime-snapshot|diagnostics|runtime-public-api-status|runtime-symbol-audit|runtime-integration-closure|runtime-api-ownership|workspace-linkage-status|runtime-crate-audit|workspace-validation-status|sovereign-workspace-closure|replay-network-status|replay-peer-status|replay-window-sync|replay-stream-runtime|replay-observer-runtime|replay-federation-runtime|replay-catchup-runtime|replay-recovery-runtime|replay-transport-verify|runtime-gameplay-status|runtime-session-list|runtime-player-status|runtime-scheduler-status|runtime-matchmaking-status|runtime-gameplay-recovery|runtime-replay-tip|runtime-observer-gameplay-status|runtime-execution-health|runtime-session-recovery|runtime-world-status|runtime-civilization-status|runtime-entity-status|runtime-economy-status|runtime-inventory-status|runtime-world-recovery|runtime-civilization-replay-tip|runtime-world-health|runtime-entity-lineage|runtime-civilization-restoration|runtime-ecs-status|runtime-ai-status|runtime-partition-status|runtime-simulation-health|runtime-behavior-tree-status|runtime-world-simulation-status|runtime-shard-migration-status|runtime-simulation-federation-status|runtime-ai-memory-status|runtime-partition-recovery|runtime-faction-status|runtime-society-status|runtime-governance-status|runtime-ecology-status|runtime-social-memory-status|runtime-civilization-federation-status|runtime-civilization-health|runtime-procedural-world-status|runtime-conflict-status|runtime-autonomous-recovery|new-game|run-dev|replay-inspect|replay-verify|validate-game|deploy-game|checkpoint-restore|multiplayer-sim|replay-diff|editor|replay-ui|inspect-entity|import-assets|hot-reload|package-content|validate-content|publish-package|creator-dashboard|visualize-simulation>");
+    println!("everarcade <release|world|lease|install-game|list-games|inspect-game|run-game|start-game|asset-register|asset-build|asset-verify|start|init-game|build-game|package-game|run-local-federation|run-arena-local|replay-world|inspect-simulation|runtime-snapshot|diagnostics|runtime-public-api-status|runtime-symbol-audit|runtime-integration-closure|runtime-api-ownership|workspace-linkage-status|runtime-crate-audit|workspace-validation-status|sovereign-workspace-closure|replay-network-status|replay-peer-status|replay-window-sync|replay-stream-runtime|replay-observer-runtime|replay-federation-runtime|replay-catchup-runtime|replay-recovery-runtime|replay-transport-verify|runtime-gameplay-status|runtime-session-list|runtime-player-status|runtime-scheduler-status|runtime-matchmaking-status|runtime-gameplay-recovery|runtime-replay-tip|runtime-observer-gameplay-status|runtime-execution-health|runtime-session-recovery|runtime-world-status|runtime-civilization-status|runtime-entity-status|runtime-economy-status|runtime-inventory-status|runtime-world-recovery|runtime-civilization-replay-tip|runtime-world-health|runtime-entity-lineage|runtime-civilization-restoration|runtime-ecs-status|runtime-ai-status|runtime-partition-status|runtime-simulation-health|runtime-behavior-tree-status|runtime-world-simulation-status|runtime-shard-migration-status|runtime-simulation-federation-status|runtime-ai-memory-status|runtime-partition-recovery|runtime-faction-status|runtime-society-status|runtime-governance-status|runtime-ecology-status|runtime-social-memory-status|runtime-civilization-federation-status|runtime-civilization-health|runtime-procedural-world-status|runtime-conflict-status|runtime-autonomous-recovery|new-game|run-dev|replay-inspect|replay-verify|validate-game|deploy-game|checkpoint-restore|multiplayer-sim|replay-diff|editor|replay-ui|inspect-entity|import-assets|hot-reload|package-content|validate-content|publish-package|creator-dashboard|visualize-simulation>");
 }
 fn install_game(path: &str) -> Result<(), String> {
     let src = PathBuf::from(path);

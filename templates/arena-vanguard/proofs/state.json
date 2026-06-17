@@ -1,0 +1,33 @@
+{
+  "world_id": "arena-vanguard",
+  "tick_rate": 20,
+  "tick": 5,
+  "players": {
+    "p1": {
+      "id": "p1",
+      "x": 100,
+      "y": 0,
+      "health": 100,
+      "connected": true,
+      "deaths": 0
+    },
+    "p2": {
+      "id": "p2",
+      "x": 100,
+      "y": 0,
+      "health": 75,
+      "connected": true,
+      "deaths": 0
+    }
+  },
+  "combat_events": [
+    {
+      "tick": 3,
+      "attacker": "p1",
+      "target": "p2",
+      "damage": 25,
+      "target_health": 75,
+      "death": false
+    }
+  ]
+}

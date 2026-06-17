@@ -1,0 +1,34 @@
+[
+  {
+    "tick": 1,
+    "player": "p1",
+    "kind": "join"
+  },
+  {
+    "tick": 1,
+    "player": "p2",
+    "kind": "join"
+  },
+  {
+    "tick": 2,
+    "player": "p1",
+    "kind": "move",
+    "direction": "right"
+  },
+  {
+    "tick": 3,
+    "player": "p1",
+    "kind": "attack",
+    "target": "p2"
+  },
+  {
+    "tick": 4,
+    "player": "p2",
+    "kind": "disconnect"
+  },
+  {
+    "tick": 5,
+    "player": "p2",
+    "kind": "join"
+  }
+]
