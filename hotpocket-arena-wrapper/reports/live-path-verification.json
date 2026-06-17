@@ -38,9 +38,9 @@
       },
       "combat_events": [],
       "state_root": "39c3e00c2b6612df35088e3568938d72ae2f5ad1b7bd10fcb904ac4fa527e6b7",
-      "receipt_root": "0b2ca4e58bd47cbf1251f86ae1b6e518831c9995492c27e19297c978a5e03770",
+      "receipt_root": "9a4937a62cf1b0dc5d9b33ae110b435964713b262a4a14c65404855780d7c553",
       "world_hash": "a5d107f5d526a138dfdbc39373834d3edbc0fe1519afce43feb08b109e115ba8",
-      "continuity_root": "a26216597675a15856f8a6f7a7d8253b1af63523522dc46f954b701002d15b5c"
+      "continuity_root": "c628cf9d5671212effb184f09f017fe712fe9a053aa04da0db3512f37d8256be"
     },
     {
       "accepted": true,
@@ -66,10 +66,10 @@
         }
       },
       "combat_events": [],
-      "state_root": "7403cf7c92912be86cdf60a9bd6ffdcb58f848e67ee3506fefdbe8591e882f11",
-      "receipt_root": "7f99141f358aa1109bfe726f7bf1983149fb70c884f9ce3cf25decb08bd598a3",
+      "state_root": "bd224136efac882df5549f4f349407608c5d08296d84f615000dcb5d9f524ba0",
+      "receipt_root": "8467807a8890bdc9dcccd2dfa3b6ab52706b1673de4744bcfabd3da28ca36f0b",
       "world_hash": "74f94776c8c7181d830df0946df98bdbe6680715aa0ae5eeace99dd02dec7db2",
-      "continuity_root": "800733eeb9e0c505438345e491b55cc09bc492e16695aab1b93cba13ed886a2f"
+      "continuity_root": "12c6929e60474d6c04615f9f82b04ca2bc1866c996ddea2088dbea02a21f913a"
     },
     {
       "accepted": true,
@@ -95,10 +95,10 @@
         }
       },
       "combat_events": [],
-      "state_root": "18ebbf8d3e0a3109179aa187f36fbe4e82e3705b44db8e3886e96a5e67619ef8",
-      "receipt_root": "c0657fc6ba9290a60e5010a2f802c76a41f4d002deaf61c0ca40d049109cc241",
+      "state_root": "11e037e3d1b5e4340b7b24f65754019c8a6b553ae2c66b79084f401713f6b8ae",
+      "receipt_root": "06f7e3b4dad4e330b6fdf06cc3b598ae249ca02c238848c7b6e85f158ff75778",
       "world_hash": "20d23ce41e2078fbec40983d8bd5dad6d5815d7229b85b9a7c236992605953f8",
-      "continuity_root": "0c73fe8e154086765c17a1c54439a07ab309fda33e827a87009d95636ae75afc"
+      "continuity_root": "60e174c207ec343d08b5b6b48d36710ccf97fc7fc1cacd65a4bdffe8ae9ee9aa"
     },
     {
       "accepted": true,
@@ -132,10 +132,10 @@
           "target_health": 75
         }
       ],
-      "state_root": "1f1820aa06ee09d48d41c4bff8810e24008b9df3556f976bfd82613c8d69c941",
-      "receipt_root": "6822935aad41204c0bbe0e889bd46a1ba74cb4de46442298025c1924fef4edad",
+      "state_root": "64d303968f511393ec9e96918a03ae98ee2b37bce3c821f55fc0eb4f097831fd",
+      "receipt_root": "cd8fbad7de731c41bab39a6fe570d8868fe6e56072a14e950ae62b099a902503",
       "world_hash": "54d6127e24fa0a40694c733301663f3cc0396e43b560e801a5ac609ee3315220",
-      "continuity_root": "5c397d8b4126d83ec209965c5ad367a8f22a8c1d90d3f8c831346f808720cbc1"
+      "continuity_root": "de69c371a13c56cc48db409b0fee40c582d9d93951b81459a8176c41e0f6eead"
     }
   ],
   "checks": {
@@ -152,17 +152,17 @@
     "ok": true,
     "live": {
       "tick": 4,
-      "state_root": "1f1820aa06ee09d48d41c4bff8810e24008b9df3556f976bfd82613c8d69c941",
-      "receipt_root": "6822935aad41204c0bbe0e889bd46a1ba74cb4de46442298025c1924fef4edad",
+      "state_root": "64d303968f511393ec9e96918a03ae98ee2b37bce3c821f55fc0eb4f097831fd",
+      "receipt_root": "cd8fbad7de731c41bab39a6fe570d8868fe6e56072a14e950ae62b099a902503",
       "world_hash": "54d6127e24fa0a40694c733301663f3cc0396e43b560e801a5ac609ee3315220",
-      "continuity_root": "5c397d8b4126d83ec209965c5ad367a8f22a8c1d90d3f8c831346f808720cbc1"
+      "continuity_root": "de69c371a13c56cc48db409b0fee40c582d9d93951b81459a8176c41e0f6eead"
     },
     "replayed": {
       "tick": 4,
-      "state_root": "1f1820aa06ee09d48d41c4bff8810e24008b9df3556f976bfd82613c8d69c941",
-      "receipt_root": "6822935aad41204c0bbe0e889bd46a1ba74cb4de46442298025c1924fef4edad",
+      "state_root": "64d303968f511393ec9e96918a03ae98ee2b37bce3c821f55fc0eb4f097831fd",
+      "receipt_root": "cd8fbad7de731c41bab39a6fe570d8868fe6e56072a14e950ae62b099a902503",
       "world_hash": "54d6127e24fa0a40694c733301663f3cc0396e43b560e801a5ac609ee3315220",
-      "continuity_root": "5c397d8b4126d83ec209965c5ad367a8f22a8c1d90d3f8c831346f808720cbc1"
+      "continuity_root": "de69c371a13c56cc48db409b0fee40c582d9d93951b81459a8176c41e0f6eead"
     }
   },
   "status": "PASS"
