@@ -1,4 +1,4 @@
-import { createHash, randomUUID } from 'node:crypto';
+import { createHash } from 'node:crypto';
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 
@@ -113,4 +113,4 @@ export class ArenaHotPocketRuntime {
 }
 
 export function defaultPaths(root = process.cwd()) { return { statePath: join(root, 'evernode/hotpocket/arena-wrapper-state.json'), journalPath: join(root, 'evernode/journals/arena-hotpocket-journal.json') }; }
-export function inputId(envelope) { return `arena-${canonicalHash(envelope).slice(0, 16)}-${randomUUID()}`; }
+export function inputId(envelope) { return `arena-${canonicalHash(envelope)}`; }
