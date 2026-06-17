@@ -1,0 +1,1 @@
+{"package":"arena-vanguard","entrypoint":"everarcade-cli arena_vanguard::execute","inputs":["join","disconnect","move","attack"],"authoritative":"deterministic-runtime"}

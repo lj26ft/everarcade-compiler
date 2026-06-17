@@ -1,0 +1,68 @@
+[
+  {
+    "tick": 1,
+    "player": "p1",
+    "input_hash": "ae5aa9f15684008d096c49c4a08180f80b65caea2f1e1fe751367e9b97398c7d",
+    "pre_state_root": "40ad63194538935545978a7b61117df564324d055278af9e091da561191cf748",
+    "post_state_root": "ea736915ef0add140d829108028e13a0c6f91e0c2979f79efa5ba411a87ec7e4",
+    "events": [
+      "player_joined"
+    ],
+    "accepted": true
+  },
+  {
+    "tick": 1,
+    "player": "p2",
+    "input_hash": "8a92e78744e62b9b4021ced5148e895a83ba1df91cab410f547869f7c4023bb4",
+    "pre_state_root": "ea736915ef0add140d829108028e13a0c6f91e0c2979f79efa5ba411a87ec7e4",
+    "post_state_root": "06d5b8101268650523ecabe31d07678888bb005a1ee78eb99ccb5b82d2bcefe7",
+    "events": [
+      "player_joined"
+    ],
+    "accepted": true
+  },
+  {
+    "tick": 2,
+    "player": "p1",
+    "input_hash": "541c48b744eb8799c310d3cfd28e40862a32e519c24f4a00ffd469e161ccb50e",
+    "pre_state_root": "dcbb17df802e1023125c525099088a8df02d8612cc077fc0b8e7df169572a8b3",
+    "post_state_root": "30e19f944da1433ce59e61c5b18c6c7ce2978c13c7176ae8a427e0b8d1a6ba93",
+    "events": [
+      "player_moved"
+    ],
+    "accepted": true
+  },
+  {
+    "tick": 3,
+    "player": "p1",
+    "input_hash": "3cd25158dd8aad271fe53567845f8a519ee755a08fa5dea3732ef5b9f49391d6",
+    "pre_state_root": "61795ac08f7ffed5601bee0d2670ba49b760177849bbeaa9dbfdd889354ac4a0",
+    "post_state_root": "a3148c566783e09c47f48f15475d2e54ab0136b55ab8afa0b3ce80bc57d58203",
+    "events": [
+      "damage_applied"
+    ],
+    "accepted": true
+  },
+  {
+    "tick": 4,
+    "player": "p2",
+    "input_hash": "4867a27f54478533159e2b4b3f0a5f55e3ba0662afb3e0f23a59f1ab556b49ae",
+    "pre_state_root": "70f74ee763a18328902759593b1429adf9d99fc33f74497f83ee612a94320f8e",
+    "post_state_root": "5bcde1d6211df57542af321bc8a56866c555b2917a4931a03f1da7951c478dfc",
+    "events": [
+      "player_disconnected"
+    ],
+    "accepted": true
+  },
+  {
+    "tick": 5,
+    "player": "p2",
+    "input_hash": "7c1e97ae33c748521b9e228646dbf38763f0ff65a8da55e86d95a132fea7cb06",
+    "pre_state_root": "925dea06c37b8862f52b4b3df1bca7e1deae40b813d8c9d37cab7651e6cfca57",
+    "post_state_root": "40d61f7e142fc4a9d57595c4d70aa57ad10693995d391f4b7b6ad33eb98f8418",
+    "events": [
+      "player_joined"
+    ],
+    "accepted": true
+  }
+]

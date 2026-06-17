@@ -1,0 +1,8 @@
+world_id = "arena-vanguard"
+name = "Arena Vanguard"
+version = "0.1.0"
+tick_rate = 20
+coordinate_format = "fixed-point-i32-centimeters"
+deterministic = true
+runtime_bundle = "contract-package.json"
+genesis = "genesis.json"

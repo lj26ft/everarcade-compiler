@@ -1,3 +1,4 @@
+mod arena_vanguard;
 mod commands;
 mod config;
 mod lease;
