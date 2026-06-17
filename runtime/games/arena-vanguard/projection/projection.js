@@ -49,15 +49,19 @@ function normalizeState(raw) {
 }
 
 function normalizeVerify(raw, normalized) {
-  const roots = raw.roots ?? raw.commitment ?? raw.latestCommitment ?? raw;
-  const ok = raw.verified ?? raw.valid ?? ["verified", "healthy", "ok"].includes(String(raw.status ?? "").toLowerCase());
+  const roots = raw.roots ?? raw.commitment ?? raw.latestCommitment ?? raw.live ?? raw;
+  const ok = raw.ok ?? raw.verified ?? raw.valid ?? ["verified", "healthy", "ok"].includes(String(raw.status ?? "").toLowerCase());
   return {
     verified: Boolean(ok),
     status: ok ? "VERIFIED" : "FAILED",
     stateRoot: roots.stateRoot ?? roots.state_root ?? roots.world_root ?? `state:arena-vanguard:tick:${normalized.tick}`,
+    replayedStateRoot: raw.replayed?.stateRoot ?? raw.replayed?.state_root ?? null,
     receiptRoot: roots.receiptRoot ?? roots.receipt_root ?? roots.replay_root ?? `receipt:arena-vanguard:entries:${normalized.journalSize}`,
+    replayedReceiptRoot: raw.replayed?.receiptRoot ?? raw.replayed?.receipt_root ?? null,
     worldHash: roots.worldHash ?? roots.world_hash ?? roots.checkpoint_root ?? `world:arena-vanguard:players:${normalized.players.length}`,
-    continuityRoot: roots.continuityRoot ?? roots.continuity_root ?? "continuity:arena-vanguard:live"
+    replayedWorldHash: raw.replayed?.worldHash ?? raw.replayed?.world_hash ?? null,
+    continuityRoot: roots.continuityRoot ?? roots.continuity_root ?? "continuity:arena-vanguard:live",
+    replayedContinuityRoot: raw.replayed?.continuityRoot ?? raw.replayed?.continuity_root ?? null
   };
 }
 
@@ -136,7 +140,7 @@ function renderVerification(verify) {
   const badge = $("verifyBadge");
   badge.textContent = verify.verified ? "✓ VERIFIED" : "✗ FAILED";
   badge.className = verify.verified ? "verified" : "failed";
-  const roots = [["State Root", verify.stateRoot], ["Receipt Root", verify.receiptRoot], ["World Hash", verify.worldHash], ["Continuity", verify.continuityRoot]];
+  const roots = [["State Root", verify.stateRoot], ["Receipt Root", verify.receiptRoot], ["World Hash", verify.worldHash], ["Continuity", verify.continuityRoot], ["Replayed State", verify.replayedStateRoot], ["Replayed Receipt", verify.replayedReceiptRoot], ["Replayed World", verify.replayedWorldHash], ["Replayed Continuity", verify.replayedContinuityRoot]].filter(([, value]) => value);
   $("roots").innerHTML = roots.map(([label, value]) => `<div class="root-row"><span>${label}</span><code title="${value}">${value}</code><button type="button" data-copy="${value}">Copy</button></div>`).join("");
 }
 
