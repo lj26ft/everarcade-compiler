@@ -1,0 +1,397 @@
+{
+  "tick": 7,
+  "players": {
+    "player-1": {
+      "id": "player-1",
+      "x": 1,
+      "y": 0,
+      "health": 100,
+      "connected": true,
+      "score": 20
+    },
+    "player-2": {
+      "id": "player-2",
+      "x": -1,
+      "y": 0,
+      "health": 50,
+      "connected": true,
+      "score": 0
+    }
+  },
+  "combat_events": [
+    {
+      "tick": 5,
+      "attacker": "player-1",
+      "target": "player-2",
+      "damage": 25,
+      "target_health": 75
+    },
+    {
+      "tick": 7,
+      "attacker": "player-1",
+      "target": "player-2",
+      "damage": 25,
+      "target_health": 50
+    }
+  ],
+  "last_sequence": {
+    "player-1": 7,
+    "player-2": 4
+  },
+  "commitments": [
+    {
+      "tick": 1,
+      "state_root": "39c3e00c2b6612df35088e3568938d72ae2f5ad1b7bd10fcb904ac4fa527e6b7",
+      "receipt_root": "9a4937a62cf1b0dc5d9b33ae110b435964713b262a4a14c65404855780d7c553",
+      "world_hash": "a5d107f5d526a138dfdbc39373834d3edbc0fe1519afce43feb08b109e115ba8",
+      "continuity_root": "c628cf9d5671212effb184f09f017fe712fe9a053aa04da0db3512f37d8256be"
+    },
+    {
+      "tick": 2,
+      "state_root": "bd224136efac882df5549f4f349407608c5d08296d84f615000dcb5d9f524ba0",
+      "receipt_root": "8467807a8890bdc9dcccd2dfa3b6ab52706b1673de4744bcfabd3da28ca36f0b",
+      "world_hash": "74f94776c8c7181d830df0946df98bdbe6680715aa0ae5eeace99dd02dec7db2",
+      "continuity_root": "12c6929e60474d6c04615f9f82b04ca2bc1866c996ddea2088dbea02a21f913a"
+    },
+    {
+      "tick": 3,
+      "state_root": "97626b377d224c3e25415e68a0f0a1a7b650f9fea0e317c9ce36c4bb8c2e5665",
+      "receipt_root": "f23f9a766bc2b949b28942203814224ec7de0fdba652254274e275ba1fc5786e",
+      "world_hash": "ad6e8aec0e95586a6d55a698088a200070087ffc0b00ea6ba66d52ab26e74271",
+      "continuity_root": "72315a16681f795195c200f5b466f6a91a2b165f664ef752f71ee73d47461024"
+    },
+    {
+      "tick": 4,
+      "state_root": "fd7b791c18b9598dda5d2b05ba1cd212c28d68942b58c83f118cbfb0085df902",
+      "receipt_root": "97dbbb0a7a14dba49846c8e95b201dda13839d308d53a8673f850424c348dd01",
+      "world_hash": "0077522b0b3154655e1674ec8a990a6d3e2be79a7913837ad68560a4017438ab",
+      "continuity_root": "e4a33d499e964697f6fb3366a4a2c9ae01e1532fa840221905f011a3c149af63"
+    },
+    {
+      "tick": 5,
+      "state_root": "cf49b0c726c506df7dbde3f8c2614471e7f82c1632ebeb125a8b95449636f07e",
+      "receipt_root": "7dc14f7c94b90e41c0aa751279af842d36c6178ecefe01646153d48ea2c2f7ba",
+      "world_hash": "3cbad7b436ef545c3e44e72b92d0bc9e9a2b67b4af84f468027066535d0e4102",
+      "continuity_root": "82a0bc36ac8e303001bbc7026a44ed20a57a57beaa5be04720c2a06fd83d15c6"
+    },
+    {
+      "tick": 7,
+      "state_root": "e90a8ee031a843b1f70b79e33e034384d14a7ce03b0f259f3cda73a98379b4f8",
+      "receipt_root": "be7c9577e1f9e23d5c6317238f0345011cc27d0b45bf91ffb0511ff07e0ba020",
+      "world_hash": "cc6043afcf35dcaebcf67d457731ae5284bff3f3ec4adc89d75fb1da956c98f4",
+      "continuity_root": "ecbb2a10467f99b958434225fb19a8ba6d4f25d856a5f794a376c8644f6f6958"
+    }
+  ],
+  "receipts": [
+    {
+      "schema": "everarcade.hotpocket.arena-wrapper.v0.1.receipt",
+      "execution_id": "arena-hotpocket-000001",
+      "sequence": 1,
+      "round": 1,
+      "status": "accepted",
+      "generated_at": "1970-01-01T00:00:00.000Z",
+      "action_hash": "4c372e5983acad7be1c40864e7a802c8cf4c1f04be11106894b77b850d267aad",
+      "state_before_hash": "dccbc8f1e044909ce5d1ea491d32f392f3b0b84a22d5347d6223454fd41449fc",
+      "mutation": "player_joined",
+      "state_root": "39c3e00c2b6612df35088e3568938d72ae2f5ad1b7bd10fcb904ac4fa527e6b7",
+      "receipt_hash": "34c780cad14e605199a2df284f7448b742a9ac2973505ba1e5555dded6fdcc6f",
+      "output": {
+        "accepted": true,
+        "action": "join",
+        "mutation": "player_joined",
+        "tick": 1,
+        "players": {
+          "player-1": {
+            "id": "player-1",
+            "x": 0,
+            "y": 0,
+            "health": 100,
+            "connected": true,
+            "score": 0
+          }
+        },
+        "combat_events": [],
+        "state_root": "39c3e00c2b6612df35088e3568938d72ae2f5ad1b7bd10fcb904ac4fa527e6b7",
+        "receipt_root": "9a4937a62cf1b0dc5d9b33ae110b435964713b262a4a14c65404855780d7c553",
+        "world_hash": "a5d107f5d526a138dfdbc39373834d3edbc0fe1519afce43feb08b109e115ba8",
+        "continuity_root": "c628cf9d5671212effb184f09f017fe712fe9a053aa04da0db3512f37d8256be"
+      },
+      "receipt_root": "9a4937a62cf1b0dc5d9b33ae110b435964713b262a4a14c65404855780d7c553",
+      "world_hash": "a5d107f5d526a138dfdbc39373834d3edbc0fe1519afce43feb08b109e115ba8",
+      "continuity_root": "c628cf9d5671212effb184f09f017fe712fe9a053aa04da0db3512f37d8256be"
+    },
+    {
+      "schema": "everarcade.hotpocket.arena-wrapper.v0.1.receipt",
+      "execution_id": "arena-hotpocket-000002",
+      "sequence": 2,
+      "round": 2,
+      "status": "accepted",
+      "generated_at": "1970-01-01T00:00:00.000Z",
+      "action_hash": "9be5efc93a6312deffb6ff08cf2b0ed6f27a6f0e595530a49d8e81c8f827d47e",
+      "state_before_hash": "34d8bdb71df8cc9d1e836a3f79bf97d52e8c16dec3090f7114c76b5de22b8573",
+      "mutation": "player_joined",
+      "state_root": "bd224136efac882df5549f4f349407608c5d08296d84f615000dcb5d9f524ba0",
+      "receipt_hash": "c98f80eb38bf9f85e768f203f8f937670264da591a0542547fc786f0fba338dc",
+      "output": {
+        "accepted": true,
+        "action": "join",
+        "mutation": "player_joined",
+        "tick": 2,
+        "players": {
+          "player-1": {
+            "id": "player-1",
+            "x": 0,
+            "y": 0,
+            "health": 100,
+            "connected": true,
+            "score": 0
+          },
+          "player-2": {
+            "id": "player-2",
+            "x": 0,
+            "y": 0,
+            "health": 100,
+            "connected": true,
+            "score": 0
+          }
+        },
+        "combat_events": [],
+        "state_root": "bd224136efac882df5549f4f349407608c5d08296d84f615000dcb5d9f524ba0",
+        "receipt_root": "8467807a8890bdc9dcccd2dfa3b6ab52706b1673de4744bcfabd3da28ca36f0b",
+        "world_hash": "74f94776c8c7181d830df0946df98bdbe6680715aa0ae5eeace99dd02dec7db2",
+        "continuity_root": "12c6929e60474d6c04615f9f82b04ca2bc1866c996ddea2088dbea02a21f913a"
+      },
+      "receipt_root": "8467807a8890bdc9dcccd2dfa3b6ab52706b1673de4744bcfabd3da28ca36f0b",
+      "world_hash": "74f94776c8c7181d830df0946df98bdbe6680715aa0ae5eeace99dd02dec7db2",
+      "continuity_root": "12c6929e60474d6c04615f9f82b04ca2bc1866c996ddea2088dbea02a21f913a"
+    },
+    {
+      "schema": "everarcade.hotpocket.arena-wrapper.v0.1.receipt",
+      "execution_id": "arena-hotpocket-000003",
+      "sequence": 3,
+      "round": 3,
+      "status": "accepted",
+      "generated_at": "1970-01-01T00:00:00.000Z",
+      "action_hash": "1463176fc86097287b34c303074baddb240d45a5448775420f7a4a9a9fb8f03f",
+      "state_before_hash": "e5961bd0d12d1c3811f6ddc691a58e05b555e7130a76b23dbfc833faef0b38ea",
+      "mutation": "player_moved",
+      "state_root": "97626b377d224c3e25415e68a0f0a1a7b650f9fea0e317c9ce36c4bb8c2e5665",
+      "receipt_hash": "2045403e52cce4617d30ac16814743578b2c1c893d432e90e4aba035ee413acb",
+      "output": {
+        "accepted": true,
+        "action": "move",
+        "mutation": "player_moved",
+        "tick": 3,
+        "players": {
+          "player-1": {
+            "id": "player-1",
+            "x": 1,
+            "y": 0,
+            "health": 100,
+            "connected": true,
+            "score": 0
+          },
+          "player-2": {
+            "id": "player-2",
+            "x": 0,
+            "y": 0,
+            "health": 100,
+            "connected": true,
+            "score": 0
+          }
+        },
+        "combat_events": [],
+        "state_root": "97626b377d224c3e25415e68a0f0a1a7b650f9fea0e317c9ce36c4bb8c2e5665",
+        "receipt_root": "f23f9a766bc2b949b28942203814224ec7de0fdba652254274e275ba1fc5786e",
+        "world_hash": "ad6e8aec0e95586a6d55a698088a200070087ffc0b00ea6ba66d52ab26e74271",
+        "continuity_root": "72315a16681f795195c200f5b466f6a91a2b165f664ef752f71ee73d47461024"
+      },
+      "receipt_root": "f23f9a766bc2b949b28942203814224ec7de0fdba652254274e275ba1fc5786e",
+      "world_hash": "ad6e8aec0e95586a6d55a698088a200070087ffc0b00ea6ba66d52ab26e74271",
+      "continuity_root": "72315a16681f795195c200f5b466f6a91a2b165f664ef752f71ee73d47461024"
+    },
+    {
+      "schema": "everarcade.hotpocket.arena-wrapper.v0.1.receipt",
+      "execution_id": "arena-hotpocket-000004",
+      "sequence": 4,
+      "round": 4,
+      "status": "accepted",
+      "generated_at": "1970-01-01T00:00:00.000Z",
+      "action_hash": "8db90a71ea3a0623fa5121bccf807dccb521fac4a46fcb03e53df3a1f4fe537b",
+      "state_before_hash": "37d626f237e265c07e1fa6ebdef90957a50fd42138e4e1ce52a7814c8eed3858",
+      "mutation": "player_moved",
+      "state_root": "fd7b791c18b9598dda5d2b05ba1cd212c28d68942b58c83f118cbfb0085df902",
+      "receipt_hash": "45fd7ede22b7c9175e4620e2543cbc10338c15de5e3b8aaf73e3a671e3347611",
+      "output": {
+        "accepted": true,
+        "action": "move",
+        "mutation": "player_moved",
+        "tick": 4,
+        "players": {
+          "player-1": {
+            "id": "player-1",
+            "x": 1,
+            "y": 0,
+            "health": 100,
+            "connected": true,
+            "score": 0
+          },
+          "player-2": {
+            "id": "player-2",
+            "x": -1,
+            "y": 0,
+            "health": 100,
+            "connected": true,
+            "score": 0
+          }
+        },
+        "combat_events": [],
+        "state_root": "fd7b791c18b9598dda5d2b05ba1cd212c28d68942b58c83f118cbfb0085df902",
+        "receipt_root": "97dbbb0a7a14dba49846c8e95b201dda13839d308d53a8673f850424c348dd01",
+        "world_hash": "0077522b0b3154655e1674ec8a990a6d3e2be79a7913837ad68560a4017438ab",
+        "continuity_root": "e4a33d499e964697f6fb3366a4a2c9ae01e1532fa840221905f011a3c149af63"
+      },
+      "receipt_root": "97dbbb0a7a14dba49846c8e95b201dda13839d308d53a8673f850424c348dd01",
+      "world_hash": "0077522b0b3154655e1674ec8a990a6d3e2be79a7913837ad68560a4017438ab",
+      "continuity_root": "e4a33d499e964697f6fb3366a4a2c9ae01e1532fa840221905f011a3c149af63"
+    },
+    {
+      "schema": "everarcade.hotpocket.arena-wrapper.v0.1.receipt",
+      "execution_id": "arena-hotpocket-000005",
+      "sequence": 5,
+      "round": 5,
+      "status": "accepted",
+      "generated_at": "1970-01-01T00:00:00.000Z",
+      "action_hash": "36f98b1d43302597863742497ec7037200004adc5347135a5f8a143987dfd5cd",
+      "state_before_hash": "a857d7a7b235071c722dbdfee7f534a26e0c2f6eb1ee01b0a9bd4f4ea86cdb9b",
+      "mutation": "player_attacked",
+      "state_root": "cf49b0c726c506df7dbde3f8c2614471e7f82c1632ebeb125a8b95449636f07e",
+      "receipt_hash": "c45fe45f7d92171b18b702057e191e7778759e06f3c82a6c30e7a2ae4464d295",
+      "output": {
+        "accepted": true,
+        "action": "attack",
+        "mutation": "player_attacked",
+        "tick": 5,
+        "players": {
+          "player-1": {
+            "id": "player-1",
+            "x": 1,
+            "y": 0,
+            "health": 100,
+            "connected": true,
+            "score": 10
+          },
+          "player-2": {
+            "id": "player-2",
+            "x": -1,
+            "y": 0,
+            "health": 75,
+            "connected": true,
+            "score": 0
+          }
+        },
+        "combat_events": [
+          {
+            "tick": 5,
+            "attacker": "player-1",
+            "target": "player-2",
+            "damage": 25,
+            "target_health": 75
+          }
+        ],
+        "state_root": "cf49b0c726c506df7dbde3f8c2614471e7f82c1632ebeb125a8b95449636f07e",
+        "receipt_root": "7dc14f7c94b90e41c0aa751279af842d36c6178ecefe01646153d48ea2c2f7ba",
+        "world_hash": "3cbad7b436ef545c3e44e72b92d0bc9e9a2b67b4af84f468027066535d0e4102",
+        "continuity_root": "82a0bc36ac8e303001bbc7026a44ed20a57a57beaa5be04720c2a06fd83d15c6"
+      },
+      "receipt_root": "7dc14f7c94b90e41c0aa751279af842d36c6178ecefe01646153d48ea2c2f7ba",
+      "world_hash": "3cbad7b436ef545c3e44e72b92d0bc9e9a2b67b4af84f468027066535d0e4102",
+      "continuity_root": "82a0bc36ac8e303001bbc7026a44ed20a57a57beaa5be04720c2a06fd83d15c6"
+    },
+    {
+      "schema": "everarcade.hotpocket.arena-wrapper.v0.1.receipt",
+      "execution_id": "arena-hotpocket-000006",
+      "sequence": 6,
+      "round": 7,
+      "status": "accepted",
+      "generated_at": "1970-01-01T00:00:00.000Z",
+      "action_hash": "36f98b1d43302597863742497ec7037200004adc5347135a5f8a143987dfd5cd",
+      "state_before_hash": "e94754b8d2383044c6995d3792bc05b6effc579dee1ed7c00284a0521fd96ada",
+      "mutation": "player_attacked",
+      "state_root": "e90a8ee031a843b1f70b79e33e034384d14a7ce03b0f259f3cda73a98379b4f8",
+      "receipt_hash": "6b7d01b7d5f1bd35b91033c91ce67ce0b7039127e3f5b48e0ff1c33508bee47c",
+      "output": {
+        "accepted": true,
+        "action": "attack",
+        "mutation": "player_attacked",
+        "tick": 7,
+        "players": {
+          "player-1": {
+            "id": "player-1",
+            "x": 1,
+            "y": 0,
+            "health": 100,
+            "connected": true,
+            "score": 20
+          },
+          "player-2": {
+            "id": "player-2",
+            "x": -1,
+            "y": 0,
+            "health": 50,
+            "connected": true,
+            "score": 0
+          }
+        },
+        "combat_events": [
+          {
+            "tick": 5,
+            "attacker": "player-1",
+            "target": "player-2",
+            "damage": 25,
+            "target_health": 75
+          },
+          {
+            "tick": 7,
+            "attacker": "player-1",
+            "target": "player-2",
+            "damage": 25,
+            "target_health": 50
+          }
+        ],
+        "state_root": "e90a8ee031a843b1f70b79e33e034384d14a7ce03b0f259f3cda73a98379b4f8",
+        "receipt_root": "be7c9577e1f9e23d5c6317238f0345011cc27d0b45bf91ffb0511ff07e0ba020",
+        "world_hash": "cc6043afcf35dcaebcf67d457731ae5284bff3f3ec4adc89d75fb1da956c98f4",
+        "continuity_root": "ecbb2a10467f99b958434225fb19a8ba6d4f25d856a5f794a376c8644f6f6958"
+      },
+      "receipt_root": "be7c9577e1f9e23d5c6317238f0345011cc27d0b45bf91ffb0511ff07e0ba020",
+      "world_hash": "cc6043afcf35dcaebcf67d457731ae5284bff3f3ec4adc89d75fb1da956c98f4",
+      "continuity_root": "ecbb2a10467f99b958434225fb19a8ba6d4f25d856a5f794a376c8644f6f6958"
+    }
+  ],
+  "journal_size": 6,
+  "replay_status": "verified",
+  "state_root": "e90a8ee031a843b1f70b79e33e034384d14a7ce03b0f259f3cda73a98379b4f8",
+  "receipt_root": "be7c9577e1f9e23d5c6317238f0345011cc27d0b45bf91ffb0511ff07e0ba020",
+  "world_hash": "cc6043afcf35dcaebcf67d457731ae5284bff3f3ec4adc89d75fb1da956c98f4",
+  "continuity_root": "ecbb2a10467f99b958434225fb19a8ba6d4f25d856a5f794a376c8644f6f6958",
+  "node_id": "node-c",
+  "positions": {
+    "player-1": {
+      "x": 1,
+      "y": 0
+    },
+    "player-2": {
+      "x": -1,
+      "y": 0
+    }
+  },
+  "health": {
+    "player-1": 100,
+    "player-2": 50
+  },
+  "score": {
+    "player-1": 20,
+    "player-2": 0
+  }
+}
