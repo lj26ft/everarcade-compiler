@@ -1,0 +1,69 @@
+EverArcade Architecture Freeze v0.1 Report
+
+Decision:
+ARCHITECTURE FREEZE V0.1: PASS
+
+Scope frozen:
+- Runtime architecture
+- Canonicalizer architecture
+- Verification boundary
+- World Contract architecture
+- RustRig architecture
+- World Package architecture
+- World Registry architecture
+- Certification architecture
+
+Frozen runtime components:
+- Replay
+- Federation
+- Restore
+- Migration
+
+Frozen verification components:
+- Canonicalizer Spec
+- Canonicalizer Kernel
+- Root Integrity Certification
+- JS <-> Kernel Equivalence
+- Proof Mapping Framework
+- Formal Proof Target Package
+
+Frozen protocol components:
+- World Contract Framework
+- World Package Specification
+- World Package Certification Framework
+- World Registry Specification
+
+Frozen certified RustRigs:
+- inventory.transfer()
+- combat.attack()
+- market.trade()
+- governance.vote()
+
+Frozen reference assets:
+- Reference Certified World v1
+- Reference World Registry
+- V0.1 Release Certification Gate
+- V0.1 Release Notes
+
+Allowed after freeze:
+- Bug fixes
+- Documentation improvements
+- Testing improvements
+- Operator onboarding improvements
+- Developer onboarding improvements
+- Build system improvements
+- Deployment tooling improvements
+- Verification improvements
+
+Disallowed without v0.2 planning:
+- New protocol layers
+- New certification frameworks
+- New package formats
+- New registry formats
+- New trust boundaries
+- Major architecture rewrites
+
+External validation targets:
+- 3-5 external operators validate package verification, deployment, replay, restore, migration, and certification understanding.
+- 3-10 external developers validate World Contracts, RustRig usage, package workflow, and documentation clarity.
+- HugeGreenCandle performs formal review of canonicalizer, proof package, proof mapping, and certification chain.
