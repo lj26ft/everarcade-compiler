@@ -1,0 +1,73 @@
+EverArcade v0.1 Open Source Security Audit
+Date: 2026-06-18
+Scope: public-release repository audit for committed source, docs, examples, scripts, release metadata, and reports. Generated dependency trees and vendored third-party source are excluded from findings unless referenced by release policy.
+
+Commands executed:
+- git status --short
+- rg -n "Build Worlds|Quick Start|Operator Guide|Developer Guide|World Package|Certification Guide|release notes|private|secret|api[_-]?key|token|password|credential|certificate|BEGIN (RSA|OPENSSH|PRIVATE)" -S --hidden -g '!target' -g '!node_modules' -g '!vendor' .
+- find examples/reference-certified-world-v1 -maxdepth 3 -type f -print | sort
+- bash examples/reference-certified-world-v1/operator/build-world-evr.sh examples/reference-certified-world-v1 /tmp/everarcade-v0.1-world.evr
+- tar -tzf /tmp/everarcade-v0.1-world.evr | LC_ALL=C sort
+- bash examples/reference-certified-world-v1/operator/verify.sh examples/reference-certified-world-v1
+- sha256sum /tmp/everarcade-v0.1-world.evr
+
+Secret and credential review:
+- Secrets: PASS. No committed production secrets were identified.
+- API keys: PASS. No committed live API keys were identified.
+- Private certificates or private key material: PASS. No PEM/private-key blocks were identified in committed first-party release materials.
+- Host credentials: PASS. Operator docs and templates describe boundaries and placeholders; no live host credentials were identified.
+- Test credentials: PASS. Test fixtures use deterministic local tokens, fixture strings, or negative assertions only.
+- Private URLs: PASS. Public-facing docs do not require private repository URLs for the v0.1 reference flow.
+
+Expected non-findings and acceptable matches:
+- Source files contain field names such as secret_root, resume_token, authority_token, certificate, and private_key_custody=false. These are runtime model terms, fixture markers, or redaction-boundary assertions, not committed credentials.
+- package.json files with "private": true mark unpublished local packages and do not expose secrets.
+- SECURITY.md, CONTRIBUTING.md, and architecture docs intentionally mention secrets, private keys, and credentials as prohibited or out-of-scope material.
+- scripts/sign_runtime_manifest.sh references a local operator signing-key path and environment variable name; the key itself is not committed.
+- Generated dependency directories node_modules/ and vendor/ were excluded from the audit scan as third-party/generated content.
+
+Documentation readiness:
+- README: PASS. Root README includes public positioning, supported local flow, and documentation links.
+- Quick Start: PASS. docs/CLI_QUICKSTART.md and docs/onboarding/30-minute-developer-journey.md provide source-first local validation flows.
+- Operator Guide: PASS. examples/reference-certified-world-v1/operator/OPERATOR-GUIDE.md provides source-free package verification and root comparison steps.
+- Developer Guide: PASS. docs/developer/quickstart.md and docs/developers/index.md provide developer entry points.
+- World Package Guide: PASS. docs/world-package-spec-v1.md and docs/world-package/world-package-v0.1.md document package structure and invariants.
+- Certification Guide: PASS. docs/world-package-certification-framework-v1.md documents certification classes and PASS criteria.
+
+Public narrative consistency:
+- Core message: PASS. Public release narrative uses "Build Worlds. Not Just Games." as the external-facing message.
+- Scope: PASS. v0.1 claims local reference-world, package, certification, and replay readiness; it does not claim production, public-testnet, new protocol, new RustRig, or new certification-framework readiness.
+
+Quick start validation summary:
+- Build world.evr: PASS.
+- Verify package: PASS.
+- Reference world present: PASS.
+- Replay evidence present: PASS via certification/replay-report.txt and proofs/formal/replay-proof.txt.
+- Root evidence present: PASS via genesis/world-roots.toml and certification/root-integrity-report.txt.
+
+Open source boundaries:
+Stable for v0.1 public consumption:
+- Runtime
+- Canonicalizer
+- Certification Framework
+- World Packages
+- World Contracts
+- RustRig Framework
+
+Experimental for v0.1 public consumption:
+- Advanced governance
+- Advanced economy
+- Future RustRigs
+- ZK integrations
+- Recursive proofs
+
+Public demo package:
+- examples/reference-certified-world-v1/ is the canonical v0.1 demo world.
+- Locally generated artifact path used for validation: /tmp/everarcade-v0.1-world.evr
+
+GitHub release preparation:
+- Version: v0.1.0
+- Required release artifacts are present or documented: release notes, certification summary, architecture overview, operator guide, developer guide.
+
+Result:
+EVERARCADE V0.1 OPEN SOURCE READY: PASS
