@@ -1,0 +1,10 @@
+{
+  "version": "1",
+  "spec": "canonicalizer-spec.md",
+  "fixtures": 3,
+  "root_integrity": "PASS",
+  "replay": "PASS",
+  "federation": "PASS",
+  "restore": "PASS",
+  "migration": "PASS"
+}

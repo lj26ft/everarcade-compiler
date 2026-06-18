@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "world_id": "arena-vanguard",
+  "arena_id": "vanguard-001",
+  "tick": 42,
+  "players": [
+    {
+      "player_id": "player-a",
+      "controller_id": "acct-a",
+      "join_tick": 0,
+      "status": "active",
+      "score": 125,
+      "metadata": {
+        "rank": 1,
+        "title": "vanguard"
+      }
+    },
+    {
+      "player_id": "player-b",
+      "controller_id": "acct-b",
+      "join_tick": 3,
+      "status": "active",
+      "score": 80,
+      "metadata": {}
+    }
+  ],
+  "entities": [
+    {
+      "entity_id": "entity-avatar-a",
+      "entity_type": "avatar",
+      "owner_player_id": "player-a",
+      "spawn_tick": 0,
+      "despawn_tick": null,
+      "attributes": {
+        "loadout": [
+          "dash",
+          "shield"
+        ],
+        "speed": 7
+      }
+    },
+    {
+      "entity_id": "entity-avatar-b",
+      "entity_type": "avatar",
+      "owner_player_id": "player-b",
+      "spawn_tick": 3,
+      "despawn_tick": null,
+      "attributes": {
+        "speed": 6
+      }
+    }
+  ],
+  "positions": [
+    {
+      "entity_id": "entity-avatar-a",
+      "x": 100,
+      "y": -20,
+      "z": 0,
+      "rotation": 90
+    },
+    {
+      "entity_id": "entity-avatar-b",
+      "x": 40,
+      "y": 15,
+      "z": 0,
+      "rotation": 270
+    }
+  ],
+  "health": [
+    {
+      "entity_id": "entity-avatar-a",
+      "current": 9,
+      "maximum": 10
+    },
+    {
+      "entity_id": "entity-avatar-b",
+      "current": 7,
+      "maximum": 10
+    }
+  ],
+  "receipts": {
+    "receipt_root": "1111111111111111111111111111111111111111111111111111111111111111",
+    "receipt_count": 42,
+    "last_receipt_hash": "2222222222222222222222222222222222222222222222222222222222222222"
+  },
+  "continuity": {
+    "continuity_root": "3333333333333333333333333333333333333333333333333333333333333333",
+    "previous_state_root": "4444444444444444444444444444444444444444444444444444444444444444",
+    "replay_root": "5555555555555555555555555555555555555555555555555555555555555555",
+    "migration_root": null,
+    "epoch": 1
+  },
+  "metadata": {
+    "ruleset_id": "arena-vanguard",
+    "ruleset_version": 1,
+    "created_by": null,
+    "labels": [
+      "ranked",
+      "vanguard"
+    ],
+    "extensions": {
+      "rules": {
+        "max_players": 2,
+        "sudden_death": false
+      }
+    }
+  }
+}
