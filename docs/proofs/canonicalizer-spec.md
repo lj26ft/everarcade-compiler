@@ -78,7 +78,7 @@ Ordering requirements:
 
 * `players` MUST be sorted by the UTF-8 byte order of `player_id`.
 * Duplicate `player_id` values MUST be rejected.
-* `metadata` keys MUST be sorted by UTF-8 byte order.
+* `metadata` keys MUST be sorted by byte-lexicographic order of the keys' UTF-8 encodings.
 
 ### 1.4 `EntityState`
 
@@ -106,7 +106,7 @@ Ordering requirements:
 
 * `entities` MUST be sorted by the UTF-8 byte order of `entity_id`.
 * Duplicate `entity_id` values MUST be rejected.
-* `attributes` object keys MUST be sorted recursively by UTF-8 byte order.
+* `attributes` object keys MUST be sorted recursively by byte-lexicographic order of the keys' UTF-8 encodings.
 
 ### 1.5 `PositionState`
 
@@ -215,7 +215,7 @@ Canonical field order:
 Ordering requirements:
 
 * `labels` MUST be sorted by UTF-8 byte order and duplicates MUST be rejected.
-* `extensions` keys MUST be sorted recursively by UTF-8 byte order.
+* `extensions` keys MUST be sorted recursively by byte-lexicographic order of the keys' UTF-8 encodings.
 * Extension values MUST obey all deterministic encoding rules in this specification.
 
 ## 2. Deterministic Encoding Rules
@@ -231,10 +231,10 @@ Ordering requirements:
 Canonical object encoding MUST use this ordering rule:
 
 1. For objects with a schema-defined field order, emit fields exactly in that order.
-2. For dynamic maps, metadata maps, attributes maps, and extension maps, emit keys sorted by lexicographic order of their UTF-8 encoded bytes.
+2. For dynamic maps, metadata maps, attributes maps, extension maps, and any other schema-permitted dynamic object keys, emit keys sorted by byte-lexicographic order of their UTF-8 encodings. Compare the raw UTF-8 byte sequences as unsigned bytes from left to right; if one key is a byte-prefix of the other, the shorter byte sequence sorts first.
 3. Recursively apply the same rule to nested objects.
 
-Implementations MUST NOT rely on host-language map iteration order.
+Implementations MUST NOT rely on host-language map iteration order. Implementations MUST NOT use locale-aware sorting, Unicode collation, ICU-dependent comparison, case-folded comparison, natural-language ordering, host-runtime string comparison where it differs from raw UTF-8 byte comparison, or any platform-default sort for canonical key ordering.
 
 ### 2.3 Array ordering
 
@@ -244,7 +244,7 @@ Arrays MUST be deterministic:
 * `entities` sorted by `entity_id`.
 * `positions` sorted by `entity_id`.
 * `health` sorted by `entity_id`.
-* `labels` sorted by string value.
+* `labels` sorted by byte-lexicographic order of each label's UTF-8 encoding.
 * Extension arrays MUST either preserve explicitly consensus-defined order or be sorted by a documented extension rule.
 
 Arrays whose order is semantically unordered MUST be sorted before canonicalization. Duplicate keys in arrays that declare uniqueness MUST be rejected.
@@ -316,7 +316,7 @@ Invalid states MUST NOT produce canonical bytes.
 Normalization MUST NOT alter consensus meaning. It is limited to:
 
 * Sorting arrays according to Section 2.3.
-* Sorting dynamic object keys recursively.
+* Sorting dynamic object keys recursively by byte-lexicographic UTF-8 key comparison.
 * Converting absent optional collections from parser-level absence into their required explicit canonical empty values only if the schema version being decoded permits that compatibility behavior. Version `1` canonical output MUST always include the explicit field.
 
 Normalization MUST NOT round numbers, coerce strings into numbers, generate identifiers, insert timestamps, or derive missing roots.
@@ -336,6 +336,16 @@ The line above is illustrative. Implementations MUST derive canonical JSON from 
 ### 3.4 Binary canonicalization
 
 Version `1` uses canonical JSON as the canonical byte source. A future binary canonicalizer MAY be introduced only by incrementing `schema_version` or by defining an explicit `canonicalizer_version` envelope. Binary encodings MUST NOT be substituted for version `1` JSON canonical bytes.
+
+### 3.5 UTF-8 byte-order fixture
+
+The fixture `docs/proofs/fixtures/utf8-key-ordering.json` is a conformance test vector for dynamic object key ordering. It contains extension keys whose ordering differs between raw UTF-8 byte comparison and UTF-16 or locale-sensitive comparison. A conforming implementation MUST canonicalize the fixture's dynamic `metadata.extensions` object with this key order:
+
+```json
+["A","a","é","","𐀀"]
+```
+
+The expected order is derived only from the raw UTF-8 byte sequences: `41`, `61`, `c3 a9`, `ee 80 80`, and `f0 90 80 80`. Locale-aware collation, Unicode collation, ICU-dependent sorting, case folding, and platform-default string sorting MUST NOT be used to reorder these keys.
 
 ## 4. State Root Generation
 
@@ -437,7 +447,7 @@ state_root == SHA256(canonical_state)
 For all valid `ArenaState` values, the proof system MUST enforce:
 
 1. Schema validity.
-2. Deterministic ordering.
+2. Deterministic ordering, including byte-lexicographic UTF-8 comparison for every dynamic object key.
 3. Integer-only value domain.
 4. Canonical JSON byte construction.
 5. SHA-256 digest correctness.
@@ -478,14 +488,14 @@ ContinuityProof(0..N) verifies:
   world_hash[N]
 ```
 
-Recursive proofs SHOULD preserve the exact root ordering from Sections 4 and 5. They MUST NOT introduce an alternate canonicalization path.
+Recursive proofs SHOULD preserve the exact root ordering from Sections 4 and 5. They MUST also preserve byte-lexicographic UTF-8 key comparison for any dynamic object key admitted into proof witness data. They MUST NOT introduce an alternate canonicalization path.
 
 ## Implementation Conformance Checklist
 
 A conforming implementation MUST:
 
 1. Reject invalid `ArenaState` values instead of best-effort serializing them.
-2. Emit canonical JSON with schema-defined field order and sorted dynamic keys.
+2. Emit canonical JSON with schema-defined field order and dynamic keys sorted by byte-lexicographic UTF-8 comparison.
 3. Encode canonical JSON as UTF-8 bytes with no trailing newline.
 4. Compute `state_root` as SHA-256 over exactly those bytes.
 5. Compute `world_hash` as SHA-256 over `state_root_bytes || receipt_root_bytes || continuity_root_bytes`.

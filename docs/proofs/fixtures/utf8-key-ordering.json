@@ -1,0 +1,16 @@
+{
+  "description": "Dynamic object keys MUST be ordered by raw UTF-8 bytes, not locale or Unicode collation. UTF-8 byte order places U+E000 before U+10000 because 0xEE sorts before 0xF0; UTF-16 or locale-aware sorting may reverse these keys.",
+  "input": {
+    "metadata": {
+      "extensions": {
+        "𐀀": "linear-b-syllable-b008-a",
+        "": "private-use-e000",
+        "A": "ascii-capital-a",
+        "a": "ascii-lower-a",
+        "é": "latin-small-e-acute"
+      }
+    }
+  },
+  "expected_dynamic_key_order": ["A", "a", "é", "", "𐀀"],
+  "expected_canonical_extensions_json": "{\"A\":\"ascii-capital-a\",\"a\":\"ascii-lower-a\",\"é\":\"latin-small-e-acute\",\"\":\"private-use-e000\",\"𐀀\":\"linear-b-syllable-b008-a\"}"
+}
