@@ -1,0 +1,11 @@
+Certification Report
+Status: PASS
+
+Mixed certification levels represented:
+- Level 0: Published
+- Level 1: Package Verified
+- Level 3: Federation Certified
+- Level 4: Migration Certified
+- Level 6: World Package Certified
+
+The registry surfaces replay, federation, migration, root integrity, world package certification, and proof status as discovery metadata without exposing implementation internals.

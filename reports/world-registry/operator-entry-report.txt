@@ -1,0 +1,12 @@
+Operator Entry Report
+Status: PASS
+
+OperatorRegistryEntry coverage:
+- operator_id
+- world_id
+- runtime_version
+- verification_status
+- availability_status
+- last_seen
+
+Operator discovery confirms multiple operators per world and preserves the rule that operator records are discovery metadata only, not governance or authority records.

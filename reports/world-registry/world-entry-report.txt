@@ -1,0 +1,12 @@
+World Entry Report
+Status: PASS
+
+Reference worlds:
+- Arena Vanguard (world_arena_vanguard)
+- Iron Frontier (world_iron_frontier)
+- Sovereign City (world_sovereign_city)
+
+WorldRegistryEntry coverage:
+- All required fields are represented in each reference world entry.
+- world_id remains stable across multiple versions of Arena Vanguard and Iron Frontier.
+- package_hash, world_hash, and world_version vary by versioned entry.
