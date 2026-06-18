@@ -1,0 +1,165 @@
+[contract]
+name = "reference-world-contract"
+version = "1.0.0"
+status = "protocol-reference"
+description = "Reference deterministic gameplay mutation surface for EverArcade World Contract Certification Framework v1."
+
+[state.players]
+kind = "canonical_map"
+key = "player_id"
+fields = ["identity", "authority", "profile", "created_at_epoch"]
+
+[state.inventory]
+kind = "canonical_map"
+key = "player_id/item_id"
+fields = ["quantity", "binding", "metadata_hash"]
+
+[state.position]
+kind = "canonical_map"
+key = "entity_id"
+fields = ["zone_id", "x", "y", "z", "facing"]
+
+[state.combat]
+kind = "canonical_map"
+key = "entity_id"
+fields = ["health", "status", "cooldowns"]
+
+[state.economy]
+kind = "canonical_map"
+key = "asset_id/account_id"
+fields = ["balance", "supply", "escrow"]
+
+[state.quests]
+kind = "canonical_map"
+key = "player_id/quest_id"
+fields = ["state", "progress", "completed_receipt"]
+
+[state.receipts]
+kind = "canonical_log"
+key = "receipt_id"
+fields = ["emitter", "input_hash", "authority", "pre_state_root", "post_state_root", "result"]
+
+[state.continuity]
+kind = "canonical_map"
+key = "epoch"
+fields = ["state_root", "world_hash", "contract_version", "previous_epoch"]
+
+[state.governance]
+kind = "canonical_map"
+key = "proposal_id"
+fields = ["proposer", "proposal_hash", "votes", "status", "execution_receipt"]
+
+[[mutations]]
+name = "combat.attack"
+class = "CLASS-A"
+authority = "player_controls_actor"
+reads = ["players", "position", "combat", "inventory"]
+writes = ["combat", "receipts"]
+receipt = "combat_attack_receipt"
+certification_targets = ["determinism", "replay_equivalence", "root_equivalence", "receipt_integrity", "state_transition_integrity", "canonical_output"]
+
+[[mutations]]
+name = "inventory.transfer"
+class = "CLASS-A"
+authority = "owner_or_delegated_inventory_authority"
+reads = ["players", "inventory"]
+writes = ["inventory", "receipts"]
+receipt = "inventory_transfer_receipt"
+certification_targets = ["determinism", "replay_equivalence", "root_equivalence", "receipt_integrity", "state_transition_integrity", "canonical_output"]
+
+[[mutations]]
+name = "position.move"
+class = "CLASS-A"
+authority = "player_controls_actor"
+reads = ["players", "position"]
+writes = ["position", "receipts"]
+receipt = "position_move_receipt"
+certification_targets = ["determinism", "replay_equivalence", "root_equivalence", "receipt_integrity", "state_transition_integrity", "canonical_output"]
+
+[[mutations]]
+name = "quest.complete"
+class = "CLASS-A"
+authority = "player_controls_actor"
+reads = ["players", "quests", "inventory", "combat"]
+writes = ["quests", "inventory", "receipts"]
+receipt = "quest_complete_receipt"
+certification_targets = ["determinism", "replay_equivalence", "root_equivalence", "receipt_integrity", "state_transition_integrity", "canonical_output"]
+
+[[mutations]]
+name = "market.trade"
+class = "CLASS-B"
+authority = "signed_market_participants"
+reads = ["players", "inventory", "economy"]
+writes = ["inventory", "economy", "receipts"]
+receipt = "market_trade_receipt"
+certification_targets = ["determinism", "replay_equivalence", "root_equivalence", "receipt_integrity", "state_transition_integrity", "canonical_output", "supply_conservation"]
+
+[[mutations]]
+name = "economy.mint"
+class = "CLASS-B"
+authority = "governance_or_protocol_treasury"
+reads = ["governance", "economy"]
+writes = ["economy", "receipts"]
+receipt = "economy_mint_receipt"
+certification_targets = ["determinism", "replay_equivalence", "root_equivalence", "receipt_integrity", "state_transition_integrity", "canonical_output", "supply_rule"]
+
+[[mutations]]
+name = "economy.burn"
+class = "CLASS-B"
+authority = "asset_owner_or_protocol_treasury"
+reads = ["players", "economy"]
+writes = ["economy", "receipts"]
+receipt = "economy_burn_receipt"
+certification_targets = ["determinism", "replay_equivalence", "root_equivalence", "receipt_integrity", "state_transition_integrity", "canonical_output", "supply_rule"]
+
+[[mutations]]
+name = "governance.vote"
+class = "CLASS-C"
+authority = "eligible_governance_member"
+reads = ["players", "governance"]
+writes = ["governance", "receipts"]
+receipt = "governance_vote_receipt"
+certification_targets = ["determinism", "replay_equivalence", "root_equivalence", "receipt_integrity", "state_transition_integrity", "canonical_output", "authority_enforcement"]
+
+[[mutations]]
+name = "world.spawn"
+class = "CLASS-D"
+authority = "governance_or_world_manager"
+reads = ["governance", "continuity"]
+writes = ["players", "position", "combat", "receipts"]
+receipt = "world_spawn_receipt"
+certification_targets = ["determinism", "replay_equivalence", "root_equivalence", "receipt_integrity", "state_transition_integrity", "canonical_output", "federation_equivalence"]
+
+[[mutations]]
+name = "world.despawn"
+class = "CLASS-D"
+authority = "governance_or_world_manager"
+reads = ["governance", "players", "position", "combat"]
+writes = ["players", "position", "combat", "receipts"]
+receipt = "world_despawn_receipt"
+certification_targets = ["determinism", "replay_equivalence", "root_equivalence", "receipt_integrity", "state_transition_integrity", "canonical_output", "federation_equivalence"]
+
+[[mutations]]
+name = "system.checkpoint"
+class = "CLASS-E"
+authority = "protocol_runtime"
+reads = ["players", "inventory", "position", "combat", "economy", "quests", "receipts", "continuity", "governance"]
+writes = ["continuity", "receipts"]
+receipt = "system_checkpoint_receipt"
+certification_targets = ["determinism", "replay_equivalence", "root_equivalence", "receipt_integrity", "canonical_output", "upgrade_safety"]
+
+[authority]
+player_controls_actor = "Caller identity must deterministically control the actor being mutated."
+owner_or_delegated_inventory_authority = "Caller must own the inventory entry or hold a deterministic delegation."
+signed_market_participants = "All trade participants must provide canonical signed consent or a valid deterministic order commitment."
+governance_or_protocol_treasury = "Caller must be authorized by governance state or protocol treasury policy."
+asset_owner_or_protocol_treasury = "Caller must own the burned asset balance or be protocol treasury authority."
+eligible_governance_member = "Caller must satisfy governance eligibility at the proposal snapshot."
+governance_or_world_manager = "Caller must be approved by governance state or deterministic world-manager role."
+protocol_runtime = "Emitter may only be invoked by the certified protocol runtime at declared lifecycle boundaries."
+
+[certification]
+required_invariants = ["WC-001", "WC-002", "WC-003", "WC-004", "WC-005", "WC-006", "WC-007", "WC-008"]
+canonicalization = "Canonicalizer Kernel"
+proof_mapping = "Proof Mapping Framework V1"
+formal_targets = "Formal Proof Target Package V1"
