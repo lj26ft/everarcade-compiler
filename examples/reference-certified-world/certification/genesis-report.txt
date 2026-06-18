@@ -1,0 +1,7 @@
+GENESIS CERTIFICATION: PASS
+class = CLASS-E
+genesis_state = genesis/arena-state.json
+initial_receipts = genesis/initial-receipts.json
+continuity_state = genesis/continuity-state.json
+initial_roots = genesis/world-roots.toml
+result = genesis inputs produce deterministic initial roots

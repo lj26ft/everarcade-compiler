@@ -1,0 +1,2 @@
+MIGRATION CERTIFICATION REPORT: PASS
+schema_version = 1

@@ -1,0 +1,7 @@
+asset_manifest_version = "1"
+executable_code_allowed = false
+
+[[assets]]
+path = "assets/metadata/reference-world.json"
+kind = "metadata"
+content_hash = "sha256:reference-world-metadata-placeholder"

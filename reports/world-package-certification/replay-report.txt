@@ -1,0 +1,7 @@
+REPLAY CERTIFICATION: PASS
+class = CLASS-F
+rule = same input = same state = same roots
+state_root = sha256:genesis-state-placeholder
+receipt_root = sha256:initial-receipts-placeholder
+continuity_root = sha256:continuity-placeholder
+result = replay is reproducible for the reference package

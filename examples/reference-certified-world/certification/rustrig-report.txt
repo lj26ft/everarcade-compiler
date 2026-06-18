@@ -1,0 +1,5 @@
+RUSTRIG CERTIFICATION: PASS
+class = CLASS-D
+rustrigs = inventory, combat, market, governance
+reference_surfaces = inventory.transfer(), combat.attack(), market.trade(), governance.vote()
+result = referenced RustRig manifests are present and certification hashes are declared

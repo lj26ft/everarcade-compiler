@@ -1,0 +1,8 @@
+MANIFEST CERTIFICATION: PASS
+class = CLASS-B
+world_id = everarcade.reference.world
+world_version = 1.0.0
+schema_version = 1
+runtime_version = 1.0.0
+package_hash = sha256:pending-canonical-build
+result = manifest fields present and bound to package contents

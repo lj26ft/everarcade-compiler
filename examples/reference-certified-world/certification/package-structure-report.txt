@@ -1,0 +1,5 @@
+PACKAGE STRUCTURE CERTIFICATION: PASS
+class = CLASS-A
+world_id = everarcade.reference.world
+checked_sections = manifest, world-contract, rustrigs, genesis, continuity, assets, proofs, metadata
+result = all required sections present

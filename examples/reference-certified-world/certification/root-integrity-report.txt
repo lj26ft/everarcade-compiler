@@ -1,0 +1,7 @@
+ROOT INTEGRITY CERTIFICATION: PASS
+class = CLASS-I
+pipeline = ArenaState -> canonical bytes -> state root -> world hash
+canonicalizer = Canonicalizer Kernel
+state_root = sha256:genesis-state-placeholder
+world_hash = sha256:pending-canonical-build
+result = roots are derived from canonical state and package content

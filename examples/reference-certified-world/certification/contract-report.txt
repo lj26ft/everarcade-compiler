@@ -1,0 +1,7 @@
+WORLD CONTRACT CERTIFICATION: PASS
+class = CLASS-C
+contract_id = everarcade.reference.contract
+mutations = inventory.transfer, combat.resolve, market.settle_trade, governance.update_policy
+authorities = world-governance, runtime-operator
+invariants = INV-INVENTORY-CONSERVATION, INV-COMBAT-DETERMINISM, INV-MARKET-SETTLEMENT, INV-GOVERNANCE-AUTHORITY
+result = contract declarations resolve to package RustRigs

@@ -1,0 +1,6 @@
+root_integrity = "root-integrity-report.txt"
+replay_certification = "replay-certification-report.txt"
+migration_certification = "migration-certification-report.txt"
+js_kernel_equivalence = "js-kernel-equivalence-report.txt"
+world_package_certification = "../certification/certification-report.txt"
+proof_integrity = "../certification/proof-integrity-report.txt"

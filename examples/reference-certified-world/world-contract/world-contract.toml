@@ -1,0 +1,62 @@
+contract_id = "everarcade.reference.contract"
+contract_version = "1.0.0"
+
+[[authorities]]
+name = "world-governance"
+scope = "parameter_updates"
+
+[[authorities]]
+name = "runtime-operator"
+scope = "deployment_and_restore"
+
+[[mutations]]
+name = "inventory.transfer"
+rustrig = "inventory"
+certified = true
+
+[[mutations]]
+name = "combat.resolve"
+rustrig = "combat"
+certified = true
+
+[[mutations]]
+name = "market.settle_trade"
+rustrig = "market"
+certified = true
+
+[[mutations]]
+name = "governance.update_policy"
+rustrig = "governance"
+certified = true
+
+[[invariants]]
+id = "INV-INVENTORY-CONSERVATION"
+description = "Inventory item balances are conserved across transfers."
+
+[[invariants]]
+id = "INV-COMBAT-DETERMINISM"
+description = "Combat resolution is deterministic for identical inputs."
+
+[[invariants]]
+id = "INV-MARKET-SETTLEMENT"
+description = "Market settlement preserves escrow and ownership rules."
+
+[[invariants]]
+id = "INV-GOVERNANCE-AUTHORITY"
+description = "Governance mutations require declared authority."
+
+[[rustrigs]]
+name = "inventory"
+manifest = "../rustrigs/inventory-rig.toml"
+
+[[rustrigs]]
+name = "combat"
+manifest = "../rustrigs/combat-rig.toml"
+
+[[rustrigs]]
+name = "market"
+manifest = "../rustrigs/market-rig.toml"
+
+[[rustrigs]]
+name = "governance"
+manifest = "../rustrigs/governance-rig.toml"
