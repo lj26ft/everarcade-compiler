@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "world_id": "arena-vanguard",
+  "arena_id": "vanguard-001",
+  "tick": 0,
+  "players": [],
+  "entities": [],
+  "positions": [],
+  "health": [
+    {
+      "entity_id": "entity-dup",
+      "current": 100,
+      "maximum": 100
+    },
+    {
+      "entity_id": "entity-dup",
+      "current": 90,
+      "maximum": 100
+    }
+  ],
+  "receipts": {
+    "receipt_root": "0000000000000000000000000000000000000000000000000000000000000000",
+    "receipt_count": 0,
+    "last_receipt_hash": null
+  },
+  "continuity": {
+    "continuity_root": "0000000000000000000000000000000000000000000000000000000000000000",
+    "previous_state_root": null,
+    "replay_root": "0000000000000000000000000000000000000000000000000000000000000000",
+    "migration_root": null,
+    "epoch": 0
+  },
+  "metadata": {
+    "ruleset_id": "arena-vanguard",
+    "ruleset_version": 1,
+    "created_by": null,
+    "labels": [],
+    "extensions": {}
+  }
+}

@@ -1,4 +1,4 @@
-use canonicalizer_kernel::{canonicalize, state_root, world_hash, ArenaState};
+use canonicalizer_kernel::{state_root, try_canonicalize, world_hash, ArenaState};
 use serde::Serialize;
 use std::env;
 use std::io::{self, Read};
@@ -20,7 +20,10 @@ fn main() {
     match command.as_str() {
         "state" => {
             let state: ArenaState = serde_json::from_str(&input).expect("parse ArenaState JSON");
-            let bytes = canonicalize(&state);
+            let bytes = try_canonicalize(&state).unwrap_or_else(|err| {
+                eprintln!("{err}");
+                std::process::exit(1);
+            });
             let root = state_root(&state);
             let output = StateOutput {
                 canonical_hex: hex::encode(&bytes),
