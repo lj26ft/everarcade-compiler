@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "world_id": "arena-vanguard",
+  "arena_id": "vanguard-utf8",
+  "tick": 7,
+  "players": [
+    {
+      "player_id": "A",
+      "controller_id": "acct-upper",
+      "join_tick": 0,
+      "status": "active",
+      "score": 1,
+      "metadata": {}
+    },
+    {
+      "player_id": "a",
+      "controller_id": "acct-lower",
+      "join_tick": 0,
+      "status": "active",
+      "score": 2,
+      "metadata": {}
+    },
+    {
+      "player_id": "é",
+      "controller_id": "acct-eacute",
+      "join_tick": 1,
+      "status": "inactive",
+      "score": 3,
+      "metadata": {}
+    }
+  ],
+  "entities": [
+    {
+      "entity_id": "A",
+      "entity_type": "marker",
+      "owner_player_id": null,
+      "spawn_tick": 0,
+      "despawn_tick": null,
+      "attributes": {
+        "A": 1,
+        "a": 2,
+        "é": 3,
+        "": 4,
+        "𐀀": 5
+      }
+    }
+  ],
+  "positions": [
+    {
+      "entity_id": "A",
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotation": 0
+    }
+  ],
+  "health": [
+    {
+      "entity_id": "A",
+      "current": 1,
+      "maximum": 1
+    }
+  ],
+  "receipts": {
+    "receipt_root": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "receipt_count": 7,
+    "last_receipt_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+  },
+  "continuity": {
+    "continuity_root": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "previous_state_root": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    "replay_root": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "migration_root": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "epoch": 2
+  },
+  "metadata": {
+    "ruleset_id": "arena-vanguard",
+    "ruleset_version": 1,
+    "created_by": null,
+    "labels": [
+      "A",
+      "a",
+      "é",
+      "",
+      "𐀀"
+    ],
+    "extensions": {
+      "A": "upper",
+      "a": "lower",
+      "é": "latin-small-e-acute",
+      "": "private-use",
+      "𐀀": "linear-b"
+    }
+  }
+}

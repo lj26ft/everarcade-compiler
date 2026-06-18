@@ -1,0 +1,10 @@
+{
+  "version": "1",
+  "status": "proof-ready",
+  "root_integrity": "PASS",
+  "replay": "PASS",
+  "federation": "PASS",
+  "restore": "PASS",
+  "migration": "PASS",
+  "js_kernel_equivalence": "PASS"
+}

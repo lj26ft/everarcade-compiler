@@ -1,0 +1,49 @@
+{
+  "schema": "everarcade.root-integrity.replay-verification.v1",
+  "replay_from": "genesis",
+  "live_state_root": "d3fe47c1fe6f49a50bcd07bad6dc2b3da3a4e1a681e59860a761ffaf9595408d",
+  "replayed_state_root": "d3fe47c1fe6f49a50bcd07bad6dc2b3da3a4e1a681e59860a761ffaf9595408d",
+  "live_world_hash": "332b5291f9c746cc498745af01e74803b74bd67102917f3e290ffdc37b2ce7a9",
+  "replayed_world_hash": "332b5291f9c746cc498745af01e74803b74bd67102917f3e290ffdc37b2ce7a9",
+  "federation": [
+    {
+      "node": "node-a",
+      "state_root": "d3fe47c1fe6f49a50bcd07bad6dc2b3da3a4e1a681e59860a761ffaf9595408d",
+      "receipt_root": "e7d7d3a8c378e1e79f90b7ddc30d5f8e7301cfed3c2f4919943c238c734a61a6",
+      "continuity_root": "61008f3891c3aace90019dba9a32d544d96322ac2cdcfe7dd78ff36743855394",
+      "world_hash": "332b5291f9c746cc498745af01e74803b74bd67102917f3e290ffdc37b2ce7a9"
+    },
+    {
+      "node": "node-b",
+      "state_root": "d3fe47c1fe6f49a50bcd07bad6dc2b3da3a4e1a681e59860a761ffaf9595408d",
+      "receipt_root": "e7d7d3a8c378e1e79f90b7ddc30d5f8e7301cfed3c2f4919943c238c734a61a6",
+      "continuity_root": "61008f3891c3aace90019dba9a32d544d96322ac2cdcfe7dd78ff36743855394",
+      "world_hash": "332b5291f9c746cc498745af01e74803b74bd67102917f3e290ffdc37b2ce7a9"
+    },
+    {
+      "node": "node-c",
+      "state_root": "d3fe47c1fe6f49a50bcd07bad6dc2b3da3a4e1a681e59860a761ffaf9595408d",
+      "receipt_root": "e7d7d3a8c378e1e79f90b7ddc30d5f8e7301cfed3c2f4919943c238c734a61a6",
+      "continuity_root": "61008f3891c3aace90019dba9a32d544d96322ac2cdcfe7dd78ff36743855394",
+      "world_hash": "332b5291f9c746cc498745af01e74803b74bd67102917f3e290ffdc37b2ce7a9"
+    }
+  ],
+  "restore": {
+    "restored_state_root": "d3fe47c1fe6f49a50bcd07bad6dc2b3da3a4e1a681e59860a761ffaf9595408d",
+    "restored_world_hash": "332b5291f9c746cc498745af01e74803b74bd67102917f3e290ffdc37b2ce7a9"
+  },
+  "migration": {
+    "destination_state_root": "d3fe47c1fe6f49a50bcd07bad6dc2b3da3a4e1a681e59860a761ffaf9595408d",
+    "destination_world_hash": "332b5291f9c746cc498745af01e74803b74bd67102917f3e290ffdc37b2ce7a9"
+  },
+  "checks": {
+    "canonical_bytes_determinism": true,
+    "state_root_integrity": true,
+    "world_hash_integrity": true,
+    "replay_root_equivalence": true,
+    "federation_root_equivalence": true,
+    "restore_root_equivalence": true,
+    "migration_root_equivalence": true,
+    "canonicalizer_spec_conformance": true
+  }
+}

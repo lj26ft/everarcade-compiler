@@ -1,0 +1,6 @@
+FORMAL PROOF TARGET PACKAGE V1: PASS
+
+Package: proofs/formal-proof-target-v1
+Archive: formal-proof-target-v1.tar.gz
+Manifest status: proof-ready
+All certification statuses: PASS

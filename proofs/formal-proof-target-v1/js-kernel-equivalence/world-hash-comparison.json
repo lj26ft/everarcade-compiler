@@ -1,0 +1,34 @@
+[
+  {
+    "label": "fixture-001",
+    "match": true,
+    "js_world_hash": "cf08731c589cdcc75bce9451c68663ce8c3afbec9159adf2912477a6814d4e4d",
+    "rust_world_hash": "cf08731c589cdcc75bce9451c68663ce8c3afbec9159adf2912477a6814d4e4d",
+    "receipt_root": "0000000000000000000000000000000000000000000000000000000000000000",
+    "continuity_root": "0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  {
+    "label": "fixture-002",
+    "match": true,
+    "js_world_hash": "cfb6c5f7147bb4d28acde39cb23e1e82ef23d40fb1993fde42f7c7a73e95e15c",
+    "rust_world_hash": "cfb6c5f7147bb4d28acde39cb23e1e82ef23d40fb1993fde42f7c7a73e95e15c",
+    "receipt_root": "1111111111111111111111111111111111111111111111111111111111111111",
+    "continuity_root": "3333333333333333333333333333333333333333333333333333333333333333"
+  },
+  {
+    "label": "fixture-003",
+    "match": true,
+    "js_world_hash": "04ade865e61a409194c5ff1c9f74fd996451c6ade57e938c83b51b0c45a76b2f",
+    "rust_world_hash": "04ade865e61a409194c5ff1c9f74fd996451c6ade57e938c83b51b0c45a76b2f",
+    "receipt_root": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "continuity_root": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+  },
+  {
+    "label": "live:arena-wrapper-state.json",
+    "match": true,
+    "js_world_hash": "d753fca8728e683488fc069dd36cc1a90868aacf88f8fbb8418a309b78b12207",
+    "rust_world_hash": "d753fca8728e683488fc069dd36cc1a90868aacf88f8fbb8418a309b78b12207",
+    "receipt_root": "7dc14f7c94b90e41c0aa751279af842d36c6178ecefe01646153d48ea2c2f7ba",
+    "continuity_root": "82a0bc36ac8e303001bbc7026a44ed20a57a57beaa5be04720c2a06fd83d15c6"
+  }
+]
