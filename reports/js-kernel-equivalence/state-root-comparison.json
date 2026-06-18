@@ -1,0 +1,26 @@
+[
+  {
+    "label": "fixture-001",
+    "match": true,
+    "js_state_root": "0233d36e2e73ed0a123dc4d75cb9dd9792cdbc0e7ea078309bd01255375468a8",
+    "rust_state_root": "0233d36e2e73ed0a123dc4d75cb9dd9792cdbc0e7ea078309bd01255375468a8"
+  },
+  {
+    "label": "fixture-002",
+    "match": true,
+    "js_state_root": "223c33f81bfa560dacdc121332a3835e5670f1eea08acc75dc54c50b3e2ef153",
+    "rust_state_root": "223c33f81bfa560dacdc121332a3835e5670f1eea08acc75dc54c50b3e2ef153"
+  },
+  {
+    "label": "fixture-003",
+    "match": true,
+    "js_state_root": "b8a6c6cd72b3cefa48ca66c0d039cf40b9bf1ea005a0e414edd2445eba4101b5",
+    "rust_state_root": "b8a6c6cd72b3cefa48ca66c0d039cf40b9bf1ea005a0e414edd2445eba4101b5"
+  },
+  {
+    "label": "live:arena-wrapper-state.json",
+    "match": true,
+    "js_state_root": "aedde4fc6f0f25acd48cce477228cd0f5126fc65529eb347af512bb081130d5c",
+    "rust_state_root": "aedde4fc6f0f25acd48cce477228cd0f5126fc65529eb347af512bb081130d5c"
+  }
+]

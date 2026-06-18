@@ -22,7 +22,8 @@
     "certify:federation": "node runtime/arena_hotpocket/validation/certify-federation.js",
     "certify:restore": "node runtime/arena_hotpocket/validation/certify-restore.js",
     "certify:migration": "node runtime/arena_hotpocket/validation/certify-migration.js",
-    "certify:root-integrity": "node runtime/arena_hotpocket/validation/certify-root-integrity.js"
+    "certify:root-integrity": "node runtime/arena_hotpocket/validation/certify-root-integrity.js",
+    "certify:js-kernel-equivalence": "node runtime/arena_hotpocket/validation/certify-js-kernel-equivalence.js"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "latest",
