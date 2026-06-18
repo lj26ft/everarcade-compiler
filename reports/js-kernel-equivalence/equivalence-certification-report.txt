@@ -1,0 +1,13 @@
+EverArcade JS ↔ Kernel Equivalence Certification
+
+Fixtures checked: 3
+Live state: /workspace/everarcade-compiler/reports/hotpocket-live/node-a/work/state/arena-wrapper-state.json
+
+Checks:
+Canonical bytes match: PASS
+State roots match: PASS
+World hashes match: PASS
+
+Proof Boundary: ArenaState -> canonical bytes -> state_root -> world_hash
+
+JS KERNEL EQUIVALENCE CERTIFICATION: PASS
