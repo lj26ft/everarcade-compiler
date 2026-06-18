@@ -418,6 +418,10 @@ name = "everarcade-rustrig-combat"
 version = "1.0.0"
 
 [[package]]
+name = "everarcade-rustrig-governance"
+version = "1.0.0"
+
+[[package]]
 name = "everarcade-rustrig-inventory"
 version = "1.0.0"
 
