@@ -1,0 +1,15 @@
+{
+  "schema": "everarcade.hotpocket-migration.roots.v0.1",
+  "operator": "destination",
+  "world": "Arena Vanguard",
+  "journal_entries": 5,
+  "roots": {
+    "tick": 5,
+    "state_root": "86ecb78930d0be6e1487f8731586d1588e2266b4fb7b110c51493646ab20666e",
+    "receipt_root": "b3b09e6045b05170e26241bd196da0cd33a33d158e27500d3d31a9d158107f16",
+    "continuity_root": "df128e8d12b5c65fdca9bc404d694a3621c4d14a8369bd0675fe2eea77961784",
+    "world_hash": "3cbad7b436ef545c3e44e72b92d0bc9e9a2b67b4af84f468027066535d0e4102"
+  },
+  "state_hash": "ae898ffcad638142acb8a74ee8702bf4380f8a404daafd3a3e9ea2c9aac87307",
+  "journal_hash_root": "c0f637c779fd85c2acf380266898b5a4abe7af04ae1fa3899999d3f206c50ae9"
+}

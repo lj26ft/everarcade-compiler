@@ -1,0 +1,42 @@
+{
+  "schema": "everarcade.hotpocket-migration.replay-source.v0.1",
+  "replay_from": "genesis",
+  "journal_entries": 5,
+  "live_roots": {
+    "tick": 5,
+    "state_root": "86ecb78930d0be6e1487f8731586d1588e2266b4fb7b110c51493646ab20666e",
+    "receipt_root": "b3b09e6045b05170e26241bd196da0cd33a33d158e27500d3d31a9d158107f16",
+    "continuity_root": "df128e8d12b5c65fdca9bc404d694a3621c4d14a8369bd0675fe2eea77961784",
+    "world_hash": "3cbad7b436ef545c3e44e72b92d0bc9e9a2b67b4af84f468027066535d0e4102"
+  },
+  "replay_roots": {
+    "tick": 5,
+    "state_root": "86ecb78930d0be6e1487f8731586d1588e2266b4fb7b110c51493646ab20666e",
+    "receipt_root": "b3b09e6045b05170e26241bd196da0cd33a33d158e27500d3d31a9d158107f16",
+    "continuity_root": "df128e8d12b5c65fdca9bc404d694a3621c4d14a8369bd0675fe2eea77961784",
+    "world_hash": "3cbad7b436ef545c3e44e72b92d0bc9e9a2b67b4af84f468027066535d0e4102"
+  },
+  "comparisons": {
+    "state_root": {
+      "live": "86ecb78930d0be6e1487f8731586d1588e2266b4fb7b110c51493646ab20666e",
+      "replayed": "86ecb78930d0be6e1487f8731586d1588e2266b4fb7b110c51493646ab20666e",
+      "match": true
+    },
+    "receipt_root": {
+      "live": "b3b09e6045b05170e26241bd196da0cd33a33d158e27500d3d31a9d158107f16",
+      "replayed": "b3b09e6045b05170e26241bd196da0cd33a33d158e27500d3d31a9d158107f16",
+      "match": true
+    },
+    "continuity_root": {
+      "live": "df128e8d12b5c65fdca9bc404d694a3621c4d14a8369bd0675fe2eea77961784",
+      "replayed": "df128e8d12b5c65fdca9bc404d694a3621c4d14a8369bd0675fe2eea77961784",
+      "match": true
+    },
+    "world_hash": {
+      "live": "3cbad7b436ef545c3e44e72b92d0bc9e9a2b67b4af84f468027066535d0e4102",
+      "replayed": "3cbad7b436ef545c3e44e72b92d0bc9e9a2b67b4af84f468027066535d0e4102",
+      "match": true
+    }
+  },
+  "ok": true
+}
