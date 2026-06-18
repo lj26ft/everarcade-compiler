@@ -1,0 +1,6 @@
+RR-005 Root Equivalence: PASS
+
+The inventory state root is computed from canonical BTreeSet/BTreeMap ordering. Repeated execution from identical input produces the same post-state root, proving root equivalence for the certified reference scenario.
+
+Evidence command:
+CARGO_BUILD_JOBS=1 cargo test -p everarcade-rustrig-inventory rr_005_root_equivalence_same_input_same_state_root

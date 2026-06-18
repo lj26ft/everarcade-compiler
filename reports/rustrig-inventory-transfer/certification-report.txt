@@ -1,0 +1,25 @@
+RUSTRIG INVENTORY TRANSFER CERTIFICATION: PASS
+
+Certified mutation surface: inventory.transfer()
+Certified RustRig crate: crates/rustrigs/inventory
+Reference World Contract declaration: contracts/reference-world-contract-v1/world-contract.toml
+
+Validated invariants:
+- RR-001 Transfer Determinism: PASS
+- RR-002 Inventory Conservation: PASS
+- RR-003 Receipt Integrity: PASS
+- RR-004 Replay Equivalence: PASS
+- RR-005 Root Equivalence: PASS
+
+Authority rule:
+owner_or_delegated_inventory_authority
+
+Validation rules:
+- source must exist
+- destination must exist
+- item must exist
+- quantity > 0
+- source inventory >= quantity
+
+Certification output:
+RUSTRIG INVENTORY TRANSFER CERTIFICATION: PASS

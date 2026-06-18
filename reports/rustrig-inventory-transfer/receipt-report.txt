@@ -1,0 +1,6 @@
+RR-003 Receipt Integrity: PASS
+
+inventory.transfer() receipts bind the RustRig id, version, canonical input hash, pre-state root, post-state root, participants, item id, quantity, authority rule, and accepted result. Repeated execution from identical input produces an identical receipt.
+
+Evidence command:
+CARGO_BUILD_JOBS=1 cargo test -p everarcade-rustrig-inventory rr_003_receipt_integrity_same_input_same_receipt
