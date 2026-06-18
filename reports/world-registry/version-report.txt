@@ -1,0 +1,9 @@
+Version Report
+Status: PASS
+
+Version coverage:
+- Arena Vanguard: 1.0.0, 1.1.0
+- Iron Frontier: 1.5.0, 2.0.0
+- Sovereign City: 0.9.0
+
+Latest package references point to the newest listed version for each world.
