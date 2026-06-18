@@ -1,0 +1,49 @@
+{
+  "arena_state_version": "1",
+  "entities": [
+    {
+      "id": "arena",
+      "kind": "map",
+      "value": "vanguard-hex-01"
+    },
+    {
+      "hp": 100,
+      "id": "player-red",
+      "inventory": [
+        "blade"
+      ],
+      "kind": "combatant",
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "hp": 100,
+      "id": "player-blue",
+      "inventory": [
+        "shield"
+      ],
+      "kind": "combatant",
+      "position": [
+        3,
+        0
+      ]
+    }
+  ],
+  "epoch": 0,
+  "rng_seed": "arena-vanguard-reference-seed-v1",
+  "systems": [
+    "inventory",
+    "combat",
+    "market",
+    "governance",
+    "federation",
+    "restore",
+    "migration"
+  ],
+  "tick": 0,
+  "world_id": "world_arena_vanguard",
+  "world_name": "Arena Vanguard",
+  "world_version": "1.2.0-reference-certified-v1"
+}

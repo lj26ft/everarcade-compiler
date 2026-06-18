@@ -1,0 +1,4 @@
+FORMAL PROOF PACKAGE: PASS
+proof_target = replay
+method = canonical fixture equality and declared invariant preservation
+world_hash = sha256:ef5409866bb75211145a0da901611621c57237bc79dad0c0c2cdde1dc3873883

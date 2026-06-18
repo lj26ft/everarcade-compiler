@@ -1,0 +1,8 @@
+WORLD PACKAGE CERTIFIED: PASS
+world_id = world_arena_vanguard
+world_name = Arena Vanguard
+world_hash = sha256:ef5409866bb75211145a0da901611621c57237bc79dad0c0c2cdde1dc3873883
+state_root = sha256:42de9b2ffef0ad9a3ef96ab7ddd7651a31e7e7b8c32e51e0a087280903b1e5af
+receipt_root = sha256:402b40d1b084b78ab4cca69058815367f083a3acb107a5c7c804c8c585ec1256
+continuity_root = sha256:d99adf235ffd48816828748514246e480cceed4887b5dc31fd6046c6ef05592f
+result = operator-verifiable deterministic certification artifact

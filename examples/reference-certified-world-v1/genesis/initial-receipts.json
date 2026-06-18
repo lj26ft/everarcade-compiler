@@ -1,0 +1,21 @@
+{
+  "receipt_stream_version": "1",
+  "receipts": [
+    {
+      "entity": "arena",
+      "mutation": "genesis.spawn",
+      "tick": 0
+    },
+    {
+      "entity": "player-red",
+      "mutation": "genesis.spawn",
+      "tick": 0
+    },
+    {
+      "entity": "player-blue",
+      "mutation": "genesis.spawn",
+      "tick": 0
+    }
+  ],
+  "world_id": "world_arena_vanguard"
+}

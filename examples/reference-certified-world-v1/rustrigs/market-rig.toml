@@ -1,0 +1,7 @@
+name = "market"
+version = "1.0.0"
+source_hash = "sha256:5a32a913c47ae13c6f8cde03dd96df9ee565d3b810a04152f92da7d31fb1767b"
+certification_hash = "sha256:43fb0ff20f0e818b2cc4009baedd6d364fc28c57450796ca012eb6ab4d9bede9"
+runtime_version = "everarcade-runtime 1.4.2"
+covered_invariants = ["INV-MARKET-SETTLEMENT", "INV-ROOT-INTEGRITY"]
+certification_report = "../proofs/formal/market-proof.txt"
