@@ -1,0 +1,7 @@
+name = "governance"
+version = "1.0.0"
+source_hash = "sha256:3306d523969a63db02553e271d27e54fbb3ae2d73d03fca977b0ea53a21d66d3"
+certification_hash = "sha256:dcb78f208025af9653939dce87b6d6424e80f3bbb68ae3762b7ecc808a6b42f4"
+runtime_version = "everarcade-runtime 1.4.2"
+covered_invariants = ["INV-GOVERNANCE-AUTHORITY", "INV-ROOT-INTEGRITY"]
+certification_report = "../proofs/formal/governance-proof.txt"

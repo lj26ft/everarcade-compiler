@@ -1,0 +1,5 @@
+{
+  "title": "Arena Vanguard",
+  "description": "Reference Certified World v1 operator package for deterministic Arena Vanguard deployment.",
+  "operator_goal": "Verify package, deploy federation, replay, migrate, restore, and reproduce identical roots without source code."
+}

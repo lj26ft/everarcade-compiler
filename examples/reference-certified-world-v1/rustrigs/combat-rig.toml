@@ -1,0 +1,7 @@
+name = "combat"
+version = "1.0.0"
+source_hash = "sha256:5cc4022fafb5bc6df8a76b59594270a8d7df7efcb3185190169ffa34954c0cc7"
+certification_hash = "sha256:f5b598c95cea47e7c05c2a9100d0d4a677e86633b2027c2034d27ec9cd98a25f"
+runtime_version = "everarcade-runtime 1.4.2"
+covered_invariants = ["INV-COMBAT-DETERMINISM", "INV-ROOT-INTEGRITY"]
+certification_report = "../proofs/formal/combat-proof.txt"

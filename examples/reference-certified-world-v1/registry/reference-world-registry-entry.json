@@ -1,0 +1,10 @@
+{
+  "world_id": "world_arena_vanguard",
+  "world_name": "Arena Vanguard",
+  "world_version": "1.2.0-reference-certified-v1",
+  "world_hash": "sha256:ef5409866bb75211145a0da901611621c57237bc79dad0c0c2cdde1dc3873883",
+  "package_hash": "sha256:ef5409866bb75211145a0da901611621c57237bc79dad0c0c2cdde1dc3873883",
+  "certification_status": "Reference Certified World v1",
+  "certification_output": "REFERENCE CERTIFIED WORLD V1: PASS",
+  "latest_world_package": "examples/reference-certified-world-v1/operator/build-world-evr.sh"
+}

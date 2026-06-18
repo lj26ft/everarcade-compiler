@@ -1,0 +1,7 @@
+asset_manifest_version = "1"
+executable_code_allowed = false
+
+[[assets]]
+path = "assets/metadata/arena-vanguard.json"
+kind = "metadata"
+content_hash = "sha256:fbce158d62bd66fd4f7450b678016bc4229a54cdaf9642eb190fb51e91dc8d0b"

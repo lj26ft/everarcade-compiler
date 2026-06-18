@@ -1,0 +1,34 @@
+contract_id = "arena-vanguard.reference.contract"
+contract_version = "1.0.0"
+
+[[authorities]]
+name = "world-governance"
+scope = "parameter_updates"
+
+[[authorities]]
+name = "runtime-operator"
+scope = "deployment_restore_migration"
+
+[[mutations]]
+name = "inventory.transfer"
+rustrig = "inventory"
+certified = true
+
+[[mutations]]
+name = "combat.resolve"
+rustrig = "combat"
+certified = true
+
+[[mutations]]
+name = "market.settle_trade"
+rustrig = "market"
+certified = true
+
+[[mutations]]
+name = "governance.update_policy"
+rustrig = "governance"
+certified = true
+
+[[invariants]]
+id = "INV-ROOT-INTEGRITY"
+description = "Canonical genesis, replay, migration, and restore roots are identical across operators."

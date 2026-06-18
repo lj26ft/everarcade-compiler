@@ -1,0 +1,7 @@
+name = "inventory"
+version = "1.0.0"
+source_hash = "sha256:a20b5b2c2cfebc1bb288159906fd2efab3a03db4f8db8fc5739b3b3ecabc4472"
+certification_hash = "sha256:bdae38455991b8fc6fa3a61ce191bce825b1bf40fa078923184c224d50005564"
+runtime_version = "everarcade-runtime 1.4.2"
+covered_invariants = ["INV-INVENTORY-CONSERVATION", "INV-ROOT-INTEGRITY"]
+certification_report = "../proofs/formal/inventory-proof.txt"

@@ -1,0 +1,7 @@
+{
+  "continuity_version": "1",
+  "current_epoch": 0,
+  "last_certified_root": "sha256:42de9b2ffef0ad9a3ef96ab7ddd7651a31e7e7b8c32e51e0a087280903b1e5af",
+  "migration_epoch": 0,
+  "restore_checkpoint": "checkpoint-000000"
+}

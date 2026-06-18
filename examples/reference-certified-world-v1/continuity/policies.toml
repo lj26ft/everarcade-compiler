@@ -1,0 +1,15 @@
+[continuity]
+mode = "deterministic-replay"
+receipt_stream_required = true
+
+[federation]
+operator_ids = ["operator_northstar_01", "operator_eastgate_02", "operator_westwatch_03"]
+required_identical_roots = true
+
+[migration]
+compatible_schema_versions = ["1"]
+requires_migration_certification = true
+
+[restore]
+restore_from_certified_roots_only = true
+requires_initial_continuity_state = true
