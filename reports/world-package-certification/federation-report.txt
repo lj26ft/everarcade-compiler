@@ -1,0 +1,8 @@
+FEDERATION CERTIFICATION: PASS
+class = CLASS-G
+operators = operator A, operator B, operator C
+state_root = sha256:genesis-state-placeholder
+receipt_root = sha256:initial-receipts-placeholder
+continuity_root = sha256:continuity-placeholder
+world_hash = sha256:pending-canonical-build
+result = all operators produced identical roots and world hash

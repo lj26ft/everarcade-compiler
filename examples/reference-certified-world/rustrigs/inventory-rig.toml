@@ -1,0 +1,11 @@
+name = "inventory"
+version = "1.0.0"
+source_hash = "sha256:inventory-source-placeholder"
+certification_hash = "sha256:inventory-certification-placeholder"
+runtime_version = "1.0.0"
+
+covered_invariants = [
+  "INV-INVENTORY-CONSERVATION",
+]
+mutations = ["inventory.transfer"]
+certification_report = "../proofs/replay-certification-report.txt"

@@ -1,0 +1,6 @@
+MIGRATION CERTIFICATION: PASS
+class = CLASS-H
+source_world = everarcade.reference.world@1.0.0
+package = world.evr
+destination_world = everarcade.reference.world@1.0.0
+result = migration preserves continuity without state divergence

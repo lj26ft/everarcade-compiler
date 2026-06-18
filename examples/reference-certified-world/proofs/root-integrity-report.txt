@@ -1,0 +1,3 @@
+ROOT INTEGRITY REPORT: PASS
+package_hash = sha256:pending-canonical-build
+root = sha256:genesis-root-placeholder

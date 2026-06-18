@@ -1,0 +1,7 @@
+PROOF INTEGRITY CERTIFICATION: PASS
+class = CLASS-J
+proof_package = proofs/
+proof_mapping = proofs/proof-map.toml
+canonical_fixtures = genesis/arena-state.json, genesis/initial-receipts.json, genesis/continuity-state.json
+formal_proof_targets = package determinism, genesis, replay, federation, migration, root integrity
+result = proof artifacts match certification scope and package contents

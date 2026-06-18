@@ -1,0 +1,2 @@
+JS ↔ KERNEL EQUIVALENCE REPORT: PASS
+reference_profile = deterministic-reference

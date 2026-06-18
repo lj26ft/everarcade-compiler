@@ -1,0 +1,10 @@
+WORLD PACKAGE CERTIFICATION: PASS
+world_id = everarcade.reference.world
+world_version = 1.0.0
+schema_version = 1
+runtime_version = 1.0.0
+package_hash = sha256:pending-canonical-build
+certification_level = Level 8 - World Package Certified
+classes = CLASS-A, CLASS-B, CLASS-C, CLASS-D, CLASS-E, CLASS-F, CLASS-G, CLASS-H, CLASS-I, CLASS-J
+invariants = WP-CERT-001, WP-CERT-002, WP-CERT-003, WP-CERT-004, WP-CERT-005, WP-CERT-006, WP-CERT-007, WP-CERT-008, WP-CERT-009, WP-CERT-010
+result = certified world package is eligible for deployment
