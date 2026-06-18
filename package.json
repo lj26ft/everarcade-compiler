@@ -21,7 +21,8 @@
     "docs:serve": "docusaurus serve",
     "certify:federation": "node runtime/arena_hotpocket/validation/certify-federation.js",
     "certify:restore": "node runtime/arena_hotpocket/validation/certify-restore.js",
-    "certify:migration": "node runtime/arena_hotpocket/validation/certify-migration.js"
+    "certify:migration": "node runtime/arena_hotpocket/validation/certify-migration.js",
+    "certify:root-integrity": "node runtime/arena_hotpocket/validation/certify-root-integrity.js"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "latest",
