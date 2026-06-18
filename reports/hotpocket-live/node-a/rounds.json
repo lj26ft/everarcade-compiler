@@ -1,0 +1,77 @@
+[
+  {
+    "round": 1,
+    "accepted_inputs": [
+      "4c372e5983acad7be1c40864e7a802c8cf4c1f04be11106894b77b850d267aad"
+    ],
+    "rejected_inputs": [],
+    "lclSeqNo": 1,
+    "commitments": {
+      "tick": 1,
+      "state_root": "39c3e00c2b6612df35088e3568938d72ae2f5ad1b7bd10fcb904ac4fa527e6b7",
+      "receipt_root": "9a4937a62cf1b0dc5d9b33ae110b435964713b262a4a14c65404855780d7c553",
+      "world_hash": "a5d107f5d526a138dfdbc39373834d3edbc0fe1519afce43feb08b109e115ba8",
+      "continuity_root": "c628cf9d5671212effb184f09f017fe712fe9a053aa04da0db3512f37d8256be"
+    }
+  },
+  {
+    "round": 2,
+    "accepted_inputs": [
+      "9be5efc93a6312deffb6ff08cf2b0ed6f27a6f0e595530a49d8e81c8f827d47e"
+    ],
+    "rejected_inputs": [],
+    "lclSeqNo": 2,
+    "commitments": {
+      "tick": 2,
+      "state_root": "bd224136efac882df5549f4f349407608c5d08296d84f615000dcb5d9f524ba0",
+      "receipt_root": "8467807a8890bdc9dcccd2dfa3b6ab52706b1673de4744bcfabd3da28ca36f0b",
+      "world_hash": "74f94776c8c7181d830df0946df98bdbe6680715aa0ae5eeace99dd02dec7db2",
+      "continuity_root": "12c6929e60474d6c04615f9f82b04ca2bc1866c996ddea2088dbea02a21f913a"
+    }
+  },
+  {
+    "round": 3,
+    "accepted_inputs": [
+      "1463176fc86097287b34c303074baddb240d45a5448775420f7a4a9a9fb8f03f"
+    ],
+    "rejected_inputs": [],
+    "lclSeqNo": 3,
+    "commitments": {
+      "tick": 3,
+      "state_root": "97626b377d224c3e25415e68a0f0a1a7b650f9fea0e317c9ce36c4bb8c2e5665",
+      "receipt_root": "f23f9a766bc2b949b28942203814224ec7de0fdba652254274e275ba1fc5786e",
+      "world_hash": "ad6e8aec0e95586a6d55a698088a200070087ffc0b00ea6ba66d52ab26e74271",
+      "continuity_root": "72315a16681f795195c200f5b466f6a91a2b165f664ef752f71ee73d47461024"
+    }
+  },
+  {
+    "round": 4,
+    "accepted_inputs": [
+      "8db90a71ea3a0623fa5121bccf807dccb521fac4a46fcb03e53df3a1f4fe537b"
+    ],
+    "rejected_inputs": [],
+    "lclSeqNo": 4,
+    "commitments": {
+      "tick": 4,
+      "state_root": "fd7b791c18b9598dda5d2b05ba1cd212c28d68942b58c83f118cbfb0085df902",
+      "receipt_root": "97dbbb0a7a14dba49846c8e95b201dda13839d308d53a8673f850424c348dd01",
+      "world_hash": "0077522b0b3154655e1674ec8a990a6d3e2be79a7913837ad68560a4017438ab",
+      "continuity_root": "e4a33d499e964697f6fb3366a4a2c9ae01e1532fa840221905f011a3c149af63"
+    }
+  },
+  {
+    "round": 5,
+    "accepted_inputs": [
+      "36f98b1d43302597863742497ec7037200004adc5347135a5f8a143987dfd5cd"
+    ],
+    "rejected_inputs": [],
+    "lclSeqNo": 5,
+    "commitments": {
+      "tick": 5,
+      "state_root": "cf49b0c726c506df7dbde3f8c2614471e7f82c1632ebeb125a8b95449636f07e",
+      "receipt_root": "7dc14f7c94b90e41c0aa751279af842d36c6178ecefe01646153d48ea2c2f7ba",
+      "world_hash": "3cbad7b436ef545c3e44e72b92d0bc9e9a2b67b4af84f468027066535d0e4102",
+      "continuity_root": "82a0bc36ac8e303001bbc7026a44ed20a57a57beaa5be04720c2a06fd83d15c6"
+    }
+  }
+]

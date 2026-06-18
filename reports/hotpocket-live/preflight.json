@@ -1,0 +1,15 @@
+{
+  "schema": "everarcade.hotpocket-live.preflight.v0.1",
+  "package_dir": "dist/arena-vanguard-hotpocket-cluster",
+  "package_hash": "8fb5ac901a86e107dc2dda6c834beaf619dc9fc3ef92946e1ab4d86547812966",
+  "contract_hash": "2f19039e525cafee024917df6a3446f2e28dd580f6eaf0efcd91f7dccda5d285",
+  "runtime_hash": "7ea2468f49257b416870e22181a6d9dc6274ade8b1f00aebebbd4f08168c9b56",
+  "genesis_hash": "07da8fd2d0126af2bddc9a377cb75590accbcbccb458200c42be78be7e3bb566",
+  "nodes": [
+    "node-a",
+    "node-b",
+    "node-c"
+  ],
+  "independent_directories": true,
+  "status": "PASS"
+}
