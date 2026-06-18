@@ -1,0 +1,19 @@
+[continuity]
+mode = "deterministic-replay"
+receipt_stream_required = true
+
+[migration]
+compatible_schema_versions = ["1"]
+requires_migration_certification = true
+
+[restore]
+restore_from_certified_roots_only = true
+requires_initial_continuity_state = true
+
+[retention]
+receipt_retention = "permanent"
+proof_retention = "permanent"
+
+[epoch]
+initial_epoch = 0
+epoch_boundary = "operator-certified"

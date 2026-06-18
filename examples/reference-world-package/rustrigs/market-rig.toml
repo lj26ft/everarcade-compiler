@@ -1,0 +1,11 @@
+name = "market"
+version = "1.0.0"
+source_hash = "sha256:market-source-placeholder"
+certification_hash = "sha256:market-certification-placeholder"
+runtime_version = "1.0.0"
+
+covered_invariants = [
+  "INV-MARKET-SETTLEMENT",
+]
+mutations = ["market.settle_trade"]
+certification_report = "../proofs/migration-certification-report.txt"

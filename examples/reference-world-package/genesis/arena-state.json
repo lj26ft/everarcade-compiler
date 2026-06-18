@@ -1,0 +1,8 @@
+{
+  "arena_state_version": "1",
+  "world_id": "everarcade.reference.world",
+  "epoch": 0,
+  "tick": 0,
+  "entities": [],
+  "systems": ["inventory", "combat", "market", "governance"]
+}

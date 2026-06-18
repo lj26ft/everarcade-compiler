@@ -1,0 +1,4 @@
+genesis_state_root = "sha256:genesis-state-placeholder"
+initial_receipt_root = "sha256:initial-receipts-placeholder"
+continuity_root = "sha256:continuity-placeholder"
+asset_root = "sha256:assets-placeholder"

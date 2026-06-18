@@ -1,0 +1,11 @@
+name = "combat"
+version = "1.0.0"
+source_hash = "sha256:combat-source-placeholder"
+certification_hash = "sha256:combat-certification-placeholder"
+runtime_version = "1.0.0"
+
+covered_invariants = [
+  "INV-COMBAT-DETERMINISM",
+]
+mutations = ["combat.resolve"]
+certification_report = "../proofs/replay-certification-report.txt"
