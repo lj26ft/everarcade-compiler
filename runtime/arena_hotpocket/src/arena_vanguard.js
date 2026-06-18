@@ -1,10 +1,11 @@
 const { createHash } = require('node:crypto');
-const { existsSync, readFileSync, writeFileSync } = require('node:fs');
-const { join } = require('node:path');
+const { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } = require('node:fs');
+const { dirname, join } = require('node:path');
 
 const SCHEMA = 'everarcade.hotpocket.arena-vanguard.v1';
 const DIRECTIONS = Object.freeze({ north: [0, -1], south: [0, 1], east: [1, 0], west: [-1, 0] });
 const GENESIS = Object.freeze({ tick: 0, players: {}, combat_events: [], last_sequence: {}, commitments: [] });
+const STATE_DIR = 'state';
 const STATE_FILE = 'arena-wrapper-state.json';
 const JOURNAL_FILE = 'arena-hotpocket-journal.json';
 
@@ -25,6 +26,17 @@ function canonicalHash(value) {
 
 function clone(value) {
   return JSON.parse(JSON.stringify(value));
+}
+
+function deterministicJson(value) {
+  return `${canonicalize(value)}\n`;
+}
+
+function atomicWriteJson(path, value) {
+  mkdirSync(dirname(path), { recursive: true });
+  const tempPath = `${path}.tmp`;
+  writeFileSync(tempPath, deterministicJson(value));
+  renameSync(tempPath, path);
 }
 
 function genesisState() {
@@ -127,9 +139,11 @@ function replayJournal(journal) {
 }
 
 class ArenaVanguard {
-  constructor({ statePath = join(process.cwd(), STATE_FILE), journalPath = join(process.cwd(), JOURNAL_FILE) } = {}) {
+  constructor({ statePath = join(process.cwd(), STATE_DIR, STATE_FILE), journalPath = join(process.cwd(), STATE_DIR, JOURNAL_FILE) } = {}) {
     this.statePath = statePath;
     this.journalPath = journalPath;
+    console.log('[ARENA] state path', this.statePath);
+    console.log('[ARENA] journal path', this.journalPath);
     this.state = genesisState();
     this.receipts = [];
     this.journal = [];
@@ -152,9 +166,16 @@ class ArenaVanguard {
   }
 
   persist() {
+    console.log('[ARENA] persist start');
     const snapshot = { state: this.state, receipts: this.receipts, journal: this.journal };
-    writeFileSync(this.statePath, `${JSON.stringify(snapshot, null, 2)}\n`);
-    writeFileSync(this.journalPath, `${JSON.stringify(this.journal, null, 2)}\n`);
+    atomicWriteJson(this.statePath, snapshot);
+    atomicWriteJson(this.journalPath, this.journal);
+    const latest = this.state.commitments.at(-1) || commitFor(this.state, this.receipts);
+    console.log('[ARENA] state_root', latest.state_root);
+    console.log('[ARENA] receipt_root', latest.receipt_root);
+    console.log('[ARENA] world_hash', latest.world_hash);
+    console.log('[ARENA] continuity_root', latest.continuity_root);
+    console.log('[ARENA] persist complete');
   }
 
   async handleInput(publicKey, message, ctx = {}) {
@@ -186,4 +207,4 @@ function inputId(envelope) {
   return `arena-${canonicalHash(envelope)}`;
 }
 
-module.exports = { ArenaVanguard, canonicalHash, canonicalize, commitFor, executeInput, genesisState, inputId, replayJournal, validateEnvelope };
+module.exports = { ArenaVanguard, atomicWriteJson, canonicalHash, canonicalize, commitFor, deterministicJson, executeInput, genesisState, inputId, replayJournal, validateEnvelope };
