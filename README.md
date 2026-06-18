@@ -1,5 +1,7 @@
 # EverArcade
 
+**Build Worlds. Not Just Games.**
+
 EverArcade is an open-source deterministic game-runtime and creator-tooling repository. It focuses on packaging worlds, running them locally, recording execution evidence, and replay-verifying deterministic outcomes.
 
 EverArcade is currently an **open-source candidate** with a proven local developer onboarding path. It is **not production ready**, **not public-testnet ready**, and **not commercial ready**.
@@ -65,6 +67,7 @@ Playable Local Game: PASS
 - Repository map: [`REPOSITORY_MAP.md`](REPOSITORY_MAP.md)
 - Contributor guide: [`docs/contributor-guide/index.md`](docs/contributor-guide/index.md)
 - Open-source readiness audit: [`OPEN_SOURCE_READINESS.md`](OPEN_SOURCE_READINESS.md)
+- v0.1 public release readiness: [`docs/open-source/v0.1-public-release-readiness.md`](docs/open-source/v0.1-public-release-readiness.md)
 
 ## Contributing
 
