@@ -97,6 +97,23 @@ pub fn canonicalize(state: &ArenaState) -> Vec<u8> {
     }
     canonicalize_map_values(&mut canonical.metadata.extensions);
 
+    canonical
+        .players
+        .sort_by(|a, b| a.player_id.as_bytes().cmp(b.player_id.as_bytes()));
+    canonical
+        .entities
+        .sort_by(|a, b| a.entity_id.as_bytes().cmp(b.entity_id.as_bytes()));
+    canonical
+        .positions
+        .sort_by(|a, b| a.entity_id.as_bytes().cmp(b.entity_id.as_bytes()));
+    canonical
+        .health
+        .sort_by(|a, b| a.entity_id.as_bytes().cmp(b.entity_id.as_bytes()));
+    canonical
+        .metadata
+        .labels
+        .sort_by(|a, b| a.as_bytes().cmp(b.as_bytes()));
+
     serde_json::to_vec(&canonical).expect("canonical JSON serialization is infallible")
 }
 
@@ -107,12 +124,22 @@ pub fn state_root(state: &ArenaState) -> String {
 
 /// Return the SHA-256 world hash as lowercase hex over the ordered roots.
 pub fn world_hash(state_root: &str, receipt_root: &str, continuity_root: &str) -> String {
-    let mut bytes =
-        Vec::with_capacity(state_root.len() + receipt_root.len() + continuity_root.len());
-    bytes.extend_from_slice(state_root.as_bytes());
-    bytes.extend_from_slice(receipt_root.as_bytes());
-    bytes.extend_from_slice(continuity_root.as_bytes());
+    let state_root = decode_root_hex(state_root, "state_root");
+    let receipt_root = decode_root_hex(receipt_root, "receipt_root");
+    let continuity_root = decode_root_hex(continuity_root, "continuity_root");
+    let mut bytes = Vec::with_capacity(96);
+    bytes.extend_from_slice(&state_root);
+    bytes.extend_from_slice(&receipt_root);
+    bytes.extend_from_slice(&continuity_root);
     hash_bytes(&bytes)
+}
+
+fn decode_root_hex(root: &str, label: &str) -> [u8; 32] {
+    let decoded =
+        hex::decode(root).unwrap_or_else(|err| panic!("{label} must be lowercase hex: {err}"));
+    decoded
+        .try_into()
+        .unwrap_or_else(|_| panic!("{label} must decode to exactly 32 bytes"))
 }
 
 fn hash_bytes(bytes: &[u8]) -> String {

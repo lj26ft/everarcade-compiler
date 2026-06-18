@@ -22,11 +22,13 @@ const METADATA_FIELDS = ['ruleset_id','ruleset_version','created_by','labels','e
 const ZERO = '0'.repeat(64);
 
 function sha256(s) { return createHash('sha256').update(s).digest('hex'); }
+function utf8Compare(a, b) { return Buffer.compare(Buffer.from(a, 'utf8'), Buffer.from(b, 'utf8')); }
+function rootBytes(root, label) { if (!/^[0-9a-f]{64}$/.test(root)) throw new Error(`${label} must be 64 lowercase hex characters`); return Buffer.from(root, 'hex'); }
 function sortValue(v) {
   if (v === undefined) return null;
   if (v === null || typeof v !== 'object') return v;
   if (Array.isArray(v)) return v.map(sortValue);
-  return Object.fromEntries(Object.keys(v).sort((a, b) => Buffer.compare(Buffer.from(a, 'utf8'), Buffer.from(b, 'utf8'))).map((k) => [k, sortValue(v[k])]));
+  return Object.fromEntries(Object.keys(v).sort(utf8Compare).map((k) => [k, sortValue(v[k])]));
 }
 function orderObject(input, fields) {
   const out = {};
@@ -36,18 +38,18 @@ function orderObject(input, fields) {
 function normalizeArenaState(input) {
   return orderObject({
     ...input,
-    players: (input.players || []).map((p) => orderObject({ ...p, metadata: sortValue(p.metadata || {}) }, PLAYER_FIELDS)),
-    entities: (input.entities || []).map((e) => orderObject({ ...e, attributes: sortValue(e.attributes || {}) }, ENTITY_FIELDS)),
-    positions: (input.positions || []).map((p) => orderObject(p, POSITION_FIELDS)),
-    health: (input.health || []).map((h) => orderObject(h, HEALTH_FIELDS)),
+    players: (input.players || []).map((p) => orderObject({ ...p, metadata: sortValue(p.metadata || {}) }, PLAYER_FIELDS)).sort((a, b) => utf8Compare(a.player_id, b.player_id)),
+    entities: (input.entities || []).map((e) => orderObject({ ...e, attributes: sortValue(e.attributes || {}) }, ENTITY_FIELDS)).sort((a, b) => utf8Compare(a.entity_id, b.entity_id)),
+    positions: (input.positions || []).map((p) => orderObject(p, POSITION_FIELDS)).sort((a, b) => utf8Compare(a.entity_id, b.entity_id)),
+    health: (input.health || []).map((h) => orderObject(h, HEALTH_FIELDS)).sort((a, b) => utf8Compare(a.entity_id, b.entity_id)),
     receipts: orderObject(input.receipts || {}, RECEIPT_FIELDS),
     continuity: orderObject(input.continuity || {}, CONTINUITY_FIELDS),
-    metadata: orderObject({ ...(input.metadata || {}), extensions: sortValue((input.metadata || {}).extensions || {}) }, METADATA_FIELDS)
+    metadata: orderObject({ ...(input.metadata || {}), labels: [...((input.metadata || {}).labels || [])].sort(utf8Compare), extensions: sortValue((input.metadata || {}).extensions || {}) }, METADATA_FIELDS)
   }, TOP_FIELDS);
 }
 function canonicalizeArenaState(state) { return JSON.stringify(normalizeArenaState(state)); }
 function stateRoot(state) { return sha256(canonicalizeArenaState(state)); }
-function worldHash(stateRoot, receiptRoot, continuityRoot) { return sha256(`${stateRoot}${receiptRoot}${continuityRoot}`); }
+function worldHash(stateRoot, receiptRoot, continuityRoot) { return createHash('sha256').update(Buffer.concat([rootBytes(stateRoot, 'state_root'), rootBytes(receiptRoot, 'receipt_root'), rootBytes(continuityRoot, 'continuity_root')])).digest('hex'); }
 let stagedKernelDir;
 function kernelManifest() {
   if (!stagedKernelDir) {
@@ -69,7 +71,7 @@ function projectLiveSnapshot(snapshot, sourcePath) {
   const s = snapshot.state || snapshot;
   const latest = (s.commitments || []).at(-1) || {};
   const previous = (s.commitments || []).at(-2) || {};
-  const ids = Object.keys(s.players || {}).sort();
+  const ids = Object.keys(s.players || {}).sort(utf8Compare);
   return normalizeArenaState({ schema_version:1, world_id:'arena-vanguard', arena_id:'arena-vanguard-live', tick:s.tick || 0,
     players: ids.map(id => ({ player_id:id, controller_id:id, join_tick:0, status:s.players[id].connected ? 'connected' : 'disconnected', score:s.players[id].score || 0, metadata:{ live_player_id:s.players[id].id } })),
     entities: ids.map(id => ({ entity_id:id, entity_type:'player', owner_player_id:id, spawn_tick:0, despawn_tick:null, attributes:{ connected:!!s.players[id].connected } })),
