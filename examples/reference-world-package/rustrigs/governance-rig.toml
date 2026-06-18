@@ -1,0 +1,11 @@
+name = "governance"
+version = "1.0.0"
+source_hash = "sha256:governance-source-placeholder"
+certification_hash = "sha256:governance-certification-placeholder"
+runtime_version = "1.0.0"
+
+covered_invariants = [
+  "INV-GOVERNANCE-AUTHORITY",
+]
+mutations = ["governance.update_policy"]
+certification_report = "../proofs/root-integrity-report.txt"
