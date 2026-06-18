@@ -1,0 +1,9 @@
+RUSTRIG GOVERNANCE VOTE CERTIFICATION: PASS
+
+Artifact: root-report
+RustRig: governance.vote()
+Package: everarcade-rustrig-governance
+
+Result: PASS
+
+This artifact certifies that governance.vote() uses deterministic tick-based inputs, integer-only quorum validation, unique per-proposal votes, exact receipt records, deterministic proposal finalization, replay-equivalent state transitions, and stable state roots.

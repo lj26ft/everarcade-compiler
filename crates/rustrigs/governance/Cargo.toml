@@ -1,0 +1,11 @@
+[package]
+name = "everarcade-rustrig-governance"
+version = "1.0.0"
+edition = "2021"
+description = "Certified EverArcade RustRig reference implementation for governance.vote()."
+
+[lib]
+name = "everarcade_rustrig_governance"
+path = "src/lib.rs"
+
+[dependencies]

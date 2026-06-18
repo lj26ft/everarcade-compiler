@@ -1,0 +1,20 @@
+RUSTRIG GOVERNANCE VOTE CERTIFICATION: PASS
+
+RustRig: governance.vote()
+Package: everarcade-rustrig-governance
+Authority: world
+Receipt: VoteReceipt
+
+Certified invariants:
+- RR-GOV-001 Vote Determinism: PASS
+- RR-GOV-002 Vote Uniqueness: PASS
+- RR-GOV-003 Tally Integrity: PASS
+- RR-GOV-004 Quorum Integrity: PASS
+- RR-GOV-005 Proposal Finality: PASS
+- RR-GOV-006 Receipt Integrity: PASS
+- RR-GOV-007 Replay Equivalence: PASS
+- RR-GOV-008 Root Equivalence: PASS
+- RR-GOV-009 Tick Window Integrity: PASS
+
+Required output:
+RUSTRIG GOVERNANCE VOTE CERTIFICATION: PASS

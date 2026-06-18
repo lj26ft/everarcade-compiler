@@ -6,6 +6,7 @@ members = [
     "crates/rustrigs/inventory",
     "crates/rustrigs/combat",
     "crates/rustrigs/market",
+    "crates/rustrigs/governance",
     "execution-core",
     "contract-api",
     "control-plane",

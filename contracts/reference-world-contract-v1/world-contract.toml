@@ -135,11 +135,19 @@ certification_targets = ["determinism", "replay_equivalence", "root_equivalence"
 [[mutations]]
 name = "governance.vote"
 class = "CLASS-C"
-authority = "eligible_governance_member"
+authority = "world"
 reads = ["players", "governance"]
 writes = ["governance", "receipts"]
-receipt = "governance_vote_receipt"
-certification_targets = ["determinism", "replay_equivalence", "root_equivalence", "receipt_integrity", "state_transition_integrity", "canonical_output", "authority_enforcement"]
+receipt = "VoteReceipt"
+certification = "reports/rustrig-governance-vote/certification-report.txt"
+certification_status = "RUSTRIG GOVERNANCE VOTE CERTIFICATION: PASS"
+certification_targets = ["determinism", "replay_equivalence", "root_equivalence", "receipt_integrity", "tally_integrity", "quorum_integrity", "proposal_finality", "tick_window_integrity"]
+
+[rustrigs.governance.vote]
+crate = "everarcade-rustrig-governance"
+certification = "PASS"
+authority = "world"
+receipt = "VoteReceipt"
 
 [[mutations]]
 name = "world.spawn"
