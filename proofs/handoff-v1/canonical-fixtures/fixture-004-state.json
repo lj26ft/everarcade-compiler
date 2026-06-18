@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "world_id": "w",
+  "arena_id": "a",
+  "tick": 0,
+  "players": [
+    {
+      "player_id": "p2",
+      "controller_id": "c",
+      "join_tick": 0,
+      "status": "active",
+      "score": 0,
+      "metadata": {}
+    },
+    {
+      "player_id": "p1",
+      "controller_id": "c",
+      "join_tick": 0,
+      "status": "active",
+      "score": 0,
+      "metadata": {}
+    }
+  ],
+  "entities": [],
+  "positions": [],
+  "health": [],
+  "receipts": {
+    "receipt_root": "0000000000000000000000000000000000000000000000000000000000000000",
+    "receipt_count": 0,
+    "last_receipt_hash": null
+  },
+  "continuity": {
+    "continuity_root": "0000000000000000000000000000000000000000000000000000000000000000",
+    "previous_state_root": null,
+    "replay_root": "0000000000000000000000000000000000000000000000000000000000000000",
+    "migration_root": null,
+    "epoch": 0
+  },
+  "metadata": {
+    "ruleset_id": "r",
+    "ruleset_version": 1,
+    "created_by": null,
+    "labels": [],
+    "extensions": {}
+  }
+}

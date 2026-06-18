@@ -1,6 +1,6 @@
 EverArcade JS ↔ Kernel Equivalence Certification
 
-Fixtures checked: 3
+Fixtures checked: 5
 Live state: /workspace/everarcade-compiler/reports/hotpocket-live/node-a/work/state/arena-wrapper-state.json
 
 Checks:
