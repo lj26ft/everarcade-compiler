@@ -1,0 +1,2 @@
+RR-MARKET-002 Item Conservation: PASS
+Total item quantity before trade equals total item quantity after trade.

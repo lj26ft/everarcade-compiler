@@ -1,0 +1,2 @@
+RR-MARKET-001 Trade Determinism: PASS
+Same market.trade() input produces identical state, receipt, and roots.

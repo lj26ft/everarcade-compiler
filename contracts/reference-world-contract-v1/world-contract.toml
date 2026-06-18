@@ -100,11 +100,19 @@ certification_targets = ["determinism", "replay_equivalence", "root_equivalence"
 [[mutations]]
 name = "market.trade"
 class = "CLASS-B"
-authority = "signed_market_participants"
+authority = "world"
 reads = ["players", "inventory", "economy"]
 writes = ["inventory", "economy", "receipts"]
-receipt = "market_trade_receipt"
+receipt = "TradeReceipt"
+certification = "reports/rustrig-market-trade/certification-report.txt"
+certification_status = "RUSTRIG MARKET TRADE CERTIFICATION: PASS"
 certification_targets = ["determinism", "replay_equivalence", "root_equivalence", "receipt_integrity", "state_transition_integrity", "canonical_output", "supply_conservation"]
+
+[rustrigs.market.trade]
+crate = "everarcade-rustrig-market"
+certification = "PASS"
+authority = "world"
+receipt = "TradeReceipt"
 
 [[mutations]]
 name = "economy.mint"
@@ -165,6 +173,7 @@ world = "World Contract authority validates declared attack types and bounded de
 player_controls_actor = "Caller identity must deterministically control the actor being mutated."
 owner_or_delegated_inventory_authority = "Caller must own the inventory entry or hold a deterministic delegation."
 signed_market_participants = "All trade participants must provide canonical signed consent or a valid deterministic order commitment."
+market_world_authority = "World Contract authority validates declared market trade types and deterministic economic mutation."
 governance_or_protocol_treasury = "Caller must be authorized by governance state or protocol treasury policy."
 asset_owner_or_protocol_treasury = "Caller must own the burned asset balance or be protocol treasury authority."
 eligible_governance_member = "Caller must satisfy governance eligibility at the proposal snapshot."

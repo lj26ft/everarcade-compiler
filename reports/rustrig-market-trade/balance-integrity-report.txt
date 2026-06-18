@@ -1,0 +1,2 @@
+RR-MARKET-004 Balance Integrity: PASS
+Buyer balance decreases and seller balance increases by exactly total_price.

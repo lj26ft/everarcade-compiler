@@ -1,0 +1,2 @@
+RR-MARKET-005 Inventory Integrity: PASS
+Seller inventory decreases and buyer inventory increases by exactly quantity.

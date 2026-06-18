@@ -1,0 +1,11 @@
+[package]
+name = "everarcade-rustrig-market"
+version = "1.0.0"
+edition = "2021"
+description = "Certified EverArcade RustRig reference implementation for market.trade()."
+
+[lib]
+name = "everarcade_rustrig_market"
+path = "src/lib.rs"
+
+[dependencies]
