@@ -1,0 +1,22 @@
+EverArcade Live Restore Certification
+
+World:
+Arena Vanguard
+
+State Restoration: PASS
+
+Journal Restoration: PASS
+
+Replay Verification: PASS
+
+Root Equivalence: PASS
+
+Runtime Restart: PASS
+
+Continuity Preservation: PASS
+
+Post-Restore Execution: PASS
+
+Result:
+
+LIVE RESTORE CERTIFICATION: PASS

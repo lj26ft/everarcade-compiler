@@ -1,0 +1,43 @@
+{
+  "schema": "everarcade.live-restore.replay-validation.v0.1",
+  "replay_from": "genesis",
+  "persisted_roots": {
+    "tick": 5,
+    "state_root": "cf49b0c726c506df7dbde3f8c2614471e7f82c1632ebeb125a8b95449636f07e",
+    "receipt_root": "7dc14f7c94b90e41c0aa751279af842d36c6178ecefe01646153d48ea2c2f7ba",
+    "world_hash": "3cbad7b436ef545c3e44e72b92d0bc9e9a2b67b4af84f468027066535d0e4102",
+    "continuity_root": "82a0bc36ac8e303001bbc7026a44ed20a57a57beaa5be04720c2a06fd83d15c6"
+  },
+  "replayed_roots": {
+    "continuity_root": "82a0bc36ac8e303001bbc7026a44ed20a57a57beaa5be04720c2a06fd83d15c6",
+    "receipt_root": "7dc14f7c94b90e41c0aa751279af842d36c6178ecefe01646153d48ea2c2f7ba",
+    "state_root": "cf49b0c726c506df7dbde3f8c2614471e7f82c1632ebeb125a8b95449636f07e",
+    "tick": 5,
+    "world_hash": "3cbad7b436ef545c3e44e72b92d0bc9e9a2b67b4af84f468027066535d0e4102"
+  },
+  "comparisons": {
+    "state_root": {
+      "persisted": "cf49b0c726c506df7dbde3f8c2614471e7f82c1632ebeb125a8b95449636f07e",
+      "replayed": "cf49b0c726c506df7dbde3f8c2614471e7f82c1632ebeb125a8b95449636f07e",
+      "match": true
+    },
+    "receipt_root": {
+      "persisted": "7dc14f7c94b90e41c0aa751279af842d36c6178ecefe01646153d48ea2c2f7ba",
+      "replayed": "7dc14f7c94b90e41c0aa751279af842d36c6178ecefe01646153d48ea2c2f7ba",
+      "match": true
+    },
+    "world_hash": {
+      "persisted": "3cbad7b436ef545c3e44e72b92d0bc9e9a2b67b4af84f468027066535d0e4102",
+      "replayed": "3cbad7b436ef545c3e44e72b92d0bc9e9a2b67b4af84f468027066535d0e4102",
+      "match": true
+    },
+    "continuity_root": {
+      "persisted": "82a0bc36ac8e303001bbc7026a44ed20a57a57beaa5be04720c2a06fd83d15c6",
+      "replayed": "82a0bc36ac8e303001bbc7026a44ed20a57a57beaa5be04720c2a06fd83d15c6",
+      "match": true
+    }
+  },
+  "hashes_valid": true,
+  "continuity_chain_valid": true,
+  "ok": true
+}
