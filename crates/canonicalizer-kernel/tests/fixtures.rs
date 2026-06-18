@@ -1,4 +1,6 @@
-use canonicalizer_kernel::{canonicalize, state_root, world_hash, ArenaState};
+use canonicalizer_kernel::{
+    canonicalize, state_root, validate_arena_state, world_hash, ArenaState,
+};
 use std::fs;
 use std::path::PathBuf;
 
@@ -108,4 +110,58 @@ fn differential_vec_3_world_hash_uses_decoded_root_bytes() {
         hash,
         "5284cf69397a12b8453ebbb82795dfd01641d503f4967a245c711bfc43b65407"
     );
+}
+
+#[test]
+fn gap_2_duplicate_identifier_fixtures_are_rejected_before_canonicalization() {
+    let cases = [
+        (
+            "fixture-gap2-duplicate-player-state.json",
+            "player_id",
+            "GAP-2 VALIDATION: FAIL duplicate player_id player-dup",
+        ),
+        (
+            "fixture-gap2-duplicate-entity-state.json",
+            "entity_id",
+            "GAP-2 VALIDATION: FAIL duplicate entity_id entity-dup",
+        ),
+        (
+            "fixture-gap2-duplicate-position-state.json",
+            "position.entity_id",
+            "GAP-2 VALIDATION: FAIL duplicate position.entity_id entity-dup",
+        ),
+        (
+            "fixture-gap2-duplicate-health-state.json",
+            "health.entity_id",
+            "GAP-2 VALIDATION: FAIL duplicate health.entity_id entity-dup",
+        ),
+    ];
+
+    for (fixture, field, expected_error) in cases {
+        let state_json = fs::read_to_string(fixture_dir().join(fixture)).unwrap();
+        let state: ArenaState = serde_json::from_str(&state_json).unwrap();
+        let error = validate_arena_state(&state).unwrap_err();
+
+        assert_eq!(error.field(), field, "field for {fixture}");
+        assert_eq!(error.to_string(), expected_error, "error for {fixture}");
+
+        let panic = std::panic::catch_unwind(|| canonicalize(&state)).unwrap_err();
+        let panic_message = panic
+            .downcast_ref::<String>()
+            .map(String::as_str)
+            .or_else(|| panic.downcast_ref::<&str>().copied())
+            .unwrap();
+        assert_eq!(panic_message, expected_error, "panic for {fixture}");
+    }
+}
+
+#[test]
+fn gap_2_validation_passes_unique_fixture_set() {
+    let dir = fixture_dir();
+    for id in ["001", "002", "003", "004", "005"] {
+        let state_json = fs::read_to_string(dir.join(format!("fixture-{id}-state.json"))).unwrap();
+        let state: ArenaState = serde_json::from_str(&state_json).unwrap();
+        validate_arena_state(&state).unwrap();
+    }
+    println!("GAP-2 VALIDATION: PASS");
 }

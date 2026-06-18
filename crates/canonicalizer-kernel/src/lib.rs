@@ -7,7 +7,7 @@
 use serde::{Deserialize, Serialize};
 use serde_json::{Map, Value};
 use sha2::{Digest, Sha256};
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 
 /// Arena state accepted by the standalone canonicalizer kernel.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -86,8 +86,73 @@ pub struct ArenaMetadata {
     pub extensions: BTreeMap<String, Value>,
 }
 
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct ValidationError {
+    field: &'static str,
+    identifier: String,
+}
+
+impl ValidationError {
+    pub fn field(&self) -> &'static str {
+        self.field
+    }
+
+    pub fn identifier(&self) -> &str {
+        &self.identifier
+    }
+}
+
+impl std::fmt::Display for ValidationError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "GAP-2 VALIDATION: FAIL duplicate {} {}",
+            self.field, self.identifier
+        )
+    }
+}
+
+impl std::error::Error for ValidationError {}
+
+/// Validate an [`ArenaState`] before canonicalization.
+pub fn validate_arena_state(state: &ArenaState) -> Result<(), ValidationError> {
+    reject_duplicate_ids(
+        "player_id",
+        state.players.iter().map(|player| player.player_id.as_str()),
+    )?;
+    reject_duplicate_ids(
+        "entity_id",
+        state
+            .entities
+            .iter()
+            .map(|entity| entity.entity_id.as_str()),
+    )?;
+    reject_duplicate_ids(
+        "position.entity_id",
+        state
+            .positions
+            .iter()
+            .map(|position| position.entity_id.as_str()),
+    )?;
+    reject_duplicate_ids(
+        "health.entity_id",
+        state.health.iter().map(|health| health.entity_id.as_str()),
+    )?;
+    Ok(())
+}
+
+/// Return canonical UTF-8 JSON bytes for an [`ArenaState`] after validation.
+pub fn try_canonicalize(state: &ArenaState) -> Result<Vec<u8>, ValidationError> {
+    validate_arena_state(state)?;
+    Ok(canonicalize_unchecked(state))
+}
+
 /// Return canonical UTF-8 JSON bytes for an [`ArenaState`].
 pub fn canonicalize(state: &ArenaState) -> Vec<u8> {
+    try_canonicalize(state).unwrap_or_else(|err| panic!("{err}"))
+}
+
+fn canonicalize_unchecked(state: &ArenaState) -> Vec<u8> {
     let mut canonical = state.clone();
     for player in &mut canonical.players {
         canonicalize_map_values(&mut player.metadata);
@@ -132,6 +197,22 @@ pub fn world_hash(state_root: &str, receipt_root: &str, continuity_root: &str) -
     bytes.extend_from_slice(&receipt_root);
     bytes.extend_from_slice(&continuity_root);
     hash_bytes(&bytes)
+}
+
+fn reject_duplicate_ids<'a>(
+    field: &'static str,
+    ids: impl Iterator<Item = &'a str>,
+) -> Result<(), ValidationError> {
+    let mut seen = BTreeSet::new();
+    for id in ids {
+        if !seen.insert(id) {
+            return Err(ValidationError {
+                field,
+                identifier: id.to_string(),
+            });
+        }
+    }
+    Ok(())
 }
 
 fn decode_root_hex(root: &str, label: &str) -> [u8; 32] {
