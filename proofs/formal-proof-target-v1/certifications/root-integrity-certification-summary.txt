@@ -1,0 +1,5 @@
+ROOT INTEGRITY CERTIFICATION: PASS
+
+Scope: proofs/handoff-v1 canonical fixtures.
+Method: decode each fixture-XXX-canonical.hex value to canonical bytes and compute SHA-256. Compare the lowercase hexadecimal digest to fixture-XXX-root.txt.
+Result: all three fixture roots match SHA-256(canonical bytes).
