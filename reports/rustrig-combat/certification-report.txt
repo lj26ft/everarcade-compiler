@@ -1,0 +1,11 @@
+RUSTRIG COMBAT CERTIFICATION: PASS
+
+Certified invariants:
+- RR-COMBAT-001 Combat Determinism: PASS
+- RR-COMBAT-002 Damage Integrity: PASS
+- RR-COMBAT-003 Health Floor: PASS
+- RR-COMBAT-004 Death Consistency: PASS
+- RR-COMBAT-005 Receipt Integrity: PASS
+- RR-COMBAT-006 Replay Equivalence: PASS
+- RR-COMBAT-007 Root Equivalence: PASS
+- RR-COMBAT-008 JS ↔ Runtime Equivalence: PASS

@@ -52,11 +52,20 @@ fields = ["proposer", "proposal_hash", "votes", "status", "execution_receipt"]
 [[mutations]]
 name = "combat.attack"
 class = "CLASS-A"
-authority = "player_controls_actor"
+authority = "world"
+rustrig = "crates/rustrigs/combat"
+certification = "reports/rustrig-combat/certification-report.txt"
+certification_status = "RUSTRIG COMBAT CERTIFICATION: PASS"
 reads = ["players", "position", "combat", "inventory"]
 writes = ["combat", "receipts"]
-receipt = "combat_attack_receipt"
+receipt = "CombatReceipt"
 certification_targets = ["determinism", "replay_equivalence", "root_equivalence", "receipt_integrity", "state_transition_integrity", "canonical_output"]
+
+[rustrigs.combat.attack]
+crate = "everarcade-rustrig-combat"
+certification = "PASS"
+authority = "world"
+receipt = "CombatReceipt"
 
 [[mutations]]
 name = "inventory.transfer"
@@ -152,6 +161,7 @@ receipt = "system_checkpoint_receipt"
 certification_targets = ["determinism", "replay_equivalence", "root_equivalence", "receipt_integrity", "canonical_output", "upgrade_safety"]
 
 [authority]
+world = "World Contract authority validates declared attack types and bounded deterministic combat mutation."
 player_controls_actor = "Caller identity must deterministically control the actor being mutated."
 owner_or_delegated_inventory_authority = "Caller must own the inventory entry or hold a deterministic delegation."
 signed_market_participants = "All trade participants must provide canonical signed consent or a valid deterministic order commitment."

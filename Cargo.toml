@@ -4,6 +4,7 @@ members = [
     "crates/transport-core",
     "crates/canonicalizer-kernel",
     "crates/rustrigs/inventory",
+    "crates/rustrigs/combat",
     "execution-core",
     "contract-api",
     "control-plane",

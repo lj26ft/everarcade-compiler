@@ -1,0 +1,11 @@
+[package]
+name = "everarcade-rustrig-combat"
+version = "1.0.0"
+edition = "2021"
+description = "Certified EverArcade RustRig reference implementation for combat.attack()."
+
+[lib]
+name = "everarcade_rustrig_combat"
+path = "src/lib.rs"
+
+[dependencies]

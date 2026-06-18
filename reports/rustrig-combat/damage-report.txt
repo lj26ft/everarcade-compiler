@@ -1,0 +1,7 @@
+RUSTRIG COMBAT CERTIFICATION: PASS
+
+Artifact: damage-report
+RustRig: combat.attack
+Crate: everarcade-rustrig-combat
+
+Certified deterministic combat state mutation with reproducible receipts, replay equivalence, and root equivalence.
