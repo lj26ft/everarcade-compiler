@@ -1,0 +1,7 @@
+{
+  "schema": "everarcade.root-integrity.state-root.v1",
+  "state_root": "d3fe47c1fe6f49a50bcd07bad6dc2b3da3a4e1a681e59860a761ffaf9595408d",
+  "runtime_produced_state_root": "d3fe47c1fe6f49a50bcd07bad6dc2b3da3a4e1a681e59860a761ffaf9595408d",
+  "algorithm": "SHA256(canonical(ArenaState))",
+  "match": true
+}

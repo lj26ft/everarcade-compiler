@@ -1,0 +1,9 @@
+{
+  "schema": "everarcade.root-integrity.world-hash.v1",
+  "state_root": "d3fe47c1fe6f49a50bcd07bad6dc2b3da3a4e1a681e59860a761ffaf9595408d",
+  "receipt_root": "e7d7d3a8c378e1e79f90b7ddc30d5f8e7301cfed3c2f4919943c238c734a61a6",
+  "continuity_root": "61008f3891c3aace90019dba9a32d544d96322ac2cdcfe7dd78ff36743855394",
+  "world_hash": "332b5291f9c746cc498745af01e74803b74bd67102917f3e290ffdc37b2ce7a9",
+  "algorithm": "SHA256(state_root || receipt_root || continuity_root)",
+  "match": true
+}
