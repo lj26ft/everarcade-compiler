@@ -1,0 +1,7 @@
+RUSTRIG MARKET TRADE CERTIFICATION: PASS
+
+Certified primitive: market.trade()
+Crate: everarcade-rustrig-market
+Authority: world
+Receipt: TradeReceipt
+Invariants: RR-MARKET-001 through RR-MARKET-009 PASS

@@ -1,0 +1,2 @@
+RR-MARKET-008 Root Equivalence: PASS
+State roots remain identical across repeated execution and replay.

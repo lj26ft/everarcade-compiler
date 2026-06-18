@@ -1,0 +1,2 @@
+RR-MARKET-006 Receipt Integrity: PASS
+TradeReceipt exactly describes the deterministic state transition.

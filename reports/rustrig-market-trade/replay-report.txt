@@ -1,0 +1,2 @@
+RR-MARKET-007 Replay Equivalence: PASS
+Replay from identical initial state and input history produces identical state and receipts.

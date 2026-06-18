@@ -1,0 +1,2 @@
+RR-MARKET-009 Overflow Safety: PASS
+quantity * unit_price uses checked integer arithmetic and rejects overflow deterministically.

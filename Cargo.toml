@@ -5,6 +5,7 @@ members = [
     "crates/canonicalizer-kernel",
     "crates/rustrigs/inventory",
     "crates/rustrigs/combat",
+    "crates/rustrigs/market",
     "execution-core",
     "contract-api",
     "control-plane",

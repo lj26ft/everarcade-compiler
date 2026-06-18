@@ -1,0 +1,2 @@
+RR-MARKET-003 Currency Conservation: PASS
+Total currency balance before trade equals total currency balance after trade.
