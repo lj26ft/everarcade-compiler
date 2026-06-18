@@ -1,0 +1,31 @@
+{
+  "schema": "everarcade.live-hotpocket-cluster.preflight.v0.1",
+  "hotpocket_mode": "local-live-context-harness",
+  "nodes": {
+    "node-a": {
+      "node_id": "node-a",
+      "node_config_valid": true,
+      "package_hash": "f4506af995f874a7c3592898de4fb18b55209e9ead022424b7f78794d45a4408",
+      "contract_hash": "2f19039e525cafee024917df6a3446f2e28dd580f6eaf0efcd91f7dccda5d285",
+      "runtime_hash": "7ea2468f49257b416870e22181a6d9dc6274ade8b1f00aebebbd4f08168c9b56",
+      "genesis_hash": "dccbc8f1e044909ce5d1ea491d32f392f3b0b84a22d5347d6223454fd41449fc"
+    },
+    "node-b": {
+      "node_id": "node-b",
+      "node_config_valid": true,
+      "package_hash": "f4506af995f874a7c3592898de4fb18b55209e9ead022424b7f78794d45a4408",
+      "contract_hash": "2f19039e525cafee024917df6a3446f2e28dd580f6eaf0efcd91f7dccda5d285",
+      "runtime_hash": "7ea2468f49257b416870e22181a6d9dc6274ade8b1f00aebebbd4f08168c9b56",
+      "genesis_hash": "dccbc8f1e044909ce5d1ea491d32f392f3b0b84a22d5347d6223454fd41449fc"
+    },
+    "node-c": {
+      "node_id": "node-c",
+      "node_config_valid": true,
+      "package_hash": "f4506af995f874a7c3592898de4fb18b55209e9ead022424b7f78794d45a4408",
+      "contract_hash": "2f19039e525cafee024917df6a3446f2e28dd580f6eaf0efcd91f7dccda5d285",
+      "runtime_hash": "7ea2468f49257b416870e22181a6d9dc6274ade8b1f00aebebbd4f08168c9b56",
+      "genesis_hash": "dccbc8f1e044909ce5d1ea491d32f392f3b0b84a22d5347d6223454fd41449fc"
+    }
+  },
+  "status": "PASS"
+}

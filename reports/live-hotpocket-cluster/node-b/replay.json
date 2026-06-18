@@ -1,0 +1,22 @@
+{
+  "node_id": "node-b",
+  "status": "PASS",
+  "live": {
+    "state_root": "e90a8ee031a843b1f70b79e33e034384d14a7ce03b0f259f3cda73a98379b4f8",
+    "receipt_root": "be7c9577e1f9e23d5c6317238f0345011cc27d0b45bf91ffb0511ff07e0ba020",
+    "world_hash": "cc6043afcf35dcaebcf67d457731ae5284bff3f3ec4adc89d75fb1da956c98f4",
+    "continuity_root": "ecbb2a10467f99b958434225fb19a8ba6d4f25d856a5f794a376c8644f6f6958"
+  },
+  "replayed": {
+    "state_root": "e90a8ee031a843b1f70b79e33e034384d14a7ce03b0f259f3cda73a98379b4f8",
+    "receipt_root": "be7c9577e1f9e23d5c6317238f0345011cc27d0b45bf91ffb0511ff07e0ba020",
+    "world_hash": "cc6043afcf35dcaebcf67d457731ae5284bff3f3ec4adc89d75fb1da956c98f4",
+    "continuity_root": "ecbb2a10467f99b958434225fb19a8ba6d4f25d856a5f794a376c8644f6f6958"
+  },
+  "checks": {
+    "state_root": true,
+    "receipt_root": true,
+    "world_hash": true,
+    "continuity_root": true
+  }
+}
