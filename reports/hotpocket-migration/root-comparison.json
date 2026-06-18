@@ -1,0 +1,225 @@
+{
+  "schema": "everarcade.hotpocket-migration.root-comparison.v0.1",
+  "source_roots": {
+    "tick": 5,
+    "state_root": "86ecb78930d0be6e1487f8731586d1588e2266b4fb7b110c51493646ab20666e",
+    "receipt_root": "b3b09e6045b05170e26241bd196da0cd33a33d158e27500d3d31a9d158107f16",
+    "continuity_root": "df128e8d12b5c65fdca9bc404d694a3621c4d14a8369bd0675fe2eea77961784",
+    "world_hash": "3cbad7b436ef545c3e44e72b92d0bc9e9a2b67b4af84f468027066535d0e4102"
+  },
+  "destination_roots": {
+    "tick": 5,
+    "state_root": "86ecb78930d0be6e1487f8731586d1588e2266b4fb7b110c51493646ab20666e",
+    "receipt_root": "b3b09e6045b05170e26241bd196da0cd33a33d158e27500d3d31a9d158107f16",
+    "continuity_root": "df128e8d12b5c65fdca9bc404d694a3621c4d14a8369bd0675fe2eea77961784",
+    "world_hash": "3cbad7b436ef545c3e44e72b92d0bc9e9a2b67b4af84f468027066535d0e4102"
+  },
+  "replay_roots": {
+    "source": {
+      "tick": 5,
+      "state_root": "86ecb78930d0be6e1487f8731586d1588e2266b4fb7b110c51493646ab20666e",
+      "receipt_root": "b3b09e6045b05170e26241bd196da0cd33a33d158e27500d3d31a9d158107f16",
+      "continuity_root": "df128e8d12b5c65fdca9bc404d694a3621c4d14a8369bd0675fe2eea77961784",
+      "world_hash": "3cbad7b436ef545c3e44e72b92d0bc9e9a2b67b4af84f468027066535d0e4102"
+    },
+    "destination": {
+      "tick": 5,
+      "state_root": "86ecb78930d0be6e1487f8731586d1588e2266b4fb7b110c51493646ab20666e",
+      "receipt_root": "b3b09e6045b05170e26241bd196da0cd33a33d158e27500d3d31a9d158107f16",
+      "continuity_root": "df128e8d12b5c65fdca9bc404d694a3621c4d14a8369bd0675fe2eea77961784",
+      "world_hash": "3cbad7b436ef545c3e44e72b92d0bc9e9a2b67b4af84f468027066535d0e4102"
+    }
+  },
+  "post_migration_roots": {
+    "tick": 8,
+    "state_root": "ea309448198df55ff128ce9b8367ddbea7fcfbd921ecb0a0c70d21bda2cdaf90",
+    "receipt_root": "d967e3468d79d73556acf019938dc8e24d442f4b5dde2286f152a43fe66f1d8d",
+    "continuity_root": "dfae2e71792fe25627cd2f2cb14518f064ab3f6ac84c774c50e4db79707fa940",
+    "world_hash": "5310c27a70d69bc22d93639ed2ba8294da7815fe413833c3fb830af3a5154e7c"
+  },
+  "source_destination": {
+    "state_root": {
+      "source": "86ecb78930d0be6e1487f8731586d1588e2266b4fb7b110c51493646ab20666e",
+      "destination": "86ecb78930d0be6e1487f8731586d1588e2266b4fb7b110c51493646ab20666e",
+      "match": true
+    },
+    "receipt_root": {
+      "source": "b3b09e6045b05170e26241bd196da0cd33a33d158e27500d3d31a9d158107f16",
+      "destination": "b3b09e6045b05170e26241bd196da0cd33a33d158e27500d3d31a9d158107f16",
+      "match": true
+    },
+    "continuity_root": {
+      "source": "df128e8d12b5c65fdca9bc404d694a3621c4d14a8369bd0675fe2eea77961784",
+      "destination": "df128e8d12b5c65fdca9bc404d694a3621c4d14a8369bd0675fe2eea77961784",
+      "match": true
+    },
+    "world_hash": {
+      "source": "3cbad7b436ef545c3e44e72b92d0bc9e9a2b67b4af84f468027066535d0e4102",
+      "destination": "3cbad7b436ef545c3e44e72b92d0bc9e9a2b67b4af84f468027066535d0e4102",
+      "match": true
+    }
+  },
+  "replay_live": {
+    "source": {
+      "state_root": {
+        "live": "86ecb78930d0be6e1487f8731586d1588e2266b4fb7b110c51493646ab20666e",
+        "replayed": "86ecb78930d0be6e1487f8731586d1588e2266b4fb7b110c51493646ab20666e",
+        "match": true
+      },
+      "receipt_root": {
+        "live": "b3b09e6045b05170e26241bd196da0cd33a33d158e27500d3d31a9d158107f16",
+        "replayed": "b3b09e6045b05170e26241bd196da0cd33a33d158e27500d3d31a9d158107f16",
+        "match": true
+      },
+      "continuity_root": {
+        "live": "df128e8d12b5c65fdca9bc404d694a3621c4d14a8369bd0675fe2eea77961784",
+        "replayed": "df128e8d12b5c65fdca9bc404d694a3621c4d14a8369bd0675fe2eea77961784",
+        "match": true
+      },
+      "world_hash": {
+        "live": "3cbad7b436ef545c3e44e72b92d0bc9e9a2b67b4af84f468027066535d0e4102",
+        "replayed": "3cbad7b436ef545c3e44e72b92d0bc9e9a2b67b4af84f468027066535d0e4102",
+        "match": true
+      }
+    },
+    "destination": {
+      "state_root": {
+        "live": "86ecb78930d0be6e1487f8731586d1588e2266b4fb7b110c51493646ab20666e",
+        "replayed": "86ecb78930d0be6e1487f8731586d1588e2266b4fb7b110c51493646ab20666e",
+        "match": true
+      },
+      "receipt_root": {
+        "live": "b3b09e6045b05170e26241bd196da0cd33a33d158e27500d3d31a9d158107f16",
+        "replayed": "b3b09e6045b05170e26241bd196da0cd33a33d158e27500d3d31a9d158107f16",
+        "match": true
+      },
+      "continuity_root": {
+        "live": "df128e8d12b5c65fdca9bc404d694a3621c4d14a8369bd0675fe2eea77961784",
+        "replayed": "df128e8d12b5c65fdca9bc404d694a3621c4d14a8369bd0675fe2eea77961784",
+        "match": true
+      },
+      "world_hash": {
+        "live": "3cbad7b436ef545c3e44e72b92d0bc9e9a2b67b4af84f468027066535d0e4102",
+        "replayed": "3cbad7b436ef545c3e44e72b92d0bc9e9a2b67b4af84f468027066535d0e4102",
+        "match": true
+      }
+    }
+  },
+  "continuation": {
+    "previous_roots": {
+      "tick": 5,
+      "state_root": "86ecb78930d0be6e1487f8731586d1588e2266b4fb7b110c51493646ab20666e",
+      "receipt_root": "b3b09e6045b05170e26241bd196da0cd33a33d158e27500d3d31a9d158107f16",
+      "continuity_root": "df128e8d12b5c65fdca9bc404d694a3621c4d14a8369bd0675fe2eea77961784",
+      "world_hash": "3cbad7b436ef545c3e44e72b92d0bc9e9a2b67b4af84f468027066535d0e4102"
+    },
+    "continuation_inputs": [
+      {
+        "action": "join",
+        "player": "player-3"
+      },
+      {
+        "action": "move",
+        "player": "player-3",
+        "direction": "north"
+      },
+      {
+        "action": "attack",
+        "player": "player-3",
+        "target": "player-2"
+      }
+    ],
+    "continuation_outputs": [
+      {
+        "input": {
+          "action": "join",
+          "player": "player-3"
+        },
+        "tick": 6,
+        "roots": {
+          "tick": 6,
+          "state_root": "fd2daa2d67d5a4f9ad02d9e01500fe748c6afebcf663561373fcfe1f1db77c19",
+          "receipt_root": "1cead9cd0b5b45a784fde58fca16ae02e303331b77c98f1c780407f383ee6fe7",
+          "continuity_root": "d216b828f5d31c21a999fac516ecb0a4cec2cba8df0029b5d4f67d74b0b4d39c",
+          "world_hash": "5722be2c96ee64aebd8950c3d11531cfcc2dface0f70f1efb40f809e062fbfe8"
+        }
+      },
+      {
+        "input": {
+          "action": "move",
+          "player": "player-3",
+          "direction": "north"
+        },
+        "tick": 7,
+        "roots": {
+          "tick": 7,
+          "state_root": "2fc61baff73a4828e78355d894d2f343f55a013d59807f9617ff7456dc4909d2",
+          "receipt_root": "10b62baab3a9caf5e7d92ba6bfa53442fbbbf6ba7c102c1a558927e1977ea6f5",
+          "continuity_root": "922fede90c8e26844341576d2fae52699c0b97f0781fcaf39c0a13fc5b236ade",
+          "world_hash": "3062691c5301ab7f38b665d88b44ab60cee84c83d529c9126c3fbee9b774dedf"
+        }
+      },
+      {
+        "input": {
+          "action": "attack",
+          "player": "player-3",
+          "target": "player-2"
+        },
+        "tick": 8,
+        "roots": {
+          "tick": 8,
+          "state_root": "ea309448198df55ff128ce9b8367ddbea7fcfbd921ecb0a0c70d21bda2cdaf90",
+          "receipt_root": "d967e3468d79d73556acf019938dc8e24d442f4b5dde2286f152a43fe66f1d8d",
+          "continuity_root": "dfae2e71792fe25627cd2f2cb14518f064ab3f6ac84c774c50e4db79707fa940",
+          "world_hash": "5310c27a70d69bc22d93639ed2ba8294da7815fe413833c3fb830af3a5154e7c"
+        }
+      }
+    ],
+    "roots_advanced": true,
+    "state_reset": false,
+    "fork_detected": false,
+    "replay_after_continuation": {
+      "schema": "everarcade.hotpocket-migration.post-migration-replay.v0.1",
+      "replay_from": "genesis",
+      "journal_entries": 8,
+      "live_roots": {
+        "tick": 8,
+        "state_root": "ea309448198df55ff128ce9b8367ddbea7fcfbd921ecb0a0c70d21bda2cdaf90",
+        "receipt_root": "d967e3468d79d73556acf019938dc8e24d442f4b5dde2286f152a43fe66f1d8d",
+        "continuity_root": "dfae2e71792fe25627cd2f2cb14518f064ab3f6ac84c774c50e4db79707fa940",
+        "world_hash": "5310c27a70d69bc22d93639ed2ba8294da7815fe413833c3fb830af3a5154e7c"
+      },
+      "replay_roots": {
+        "tick": 8,
+        "state_root": "ea309448198df55ff128ce9b8367ddbea7fcfbd921ecb0a0c70d21bda2cdaf90",
+        "receipt_root": "d967e3468d79d73556acf019938dc8e24d442f4b5dde2286f152a43fe66f1d8d",
+        "continuity_root": "dfae2e71792fe25627cd2f2cb14518f064ab3f6ac84c774c50e4db79707fa940",
+        "world_hash": "5310c27a70d69bc22d93639ed2ba8294da7815fe413833c3fb830af3a5154e7c"
+      },
+      "comparisons": {
+        "state_root": {
+          "live": "ea309448198df55ff128ce9b8367ddbea7fcfbd921ecb0a0c70d21bda2cdaf90",
+          "replayed": "ea309448198df55ff128ce9b8367ddbea7fcfbd921ecb0a0c70d21bda2cdaf90",
+          "match": true
+        },
+        "receipt_root": {
+          "live": "d967e3468d79d73556acf019938dc8e24d442f4b5dde2286f152a43fe66f1d8d",
+          "replayed": "d967e3468d79d73556acf019938dc8e24d442f4b5dde2286f152a43fe66f1d8d",
+          "match": true
+        },
+        "continuity_root": {
+          "live": "dfae2e71792fe25627cd2f2cb14518f064ab3f6ac84c774c50e4db79707fa940",
+          "replayed": "dfae2e71792fe25627cd2f2cb14518f064ab3f6ac84c774c50e4db79707fa940",
+          "match": true
+        },
+        "world_hash": {
+          "live": "5310c27a70d69bc22d93639ed2ba8294da7815fe413833c3fb830af3a5154e7c",
+          "replayed": "5310c27a70d69bc22d93639ed2ba8294da7815fe413833c3fb830af3a5154e7c",
+          "match": true
+        }
+      },
+      "ok": true
+    }
+  },
+  "ok": true
+}
