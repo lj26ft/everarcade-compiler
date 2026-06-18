@@ -1,0 +1,7 @@
+EverArcade v0.1 Repository Release Validation
+
+No committed binaries: PASS — generated archives world.evr, formal-proof-target-v1.tar.gz, handoff-v1.tar.gz are not release-tracked artifacts.
+Reproducibility: PASS — reference world package uses sorted file order, fixed tar metadata, numeric owner/group, and gzip tar output from operator/build-world-evr.sh.
+Known exceptions: PASS — runtime/gpu-marketplace/Cargo.lock may remain intentionally untracked if present in operator environments.
+
+Repository release gate result: PASS

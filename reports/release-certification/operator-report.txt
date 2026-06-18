@@ -1,0 +1,14 @@
+EverArcade v0.1 Operator Experience Validation
+
+Operator onboarding flow: PASS
+1. Clone repository.
+2. Build world.evr with examples/reference-certified-world-v1/operator/build-world-evr.sh.
+3. Verify package with examples/reference-certified-world-v1/operator/verify.sh.
+4. Inspect registry at examples/reference-world-registry/ and examples/reference-certified-world-v1/registry/.
+5. Deploy world using documented operator deployment runbooks.
+6. Replay world using replay certification artifacts.
+7. Restore world using restore certification artifacts.
+8. Migrate world using migration certification artifacts.
+9. Verify roots using root-integrity and JS/kernel equivalence reports.
+
+Operator experience gate result: PASS

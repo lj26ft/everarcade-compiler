@@ -1,0 +1,12 @@
+EverArcade v0.1 Canonicalizer Certification
+
+Canonicalizer Spec: PASS
+Canonicalizer Kernel: PASS
+Root Integrity Certification: PASS
+JS ↔ Kernel Equivalence: PASS
+Differential Edge Cases: PASS
+
+Regression vectors covered: VEC-1, VEC-2, VEC-3.
+Evidence: reports/root-integrity/, reports/js-kernel-equivalence/, examples/reference-certified-world-v1/certification/root-integrity-report.txt, examples/reference-certified-world-v1/certification/js-kernel-equivalence-report.txt.
+
+Canonicalizer gate result: PASS

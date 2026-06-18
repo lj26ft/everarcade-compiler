@@ -1,0 +1,11 @@
+EverArcade v0.1 Formal Verification Boundary Certification
+
+Formal Proof Package: Formal Proof Package V1
+Proof Mapping Framework: Proof Mapping Framework V1
+Canonical Fixtures: PASS
+Proof Targets: PASS
+
+Evidence: examples/reference-certified-world-v1/proofs/formal/, examples/reference-certified-world-v1/proofs/proof-map.toml, scripts/package-formal-proof-target.js.
+Internal consistency: PASS — proof map, canonical fixtures, runtime reports, root-integrity reports, and JS/kernel equivalence reports reference the same v0.1 certification boundary.
+
+Formal verification boundary gate result: PASS
