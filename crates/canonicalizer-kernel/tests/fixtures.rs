@@ -118,22 +118,22 @@ fn gap_2_duplicate_identifier_fixtures_are_rejected_before_canonicalization() {
         (
             "fixture-gap2-duplicate-player-state.json",
             "player_id",
-            "GAP-2 VALIDATION: FAIL duplicate player_id player-dup",
+            "ERROR duplicate player_id: player-dup",
         ),
         (
             "fixture-gap2-duplicate-entity-state.json",
             "entity_id",
-            "GAP-2 VALIDATION: FAIL duplicate entity_id entity-dup",
+            "ERROR duplicate entity_id: entity-dup",
         ),
         (
             "fixture-gap2-duplicate-position-state.json",
             "position.entity_id",
-            "GAP-2 VALIDATION: FAIL duplicate position.entity_id entity-dup",
+            "ERROR duplicate position entity_id: entity-dup",
         ),
         (
             "fixture-gap2-duplicate-health-state.json",
             "health.entity_id",
-            "GAP-2 VALIDATION: FAIL duplicate health.entity_id entity-dup",
+            "ERROR duplicate health entity_id: entity-dup",
         ),
     ];
 

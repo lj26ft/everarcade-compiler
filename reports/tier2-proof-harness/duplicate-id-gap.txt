@@ -1,0 +1,11 @@
+TIER-2 DUPLICATE ID GAP: CLOSED
+
+Duplicate identity validation is enforced before canonicalization for:
+- players.player_id
+- entities.entity_id
+- positions.entity_id
+- health.entity_id
+
+Invalid duplicate-identity ArenaState inputs produce deterministic validation errors and no canonical bytes, state_root, or world_hash.
+
+CANONICALIZER DUPLICATE ID VALIDATION: PASS

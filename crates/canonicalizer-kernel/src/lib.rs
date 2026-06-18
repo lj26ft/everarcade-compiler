@@ -86,19 +86,41 @@ pub struct ArenaMetadata {
     pub extensions: BTreeMap<String, Value>,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct ValidationError {
-    field: &'static str,
-    identifier: String,
+#[derive(Clone, Debug, PartialEq, Eq, Serialize)]
+#[serde(tag = "type", content = "identifier")]
+pub enum ValidationError {
+    DuplicatePlayerId(String),
+    DuplicateEntityId(String),
+    DuplicatePositionEntityId(String),
+    DuplicateHealthEntityId(String),
 }
 
 impl ValidationError {
     pub fn field(&self) -> &'static str {
-        self.field
+        match self {
+            Self::DuplicatePlayerId(_) => "player_id",
+            Self::DuplicateEntityId(_) => "entity_id",
+            Self::DuplicatePositionEntityId(_) => "position.entity_id",
+            Self::DuplicateHealthEntityId(_) => "health.entity_id",
+        }
     }
 
     pub fn identifier(&self) -> &str {
-        &self.identifier
+        match self {
+            Self::DuplicatePlayerId(id)
+            | Self::DuplicateEntityId(id)
+            | Self::DuplicatePositionEntityId(id)
+            | Self::DuplicateHealthEntityId(id) => id,
+        }
+    }
+
+    fn cli_label(&self) -> &'static str {
+        match self {
+            Self::DuplicatePlayerId(_) => "player_id",
+            Self::DuplicateEntityId(_) => "entity_id",
+            Self::DuplicatePositionEntityId(_) => "position entity_id",
+            Self::DuplicateHealthEntityId(_) => "health entity_id",
+        }
     }
 }
 
@@ -106,8 +128,9 @@ impl std::fmt::Display for ValidationError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
-            "GAP-2 VALIDATION: FAIL duplicate {} {}",
-            self.field, self.identifier
+            "ERROR duplicate {}: {}",
+            self.cli_label(),
+            self.identifier()
         )
     }
 }
@@ -117,26 +140,26 @@ impl std::error::Error for ValidationError {}
 /// Validate an [`ArenaState`] before canonicalization.
 pub fn validate_arena_state(state: &ArenaState) -> Result<(), ValidationError> {
     reject_duplicate_ids(
-        "player_id",
         state.players.iter().map(|player| player.player_id.as_str()),
+        ValidationError::DuplicatePlayerId,
     )?;
     reject_duplicate_ids(
-        "entity_id",
         state
             .entities
             .iter()
             .map(|entity| entity.entity_id.as_str()),
+        ValidationError::DuplicateEntityId,
     )?;
     reject_duplicate_ids(
-        "position.entity_id",
         state
             .positions
             .iter()
             .map(|position| position.entity_id.as_str()),
+        ValidationError::DuplicatePositionEntityId,
     )?;
     reject_duplicate_ids(
-        "health.entity_id",
         state.health.iter().map(|health| health.entity_id.as_str()),
+        ValidationError::DuplicateHealthEntityId,
     )?;
     Ok(())
 }
@@ -183,8 +206,13 @@ fn canonicalize_unchecked(state: &ArenaState) -> Vec<u8> {
 }
 
 /// Return the SHA-256 state root as lowercase hex over [`canonicalize`] bytes.
+pub fn try_state_root(state: &ArenaState) -> Result<String, ValidationError> {
+    Ok(hash_bytes(&try_canonicalize(state)?))
+}
+
+/// Return the SHA-256 state root as lowercase hex over [`canonicalize`] bytes.
 pub fn state_root(state: &ArenaState) -> String {
-    hash_bytes(&canonicalize(state))
+    try_state_root(state).unwrap_or_else(|err| panic!("{err}"))
 }
 
 /// Return the SHA-256 world hash as lowercase hex over the ordered roots.
@@ -200,16 +228,13 @@ pub fn world_hash(state_root: &str, receipt_root: &str, continuity_root: &str) -
 }
 
 fn reject_duplicate_ids<'a>(
-    field: &'static str,
     ids: impl Iterator<Item = &'a str>,
+    error: impl Fn(String) -> ValidationError,
 ) -> Result<(), ValidationError> {
     let mut seen = BTreeSet::new();
     for id in ids {
         if !seen.insert(id) {
-            return Err(ValidationError {
-                field,
-                identifier: id.to_string(),
-            });
+            return Err(error(id.to_string()));
         }
     }
     Ok(())

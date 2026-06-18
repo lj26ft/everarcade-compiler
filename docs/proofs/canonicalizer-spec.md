@@ -500,3 +500,11 @@ A conforming implementation MUST:
 4. Compute `state_root` as SHA-256 over exactly those bytes.
 5. Compute `world_hash` as SHA-256 over `state_root_bytes || receipt_root_bytes || continuity_root_bytes`.
 6. Produce identical roots across independent implementations for the same valid state.
+
+## INV-009 Duplicate Identity Rejection
+
+Identity-bearing arrays MUST contain unique identifiers before canonical bytes are generated. The required uniqueness domains are `players.player_id`, `entities.entity_id`, `positions.entity_id`, and `health.entity_id`.
+
+Duplicate identifiers are invalid state. Invalid duplicate-identity `ArenaState` input MUST be rejected before canonicalization and MUST NOT produce canonical bytes, a `state_root`, or a `world_hash`.
+
+Statement: No invalid duplicate-identity ArenaState may produce canonical bytes or roots.

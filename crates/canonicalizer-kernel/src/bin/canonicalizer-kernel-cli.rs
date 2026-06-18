@@ -1,4 +1,4 @@
-use canonicalizer_kernel::{state_root, try_canonicalize, world_hash, ArenaState};
+use canonicalizer_kernel::{try_canonicalize, try_state_root, world_hash, ArenaState};
 use serde::Serialize;
 use std::env;
 use std::io::{self, Read};
@@ -24,7 +24,7 @@ fn main() {
                 eprintln!("{err}");
                 std::process::exit(1);
             });
-            let root = state_root(&state);
+            let root = try_state_root(&state).expect("validated canonical state has a state root");
             let output = StateOutput {
                 canonical_hex: hex::encode(&bytes),
                 canonical_utf8: String::from_utf8(bytes).expect("canonical JSON is UTF-8"),

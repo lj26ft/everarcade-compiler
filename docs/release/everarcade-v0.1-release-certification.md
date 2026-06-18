@@ -204,3 +204,10 @@ EverArcade v0.1 is release certified.
 ```text
 EVERARCADE V0.1 RELEASE CERTIFICATION: PASS
 ```
+
+## INV-009 Duplicate Identity Rejection
+
+Identity-bearing arrays must contain unique IDs. Duplicate identifiers in `players.player_id`, `entities.entity_id`, `positions.entity_id`, or `health.entity_id` are invalid state. Invalid state must be rejected before canonicalization and must not emit canonical bytes, `state_root`, or `world_hash`.
+
+TIER-2 DUPLICATE ID GAP: CLOSED
+CANONICALIZER DUPLICATE ID VALIDATION: PASS
