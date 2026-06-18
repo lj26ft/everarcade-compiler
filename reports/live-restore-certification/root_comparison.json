@@ -1,0 +1,54 @@
+{
+  "schema": "everarcade.live-restore.root-comparison.v0.1",
+  "pre_restore_roots": {
+    "tick": 5,
+    "state_root": "cf49b0c726c506df7dbde3f8c2614471e7f82c1632ebeb125a8b95449636f07e",
+    "receipt_root": "7dc14f7c94b90e41c0aa751279af842d36c6178ecefe01646153d48ea2c2f7ba",
+    "world_hash": "3cbad7b436ef545c3e44e72b92d0bc9e9a2b67b4af84f468027066535d0e4102",
+    "continuity_root": "82a0bc36ac8e303001bbc7026a44ed20a57a57beaa5be04720c2a06fd83d15c6"
+  },
+  "replayed_roots": {
+    "continuity_root": "82a0bc36ac8e303001bbc7026a44ed20a57a57beaa5be04720c2a06fd83d15c6",
+    "receipt_root": "7dc14f7c94b90e41c0aa751279af842d36c6178ecefe01646153d48ea2c2f7ba",
+    "state_root": "cf49b0c726c506df7dbde3f8c2614471e7f82c1632ebeb125a8b95449636f07e",
+    "tick": 5,
+    "world_hash": "3cbad7b436ef545c3e44e72b92d0bc9e9a2b67b4af84f468027066535d0e4102"
+  },
+  "post_restore_roots": {
+    "continuity_root": "c6b630b7b729f2ff65de36e96f5341f6c2b9a8957526784977ee7590ee2a56fd",
+    "receipt_root": "8999ec4f705a91178cab1e538dc58ddbd4fa5b611c6586d666da4d149eb06fa1",
+    "state_root": "bf5ce3bb56f4614d07691db787091d02435bfb387d5183937eda4f9b58335b4c",
+    "tick": 8,
+    "world_hash": "5310c27a70d69bc22d93639ed2ba8294da7815fe413833c3fb830af3a5154e7c"
+  },
+  "pre_restore_matches_replay": {
+    "state_root": {
+      "persisted": "cf49b0c726c506df7dbde3f8c2614471e7f82c1632ebeb125a8b95449636f07e",
+      "replayed": "cf49b0c726c506df7dbde3f8c2614471e7f82c1632ebeb125a8b95449636f07e",
+      "match": true
+    },
+    "receipt_root": {
+      "persisted": "7dc14f7c94b90e41c0aa751279af842d36c6178ecefe01646153d48ea2c2f7ba",
+      "replayed": "7dc14f7c94b90e41c0aa751279af842d36c6178ecefe01646153d48ea2c2f7ba",
+      "match": true
+    },
+    "world_hash": {
+      "persisted": "3cbad7b436ef545c3e44e72b92d0bc9e9a2b67b4af84f468027066535d0e4102",
+      "replayed": "3cbad7b436ef545c3e44e72b92d0bc9e9a2b67b4af84f468027066535d0e4102",
+      "match": true
+    },
+    "continuity_root": {
+      "persisted": "82a0bc36ac8e303001bbc7026a44ed20a57a57beaa5be04720c2a06fd83d15c6",
+      "replayed": "82a0bc36ac8e303001bbc7026a44ed20a57a57beaa5be04720c2a06fd83d15c6",
+      "match": true
+    }
+  },
+  "post_restore_derives_from_same_lineage": true,
+  "continuity_chain": {
+    "previous_continuity_root": "82a0bc36ac8e303001bbc7026a44ed20a57a57beaa5be04720c2a06fd83d15c6",
+    "new_continuity_root": "c6b630b7b729f2ff65de36e96f5341f6c2b9a8957526784977ee7590ee2a56fd",
+    "continuity_reset": false,
+    "continuity_extends_previous": true
+  },
+  "ok": true
+}

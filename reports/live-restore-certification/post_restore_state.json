@@ -1,0 +1,73 @@
+{
+  "schema": "everarcade.live-restore.state.v0.1",
+  "phase": "post_restore",
+  "world": "Arena Vanguard",
+  "journal_entries": 8,
+  "roots": {
+    "continuity_root": "c6b630b7b729f2ff65de36e96f5341f6c2b9a8957526784977ee7590ee2a56fd",
+    "receipt_root": "8999ec4f705a91178cab1e538dc58ddbd4fa5b611c6586d666da4d149eb06fa1",
+    "state_root": "bf5ce3bb56f4614d07691db787091d02435bfb387d5183937eda4f9b58335b4c",
+    "tick": 8,
+    "world_hash": "5310c27a70d69bc22d93639ed2ba8294da7815fe413833c3fb830af3a5154e7c"
+  },
+  "previous_continuity_root": "82a0bc36ac8e303001bbc7026a44ed20a57a57beaa5be04720c2a06fd83d15c6",
+  "continuation_inputs": [
+    {
+      "action": "join",
+      "player": "player-3"
+    },
+    {
+      "action": "move",
+      "player": "player-3",
+      "direction": "north"
+    },
+    {
+      "action": "attack",
+      "player": "player-3",
+      "target": "player-2"
+    }
+  ],
+  "continuation_outputs": [
+    {
+      "input": {
+        "action": "join",
+        "player": "player-3"
+      },
+      "roots": {
+        "state_root": "58a8ab8f4102eef507d2a5839ea6d2038ecb24921e03da9472f7281cc0262acf",
+        "receipt_root": "2fd53efb02e52493c35ccf10185fad42e22c09e33879ceeb14ca2f90af3440fb",
+        "world_hash": "5722be2c96ee64aebd8950c3d11531cfcc2dface0f70f1efb40f809e062fbfe8",
+        "continuity_root": "1dfc75d57b3e2e020ba2386acd4ff2aa4fde06bdce34ae30f5561f8f873f37f7"
+      },
+      "tick": 6
+    },
+    {
+      "input": {
+        "action": "move",
+        "player": "player-3",
+        "direction": "north"
+      },
+      "roots": {
+        "state_root": "4cd3aef569d54cfcf3e70149b85dc2cdc4a8656a681712d9d4455ed461c6b7f4",
+        "receipt_root": "6f545024dd7873a779f0276f18f9be1ffd54a37b45112af19a05653e7c0b3780",
+        "world_hash": "3062691c5301ab7f38b665d88b44ab60cee84c83d529c9126c3fbee9b774dedf",
+        "continuity_root": "df74f1e208b3740aab44e58c393669ef370cd1e226f908083f4da6a0a673eac3"
+      },
+      "tick": 7
+    },
+    {
+      "input": {
+        "action": "attack",
+        "player": "player-3",
+        "target": "player-2"
+      },
+      "roots": {
+        "state_root": "bf5ce3bb56f4614d07691db787091d02435bfb387d5183937eda4f9b58335b4c",
+        "receipt_root": "8999ec4f705a91178cab1e538dc58ddbd4fa5b611c6586d666da4d149eb06fa1",
+        "world_hash": "5310c27a70d69bc22d93639ed2ba8294da7815fe413833c3fb830af3a5154e7c",
+        "continuity_root": "c6b630b7b729f2ff65de36e96f5341f6c2b9a8957526784977ee7590ee2a56fd"
+      },
+      "tick": 8
+    }
+  ]
+}
