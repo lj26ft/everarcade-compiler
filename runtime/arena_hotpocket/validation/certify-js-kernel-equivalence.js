@@ -35,7 +35,22 @@ function orderObject(input, fields) {
   for (const f of fields) out[f] = input[f];
   return out;
 }
+function rejectDuplicateIds(items, key, label) {
+  const seen = new Set();
+  for (const item of items || []) {
+    const id = item[key];
+    if (seen.has(id)) throw new Error(`ERROR duplicate ${label}: ${id}`);
+    seen.add(id);
+  }
+}
+function validateArenaState(input) {
+  rejectDuplicateIds(input.players, 'player_id', 'player_id');
+  rejectDuplicateIds(input.entities, 'entity_id', 'entity_id');
+  rejectDuplicateIds(input.positions, 'entity_id', 'position entity_id');
+  rejectDuplicateIds(input.health, 'entity_id', 'health entity_id');
+}
 function normalizeArenaState(input) {
+  validateArenaState(input);
   return orderObject({
     ...input,
     players: (input.players || []).map((p) => orderObject({ ...p, metadata: sortValue(p.metadata || {}) }, PLAYER_FIELDS)).sort((a, b) => utf8Compare(a.player_id, b.player_id)),

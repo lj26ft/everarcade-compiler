@@ -196,3 +196,11 @@ A verifier can answer the success criteria as follows:
 - **Future proofs:** Section 4 maps each invariant to a future proof obligation and proof status.
 
 **Result:** `PROOF MAPPING FRAMEWORK V1: PASS`
+
+### INV-009 — Duplicate Identity Rejection
+
+No invalid duplicate-identity ArenaState may produce canonical bytes or roots. Identity-bearing arrays must contain unique IDs for `players.player_id`, `entities.entity_id`, `positions.entity_id`, and `health.entity_id`; duplicate identifiers are invalid state and must be rejected before canonicalization.
+
+| Invariant | Evidence | Status | Artifact |
+| --- | --- | --- | --- |
+| INV-009 Duplicate Identity Rejection | Kernel validation rejects duplicate player, entity, position, and health IDs before canonicalization; JS equivalence validation applies the same rule. | CERTIFIED | `crates/canonicalizer-kernel/tests/fixtures.rs`; `runtime/arena_hotpocket/validation/certify-js-kernel-equivalence.js`; `reports/tier2-proof-harness/duplicate-id-gap.txt` |
