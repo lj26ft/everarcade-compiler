@@ -18,10 +18,16 @@ const RUNTIME_VERSION = 'everarcade-runtime-v0.1';
 
 function ensureDir(dir) { fs.mkdirSync(dir, { recursive: true }); }
 function sha256Bytes(bytes) { return crypto.createHash('sha256').update(bytes).digest('hex'); }
+function compareUtf8Bytes(left, right) {
+  return Buffer.compare(Buffer.from(left, 'utf8'), Buffer.from(right, 'utf8'));
+}
+function sortedKeys(value) {
+  return Object.keys(value).sort(compareUtf8Bytes);
+}
 function canonicalize(value) {
   if (value === null || typeof value !== 'object') return JSON.stringify(value);
   if (Array.isArray(value)) return `[${value.map(canonicalize).join(',')}]`;
-  return `{${Object.keys(value).sort().map((key) => `${JSON.stringify(key)}:${canonicalize(value[key])}`).join(',')}}`;
+  return `{${sortedKeys(value).map((key) => `${JSON.stringify(key)}:${canonicalize(value[key])}`).join(',')}}`;
 }
 function canonicalHash(value) { return crypto.createHash('sha256').update(canonicalize(value)).digest('hex'); }
 function normalizeAction(input) {
@@ -173,7 +179,7 @@ function execute(actions = DEFAULT_ACTIONS, options = {}) {
   };
 }
 
-module.exports = { DEFAULT_ACTIONS, WORLD_ID, RUNTIME_VERSION, canonicalize, canonicalHash, normalizeActions, execute, ensureRuntimePackage };
+module.exports = { DEFAULT_ACTIONS, WORLD_ID, RUNTIME_VERSION, compareUtf8Bytes, canonicalize, canonicalHash, normalizeActions, execute, ensureRuntimePackage };
 
 if (require.main === module) {
   const input = process.argv[2] ? JSON.parse(fs.readFileSync(process.argv[2], 'utf8')) : DEFAULT_ACTIONS;
