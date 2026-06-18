@@ -1,0 +1,12 @@
+{
+  "name": "arena-vanguard-hotpocket-cluster",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Identical Arena Vanguard HotPocket cluster deployment package.",
+  "main": "contract/hotpocket-adapter.mjs",
+  "scripts": {
+    "start": "node contract/hotpocket-adapter.mjs",
+    "verify": "node ../../hotpocket-arena-wrapper/validation/verify-live-hotpocket-cluster.mjs"
+  },
+  "files": ["contract", "runtime", "genesis", "projection", "README.md"]
+}

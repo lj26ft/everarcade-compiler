@@ -1,0 +1,26 @@
+{
+  "schema": "everarcade.hotpocket-live.failure-tests.v0.1",
+  "tests": [
+    {
+      "name": "invalid-input",
+      "result": "rejected deterministically",
+      "divergence": false
+    },
+    {
+      "name": "duplicate-input",
+      "result": "same handling across nodes",
+      "divergence": false
+    },
+    {
+      "name": "node-restart",
+      "result": "recovered from persisted journal and replay verified",
+      "divergence": false
+    },
+    {
+      "name": "cluster-restart",
+      "result": "same world state and commitments after reload",
+      "divergence": false
+    }
+  ],
+  "status": "PASS"
+}

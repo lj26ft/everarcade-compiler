@@ -1,0 +1,25 @@
+hpc.init() observed via adapter handleContext invocation
+ctx.users.list()
+ctx.users.read()
+ctx.lclSeqNo=1
+ctx.npl=3
+hpc.init() observed via adapter handleContext invocation
+ctx.users.list()
+ctx.users.read()
+ctx.lclSeqNo=2
+ctx.npl=3
+hpc.init() observed via adapter handleContext invocation
+ctx.users.list()
+ctx.users.read()
+ctx.lclSeqNo=3
+ctx.npl=3
+hpc.init() observed via adapter handleContext invocation
+ctx.users.list()
+ctx.users.read()
+ctx.lclSeqNo=4
+ctx.npl=3
+hpc.init() observed via adapter handleContext invocation
+ctx.users.list()
+ctx.users.read()
+ctx.lclSeqNo=5
+ctx.npl=3
