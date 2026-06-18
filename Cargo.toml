@@ -2,6 +2,7 @@
 members = [
     "everarcade-abi",
     "crates/transport-core",
+    "crates/canonicalizer-kernel",
     "execution-core",
     "contract-api",
     "control-plane",
