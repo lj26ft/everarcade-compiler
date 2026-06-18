@@ -1,0 +1,11 @@
+{
+  "schema": "everarcade.hotpocket.federation.world_hash.v0.1",
+  "generated_at": "1970-01-01T00:00:00.000Z",
+  "nodes": {
+    "node1": "3cbad7b436ef545c3e44e72b92d0bc9e9a2b67b4af84f468027066535d0e4102",
+    "node2": "3cbad7b436ef545c3e44e72b92d0bc9e9a2b67b4af84f468027066535d0e4102",
+    "node3": "3cbad7b436ef545c3e44e72b92d0bc9e9a2b67b4af84f468027066535d0e4102"
+  },
+  "match": true,
+  "canonical": "3cbad7b436ef545c3e44e72b92d0bc9e9a2b67b4af84f468027066535d0e4102"
+}

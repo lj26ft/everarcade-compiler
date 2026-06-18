@@ -1,0 +1,14 @@
+EverArcade Federation Replay Certification
+
+World: Arena Vanguard
+Nodes Verified: 3
+
+State Root Match: PASS
+Receipt Root Match: PASS
+World Hash Match: PASS
+Continuity Root Match: PASS
+
+Replay Verification: PASS
+
+Result:
+LIVE HOTPOCKET FEDERATION CERTIFICATION: PASS
