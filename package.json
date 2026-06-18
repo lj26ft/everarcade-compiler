@@ -18,7 +18,8 @@
     "frontend:validate": "bash scripts/run_frontend_validation.sh",
     "docs:start": "docusaurus start",
     "docs:build": "docusaurus build",
-    "docs:serve": "docusaurus serve"
+    "docs:serve": "docusaurus serve",
+    "certify:federation": "node runtime/arena_hotpocket/validation/certify-federation.js"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "latest",
