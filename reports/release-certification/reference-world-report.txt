@@ -1,0 +1,8 @@
+EverArcade v0.1 Reference Certified World Validation
+
+Reference world: examples/reference-certified-world-v1/
+Build: PASS — operator/build-world-evr.sh generated world.evr.
+Verify: PASS — operator/verify.sh returned REFERENCE CERTIFIED WORLD V1: PASS.
+Package contents: PASS — generated package includes manifest, world contract, rustrigs, genesis, continuity, proofs, metadata, certification artifacts, registry entry, assets, and operator guide.
+
+Reference certified world gate result: PASS

@@ -1,0 +1,11 @@
+EverArcade v0.1 RustRig Certification
+
+inventory.transfer(): PASS
+combat.attack(): PASS
+market.trade(): PASS
+governance.vote(): PASS
+
+Each certified RustRig contains tests, certification report linkage, developer documentation, and world contract integration through the reference world package and RustRig documentation.
+Evidence: docs/rustrigs/, examples/reference-certified-world-v1/rustrigs/, examples/reference-certified-world-v1/world-contract/world-contract.toml.
+
+RustRig gate result: PASS

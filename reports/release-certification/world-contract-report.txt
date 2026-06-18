@@ -1,0 +1,8 @@
+EverArcade v0.1 World Contract Certification
+
+World Contract Framework: PASS
+Evidence: docs/world-contract-certification-framework-v1.md
+Reference World Contract: PASS
+Evidence: examples/reference-certified-world-v1/world-contract/world-contract.toml and examples/reference-certified-world-v1/certification/world-contract-report.txt.
+
+World contract gate result: PASS

@@ -1,0 +1,12 @@
+EverArcade v0.1 Runtime Certification
+
+Replay Certification: PASS
+Evidence: examples/reference-certified-world-v1/certification/replay-report.txt
+Federation Certification: PASS
+Evidence: examples/reference-certified-world-v1/certification/federation-report.txt
+Restore Certification: PASS
+Evidence: examples/reference-certified-world-v1/certification/restore-report.txt
+Migration Certification: PASS
+Evidence: examples/reference-certified-world-v1/certification/migration-report.txt
+
+Runtime gate result: PASS

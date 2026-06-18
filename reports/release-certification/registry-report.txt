@@ -1,0 +1,11 @@
+EverArcade v0.1 World Registry Certification
+
+World Registry Specification: PASS
+Evidence: docs/world-registry-spec-v1.md
+Reference Registry: PASS
+Evidence: examples/reference-world-registry/registry.json and examples/reference-certified-world-v1/registry/reference-world-registry-entry.json.
+Registry Hash: PASS
+Deterministic registry hash: sha256:7883567a82d553e5cd3cd79a6442495345992043527b869fed9561d458aa797b
+Evidence: examples/reference-world-registry/registry-hash.txt; regenerated with sha256sum over canonical registry JSON bytes.
+
+World registry gate result: PASS

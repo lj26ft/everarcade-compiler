@@ -1,0 +1,10 @@
+EverArcade v0.1 World Package Certification
+
+World Package Specification: PASS
+Evidence: docs/world-package-spec-v1.md
+World Package Certification Framework: PASS
+Evidence: docs/world-package-certification-framework-v1.md
+Reference Certified World: PASS
+Evidence: examples/reference-certified-world-v1/ and examples/reference-certified-world-v1/certification/world-package-report.txt.
+
+World package gate result: PASS
