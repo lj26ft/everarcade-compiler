@@ -414,6 +414,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "everarcade-rustrig-inventory"
+version = "1.0.0"
+
+[[package]]
 name = "everarcade-sdk"
 version = "0.1.0"
 dependencies = [

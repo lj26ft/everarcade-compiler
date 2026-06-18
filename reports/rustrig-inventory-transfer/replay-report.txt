@@ -1,0 +1,6 @@
+RR-004 Replay Equivalence: PASS
+
+Replaying inventory.transfer() from the same canonical input and pre-state produces an equivalent post-state. The transfer mutation is pure over its input state and TransferInput and does not depend on clocks, randomness, map iteration order, or host environment data.
+
+Evidence command:
+CARGO_BUILD_JOBS=1 cargo test -p everarcade-rustrig-inventory rr_004_replay_equivalence

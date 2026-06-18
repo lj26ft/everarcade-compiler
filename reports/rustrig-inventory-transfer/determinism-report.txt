@@ -1,0 +1,6 @@
+RR-001 Transfer Determinism: PASS
+
+inventory.transfer() was executed repeatedly from the same canonical input and the same canonical pre-state. Each execution produced identical TransferOutput values, including identical updated inventory state and state root.
+
+Evidence command:
+CARGO_BUILD_JOBS=1 cargo test -p everarcade-rustrig-inventory rr_001_transfer_determinism_same_input_same_output

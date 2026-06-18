@@ -1,0 +1,11 @@
+[package]
+name = "everarcade-rustrig-inventory"
+version = "1.0.0"
+edition = "2021"
+description = "Certified EverArcade RustRig reference implementation for inventory.transfer()."
+
+[lib]
+name = "everarcade_rustrig_inventory"
+path = "src/lib.rs"
+
+[dependencies]
