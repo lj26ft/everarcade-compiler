@@ -6,7 +6,8 @@
     "build:prod": "npx ncc build src/contract.js --minify -o dist",
     "start": "npm run build && hpdevkit deploy dist",
     "test": "node --test tests/*.test.js",
-    "validate:replay": "node validation/verify-replay.js"
+    "validate:replay": "node validation/verify-replay.js",
+    "validate:live": "node validation/verify-live-hotpocket-persistence.js"
   },
   "dependencies": {
     "hotpocket-nodejs-contract": "^0.7.3",

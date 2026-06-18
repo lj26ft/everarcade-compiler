@@ -620,12 +620,13 @@ module.exports = __nccwpck_require__(224);
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 const { createHash } = __nccwpck_require__(5);
-const { existsSync, readFileSync, writeFileSync } = __nccwpck_require__(561);
-const { join } = __nccwpck_require__(411);
+const { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } = __nccwpck_require__(561);
+const { dirname, join } = __nccwpck_require__(411);
 
 const SCHEMA = 'everarcade.hotpocket.arena-vanguard.v1';
 const DIRECTIONS = Object.freeze({ north: [0, -1], south: [0, 1], east: [1, 0], west: [-1, 0] });
 const GENESIS = Object.freeze({ tick: 0, players: {}, combat_events: [], last_sequence: {}, commitments: [] });
+const STATE_DIR = 'state';
 const STATE_FILE = 'arena-wrapper-state.json';
 const JOURNAL_FILE = 'arena-hotpocket-journal.json';
 
@@ -646,6 +647,17 @@ function canonicalHash(value) {
 
 function clone(value) {
   return JSON.parse(JSON.stringify(value));
+}
+
+function deterministicJson(value) {
+  return `${canonicalize(value)}\n`;
+}
+
+function atomicWriteJson(path, value) {
+  mkdirSync(dirname(path), { recursive: true });
+  const tempPath = `${path}.tmp`;
+  writeFileSync(tempPath, deterministicJson(value));
+  renameSync(tempPath, path);
 }
 
 function genesisState() {
@@ -748,9 +760,11 @@ function replayJournal(journal) {
 }
 
 class ArenaVanguard {
-  constructor({ statePath = join(process.cwd(), STATE_FILE), journalPath = join(process.cwd(), JOURNAL_FILE) } = {}) {
+  constructor({ statePath = join(process.cwd(), STATE_DIR, STATE_FILE), journalPath = join(process.cwd(), STATE_DIR, JOURNAL_FILE) } = {}) {
     this.statePath = statePath;
     this.journalPath = journalPath;
+    console.log('[ARENA] state path', this.statePath);
+    console.log('[ARENA] journal path', this.journalPath);
     this.state = genesisState();
     this.receipts = [];
     this.journal = [];
@@ -773,9 +787,16 @@ class ArenaVanguard {
   }
 
   persist() {
+    console.log('[ARENA] persist start');
     const snapshot = { state: this.state, receipts: this.receipts, journal: this.journal };
-    writeFileSync(this.statePath, `${JSON.stringify(snapshot, null, 2)}\n`);
-    writeFileSync(this.journalPath, `${JSON.stringify(this.journal, null, 2)}\n`);
+    atomicWriteJson(this.statePath, snapshot);
+    atomicWriteJson(this.journalPath, this.journal);
+    const latest = this.state.commitments.at(-1) || commitFor(this.state, this.receipts);
+    console.log('[ARENA] state_root', latest.state_root);
+    console.log('[ARENA] receipt_root', latest.receipt_root);
+    console.log('[ARENA] world_hash', latest.world_hash);
+    console.log('[ARENA] continuity_root', latest.continuity_root);
+    console.log('[ARENA] persist complete');
   }
 
   async handleInput(publicKey, message, ctx = {}) {
@@ -807,7 +828,7 @@ function inputId(envelope) {
   return `arena-${canonicalHash(envelope)}`;
 }
 
-module.exports = { ArenaVanguard, canonicalHash, canonicalize, commitFor, executeInput, genesisState, inputId, replayJournal, validateEnvelope };
+module.exports = { ArenaVanguard, atomicWriteJson, canonicalHash, canonicalize, commitFor, deterministicJson, executeInput, genesisState, inputId, replayJournal, validateEnvelope };
 
 
 /***/ }),
@@ -819,19 +840,31 @@ const HotPocket = __nccwpck_require__(875);
 const { ArenaVanguard } = __nccwpck_require__(472);
 
 async function contract(ctx) {
+  console.log('[ARENA] contract cwd', process.cwd());
+  console.log('[ARENA] contract round', String(ctx.lclSeqNo));
   const app = new ArenaVanguard();
+  const users = ctx.users.list();
+  const usersWithInputs = users.filter((user) => user.inputs && user.inputs.length > 0);
+  console.log('[ARENA] users with inputs', usersWithInputs.length);
 
-  for (const user of ctx.users.list()) {
+  for (const user of users) {
+    console.log('[ARENA] user input count', user.inputs ? user.inputs.length : 0);
     for (const input of user.inputs) {
       try {
+        console.log('[ARENA] reading input');
         const buf = await ctx.users.read(input);
-        const message = JSON.parse(buf);
+        const raw = Buffer.isBuffer(buf) ? buf.toString('utf8') : String(buf);
+        console.log('[ARENA] raw input', raw);
+        const message = JSON.parse(raw);
+        console.log('[ARENA] parsed input', JSON.stringify(message));
+        console.log('[ARENA] calling ArenaVanguard.handleInput');
         const output = await app.handleInput(user.publicKey, message, {
           readonly: ctx.readonly,
           lclSeqNo: ctx.lclSeqNo,
           npl: ctx.npl
         });
-
+        console.log('[ARENA] output', JSON.stringify(output));
+        console.log('[ARENA] sending output');
         await user.send(JSON.stringify(output));
       } catch (error) {
         const output = {
@@ -841,6 +874,8 @@ async function contract(ctx) {
           lclSeqNo: Number(ctx.lclSeqNo),
           error: error.message
         };
+        console.log('[ARENA] output', JSON.stringify(output));
+        console.log('[ARENA] sending output');
         await user.send(JSON.stringify(output));
       }
     }
