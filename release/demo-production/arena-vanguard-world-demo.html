@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Arena Vanguard World Demo</title>
+  <link rel="stylesheet" href="./arena-vanguard-world-demo.css">
+</head>
+<body>
+  <header class="hero" aria-labelledby="demo-title">
+    <div class="hero__copy">
+      <p class="eyebrow">EverArcade public world demo</p>
+      <h1 id="demo-title">Arena Vanguard</h1>
+      <p class="tagline">A frontier world that remembers.</p>
+      <p class="description">Players come and go. The world persists.</p>
+    </div>
+    <div class="age-card" aria-live="polite">
+      <span>World Age</span>
+      <strong id="worldAge">Day 37</strong>
+      <small id="ageNote">Returned players re-enter an older world.</small>
+    </div>
+  </header>
+
+  <main class="dashboard-shell">
+    <section class="world-panel" aria-labelledby="map-title">
+      <div class="section-heading">
+        <p class="eyebrow">Living World Map</p>
+        <h2 id="map-title">A readable board of remembered places</h2>
+      </div>
+      <div class="world-board" id="worldBoard" aria-label="Arena Vanguard regions and world objects"></div>
+    </section>
+
+    <aside class="memory-panel" aria-labelledby="memory-title">
+      <div class="section-heading">
+        <p class="eyebrow">World Memory</p>
+        <h2 id="memory-title">The world keeps its firsts</h2>
+      </div>
+      <div class="memory-grid" id="memoryGrid"></div>
+    </aside>
+
+    <section class="timeline-panel" aria-labelledby="timeline-title">
+      <div class="section-heading">
+        <p class="eyebrow">Event Timeline</p>
+        <h2 id="timeline-title">Continuity across days</h2>
+      </div>
+      <ol class="timeline" id="eventTimeline"></ol>
+    </section>
+
+    <section class="controls-panel" aria-labelledby="controls-title">
+      <div class="section-heading">
+        <p class="eyebrow">Demo Controls</p>
+        <h2 id="controls-title">Safe local story controls</h2>
+        <p class="panel-note">These buttons only change this browser presentation. They do not mutate runtime authority, consensus state, or validator roots.</p>
+      </div>
+      <div class="control-grid" id="demoControls"></div>
+      <div class="story-callout" id="storyCallout">Replay history to see how remembered events become ruins, markets, votes, and migrations.</div>
+    </section>
+
+    <section class="verification-panel" aria-labelledby="verification-title">
+      <div class="section-heading">
+        <p class="eyebrow">Verification Layer</p>
+        <h2 id="verification-title">Proofs below the world</h2>
+      </div>
+      <div class="verification-grid" id="verificationGrid"></div>
+    </section>
+  </main>
+
+  <script src="./arena-vanguard-world-demo.js"></script>
+</body>
+</html>

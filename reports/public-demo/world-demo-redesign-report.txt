@@ -1,0 +1,32 @@
+Arena Vanguard World Demo Redesign Report
+=========================================
+
+Outcome: ARENA VANGUARD WORLD DEMO: PASS
+Date: 2026-06-19
+
+Summary
+-------
+Created a new public-facing Arena Vanguard world dashboard at release/demo-production/arena-vanguard-world-demo.html with separate CSS and JavaScript assets. The redesign intentionally avoids the old full-screen quadrant/debug projection and presents the demo as a narrative persistent PvE world.
+
+Acceptance Coverage
+-------------------
+PASS - Hero presents Arena Vanguard, the frontier-world tagline, World Age Day X, and the statement that players come and go while the world persists.
+PASS - Living World Map uses large region cards for Citadel, Frontier, Wilderness, and Ruins instead of a coordinate quadrant canvas.
+PASS - Region cards show readable creatures, resources, structures, players, and ruins as world objects.
+PASS - World Memory includes first kill, first trade, first vote, first migration, oldest structure, and ruins created from past events.
+PASS - Event Timeline includes the required Day 1, Day 3, Day 7, Day 12, Day 30, and Day 37 story beats.
+PASS - Verification Layer includes state root, world hash, Tier 1 PASS, Tier 2 PASS, roots match, and receipt root as a secondary lower-priority panel.
+PASS - Demo controls are browser-local presentation controls only and explicitly do not mutate runtime authority.
+PASS - Visual direction uses a dark background, neon yellow/cyan accents, large readable cards, and avoids cramped bubbles or the old quadrant grid.
+PASS - The page loads demo-world-seed.json when served over HTTP and falls back to local static demo data when opened directly from disk.
+
+Run Instructions
+----------------
+Serve the release directory and open:
+  http://127.0.0.1:8080/arena-vanguard-world-demo.html
+
+The older dashboard.html/projection canvas remains available for technical projection, but the new world demo page is the public release demo.
+
+Final Result
+------------
+ARENA VANGUARD WORLD DEMO: PASS
