@@ -2,123 +2,347 @@
   "demo_id": "arena-vanguard-reference-projection",
   "duration_target_seconds": 300,
   "world": {
-    "name": "Arena Vanguard: Reference Projection",
+    "name": "Arena Vanguard: Persistent PvE Frontier World",
     "seed": "everarcade-public-demo-2026-06-19",
-    "tick": 1280,
-    "objective": "Prove a live deterministic world can be watched, replayed, migrated, and restored without trusting the projection UI.",
+    "tick": 2400,
+    "objective": "Demonstrate that players are temporary while the world persists, ages, accumulates history, and survives replay, restore, migration, and operator turnover.",
     "players": [
       {
         "id": "alice",
-        "x": -2,
+        "x": -3,
         "y": 1,
-        "zone": "Outpost",
+        "zone": "Frontier",
         "health": 92,
         "score": 410,
         "connected": true,
         "inventory": {
           "items": [
-            "relay-key"
+            "wolf-pelt",
+            "training-token"
           ],
           "last_event": "pickup"
         },
-        "last_action": "move",
+        "last_action": "combat.attack()",
         "trail": [
           {
-            "x": -3,
-            "y": 1
+            "x": -6,
+            "y": 0
           },
           {
-            "x": -2,
+            "x": -3,
             "y": 1
           }
         ]
       },
       {
         "id": "bruno",
-        "x": 1,
-        "y": 0,
-        "zone": "Outpost",
+        "x": 4,
+        "y": -1,
+        "zone": "Wilderness",
         "health": 76,
         "score": 355,
         "connected": true,
         "inventory": {
           "items": [
-            "relay-key",
-            "medkit"
+            "iron ore",
+            "raider-token"
           ],
           "last_event": "transfer"
         },
-        "last_action": "attack",
-        "trail": [
-          {
-            "x": 0,
-            "y": 0
-          },
-          {
-            "x": 1,
-            "y": 0
-          }
-        ]
-      },
-      {
-        "id": "chen",
-        "x": 3,
-        "y": -2,
-        "zone": "Relic Gate",
-        "health": 100,
-        "score": 520,
-        "connected": false,
-        "inventory": {
-          "items": [
-            "relay-key",
-            "medkit",
-            "ore"
-          ],
-          "last_event": "pickup"
-        },
-        "last_action": "trade",
+        "last_action": "inventory.transfer()",
         "trail": [
           {
             "x": 2,
             "y": -2
           },
           {
+            "x": 4,
+            "y": -1
+          }
+        ]
+      },
+      {
+        "id": "chen",
+        "x": 5,
+        "y": 6,
+        "zone": "Citadel",
+        "health": 100,
+        "score": 520,
+        "connected": false,
+        "inventory": {
+          "items": [
+            "ledger-credit",
+            "medkit"
+          ],
+          "last_event": "trade"
+        },
+        "last_action": "market.trade()",
+        "trail": [
+          {
             "x": 3,
-            "y": -2
+            "y": 5
+          },
+          {
+            "x": 5,
+            "y": 6
           }
         ]
       }
     ],
     "enemies": [
       {
-        "id": "drone-7",
-        "x": 2,
+        "id": "raider-006",
+        "kind": "Raider",
+        "x": 5,
         "y": 2,
-        "health": 48
+        "health": 58,
+        "region": "Wilderness",
+        "spawn_tick": 920,
+        "death_tick": null,
+        "killer": null
       },
       {
-        "id": "sentinel-2",
-        "x": -3,
-        "y": -1,
-        "health": 64
+        "id": "guardian-001",
+        "kind": "Ancient Guardian",
+        "x": -4,
+        "y": -6,
+        "health": 240,
+        "region": "Ruins",
+        "spawn_tick": 1,
+        "death_tick": null,
+        "killer": null
       }
     ],
     "epoch": 7,
     "receipt_count": 42,
     "entities": [
       {
-        "id": "relic-cache",
-        "type": "neutral",
-        "x": 0,
-        "y": -3,
-        "health": 100
+        "id": "training-yard",
+        "type": "structure",
+        "x": -6,
+        "y": 2,
+        "health": 75,
+        "region": "Frontier",
+        "age_ticks": 2395
       },
       {
         "id": "market-kiosk",
-        "type": "neutral",
-        "x": -1,
-        "y": 2,
-        "health": 100
+        "type": "structure",
+        "x": 4,
+        "y": 6,
+        "health": 100,
+        "region": "Citadel",
+        "age_ticks": 2300
+      },
+      {
+        "id": "operator-archive",
+        "type": "structure",
+        "x": 5,
+        "y": 7,
+        "health": 100,
+        "region": "Citadel",
+        "age_ticks": 2399
+      },
+      {
+        "id": "fallen-camp",
+        "type": "structure",
+        "x": -4,
+        "y": -6,
+        "health": 20,
+        "region": "Ruins",
+        "age_ticks": 1530
+      }
+    ],
+    "world_age_days": 100,
+    "world_age_ticks": 2400,
+    "public_message": "Arena Vanguard is not a game prototype. Arena Vanguard is a world prototype. The purpose is to demonstrate continuity.",
+    "regions": [
+      {
+        "id": "frontier",
+        "name": "Frontier",
+        "role": "Starting area, low-level creatures, training grounds",
+        "bounds": [
+          -8,
+          -4,
+          0,
+          4
+        ],
+        "terrain": "grassland outpost"
+      },
+      {
+        "id": "wilderness",
+        "name": "Wilderness",
+        "role": "Resource gathering, creature nests, expansion area",
+        "bounds": [
+          0,
+          -4,
+          8,
+          4
+        ],
+        "terrain": "forest and ore fields"
+      },
+      {
+        "id": "ruins",
+        "name": "Ruins",
+        "role": "Historical remnants of previous world events",
+        "bounds": [
+          -8,
+          -9,
+          0,
+          -4
+        ],
+        "terrain": "broken camps and ancient markers"
+      },
+      {
+        "id": "citadel",
+        "name": "Citadel",
+        "role": "Community hub, governance, marketplace, statistics, records",
+        "bounds": [
+          0,
+          4,
+          8,
+          9
+        ],
+        "terrain": "stone hub"
+      }
+    ],
+    "creatures": [
+      {
+        "id": "wolf-001",
+        "kind": "Wolf",
+        "spawn_tick": 12,
+        "death_tick": 34,
+        "killer": "alice",
+        "region": "Frontier",
+        "health": 0,
+        "x": -5,
+        "y": 1
+      },
+      {
+        "id": "bandit-014",
+        "kind": "Bandit",
+        "spawn_tick": 210,
+        "death_tick": 391,
+        "killer": "bruno",
+        "region": "Wilderness",
+        "health": 0,
+        "x": 3,
+        "y": -1
+      },
+      {
+        "id": "raider-006",
+        "kind": "Raider",
+        "spawn_tick": 920,
+        "death_tick": null,
+        "killer": null,
+        "region": "Wilderness",
+        "health": 58,
+        "x": 5,
+        "y": 2
+      },
+      {
+        "id": "guardian-001",
+        "kind": "Ancient Guardian",
+        "spawn_tick": 1,
+        "death_tick": null,
+        "killer": null,
+        "region": "Ruins",
+        "health": 240,
+        "x": -4,
+        "y": -6
+      }
+    ],
+    "structures": [
+      {
+        "id": "training-yard",
+        "name": "Training Yard",
+        "region": "Frontier",
+        "built_tick": 5,
+        "age_ticks": 2395,
+        "condition": "weathered"
+      },
+      {
+        "id": "market-kiosk",
+        "name": "Market Kiosk",
+        "region": "Citadel",
+        "built_tick": 100,
+        "age_ticks": 2300,
+        "condition": "maintained"
+      },
+      {
+        "id": "operator-archive",
+        "name": "Operator Archive",
+        "region": "Citadel",
+        "built_tick": 1,
+        "age_ticks": 2399,
+        "condition": "sealed"
+      },
+      {
+        "id": "fallen-camp",
+        "name": "Destroyed Raider Camp",
+        "region": "Ruins",
+        "built_tick": 870,
+        "age_ticks": 1530,
+        "condition": "ruin"
+      }
+    ],
+    "resources": [
+      {
+        "id": "ore-vein-east",
+        "item": "iron ore",
+        "region": "Wilderness",
+        "quantity": 64,
+        "regenerates_every_ticks": 80,
+        "last_regenerated_tick": 2320
+      },
+      {
+        "id": "frontier-herbs",
+        "item": "herbs",
+        "region": "Frontier",
+        "quantity": 31,
+        "regenerates_every_ticks": 40,
+        "last_regenerated_tick": 2360
+      }
+    ],
+    "historical_records": {
+      "first_player": "alice",
+      "first_kill": "alice killed wolf-001 at tick 34 in Frontier",
+      "first_trade": "chen bought 8 iron ore from bruno at tick 612",
+      "first_migration": "operator-a to operator-b at tick 1800",
+      "largest_battle": "Battle of Fallen Camp: 3 players vs 6 raiders at tick 950",
+      "highest_score": "chen: 520",
+      "oldest_structure": "operator-archive built at tick 1"
+    },
+    "world_timeline": [
+      {
+        "day": 1,
+        "tick": 24,
+        "label": "First wolf killed; Frontier history begins"
+      },
+      {
+        "day": 10,
+        "tick": 240,
+        "label": "Wilderness nests discovered and resource gathering starts"
+      },
+      {
+        "day": 30,
+        "tick": 720,
+        "label": "Citadel market records first verified trade"
+      },
+      {
+        "day": 60,
+        "tick": 1440,
+        "label": "Governance vote establishes shared repair policy"
+      },
+      {
+        "day": 75,
+        "tick": 1800,
+        "label": "First migration completes with matching roots"
+      },
+      {
+        "day": 100,
+        "tick": 2400,
+        "label": "Returning players find older structures, regenerated resources, and visible ruins"
       }
     ]
   },
@@ -204,74 +428,125 @@
     ]
   },
   "commitments": {
-    "state_root": "state:arena-vanguard:tick:1280",
-    "receipt_root": "receipt:arena-vanguard:entries:42",
-    "world_hash": "world:arena-vanguard:players:3",
-    "continuity_root": "continuity:arena-vanguard:live"
+    "state_root": "state:d3bf40aa5132f19e1a86a28c9fc0275d",
+    "receipt_root": "receipt:51e2c1835f267db695dcc70f4349fd94",
+    "world_hash": "world:5f073b462d9b8cf0cebc927caf6c615a",
+    "continuity_root": "continuity:1fad32513c80e2d774b962e0f89ce5b6"
   },
   "events": [
     {
-      "tick": 0,
+      "tick": 1,
       "type": "join",
-      "label": "player joined: alice",
-      "detail": "receipt emitted"
+      "label": "first player joined: alice",
+      "detail": "Historical record: first_player=alice"
     },
     {
-      "tick": 25,
-      "type": "move",
-      "label": "player moved: bruno",
-      "detail": "state_root updated"
-    },
-    {
-      "tick": 50,
+      "tick": 34,
       "type": "attack",
-      "label": "combat.attack(): bruno \u2192 drone-7",
-      "detail": "28 damage \u00b7 verified"
+      "label": "combat.attack(): alice \u2192 wolf-001",
+      "detail": "Wolf killed \u00b7 damage visualized \u00b7 health 0 \u00b7 receipt combat-0001",
+      "damage": 28
     },
     {
       "tick": 60,
       "type": "inventory",
-      "label": "inventory.transfer(): relay-key",
-      "detail": "pickup/transfer indicator"
+      "label": "inventory.transfer(): wolf-pelt \u2192 alice",
+      "detail": "loot pickup/drop/transfer receipt inventory-0001"
     },
     {
-      "tick": 75,
+      "tick": 612,
       "type": "trade",
-      "label": "market.trade(): VERIFIED",
-      "detail": "alice \u2192 chen \u00b7 2 ore \u00b7 14 credits"
+      "label": "market.trade(): bruno sold iron ore to chen",
+      "detail": "seller bruno \u00b7 buyer chen \u00b7 item iron ore \u00b7 currency ledger-credit"
     },
     {
-      "tick": 85,
+      "tick": 950,
+      "type": "ruin",
+      "label": "Ruins updated: battlefield-fallen-camp remains",
+      "detail": "largest battle marker persists after players leave"
+    },
+    {
+      "tick": 1440,
       "type": "vote",
-      "label": "governance.vote(): VERIFIED",
-      "detail": "proposal AV-17 yes 2 no 0 abstain 1"
+      "label": "governance.vote(): Citadel road repair passed",
+      "detail": "proposal proposal-repair-citadel-road \u00b7 world policy updated"
     },
     {
-      "tick": 92,
+      "tick": 1680,
       "type": "restore",
-      "label": "RESTORE VERIFIED",
-      "detail": "checkpoint \u2192 restore \u2192 continue"
+      "label": "Restore checkpoint verified",
+      "detail": "checkpoint restored and continued without losing history"
     },
     {
-      "tick": 100,
+      "tick": 1800,
       "type": "migration",
-      "label": "MIGRATION VERIFIED",
-      "detail": "source \u2192 package \u2192 destination"
+      "label": "Migration completed: Operator A \u2192 Operator B",
+      "detail": "first migration historical record sealed"
+    },
+    {
+      "tick": 2400,
+      "type": "return",
+      "label": "Player returns later: world age advanced to Day 100",
+      "detail": "resources regenerated, structures aged, ruins still visible"
     }
   ],
   "market": {
-    "seller": "alice",
+    "status": "market.trade(): VERIFIED",
+    "seller": "bruno",
     "buyer": "chen",
-    "item": "ore",
-    "quantity": 2,
-    "currency": 14,
-    "status": "market.trade(): VERIFIED"
+    "item": "iron ore",
+    "quantity": 8,
+    "currency": "ledger-credit",
+    "trade_history": [
+      {
+        "tick": 612,
+        "seller": "bruno",
+        "buyer": "chen",
+        "item": "iron ore",
+        "currency": "ledger-credit",
+        "receipt": "market.trade()/receipt-0001"
+      }
+    ]
   },
   "governance": {
-    "proposal_id": "AV-17",
-    "yes": 2,
-    "no": 0,
-    "abstain": 1,
-    "status": "governance.vote(): VERIFIED"
+    "status": "governance.vote(): PASSED",
+    "proposal_id": "proposal-repair-citadel-road",
+    "proposal": "Allocate 12 ore to repair the Citadel road",
+    "yes": 7,
+    "no": 1,
+    "abstain": 2,
+    "result": "passed",
+    "world_policy": "Citadel repair fund active"
+  },
+  "ruins": [
+    {
+      "id": "battlefield-fallen-camp",
+      "region": "Ruins",
+      "created_tick": 950,
+      "label": "Battlefield remains visible after raiders died"
+    },
+    {
+      "id": "ancient-marker-first-migration",
+      "region": "Ruins",
+      "created_tick": 1800,
+      "label": "Marker records first migration root"
+    }
+  ],
+  "replay_demonstrations": [
+    "first kill",
+    "first trade",
+    "first governance vote",
+    "first migration"
+  ],
+  "restore_demonstration": {
+    "checkpoint_tick": 1800,
+    "continued_to_tick": 2400,
+    "state_preserved": true
+  },
+  "migration_demonstration": {
+    "from": "Operator A",
+    "to": "Operator B",
+    "tick": 1800,
+    "history_preserved": true
   }
 }

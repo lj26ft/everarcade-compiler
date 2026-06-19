@@ -1,0 +1,13 @@
+ARENA VANGUARD CONTINUITY REPORT: PASS
+
+Continuity centerpiece verified:
+- world_age_days and world_age_ticks are tracked and displayed prominently.
+- structures age every tick through age_ticks.
+- creature population records spawn_tick, death_tick, killer, and region.
+- resources expose regeneration cadence and last regenerated tick.
+- ruins remain visible after battles, migration, and player disconnects.
+
+Public message:
+Arena Vanguard is not a game prototype. Arena Vanguard is a world prototype. The purpose is to demonstrate continuity.
+
+Final Output: ARENA VANGUARD WORLD DEMONSTRATION: PASS

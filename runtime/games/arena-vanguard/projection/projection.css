@@ -107,3 +107,13 @@ details dd { margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: 
 .flows div { display:grid; gap:8px; text-align:center; border:1px solid var(--line); border-radius:16px; padding:14px; background:rgba(255,255,255,.045); }
 .flows span { color:var(--blue); font-size:1.4rem; }.flows strong { color:var(--green); }
 @media (max-width:1100px){.cert-strip{grid-template-columns:repeat(3,1fr)}.flows{grid-template-columns:1fr}}
+.history-panel { grid-column: 1 / -1; }
+.history-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin-top:12px; }
+.history-grid h3 { margin:.2rem 0 .6rem; color:var(--text); font-size:.95rem; }
+.history-grid .event-list { max-height:300px; }
+.marker.ruin,.event-list li.ruin { border-color:var(--purple); }
+.marker.restore,.event-list li.restore { border-color:var(--blue); }
+.marker.migration,.event-list li.migration { border-color:var(--green); }
+.marker.return,.event-list li.return { border-color:var(--yellow); }
+@media (max-width:1100px){.history-grid{grid-template-columns:1fr 1fr}}
+@media (max-width:700px){.history-grid{grid-template-columns:1fr}}

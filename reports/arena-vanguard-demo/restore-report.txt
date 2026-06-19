@@ -1,0 +1,9 @@
+ARENA VANGUARD RESTORE REPORT: PASS
+
+Checkpoint selected: tick 1800
+Continuation tick: 2400
+State preserved: true
+History preserved: true
+Ruins preserved: true
+
+Restore result: the restored world continues with preserved state, records, structures, resources, and timeline.

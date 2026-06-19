@@ -1,0 +1,9 @@
+ARENA VANGUARD MIGRATION REPORT: PASS
+
+Migration: Operator A -> Operator B
+Migration tick: 1800
+Roots match: true
+History preserved: true
+World age preserved: true
+
+Migration result: the world moved operators and continued with preserved continuity records.
