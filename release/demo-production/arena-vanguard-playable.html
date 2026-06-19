@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Arena Vanguard Playable Demo v0.1</title>
+  <link rel="stylesheet" href="./arena-vanguard-playable.css">
+</head>
+<body>
+  <main class="game-shell" aria-labelledby="title">
+    <section class="stage-card">
+      <header class="game-header">
+        <div>
+          <p class="eyebrow">EverArcade developer preview</p>
+          <h1 id="title">Arena Vanguard</h1>
+          <p class="tagline">Playable Demo v0.1 — a tiny PvE loop where the world remembers.</p>
+        </div>
+        <div class="memory-banner" id="memoryBanner">Move with WASD/Arrows. Space or click attacks. E picks up loot.</div>
+      </header>
+
+      <canvas id="worldCanvas" width="960" height="640" aria-label="Playable Arena Vanguard PvE world" tabindex="0"></canvas>
+
+      <div class="hud-row">
+        <div class="hud-card"><span>Inventory</span><strong id="inventoryText">none</strong></div>
+        <div class="hud-card"><span>Status</span><strong id="statusText">Ready</strong></div>
+        <div class="hud-card"><span>Controls</span><strong>WASD · Space · E · T · V · R · M · C</strong></div>
+      </div>
+    </section>
+
+    <aside class="side-panel">
+      <section class="verification" aria-labelledby="verificationTitle">
+        <h2 id="verificationTitle">Verification</h2>
+        <dl id="verificationGrid"></dl>
+      </section>
+
+      <section class="receipts" aria-labelledby="receiptsTitle">
+        <h2 id="receiptsTitle">Receipts</h2>
+        <ol id="receiptList"></ol>
+      </section>
+
+      <section class="events" aria-labelledby="eventsTitle">
+        <h2 id="eventsTitle">World Memory Feed</h2>
+        <ol id="eventFeed"></ol>
+      </section>
+    </aside>
+  </main>
+
+  <script src="./arena-vanguard-playable.js"></script>
+</body>
+</html>
