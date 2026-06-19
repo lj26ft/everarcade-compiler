@@ -1,0 +1,17 @@
+ARENA VANGUARD PLAYABLE REMAKE: PASS
+
+Scope:
+- Replaced the public Arena Vanguard playable with a small 2D PvE proof-of-world loop.
+- Added frontier movement, creature combat, camp leader clear, loot pickup, return-later aging, local journal replay, checkpoint restore, and local migration preservation.
+- Kept authority boundaries explicit: no wallets, no settlement, no HotPocket mutation, and demo-root fallback labels until canonicalizer integration is wired.
+
+Manual test checklist:
+- Move with WASD/arrow keys.
+- Attack with Space/click.
+- Kill 2-4 creatures including the camp leader.
+- Pick up sparkle loot with E.
+- Return to the Citadel.
+- Press L and verify the camp remains as an older remembered ruin.
+- Press R and verify REPLAY VERIFIED.
+- Press C and verify RESTORE VERIFIED.
+- Press M and verify MIGRATION VERIFIED and Migration Preserved memory.
