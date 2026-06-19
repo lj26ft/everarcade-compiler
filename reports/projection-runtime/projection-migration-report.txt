@@ -1,0 +1,5 @@
+Projection migration report: PASS
+PR-005 Migration projection continues from migrated state: PASS
+Source runtime: source-runtime
+Destination runtime: destination-runtime
+Migration tick: 2

@@ -1,0 +1,12 @@
+{
+  "name": "@everarcade/projection-runtime",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Developer-preview visual projection runtime for deterministic EverArcade ArenaState.",
+  "scripts": {
+    "demo": "node src/cli.mjs --mode live --journal ../../examples/projection-demo-world/journal.json",
+    "replay": "node src/cli.mjs --mode replay --journal ../../examples/projection-demo-world/journal.json",
+    "certify": "node src/certify.mjs"
+  }
+}
