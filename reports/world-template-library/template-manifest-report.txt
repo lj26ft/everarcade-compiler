@@ -1,0 +1,5 @@
+World Template Manifest Report
+
+Templates: arena, frontier, settlement, social, civilization
+Schema sections: template, world, rustrigs, projection, certification
+Status: PASS

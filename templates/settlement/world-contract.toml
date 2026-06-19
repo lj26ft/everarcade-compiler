@@ -1,0 +1,36 @@
+[contract]
+template_id = "settlement"
+editable = true
+purpose = "Economic and governance worlds."
+
+[contract.rustrigs]
+allowed = [
+  "market.trade",
+  "market.list",
+  "governance.vote",
+  "governance.create_proposal",
+  "structure.build",
+  "inventory.transfer",
+]
+
+[contract.authority]
+rules = [
+  "market.list requires asset ownership",
+  "market.trade requires matched consideration",
+  "governance.vote requires eligible membership",
+  "proposal creation follows charter rules",
+]
+
+[contract.receipts]
+required = [
+  "listing_receipt",
+  "trade_receipt",
+  "proposal_receipt",
+  "vote_receipt",
+  "build_receipt",
+  "transfer_receipt",
+]
+
+[contract.continuity]
+enabled = true
+behavior = "institutional: market history, ownership records, and enacted proposals remain durable"

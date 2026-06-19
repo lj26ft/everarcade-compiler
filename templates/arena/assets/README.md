@@ -1,3 +1,3 @@
-# Arena Assets
+# Arena World Assets
 
-Placeholder assets for the Arena template. Replace these files with production art when customizing.
+Placeholder asset directory for `arena` template customization. Add icons, projection styling, and world-specific media here.

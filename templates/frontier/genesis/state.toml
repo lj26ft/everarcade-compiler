@@ -1,0 +1,7 @@
+[genesis]
+world_name = "Iron Frontier"
+template_id = "frontier"
+seed = "example-only-frontier"
+
+[genesis.note]
+text = "Example genesis state for Frontier World; customize before production deployment."

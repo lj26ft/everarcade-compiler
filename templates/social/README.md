@@ -1,25 +1,25 @@
-# Arena World Template
+# Social World Template
 
 ## Purpose
 
-Fast PvE/PvP gameplay worlds.
+Community and social worlds.
 
 ## Demonstrates
 
-Fast sessions, leaderboards, loot, and combat-focused loops.
+Worlds as communities.
 
 ## Included RustRigs
 
 - `identity.join`
-- `position.move`
-- `world.spawn`
-- `combat.attack`
-- `inventory.pickup`
-- `inventory.transfer`
+- `faction.create`
+- `faction.join`
+- `guild.create`
+- `quest.start`
+- `quest.complete`
 
 ## Continuity
 
-minimal: match summaries and leaderboard deltas are recorded; no long-lived aging loop
+social: membership, events, guild milestones, and completed quests are recorded
 
 ## Customize
 

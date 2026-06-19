@@ -1,0 +1,4 @@
+[continuity]
+enabled = false
+behavior = "minimal: match summaries and leaderboard deltas are recorded; no long-lived aging loop"
+record_events = false

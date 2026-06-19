@@ -1,0 +1,4 @@
+World Template Contract Report
+
+Each template defines allowed RustRigs, authority rules, receipts, and continuity behavior in world-contract.toml.
+Status: PASS

@@ -1,0 +1,33 @@
+[contract]
+template_id = "arena"
+editable = true
+purpose = "Fast PvE/PvP gameplay worlds."
+
+[contract.rustrigs]
+allowed = [
+  "identity.join",
+  "position.move",
+  "world.spawn",
+  "combat.attack",
+  "inventory.pickup",
+  "inventory.transfer",
+]
+
+[contract.authority]
+rules = [
+  "joined identities may move owned avatars",
+  "combat.attack requires live session authority",
+  "loot transfers require receipt-backed pickup",
+]
+
+[contract.receipts]
+required = [
+  "join_receipt",
+  "movement_receipt",
+  "combat_receipt",
+  "loot_receipt",
+]
+
+[contract.continuity]
+enabled = false
+behavior = "minimal: match summaries and leaderboard deltas are recorded; no long-lived aging loop"

@@ -1,0 +1,56 @@
+[contract]
+template_id = "civilization"
+editable = true
+purpose = "Full Continuity Engine worlds."
+
+[contract.rustrigs]
+allowed = [
+  "identity.join",
+  "position.move",
+  "resource.harvest",
+  "inventory.transfer",
+  "structure.build",
+  "structure.repair",
+  "structure.decay",
+  "market.list",
+  "market.trade",
+  "governance.create_proposal",
+  "governance.vote",
+  "faction.create",
+  "faction.join",
+  "guild.create",
+  "quest.start",
+  "quest.complete",
+  "continuity.advance",
+  "continuity.record_event",
+  "migration.prepare",
+  "migration.apply",
+]
+
+[contract.authority]
+rules = [
+  "domain authorities are scoped by contract module",
+  "economic actions require ownership and consideration checks",
+  "governance actions require charter eligibility",
+  "continuity and migration require operator quorum",
+]
+
+[contract.receipts]
+required = [
+  "identity_receipt",
+  "movement_receipt",
+  "resource_receipt",
+  "inventory_receipt",
+  "structure_receipt",
+  "market_receipt",
+  "governance_receipt",
+  "faction_receipt",
+  "guild_receipt",
+  "quest_receipt",
+  "continuity_receipt",
+  "migration_receipt",
+]
+
+[contract.continuity]
+enabled = true
+behavior = "full: economy, governance, history, factions, settlements, continuity, and migration are linked into a durable timeline"

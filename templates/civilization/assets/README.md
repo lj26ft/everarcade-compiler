@@ -1,3 +1,3 @@
-# Civilization Assets
+# Civilization World Assets
 
-Placeholder assets for the Civilization template. Replace these files with production art when customizing.
+Placeholder asset directory for `civilization` template customization. Add icons, projection styling, and world-specific media here.

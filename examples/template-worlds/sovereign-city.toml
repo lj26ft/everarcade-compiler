@@ -1,0 +1,8 @@
+[example_world]
+name = "Sovereign City"
+template_id = "settlement"
+production_ready = false
+purpose = "Example world showing how the Settlement World archetype can be customized."
+
+[customization]
+first_steps = ["Choose template", "Customize contract", "Customize assets", "Build package", "Deploy world"]

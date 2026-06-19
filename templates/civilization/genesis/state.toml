@@ -1,0 +1,7 @@
+[genesis]
+world_name = "Digital Republic"
+template_id = "civilization"
+seed = "example-only-civilization"
+
+[genesis.note]
+text = "Example genesis state for Civilization World; customize before production deployment."

@@ -1,0 +1,28 @@
+[template]
+template_id = "arena"
+name = "Arena World"
+version = 1
+description = "Fast PvE/PvP gameplay worlds."
+example_world = "Arena Vanguard"
+
+[world]
+world_type = "session"
+continuity_enabled = false
+
+[rustrigs]
+enabled = [
+  "identity.join",
+  "position.move",
+  "world.spawn",
+  "combat.attack",
+  "inventory.pickup",
+  "inventory.transfer",
+]
+
+[projection]
+default_projection = "arena-combat-view"
+description = "Starter combat-focused view."
+
+[certification]
+level = 2
+mapping = "registry/certification.toml"

@@ -1,0 +1,34 @@
+[contract]
+template_id = "social"
+editable = true
+purpose = "Community and social worlds."
+
+[contract.rustrigs]
+allowed = [
+  "identity.join",
+  "faction.create",
+  "faction.join",
+  "guild.create",
+  "quest.start",
+  "quest.complete",
+]
+
+[contract.authority]
+rules = [
+  "identity.join creates community presence",
+  "faction and guild creation follow naming policy",
+  "quest completion requires event proof or moderator authority",
+]
+
+[contract.receipts]
+required = [
+  "join_receipt",
+  "faction_receipt",
+  "guild_receipt",
+  "quest_start_receipt",
+  "quest_complete_receipt",
+]
+
+[contract.continuity]
+enabled = true
+behavior = "social: membership, events, guild milestones, and completed quests are recorded"

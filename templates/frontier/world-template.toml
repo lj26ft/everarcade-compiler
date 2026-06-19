@@ -1,0 +1,31 @@
+[template]
+template_id = "frontier"
+name = "Frontier World"
+version = 1
+description = "Persistent survival and exploration worlds."
+example_world = "Iron Frontier"
+
+[world]
+world_type = "persistent"
+continuity_enabled = true
+
+[rustrigs]
+enabled = [
+  "identity.join",
+  "position.move",
+  "resource.harvest",
+  "inventory.transfer",
+  "structure.build",
+  "structure.repair",
+  "structure.decay",
+  "continuity.advance",
+  "continuity.record_event",
+]
+
+[projection]
+default_projection = "frontier-dashboard"
+description = "Starter resource + settlement view."
+
+[certification]
+level = 3
+mapping = "registry/certification.toml"
