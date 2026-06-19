@@ -16,12 +16,13 @@ EverArcade documentation is now organized around a canonical platform documentat
 6. `12-gap-analysis.md`
 7. `runtime-capabilities.md`
 8. `13-runtime-operations-manual.md`
-9. `repository-navigation.md`
-10. `documentation-governance.md`
+9. `14-v0.1-architecture-freeze.md`
+10. `repository-navigation.md`
+11. `documentation-governance.md`
 
 ## Authoritative Documents
 
-The authoritative architecture and operations documents are the numbered `01` through `13` documents in this directory, plus `runtime-capabilities.md`, `repository-navigation.md`, and `documentation-governance.md`.
+The authoritative architecture and operations documents are the numbered `01` through `14` documents in this directory, plus `runtime-capabilities.md`, `repository-navigation.md`, and `documentation-governance.md`.
 
 ## Historical Evidence
 
