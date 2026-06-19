@@ -1,0 +1,9 @@
+RUSTRIG MUTATION LIBRARY SUITE V1
+
+Certified mutations:
+- inventory.transfer: PASS
+- combat.attack: PASS
+- market.trade: PASS
+- governance.vote: PASS
+
+RUSTRIG MUTATION LIBRARY SUITE V1: PASS

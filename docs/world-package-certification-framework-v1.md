@@ -444,3 +444,20 @@ A World Package is certified under this framework when:
 3. package hash, roots, contract references, RustRig certifications, and proof mappings agree;
 4. the package reaches Level 8 on the certification ladder;
 5. the final certification report contains `WORLD PACKAGE CERTIFICATION: PASS`.
+
+
+## RustRig Proof Target Package Candidates
+
+World Package certification recognizes RustRig proof targets as package-cert candidates. A certified package may map `world.evr` mutation declarations to `proof-targets/rustrigs/` folders, the matching RustRig crate, invariant document, property target document, and certification report.
+
+Certification chain:
+
+```text
+world.evr
+→ certified RustRig kernels
+→ signed certificate
+→ independent re-check
+→ deploy
+```
+
+The package certificate must name each certified RustRig kernel, its crate path, invariant list, receipt type, authority rule, and report path before deployment.

@@ -1,5 +1,6 @@
 use everarcade_rustrig_market::{
-    replay, trade, MarketConfig, MarketPlayer, MarketState, TradeError, TradeInput, RUSTRIG_ID,
+    replay_with_config as replay, trade, MarketConfig, MarketPlayer, MarketState, TradeError,
+    TradeInput, RUSTRIG_ID,
 };
 
 fn config() -> MarketConfig {

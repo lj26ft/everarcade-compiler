@@ -388,7 +388,7 @@ pub fn finalize_proposal(
     })
 }
 
-pub fn replay(
+pub fn replay_with_finalizations(
     initial_state: &GovernanceState,
     inputs: &[VoteInput],
     finalizations: &[(String, u64)],
@@ -401,6 +401,39 @@ pub fn replay(
         state = finalize_proposal(&state, proposal_id, *tick)?.state;
     }
     Ok(state)
+}
+
+/// Standard RustRig input model for `governance.vote`.
+pub type Input = VoteInput;
+/// Standard RustRig state model for `governance.vote`.
+pub type State = GovernanceState;
+/// Standard RustRig output/receipt model for `governance.vote`.
+pub type Output = VoteOutput;
+/// Standard RustRig error model for `governance.vote`.
+pub type Error = GovernanceError;
+
+pub fn apply(input: Input, state: State) -> Result<Output, Error> {
+    vote(&state, input)
+}
+
+pub fn governance_vote(input: Input, state: State) -> Result<Output, Error> {
+    apply(input, state)
+}
+
+pub fn replay(inputs: &[Input], genesis: State) -> Result<State, Error> {
+    let mut state = genesis;
+    for input in inputs {
+        state = apply(input.clone(), state)?.state;
+    }
+    Ok(state)
+}
+
+pub fn state_root(state: &State) -> String {
+    state.state_root()
+}
+
+pub fn certified_status() -> &'static str {
+    CERTIFICATION_STATUS
 }
 
 fn deterministic_receipt_id(input: &VoteInput) -> String {

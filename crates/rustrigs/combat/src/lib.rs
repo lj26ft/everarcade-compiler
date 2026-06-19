@@ -273,7 +273,7 @@ pub fn attack(
     })
 }
 
-pub fn replay(
+pub fn replay_with_config(
     initial_state: &CombatState,
     config: &CombatConfig,
     inputs: &[CombatInput],
@@ -283,6 +283,43 @@ pub fn replay(
         state = attack(&state, config, input.clone())?.state;
     }
     Ok(state)
+}
+
+/// Standard RustRig input model for `combat.attack`.
+pub type Input = CombatInput;
+/// Standard RustRig state model for `combat.attack`.
+pub type State = CombatState;
+/// Standard RustRig output/receipt model for `combat.attack`.
+pub type Output = CombatOutput;
+/// Standard RustRig error model for `combat.attack`.
+pub type Error = CombatError;
+
+pub fn default_config() -> CombatConfig {
+    CombatConfig::new(u64::MAX, ["slash", "pierce", "blunt", "direct", "basic"])
+}
+
+pub fn apply(input: Input, state: State) -> Result<Output, Error> {
+    attack(&state, &default_config(), input)
+}
+
+pub fn combat_attack(input: Input, state: State) -> Result<Output, Error> {
+    apply(input, state)
+}
+
+pub fn replay(inputs: &[Input], genesis: State) -> Result<State, Error> {
+    let mut state = genesis;
+    for input in inputs {
+        state = apply(input.clone(), state)?.state;
+    }
+    Ok(state)
+}
+
+pub fn state_root(state: &State) -> String {
+    state.state_root()
+}
+
+pub fn certified_status() -> &'static str {
+    CERTIFICATION_STATUS
 }
 
 fn validate(
