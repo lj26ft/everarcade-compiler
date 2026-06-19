@@ -206,6 +206,39 @@ fn digest(value: &str) -> String {
     format!("ea{:032x}", hash)
 }
 
+/// Standard RustRig input model for `inventory.transfer`.
+pub type Input = TransferInput;
+/// Standard RustRig state model for `inventory.transfer`.
+pub type State = InventoryState;
+/// Standard RustRig output/receipt model for `inventory.transfer`.
+pub type Output = TransferOutput;
+/// Standard RustRig error model for `inventory.transfer`.
+pub type Error = TransferError;
+
+pub fn apply(input: Input, state: State) -> Result<Output, Error> {
+    transfer(&state, input)
+}
+
+pub fn inventory_transfer(input: Input, state: State) -> Result<Output, Error> {
+    apply(input, state)
+}
+
+pub fn replay(inputs: &[Input], genesis: State) -> Result<State, Error> {
+    let mut state = genesis;
+    for input in inputs {
+        state = apply(input.clone(), state)?.state;
+    }
+    Ok(state)
+}
+
+pub fn state_root(state: &State) -> String {
+    state.state_root()
+}
+
+pub fn certified_status() -> &'static str {
+    CERTIFICATION_STATUS
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

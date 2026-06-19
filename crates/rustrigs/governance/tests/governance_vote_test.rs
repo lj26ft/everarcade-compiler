@@ -1,6 +1,6 @@
 use everarcade_rustrig_governance::{
-    finalize_proposal, replay, vote, GovernanceError, GovernanceState, Proposal, ProposalStatus,
-    VoteInput, RUSTRIG_ID,
+    finalize_proposal, replay_with_finalizations as replay, vote, GovernanceError, GovernanceState,
+    Proposal, ProposalStatus, VoteInput, RUSTRIG_ID,
 };
 
 fn proposal(id: &str, quorum: u64) -> Proposal {

@@ -1,5 +1,6 @@
 use everarcade_rustrig_combat::{
-    attack, replay, CombatConfig, CombatEntity, CombatError, CombatInput, CombatState, RUSTRIG_ID,
+    attack, replay_with_config as replay, CombatConfig, CombatEntity, CombatError, CombatInput,
+    CombatState, RUSTRIG_ID,
 };
 
 fn config() -> CombatConfig {

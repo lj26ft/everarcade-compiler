@@ -1,0 +1,14 @@
+# market.trade Invariants
+
+- **RR-MARKET-001 Trade Determinism**
+- **RR-MARKET-002 Item Conservation**
+- **RR-MARKET-003 Currency Conservation**
+- **RR-MARKET-004 No Buyer Overdraw**
+- **RR-MARKET-005 No Seller Overdraw**
+- **RR-MARKET-006 Overflow Safety**
+- **RR-MARKET-007 Receipt Integrity**
+- **RR-MARKET-008 Replay Equivalence**
+- **RR-MARKET-009 Root Equivalence**
+
+## Proof target
+Verifiers prove deterministic state transition, receipt integrity, replay equivalence, root equivalence, and mutation-specific conservation/safety properties from `src/lib.rs`.

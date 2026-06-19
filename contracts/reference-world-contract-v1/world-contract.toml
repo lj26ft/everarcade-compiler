@@ -54,7 +54,7 @@ name = "combat.attack"
 class = "CLASS-A"
 authority = "world"
 rustrig = "crates/rustrigs/combat"
-certification = "reports/rustrig-combat/certification-report.txt"
+certification = "reports/rustrig-suite/combat-attack-report.txt"
 certification_status = "RUSTRIG COMBAT CERTIFICATION: PASS"
 reads = ["players", "position", "combat", "inventory"]
 writes = ["combat", "receipts"]
@@ -72,11 +72,11 @@ name = "inventory.transfer"
 class = "CLASS-A"
 authority = "owner_or_delegated_inventory_authority"
 rustrig = "crates/rustrigs/inventory"
-certification = "reports/rustrig-inventory-transfer/certification-report.txt"
+certification = "reports/rustrig-suite/inventory-transfer-report.txt"
 certification_status = "RUSTRIG INVENTORY TRANSFER CERTIFICATION: PASS"
 reads = ["players", "inventory"]
 writes = ["inventory", "receipts"]
-receipt = "inventory_transfer_receipt"
+receipt = "TransferReceipt"
 certification_targets = ["determinism", "replay_equivalence", "root_equivalence", "receipt_integrity", "state_transition_integrity", "canonical_output"]
 
 [[mutations]]
@@ -104,7 +104,7 @@ authority = "world"
 reads = ["players", "inventory", "economy"]
 writes = ["inventory", "economy", "receipts"]
 receipt = "TradeReceipt"
-certification = "reports/rustrig-market-trade/certification-report.txt"
+certification = "reports/rustrig-suite/market-trade-report.txt"
 certification_status = "RUSTRIG MARKET TRADE CERTIFICATION: PASS"
 certification_targets = ["determinism", "replay_equivalence", "root_equivalence", "receipt_integrity", "state_transition_integrity", "canonical_output", "supply_conservation"]
 
@@ -139,7 +139,7 @@ authority = "world"
 reads = ["players", "governance"]
 writes = ["governance", "receipts"]
 receipt = "VoteReceipt"
-certification = "reports/rustrig-governance-vote/certification-report.txt"
+certification = "reports/rustrig-suite/governance-vote-report.txt"
 certification_status = "RUSTRIG GOVERNANCE VOTE CERTIFICATION: PASS"
 certification_targets = ["determinism", "replay_equivalence", "root_equivalence", "receipt_integrity", "tally_integrity", "quorum_integrity", "proposal_finality", "tick_window_integrity"]
 
@@ -193,3 +193,36 @@ required_invariants = ["WC-001", "WC-002", "WC-003", "WC-004", "WC-005", "WC-006
 canonicalization = "Canonicalizer Kernel"
 proof_mapping = "Proof Mapping Framework V1"
 formal_targets = "Formal Proof Target Package V1"
+
+
+[certified_mutation_surface.inventory.transfer]
+crate_path = "crates/rustrigs/inventory"
+certification_report = "reports/rustrig-suite/inventory-transfer-report.txt"
+invariants = ["RR-INV-001", "RR-INV-002", "RR-INV-003", "RR-INV-004", "RR-INV-005", "RR-INV-006", "RR-INV-007"]
+receipt_type = "TransferReceipt"
+authority_rule = "owner_or_delegated_inventory_authority"
+proof_target = "proof-targets/rustrigs/inventory-transfer"
+
+[certified_mutation_surface.combat.attack]
+crate_path = "crates/rustrigs/combat"
+certification_report = "reports/rustrig-suite/combat-attack-report.txt"
+invariants = ["RR-COMBAT-001", "RR-COMBAT-002", "RR-COMBAT-003", "RR-COMBAT-004", "RR-COMBAT-005", "RR-COMBAT-006", "RR-COMBAT-007"]
+receipt_type = "CombatReceipt"
+authority_rule = "world"
+proof_target = "proof-targets/rustrigs/combat-attack"
+
+[certified_mutation_surface.market.trade]
+crate_path = "crates/rustrigs/market"
+certification_report = "reports/rustrig-suite/market-trade-report.txt"
+invariants = ["RR-MARKET-001", "RR-MARKET-002", "RR-MARKET-003", "RR-MARKET-004", "RR-MARKET-005", "RR-MARKET-006", "RR-MARKET-007", "RR-MARKET-008", "RR-MARKET-009"]
+receipt_type = "TradeReceipt"
+authority_rule = "world"
+proof_target = "proof-targets/rustrigs/market-trade"
+
+[certified_mutation_surface.governance.vote]
+crate_path = "crates/rustrigs/governance"
+certification_report = "reports/rustrig-suite/governance-vote-report.txt"
+invariants = ["RR-GOV-001", "RR-GOV-002", "RR-GOV-003", "RR-GOV-004", "RR-GOV-005", "RR-GOV-006", "RR-GOV-007", "RR-GOV-008", "RR-GOV-009"]
+receipt_type = "VoteReceipt"
+authority_rule = "world"
+proof_target = "proof-targets/rustrigs/governance-vote"

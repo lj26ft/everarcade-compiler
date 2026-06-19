@@ -367,7 +367,7 @@ pub fn trade(
     })
 }
 
-pub fn replay(
+pub fn replay_with_config(
     initial_state: &MarketState,
     config: &MarketConfig,
     inputs: &[TradeInput],
@@ -377,6 +377,43 @@ pub fn replay(
         state = trade(&state, config, input.clone())?.state;
     }
     Ok(state)
+}
+
+/// Standard RustRig input model for `market.trade`.
+pub type Input = TradeInput;
+/// Standard RustRig state model for `market.trade`.
+pub type State = MarketState;
+/// Standard RustRig output/receipt model for `market.trade`.
+pub type Output = TradeOutput;
+/// Standard RustRig error model for `market.trade`.
+pub type Error = TradeError;
+
+pub fn default_config() -> MarketConfig {
+    MarketConfig::new(["direct", "fixed_price"])
+}
+
+pub fn apply(input: Input, state: State) -> Result<Output, Error> {
+    trade(&state, &default_config(), input)
+}
+
+pub fn market_trade(input: Input, state: State) -> Result<Output, Error> {
+    apply(input, state)
+}
+
+pub fn replay(inputs: &[Input], genesis: State) -> Result<State, Error> {
+    let mut state = genesis;
+    for input in inputs {
+        state = apply(input.clone(), state)?.state;
+    }
+    Ok(state)
+}
+
+pub fn state_root(state: &State) -> String {
+    state.state_root()
+}
+
+pub fn certified_status() -> &'static str {
+    CERTIFICATION_STATUS
 }
 
 fn validate(
