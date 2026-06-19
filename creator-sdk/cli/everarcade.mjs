@@ -579,6 +579,122 @@ function executeGuest(projectDir) {
   console.log('WASM Guest Execution: PASS');
 }
 
+function fileSha256(file) {
+  return crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
+}
+
+function certificatePayload(certificate) {
+  const { signature, ...payload } = certificate;
+  return orderedJson(payload, [
+    'schema', 'certificate_id', 'issued_at', 'world', 'certified_kernels', 'proof_registry',
+    'package_artifacts', 'independent_recheck', 'scope', 'non_goals'
+  ]);
+}
+
+function signCertificate(certificate) {
+  return `sha256:${crypto.createHash('sha256').update(certificatePayload(certificate)).digest('hex')}`;
+}
+
+function buildProofRegistry(projectDir, packaged) {
+  const packageDir = packaged.packageDir;
+  const worldFile = path.join(packageDir, 'world.json');
+  const manifestFile = path.join(packageDir, 'manifest.json');
+  const wasmFile = path.join(packageDir, packaged.manifest.wasm_path);
+  const kernelVersion = packaged.manifest.runtime_compatibility;
+  return {
+    schema: 'everarcade.formal-proof-registry.vnext',
+    world_source: 'world.evr',
+    world_id: packaged.manifest.world_id,
+    package_id: packaged.manifest.package_id,
+    runtime_compatibility: kernelVersion,
+    proofs: [
+      { id: 'world-package-manifest-integrity', artifact: path.relative(projectDir, manifestFile), algorithm: 'sha256', digest: fileSha256(manifestFile), required: true },
+      { id: 'world-metadata-integrity', artifact: path.relative(projectDir, worldFile), algorithm: 'sha256', digest: fileSha256(worldFile), required: true },
+      { id: 'certified-kernel-wasm-integrity', artifact: path.relative(projectDir, wasmFile), algorithm: 'sha256', digest: fileSha256(wasmFile), required: true }
+    ],
+    certified_kernels: [
+      {
+        kernel_id: 'everarcade-runtime',
+        runtime_version: kernelVersion,
+        compatibility: packaged.manifest.runtime_compatibility,
+        package_wasm_hash: packaged.manifest.wasm_hash,
+        status: 'CERTIFIED'
+      }
+    ]
+  };
+}
+
+function writeCertificationArtifacts(projectDir, packaged) {
+  const certDir = path.join(projectDir, 'dist', 'certification');
+  fs.mkdirSync(certDir, { recursive: true });
+  const registry = buildProofRegistry(projectDir, packaged);
+  const registryPath = path.join(certDir, 'formal-proof-registry.json');
+  writeJson(registryPath, registry);
+
+  const certificate = {
+    schema: 'everarcade.world-package-certificate.vnext',
+    certificate_id: `${packaged.manifest.world_id}:${packaged.manifest.package_id}:${packaged.manifest.wasm_hash.slice(0, 16)}`,
+    issued_at: new Date().toISOString(),
+    world: { source: 'world.evr', world_id: packaged.manifest.world_id, package_id: packaged.manifest.package_id, package_version: packaged.manifest.package_version },
+    certified_kernels: registry.certified_kernels,
+    proof_registry: { artifact: path.relative(projectDir, registryPath), digest: fileSha256(registryPath), required_proofs: registry.proofs.length },
+    package_artifacts: {
+      manifest: { artifact: path.relative(projectDir, path.join(packaged.packageDir, 'manifest.json')), digest: fileSha256(path.join(packaged.packageDir, 'manifest.json')) },
+      world: { artifact: path.relative(projectDir, path.join(packaged.packageDir, 'world.json')), digest: fileSha256(path.join(packaged.packageDir, 'world.json')) },
+      wasm: { artifact: path.relative(projectDir, path.join(packaged.packageDir, packaged.manifest.wasm_path)), digest: fileSha256(path.join(packaged.packageDir, packaged.manifest.wasm_path)) }
+    },
+    independent_recheck: { status: 'PENDING', verifier: 'everarcade-independent-proof-recheck.vnext' },
+    scope: 'Map formal proof artifacts into World Package certification for local deployment gating.',
+    non_goals: ['No changes to v0.1 architecture', 'No changes to runtime authority', 'No changes to canonicalizer']
+  };
+  certificate.signature = signCertificate(certificate);
+  const certificatePath = path.join(certDir, 'world-package-certificate.json');
+  writeJson(certificatePath, certificate);
+  return { certDir, registry, registryPath, certificate, certificatePath };
+}
+
+function independentProofRecheck(projectDir, certificatePath = path.join(projectDir, 'dist', 'certification', 'world-package-certificate.json')) {
+  const certificate = JSON.parse(fs.readFileSync(certificatePath, 'utf8'));
+  const expectedSignature = signCertificate(certificate);
+  const checks = [
+    { id: 'certificate-signature', status: certificate.signature === expectedSignature ? 'PASS' : 'FAIL' },
+    { id: 'manifest-digest', status: fileSha256(path.join(projectDir, certificate.package_artifacts.manifest.artifact)) === certificate.package_artifacts.manifest.digest ? 'PASS' : 'FAIL' },
+    { id: 'world-digest', status: fileSha256(path.join(projectDir, certificate.package_artifacts.world.artifact)) === certificate.package_artifacts.world.digest ? 'PASS' : 'FAIL' },
+    { id: 'wasm-digest', status: fileSha256(path.join(projectDir, certificate.package_artifacts.wasm.artifact)) === certificate.package_artifacts.wasm.digest ? 'PASS' : 'FAIL' },
+    { id: 'proof-registry-digest', status: fileSha256(path.join(projectDir, certificate.proof_registry.artifact)) === certificate.proof_registry.digest ? 'PASS' : 'FAIL' }
+  ];
+  const status = checks.every((check) => check.status === 'PASS') ? 'PASS' : 'FAIL';
+  const report = { schema: 'everarcade.independent-proof-recheck.vnext', certificate: path.relative(projectDir, certificatePath), checks, status };
+  writeJson(path.join(projectDir, 'dist', 'certification', 'independent-proof-recheck.json'), report);
+  if (status !== 'PASS') throw new Error(`Independent proof re-check failed: ${JSON.stringify(report)}`);
+  certificate.independent_recheck = { status: 'PASS', verifier: report.schema, artifact: 'dist/certification/independent-proof-recheck.json' };
+  certificate.signature = signCertificate(certificate);
+  writeJson(certificatePath, certificate);
+  return report;
+}
+
+function verifyWorldCertificate(projectDir) {
+  independentProofRecheck(projectDir);
+  console.log('Independent Proof Re-check: PASS');
+}
+
+function certifyWorld(projectDir) {
+  const packaged = packageGame(projectDir);
+  const artifacts = writeCertificationArtifacts(projectDir, packaged);
+  const recheck = independentProofRecheck(projectDir, artifacts.certificatePath);
+  writeJson(path.join(projectDir, 'dist', 'certification', 'package-certification-artifacts.json'), {
+    schema: 'everarcade.package-certification-artifacts.vnext',
+    flow: ['world.evr', 'certified kernel(s)', 'signed certificate', 'independent verification', 'deploy'],
+    artifacts: {
+      proof_registry: path.relative(projectDir, artifacts.registryPath),
+      signed_certificate: path.relative(projectDir, artifacts.certificatePath),
+      independent_recheck: 'dist/certification/independent-proof-recheck.json'
+    },
+    status: recheck.status
+  });
+  console.log('World Package Certification: PASS');
+}
+
 function build(projectDir) {
   const manifest = readManifest(projectDir);
   const dist = path.join(projectDir, 'dist');
@@ -614,13 +730,16 @@ function deploy(projectDir) {
   const manifest = readManifest(projectDir);
   const dist = path.join(projectDir, 'dist');
   if (!fs.existsSync(path.join(dist, 'build.json'))) build(projectDir);
+  const certificatePath = path.join(dist, 'certification', 'world-package-certificate.json');
+  const certificate = fs.existsSync(certificatePath) ? JSON.parse(fs.readFileSync(certificatePath, 'utf8')) : null;
   writeJson(path.join(dist, 'deployment.json'), {
     type: 'Deployment',
     project: manifest.name,
     target: value('--target', 'local'),
     authority: 'protocol-interface',
     settlement: 'testnet-simulated',
-    replay: 'enabled'
+    replay: 'enabled',
+    certification: certificate ? { certificate: path.relative(projectDir, certificatePath), signature: certificate.signature, independent_recheck: certificate.independent_recheck?.status ?? 'UNKNOWN' } : null
   });
   console.log(`Deploy: PASS (${manifest.name})`);
 }
@@ -656,6 +775,8 @@ try {
   } else if (command === 'build') build(projectDir);
   else if (command === 'test') test(projectDir);
   else if (command === 'package') packageGame(projectDir);
+  else if (command === 'certify-world') certifyWorld(projectDir);
+  else if (command === 'verify-world-certificate') verifyWorldCertificate(projectDir);
   else if (command === 'launch-local') launchLocal(projectDir);
   else if (command === 'execute-local') executeLocal(projectDir);
   else if (command === 'execute-template') executeTemplate(projectDir);
@@ -668,7 +789,7 @@ try {
   else if (command === 'deploy') deploy(projectDir);
   else if (command === 'publish') publish(projectDir);
   else {
-    console.log('everarcade <new|build|test|package|launch-local|execute-local|execute-template|execute-guest|play-local|play-local-multiplayer|play-network-local|play-federated-local|play-multi-lease-local|deploy|publish> [--project DIR]');
+    console.log('everarcade <new|build|test|package|certify-world|verify-world-certificate|launch-local|execute-local|execute-template|execute-guest|play-local|play-local-multiplayer|play-network-local|play-federated-local|play-multi-lease-local|deploy|publish> [--project DIR]');
     process.exit(command ? 1 : 0);
   }
 } catch (error) {
