@@ -1,0 +1,4 @@
+Projection restore report: PASS
+PR-004 Restore projection continues from restored state: PASS
+Checkpoint tick: 2
+Continue tick: 3

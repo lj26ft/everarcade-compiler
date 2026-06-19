@@ -1,0 +1,3 @@
+Projection replay report: PASS
+PR-003 Replay projection matches live projection: PASS
+Frames checked: 3

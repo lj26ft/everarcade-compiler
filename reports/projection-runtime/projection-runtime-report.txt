@@ -1,0 +1,7 @@
+PROJECTION RUNTIME V0.1: PASS
+
+PR-001 Projection never mutates state: PASS
+PR-002 Projection derives solely from ArenaState: PASS
+PR-006 Projection crashes cannot affect runtime authority: PASS (projection has no authority, journal, root, or consensus write API)
+Operators with same root: PASS
+Latest root: b1070ed44d97363e48d0b15e56b7588f91a8ae69b84bd32e125ccda9dca234b9
