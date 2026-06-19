@@ -3,48 +3,57 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Arena Vanguard Playable Demo v0.1</title>
+  <title>Arena Vanguard — Playable Proof-of-World</title>
   <link rel="stylesheet" href="./arena-vanguard-playable.css">
 </head>
 <body>
   <main class="game-shell" aria-labelledby="title">
     <section class="stage-card">
-      <header class="game-header">
-        <div>
+      <header class="top-hud" aria-label="Arena Vanguard status">
+        <div class="brand-block">
           <p class="eyebrow">EverArcade developer preview</p>
           <h1 id="title">Arena Vanguard</h1>
-          <p class="tagline">Playable Demo v0.1 — a tiny PvE loop where the world remembers.</p>
+          <p class="tagline">A tiny frontier PvE loop where <strong>the world remembers</strong>.</p>
         </div>
-        <div class="memory-banner" id="memoryBanner">Move with WASD/Arrows. Space or click attacks. E picks up loot.</div>
+        <div class="hud-pill"><span>World Age</span><strong id="hudAge">Day 1</strong></div>
+        <div class="hud-pill"><span>Tick</span><strong id="hudTick">0</strong></div>
+        <div class="hud-pill wide"><span>Objective</span><strong id="hudObjective">Reach the Frontier camp</strong></div>
+        <div class="hud-pill"><span>Health</span><strong id="hudHealth">12/12</strong></div>
+        <div class="hud-pill"><span>Loot</span><strong id="hudLoot">0</strong></div>
       </header>
 
-      <canvas id="worldCanvas" width="960" height="640" aria-label="Playable Arena Vanguard PvE world" tabindex="0"></canvas>
-
-      <div class="hud-row">
-        <div class="hud-card"><span>Inventory</span><strong id="inventoryText">none</strong></div>
-        <div class="hud-card"><span>Status</span><strong id="statusText">Ready</strong></div>
-        <div class="hud-card"><span>Controls</span><strong>WASD · Space · E · T · V · R · M · C</strong></div>
+      <div class="play-wrap">
+        <canvas id="worldCanvas" width="1100" height="690" aria-label="Playable Arena Vanguard frontier" tabindex="0"></canvas>
+        <div class="quest-card" id="questCard">
+          <b>Frontier Scout Orders</b>
+          <span id="questText">Move with WASD/Arrows. Clear the creature camp, loot the leader, return to the Citadel, then press L.</span>
+          <small>Space/click attack · E loot · Q objective · R replay · C restore · M migrate · L return later</small>
+        </div>
+        <div class="toast-stack" id="toastStack" aria-live="polite"></div>
+        <div class="completion-banner" id="completionBanner">Frontier camp cleared — the ruin is now world memory.</div>
       </div>
+
+      <section class="verification-strip" aria-labelledby="verificationTitle">
+        <h2 id="verificationTitle">Verification <span>secondary local proof layer</span></h2>
+        <div class="verify-grid" id="verificationGrid"></div>
+      </section>
     </section>
 
     <aside class="side-panel">
-      <section class="verification" aria-labelledby="verificationTitle">
-        <h2 id="verificationTitle">Verification</h2>
-        <dl id="verificationGrid"></dl>
+      <section class="memory-panel" aria-labelledby="memoryTitle">
+        <h2 id="memoryTitle">World Memory</h2>
+        <ul id="memoryList"></ul>
       </section>
-
-      <section class="receipts" aria-labelledby="receiptsTitle">
-        <h2 id="receiptsTitle">Receipts</h2>
-        <ol id="receiptList"></ol>
-      </section>
-
-      <section class="events" aria-labelledby="eventsTitle">
-        <h2 id="eventsTitle">World Memory Feed</h2>
+      <section class="event-panel" aria-labelledby="eventTitle">
+        <h2 id="eventTitle">Timeline</h2>
         <ol id="eventFeed"></ol>
+      </section>
+      <section class="receipt-panel" aria-labelledby="receiptTitle">
+        <h2 id="receiptTitle">Receipts</h2>
+        <ol id="receiptList"></ol>
       </section>
     </aside>
   </main>
-
   <script src="./arena-vanguard-playable.js"></script>
 </body>
 </html>

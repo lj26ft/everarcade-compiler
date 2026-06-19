@@ -1,262 +1,117 @@
 # EverArcade Public Demonstration Script
 
-## Demonstration Thesis
+## Demonstration thesis
 
 ```text
-The World Is The Artifact.
+Small game feel. Big world-continuity idea.
 ```
 
-This public demonstration is designed to make one idea obvious in under sixty seconds and undeniable within five minutes: an EverArcade world is not a session, server, or save file. It is a deployable, verifiable, replayable, restorable, and migratable artifact that continues across operators.
+Arena Vanguard is presented as a playable proof-of-world demo: a frontier scout clears a creature camp, the camp becomes a remembered ruin, and replay/restore/migration preserve that remembered world.
 
-## Audience Takeaway
+## Audience takeaway
 
-By the end of the demo, a viewer with no prior EverArcade context should understand that:
+Within the first minute, the viewer should understand:
 
-- Worlds are deployable.
-- Worlds are verifiable.
-- Worlds are portable.
-- Worlds survive operator changes.
-- Worlds survive migration without reset or rollback.
-
-## Core Contrast
-
-Traditional games:
-
-```text
-Player
-↓
-Server
-↓
-Game
-```
-
-EverArcade:
-
-```text
-World
-↓
-Package
-↓
-Verification
-↓
-Deployment
-↓
-Continuation
-```
+- I can move.
+- I can fight creatures.
+- I can loot.
+- The world records what happened.
+- Returning later shows the world aged.
+- Replay, restore, and migration preserve the same remembered world.
+- Verification roots exist underneath the game view.
 
 ## Tone
 
-The narration should feel infrastructure-grade: calm, precise, and confident. Avoid hype language, fantasy framing, casino-like language, and gameplay-first claims. The operator should sound like they are demonstrating a reliable deployment system for persistent worlds.
+Lead with game feel, then explain continuity. Avoid claims that the page is a production game, commercial MMO, live HotPocket authority, wallet flow, XRPL/Xahau settlement, or marketplace. Call it a local playable developer-preview.
 
-## Certification Overlay
+## Scene 1: Enter the frontier
 
-Keep this overlay visible throughout the demonstration:
-
-```text
-Tier 1: PASS
-Tier 2: PASS
-Projection Runtime: PASS
-World Package: PASS
-```
-
-## Scene 1: Build World
-
-**Screen action:** Show the command terminal and package panel.
-
-```bash
-everarcade new-world arena-vanguard
-```
-
-**Visual result:** A `world.evr` artifact appears with package structure:
-
-```text
-arena-vanguard/
-├── world.evr
-├── manifest.json
-├── runtime.wasm
-├── state/
-├── receipts/
-└── checkpoints/
-```
+**Screen action:** Open `arena-vanguard-playable.html` from a local server. Move the scout with WASD or arrow keys.
 
 **Narration:**
 
-> In EverArcade, the world itself is a deployable artifact.
+> This is a tiny PvE proof-of-world. You are a frontier scout. The goal is simple: clear the creature camp and return later to see what the world remembers.
 
-**On-screen emphasis:** Highlight `world.evr`, then pulse the World Hash and State Root fields in the left panel.
+**On-screen emphasis:** Top HUD objective, large canvas, region labels, minimap.
 
-## Scene 2: Certify World
+## Scene 2: Fight the camp
 
-**Screen action:** Run certification.
-
-```bash
-everarcade certify-world
-```
-
-**Visual result:** Display deterministic certification checks.
-
-```text
-Package Integrity: PASS
-Determinism Profile: PASS
-Replay Plan: PASS
-Certificate: generated
-```
+**Screen action:** Move into the Frontier camp. Attack with Space or click. Let the viewer see enemy chase, hit flash, health bars, attack arcs, and damage numbers.
 
 **Narration:**
 
-> Before deployment, the world can be independently verified.
+> Player actions are local journal inputs. Movement and combat advance tick, receipts, and roots.
 
-**On-screen emphasis:** The certification overlay remains small but visible. The certificate icon attaches to `world.evr`.
+## Scene 3: Kill the camp leader
 
-## Scene 3: Deploy World
+**Screen action:** Defeat the Camp Leader.
 
-**Screen action:** The right operator panel activates Operator A, Operator B, and Operator C.
-
-```text
-Operator A: ONLINE
-Operator B: ONLINE
-Operator C: ONLINE
-```
+**Visual result:** Camp clear banner appears, the camp becomes a remembered ruin marker, and World Memory records First Kill and Camp Cleared.
 
 **Narration:**
 
-> Three operators. One world.
+> The important moment is not the kill itself. The world records that this place changed.
 
-**On-screen emphasis:** The same World Hash is copied to all three operators. Status indicators turn bright green only after all three load the same package.
+## Scene 4: Loot
 
-## Scene 4: Live World
+**Screen action:** Press E near the sparkle loot.
 
-**Screen action:** The projection runtime starts. The center panel shows minimalist state-focused activity:
-
-- movement paths,
-- combat intent and resolution,
-- inventory deltas,
-- market trades,
-- governance votes.
-
-**Live overlay:**
-
-```text
-Tick: 1842
-Epoch: 12
-State Root: 0x9f4c...a21e
-Receipt Count: 493
-```
+**Visual result:** Loot count increases, First Loot appears in World Memory, and a checkpoint refreshes.
 
 **Narration:**
 
-> The runtime is a projection of the world state. Gameplay events become receipts. Receipts advance the world.
+> Loot is also remembered as a deterministic state transition.
 
-**On-screen emphasis:** Receipts flow from the center panel into the left World Overview panel and then synchronize to the right Operator View.
+## Scene 5: Return later
 
-## Scene 5: Verification
+**Screen action:** Return to the Citadel and press L.
 
-**Screen action:** Highlight operator roots.
-
-```text
-Operator A Root: 0x9f4c...a21e
-Operator B Root: 0x9f4c...a21e
-Operator C Root: 0x9f4c...a21e
-```
-
-**Animated confirmation:**
-
-```text
-ROOTS MATCH
-```
+**Visual result:** World Age advances, resources regenerate, the ruin appears older, and the timeline says: `You returned to an older world.`
 
 **Narration:**
 
-> Independent operators reached the same world state.
-
-**On-screen emphasis:** Root synchronization lines converge into one bright green verification bar.
+> This is the thesis: returning later does not reset the camp. The world aged, and the cleared camp is still part of history.
 
 ## Scene 6: Replay
 
-**Screen action:** Stop live execution, dim the runtime, and run replay.
+**Screen action:** Press R.
 
-```bash
-everarcade replay
-```
-
-**Visual result:** History replays from receipts and ends at the same State Root.
-
-```text
-Replay Start Root: 0x1a02...41bf
-Replay End Root:   0x9f4c...a21e
-Live End Root:     0x9f4c...a21e
-REPLAY VERIFIED
-```
+**Visual result:** The local journal visibly replays and the verification strip shows `REPLAY VERIFIED`.
 
 **Narration:**
 
-> The world can be replayed from its history and arrive at the same state.
+> The local journal can replay from genesis and arrive at the same remembered world.
 
 ## Scene 7: Restore
 
-**Screen action:** Restore a checkpoint and resume simulation.
+**Screen action:** Press C.
 
-```text
-Checkpoint: epoch-12.tick-1800
-Restore Root: 0x7bd0...337c
-Continuation Root: 0x9f4c...a21e
-RESTORE VERIFIED
-```
+**Visual result:** The checkpoint restores and execution continues with `RESTORE VERIFIED`.
 
 **Narration:**
 
-> Restore does not mean reset. The world continues from a verified checkpoint.
-
-**On-screen emphasis:** The tick counter resumes from the restored checkpoint instead of returning to zero.
+> Restore is not a reset. It is a continuation from a checkpoint while preserving world memory.
 
 ## Scene 8: Migration
 
-**Screen action:** Show migration from Operator A to Operator D.
+**Screen action:** Press M.
 
-```text
-Operator A
-    ↓
-Migration Package
-    ↓
-Operator D
-```
-
-**Visual result:** Operator D joins with the same World Hash and State Root.
-
-```text
-Operator D: ONLINE
-Migration Root: 0x9f4c...a21e
-MIGRATION VERIFIED
-```
+**Visual result:** The World Memory panel shows Migration Preserved and the verification strip shows `MIGRATION VERIFIED`.
 
 **Narration:**
 
-> The world is not trapped inside an operator. It can move and continue.
+> The local source world package moves to a destination world without losing the remembered ruin.
 
-## Scene 9: Final Reveal
+## Scene 9: Close
 
-**Screen action:** Clear the runtime and show the final capability ladder.
+**Screen action:** Leave the canvas on the aged ruin, memory panel, timeline, and verification strip.
 
-```text
-CREATE
-CERTIFY
-VERIFY
-DEPLOY
-REPLAY
-RESTORE
-MIGRATE
-CONTINUE
-```
+**Narration:**
 
-Then reveal:
-
-```text
-BUILD WORLDS.
-NOT JUST GAMES.
-```
+> Arena Vanguard is not claiming live settlement here. It is demonstrating the continuity primitive: a playable world whose history can be remembered, replayed, restored, migrated, and verified.
 
 End card:
 
 ```text
-PUBLIC DEMONSTRATION CERTIFICATION: PASS
+ARENA VANGUARD PLAYABLE REMAKE: PASS
 ```

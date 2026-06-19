@@ -1,277 +1,56 @@
 {
-  "demo_id": "arena-vanguard-reference-projection",
-  "duration_target_seconds": 300,
+  "demo_id": "arena-vanguard-playable-proof-of-world",
+  "version": "0.2.0",
+  "duration_target_seconds": 180,
+  "safety_boundary": {
+    "mode": "local_playable_developer_preview",
+    "hotpocket_inputs": false,
+    "wallets": false,
+    "xrpl_xahau_settlement": false,
+    "authority_claim": "DEMO ROOT FALLBACK — canonicalizer integration pending."
+  },
   "world": {
-    "name": "Arena Vanguard: Reference Projection",
-    "seed": "everarcade-public-demo-2026-06-19",
-    "tick": 1280,
-    "objective": "Prove a live deterministic world can be watched, replayed, migrated, and restored without trusting the projection UI.",
-    "players": [
-      {
-        "id": "alice",
-        "x": -2,
-        "y": 1,
-        "zone": "Outpost",
-        "health": 92,
-        "score": 410,
-        "connected": true,
-        "inventory": {
-          "items": [
-            "relay-key"
-          ],
-          "last_event": "pickup"
-        },
-        "last_action": "move",
-        "trail": [
-          {
-            "x": -3,
-            "y": 1
-          },
-          {
-            "x": -2,
-            "y": 1
-          }
-        ]
-      },
-      {
-        "id": "bruno",
-        "x": 1,
-        "y": 0,
-        "zone": "Outpost",
-        "health": 76,
-        "score": 355,
-        "connected": true,
-        "inventory": {
-          "items": [
-            "relay-key",
-            "medkit"
-          ],
-          "last_event": "transfer"
-        },
-        "last_action": "attack",
-        "trail": [
-          {
-            "x": 0,
-            "y": 0
-          },
-          {
-            "x": 1,
-            "y": 0
-          }
-        ]
-      },
-      {
-        "id": "chen",
-        "x": 3,
-        "y": -2,
-        "zone": "Relic Gate",
-        "health": 100,
-        "score": 520,
-        "connected": false,
-        "inventory": {
-          "items": [
-            "relay-key",
-            "medkit",
-            "ore"
-          ],
-          "last_event": "pickup"
-        },
-        "last_action": "trade",
-        "trail": [
-          {
-            "x": 2,
-            "y": -2
-          },
-          {
-            "x": 3,
-            "y": -2
-          }
-        ]
-      }
+    "name": "Arena Vanguard: Frontier Scout Loop",
+    "seed": "everarcade-frontier-memory-2026-06-19",
+    "schema": "ArenaState.demo.v0.2",
+    "opening_tick": 0,
+    "opening_world_age": 1,
+    "objective": "Clear the Frontier creature camp, loot the leader, return to the Citadel, advance world age, then verify replay, restore, and migration preserve the remembered ruin.",
+    "regions": [
+      { "id": "citadel", "label": "Citadel", "role": "safe return point" },
+      { "id": "frontier_camp", "label": "Frontier Camp", "role": "PvE combat and camp leader" },
+      { "id": "wilderness_edge", "label": "Wilderness Edge", "role": "regenerating resources" },
+      { "id": "remembered_ruin", "label": "Remembered Ruin", "role": "created after camp clear" }
     ],
-    "enemies": [
-      {
-        "id": "drone-7",
-        "x": 2,
-        "y": 2,
-        "health": 48
-      },
-      {
-        "id": "sentinel-2",
-        "x": -3,
-        "y": -1,
-        "health": 64
-      }
+    "player": { "id": "frontier-scout", "health": 12, "spawn": { "x": 220, "y": 330 } },
+    "creatures": [
+      { "id": "skitter-1", "kind": "Skitter", "health": 3, "leader": false },
+      { "id": "skitter-2", "kind": "Skitter", "health": 3, "leader": false },
+      { "id": "brute-1", "kind": "Brute", "health": 4, "leader": false },
+      { "id": "leader", "kind": "Camp Leader", "health": 7, "leader": true }
     ],
-    "epoch": 7,
-    "receipt_count": 42,
-    "entities": [
-      {
-        "id": "relic-cache",
-        "type": "neutral",
-        "x": 0,
-        "y": -3,
-        "health": 100
-      },
-      {
-        "id": "market-kiosk",
-        "type": "neutral",
-        "x": -1,
-        "y": 2,
-        "health": 100
-      }
-    ]
+    "required_journal_inputs": ["move", "attack", "kill", "loot", "camp_cleared", "return_later", "replay", "restore", "migration"],
+    "memory_records": ["First Kill", "Camp Cleared", "First Loot", "Returned Later", "Migration Preserved"]
   },
-  "operator": {
-    "status": "LIVE_RUNNABLE",
-    "network": "local-demo-federation",
-    "nodes": [
-      "Operator A",
-      "Operator B",
-      "Operator C"
-    ],
-    "controls": [
-      "view roots",
-      "scrub replay",
-      "event details",
-      "certification",
-      "toggle labels"
-    ],
-    "root_match": true
+  "verification": {
+    "state_root": "demo-root-fallback",
+    "world_hash": "demo-world-fallback",
+    "tier_1": "PASS",
+    "tier_2": "PASS",
+    "world_package": "PASS",
+    "replay": "local journal replay only",
+    "restore": "local checkpoint restore only",
+    "migration": "local source package to destination visualization only"
   },
-  "timelines": {
-    "replay": [
-      {
-        "tick": 1268,
-        "label": "Genesis seed loaded",
-        "root": "replay:seed:1268"
-      },
-      {
-        "tick": 1272,
-        "label": "Alice joins and moves",
-        "root": "replay:join-move:1272"
-      },
-      {
-        "tick": 1278,
-        "label": "Bruno defeats drone-7",
-        "root": "replay:combat:1278"
-      },
-      {
-        "tick": 1280,
-        "label": "Live projection verified",
-        "root": "replay:verified:1280"
-      }
-    ],
-    "migration": [
-      {
-        "phase": "freeze",
-        "seconds": 0,
-        "label": "Seal input window"
-      },
-      {
-        "phase": "export",
-        "seconds": 8,
-        "label": "Export checkpoint and receipts"
-      },
-      {
-        "phase": "transfer",
-        "seconds": 18,
-        "label": "Move world to validator-b"
-      },
-      {
-        "phase": "resume",
-        "seconds": 28,
-        "label": "Resume at same world root"
-      }
-    ],
-    "restore": [
-      {
-        "seconds": 0,
-        "label": "Select checkpoint 1278"
-      },
-      {
-        "seconds": 6,
-        "label": "Replay receipts 1279-1280"
-      },
-      {
-        "seconds": 12,
-        "label": "Compare roots"
-      },
-      {
-        "seconds": 18,
-        "label": "Reconnect players"
-      }
-    ]
-  },
-  "commitments": {
-    "state_root": "state:arena-vanguard:tick:1280",
-    "receipt_root": "receipt:arena-vanguard:entries:42",
-    "world_hash": "world:arena-vanguard:players:3",
-    "continuity_root": "continuity:arena-vanguard:live"
-  },
-  "events": [
-    {
-      "tick": 0,
-      "type": "join",
-      "label": "player joined: alice",
-      "detail": "receipt emitted"
-    },
-    {
-      "tick": 25,
-      "type": "move",
-      "label": "player moved: bruno",
-      "detail": "state_root updated"
-    },
-    {
-      "tick": 50,
-      "type": "attack",
-      "label": "combat.attack(): bruno \u2192 drone-7",
-      "detail": "28 damage \u00b7 verified"
-    },
-    {
-      "tick": 60,
-      "type": "inventory",
-      "label": "inventory.transfer(): relay-key",
-      "detail": "pickup/transfer indicator"
-    },
-    {
-      "tick": 75,
-      "type": "trade",
-      "label": "market.trade(): VERIFIED",
-      "detail": "alice \u2192 chen \u00b7 2 ore \u00b7 14 credits"
-    },
-    {
-      "tick": 85,
-      "type": "vote",
-      "label": "governance.vote(): VERIFIED",
-      "detail": "proposal AV-17 yes 2 no 0 abstain 1"
-    },
-    {
-      "tick": 92,
-      "type": "restore",
-      "label": "RESTORE VERIFIED",
-      "detail": "checkpoint \u2192 restore \u2192 continue"
-    },
-    {
-      "tick": 100,
-      "type": "migration",
-      "label": "MIGRATION VERIFIED",
-      "detail": "source \u2192 package \u2192 destination"
-    }
-  ],
-  "market": {
-    "seller": "alice",
-    "buyer": "chen",
-    "item": "ore",
-    "quantity": 2,
-    "currency": 14,
-    "status": "market.trade(): VERIFIED"
-  },
-  "governance": {
-    "proposal_id": "AV-17",
-    "yes": 2,
-    "no": 0,
-    "abstain": 1,
-    "status": "governance.vote(): VERIFIED"
-  }
+  "scripted_loop": [
+    "Move from the Citadel to the Frontier camp.",
+    "Fight 2-4 creatures using Space or click.",
+    "Kill the camp leader to create the remembered ruin.",
+    "Pick up the leader loot with E.",
+    "Return to the Citadel.",
+    "Press L to return later and age the world.",
+    "Press R to replay the local journal and verify the remembered world.",
+    "Press C to restore a checkpoint and continue.",
+    "Press M to migrate the local world package and preserve memory."
+  ]
 }
