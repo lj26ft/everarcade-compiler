@@ -1,5 +1,17 @@
 # Arena Vanguard Public Demo Runbook
 
+
+## Public release world demo
+
+The public-facing Arena Vanguard demo is the narrative world dashboard, not the old technical projection canvas. Serve the release demo directory and open:
+
+```bash
+python3 -m http.server 8080 --directory release/demo-production
+# open http://127.0.0.1:8080/arena-vanguard-world-demo.html
+```
+
+Use this page for the first viewer impression. It presents the persistent PvE world, remembered events, region cards, local-only story controls, and secondary verification details. The older `dashboard.html` projection may still be used for technical inspection, but it is not the main public experience.
+
 ## Phase 1: recorded guided demo
 
 Use seed or replay mode to control the story: live state, operator roots, replay, restore, migration, and verification.
