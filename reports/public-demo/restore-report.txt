@@ -1,0 +1,12 @@
+EverArcade Public Demonstration Restore Report
+
+[RESTORE] checkpoint selected: PASS
+[RESTORE] checkpoint loaded: PASS
+[RESTORE] restore root recorded: PASS
+[RESTORE] continuation root generated: PASS
+[RESTORE] no reset detected: PASS
+[RESTORE] no rollback detected: PASS
+[RESTORE] restore verified: PASS
+
+RESTORE VERIFIED
+PUBLIC DEMONSTRATION CERTIFICATION: PASS

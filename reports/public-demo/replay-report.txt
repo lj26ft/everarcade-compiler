@@ -1,0 +1,11 @@
+EverArcade Public Demonstration Replay Report
+
+[REPLAY] live execution stopped for replay: PASS
+[REPLAY] receipt history loaded: PASS
+[REPLAY] replay start root recorded: PASS
+[REPLAY] replay end root recorded: PASS
+[REPLAY] final root equals live root: PASS
+[REPLAY] replay verified: PASS
+
+REPLAY VERIFIED
+PUBLIC DEMONSTRATION CERTIFICATION: PASS

@@ -1,0 +1,12 @@
+EverArcade Public Demonstration Migration Report
+
+[MIGRATION] source operator selected: PASS
+[MIGRATION] migration package created: PASS
+[MIGRATION] Operator D online: PASS
+[MIGRATION] world hash preserved: PASS
+[MIGRATION] state root preserved at migration boundary: PASS
+[MIGRATION] continuation after migration: PASS
+[MIGRATION] migration verified: PASS
+
+MIGRATION VERIFIED
+PUBLIC DEMONSTRATION CERTIFICATION: PASS
