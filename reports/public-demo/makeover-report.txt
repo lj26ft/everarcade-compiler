@@ -1,0 +1,6 @@
+ARENA VANGUARD PROJECTION MAKEOVER: PASS
+
+Public-facing name: Arena Vanguard: Reference Projection.
+Framing: certified world viewer, deterministic world visualization, reference projection.
+Read-only safety: mutation, wallet, settlement, market authority, governance authority, package deployment, signing, and admin controls are not exposed.
+Visual proof points: live/seed/replay modes, root certification overlay, operator agreement banner, replay scrubber, restore animation, migration animation, event feed, combat/trade/vote verification cards.

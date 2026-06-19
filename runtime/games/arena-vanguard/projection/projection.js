@@ -1,193 +1,58 @@
-const POLL_MS = 1000;
+const POLL_MS = 1200;
 const MAX_EVENTS = 120;
-const state = { lastState: null, lastVerify: null, seenCombat: new Set(), combat: [], commitments: [], demoMode: false };
-
+const params = new URLSearchParams(location.search);
+const publicMode = params.get("mode") || "seed";
+const state = { lastState: null, lastVerify: null, seenCombat: new Set(), combat: [], commitments: [], demoMode: true, speed: 1, labels: true };
 const $ = id => document.getElementById(id);
 const canvas = $("arenaCanvas");
 const ctx = canvas.getContext("2d");
 
-async function fetchJson(path) {
-  const response = await fetch(path, { cache: "no-store" });
-  if (!response.ok) throw new Error(`${path} returned ${response.status}`);
-  return response.json();
-}
-
+async function fetchJson(path) { const r = await fetch(path, { cache: "no-store" }); if (!r.ok) throw new Error(`${path} returned ${r.status}`); return r.json(); }
+async function loadSeed() { return fetchJson("../../../release/demo-production/demo-world-seed.json").catch(() => fetchJson("./demo-world-seed.json")); }
 async function fetchAuthoritativeState() {
-  let world, verify;
+  let world, verify, seed;
   try {
-    [world, verify] = await Promise.all([
-      fetchJson("/state").catch(() => fetchJson("/world-state")),
-      fetchJson("/verify").catch(() => fetchJson("/status"))
-    ]);
-    state.demoMode = false;
-  } catch (error) {
-    const seed = await fetchJson("../../../release/demo-production/demo-world-seed.json").catch(() => fetchJson("./demo-world-seed.json"));
-    world = demoWorldFromSeed(seed);
-    verify = { ok: true, roots: { stateRoot: seed.commitments.state_root, receiptRoot: seed.commitments.receipt_root, worldHash: seed.commitments.world_hash, continuityRoot: seed.commitments.continuity_root } };
-    state.demoMode = true;
-  }
-  state.lastState = normalizeState(world);
+    seed = await loadSeed();
+    if (publicMode === "live") {
+      [world, verify] = await Promise.all([fetchJson("/state").catch(() => fetchJson("/world-state")), fetchJson("/verify").catch(() => fetchJson("/status"))]);
+      state.demoMode = false;
+    } else {
+      world = demoWorldFromSeed(seed);
+      verify = { ok: true, roots: { stateRoot: seed.commitments.state_root, receiptRoot: seed.commitments.receipt_root, worldHash: seed.commitments.world_hash, continuityRoot: seed.commitments.continuity_root } };
+      state.demoMode = true;
+    }
+    state.seed = seed;
+  } catch (error) { setConnection(false, error.message); return; }
+  state.lastState = normalizeState(world, state.seed);
   state.lastVerify = normalizeVerify(verify, state.lastState);
   rememberCommitment(state.lastState, state.lastVerify);
-  render();
-  setConnection(true);
+  render(); setConnection(true);
 }
-
-function normalizeState(raw) {
+function normalizeState(raw, seed = {}) {
   const feed = raw.feed ?? raw.worldStateFeed ?? raw;
-  const players = Object.values(feed.players ?? raw.players ?? {}).map(player => ({
-    id: player.playerId ?? player.id ?? player.player_id ?? "unknown-player",
-    x: Number(player.position?.x ?? player.x ?? 0),
-    y: Number(player.position?.y ?? player.y ?? 0),
-    zone: player.position?.zone ?? player.zone ?? "Arena",
-    health: Number(player.health ?? player.hp ?? 100),
-    score: Number(player.score ?? player.xp ?? 0),
-    connected: player.connected !== false && player.connectionStatus !== "disconnected"
-  }));
-  const journal = raw.journal ?? raw.replay ?? raw.entries ?? [];
-  const combatEvents = [...(raw.combat_events ?? raw.combatEvents ?? []), ...journal.filter(entry => `${entry}`.includes("attack"))];
-  for (const event of combatEvents) addCombat(event, feed.tick ?? raw.tick ?? 0);
-  return {
-    tick: Number(feed.tick ?? raw.tick ?? raw.runtimeTick ?? 0),
-    players,
-    enemies: Object.values(feed.enemies ?? raw.enemies ?? {}),
-    journal,
-    replayStatus: raw.replayStatus ?? raw.replay_status ?? feed.runtime_health?.recovery_state ?? "LIVE",
-    journalSize: Number(raw.journalSize ?? raw.journal_size ?? feed.replaySize ?? journal.length ?? 0)
-  };
+  const players = Object.values(feed.players ?? raw.players ?? {}).map(p => ({ id: p.playerId ?? p.id ?? "unknown", x: Number(p.position?.x ?? p.x ?? 0), y: Number(p.position?.y ?? p.y ?? 0), zone: p.position?.zone ?? p.zone ?? "Arena", health: Number(p.health ?? p.hp ?? 100), score: Number(p.score ?? p.xp ?? 0), connected: p.connected !== false && p.connectionStatus !== "disconnected", inventory: p.inventory ?? { items: [], last_event: "none" }, trail: p.trail ?? [], lastAction: p.last_action ?? p.lastAction ?? "observe" }));
+  const journal = raw.journal ?? raw.replay ?? raw.entries ?? seed.events ?? [];
+  const combatEvents = [...(raw.combat_events ?? raw.combatEvents ?? []), ...journal.filter(e => `${e.type ?? e.label ?? e}`.includes("attack"))];
+  for (const e of combatEvents) addCombat(e, feed.tick ?? raw.tick ?? 0);
+  return { tick: Number(feed.tick ?? raw.tick ?? 0), epoch: Number(feed.epoch ?? raw.epoch ?? seed.world?.epoch ?? 1), players, enemies: Object.values(feed.enemies ?? raw.enemies ?? {}), entities: Object.values(feed.entities ?? raw.entities ?? seed.world?.entities ?? {}), journal, events: seed.events ?? journal, market: seed.market, governance: seed.governance, replayStatus: raw.replayStatus ?? "REFERENCE", journalSize: Number(raw.journalSize ?? journal.length ?? 0), receiptCount: Number(raw.receipt_count ?? seed.world?.receipt_count ?? journal.length) };
 }
-
-function demoWorldFromSeed(seed) {
-  return { tick: seed.world.tick, players: seed.world.players, enemies: seed.world.enemies, journal: seed.timelines.replay.map(e => ({ tick: e.tick, type: e.label, root: e.root })), combat_events: [{ tick: seed.world.tick - 2, description: "Bruno defeats drone-7 for 52 damage", damage: 52 }], replayStatus: "DEMO-SEED", journalSize: seed.timelines.replay.length };
-}
-
-function normalizeVerify(raw, normalized) {
-  const roots = raw.roots ?? raw.commitment ?? raw.latestCommitment ?? raw.live ?? raw;
-  const ok = raw.ok ?? raw.verified ?? raw.valid ?? ["verified", "healthy", "ok"].includes(String(raw.status ?? "").toLowerCase());
-  return {
-    verified: Boolean(ok),
-    status: ok ? "VERIFIED" : "FAILED",
-    stateRoot: roots.stateRoot ?? roots.state_root ?? roots.world_root ?? `state:arena-vanguard:tick:${normalized.tick}`,
-    replayedStateRoot: raw.replayed?.stateRoot ?? raw.replayed?.state_root ?? null,
-    receiptRoot: roots.receiptRoot ?? roots.receipt_root ?? roots.replay_root ?? `receipt:arena-vanguard:entries:${normalized.journalSize}`,
-    replayedReceiptRoot: raw.replayed?.receiptRoot ?? raw.replayed?.receipt_root ?? null,
-    worldHash: roots.worldHash ?? roots.world_hash ?? roots.checkpoint_root ?? `world:arena-vanguard:players:${normalized.players.length}`,
-    replayedWorldHash: raw.replayed?.worldHash ?? raw.replayed?.world_hash ?? null,
-    continuityRoot: roots.continuityRoot ?? roots.continuity_root ?? "continuity:arena-vanguard:live",
-    replayedContinuityRoot: raw.replayed?.continuityRoot ?? raw.replayed?.continuity_root ?? null
-  };
-}
-
-function addCombat(event, fallbackTick) {
-  const text = typeof event === "string" ? event : (event.description ?? `${event.attacker ?? "player"} attacked ${event.target ?? "target"} for ${event.damage ?? 25} damage`);
-  const tick = event.tick ?? fallbackTick;
-  const key = `${tick}:${text}`;
-  if (state.seenCombat.has(key)) return;
-  state.seenCombat.add(key);
-  state.combat.unshift({ tick, text, damage: event.damage ?? text.match(/(\d+) damage/)?.[1] ?? 25, at: new Date().toLocaleTimeString() });
-  state.combat = state.combat.slice(0, MAX_EVENTS);
-}
-
-function rememberCommitment(world, verify) {
-  const previous = state.commitments[0];
-  const record = { tick: world.tick, ...verify };
-  if (previous && previous.tick === record.tick && previous.stateRoot === record.stateRoot) return;
-  state.commitments.unshift(record);
-  state.commitments = state.commitments.slice(0, 80);
-}
-
-function setConnection(ok, error = "") {
-  $("connectionDot").className = `dot ${ok ? "dot-ok" : "dot-fail"}`;
-  $("connectionStatus").textContent = ok ? "Live runtime connected" : "Runtime unavailable";
-  $("lastRefresh").textContent = ok ? `Updated ${new Date().toLocaleTimeString()}` : error;
-}
-
-function render() {
-  const world = state.lastState;
-  const verify = state.lastVerify;
-  if (!world || !verify) return;
-  drawArena(world);
-  renderPlayers(world.players);
-  renderRuntime(world, verify);
-  renderVerification(verify);
-  renderCombat();
-  renderTimeline(world.journal);
-  renderCommitments();
-}
-
-function drawArena(world) {
-  const w = canvas.width, h = canvas.height, centerX = w / 2, centerY = h / 2, cell = 48;
-  ctx.clearRect(0, 0, w, h);
-  ctx.fillStyle = "#081827"; ctx.fillRect(0, 0, w, h);
-  ctx.strokeStyle = "rgba(96,165,250,0.2)"; ctx.lineWidth = 1;
-  for (let x = centerX % cell; x < w; x += cell) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke(); }
-  for (let y = centerY % cell; y < h; y += cell) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); }
-  ctx.strokeStyle = "rgba(255,255,255,0.34)"; ctx.beginPath(); ctx.moveTo(centerX, 0); ctx.lineTo(centerX, h); ctx.moveTo(0, centerY); ctx.lineTo(w, centerY); ctx.stroke();
-  for (const enemy of world.enemies) drawMarker(enemy.enemyId ?? enemy.id, enemy.position?.x ?? enemy.x ?? 0, enemy.position?.y ?? enemy.y ?? 0, enemy.health ?? 100, 0, true, "#ff5b6e");
-  for (const player of world.players) drawMarker(player.id, player.x, player.y, player.health, player.score, player.connected, player.connected ? "#35e48a" : "#64748b");
-}
-
-function drawMarker(id, x, y, health, score, connected, color) {
-  const px = canvas.width / 2 + x * 48;
-  const py = canvas.height / 2 - y * 48;
-  ctx.globalAlpha = connected ? 1 : 0.55;
-  ctx.fillStyle = color; ctx.beginPath(); ctx.arc(px, py, 16, 0, Math.PI * 2); ctx.fill();
-  ctx.strokeStyle = "#eef6ff"; ctx.lineWidth = 2; ctx.stroke();
-  ctx.fillStyle = "#eef6ff"; ctx.font = "14px ui-sans-serif"; ctx.textAlign = "center";
-  ctx.fillText(id, px, py - 26); ctx.fillText(`(${x}, ${y}) HP ${health} S ${score}`, px, py + 34);
-  ctx.globalAlpha = 1;
-}
-
-function renderPlayers(players) {
-  $("playerList").innerHTML = players.map(p => `<article class="player-card ${p.connected ? "" : "offline"}"><strong>${p.id}</strong><span>Position: (${p.x}, ${p.y}) · ${p.zone}</span><span>Health: ${p.health} · Score: ${p.score} · ${p.connected ? "Connected" : "Disconnected"}</span><div class="bars"><i style="width:${Math.max(0, Math.min(100, p.health))}%"></i></div></article>`).join("") || "<p class='subtitle'>No players have joined yet.</p>";
-}
-
-function renderRuntime(world, verify) {
-  $("tickValue").textContent = world.tick;
-  $("journalSize").textContent = world.journalSize;
-  $("replayStatus").textContent = verify.status;
-  $("playerCount").textContent = world.players.length;
-  $("runtimeMode").textContent = state.demoMode ? "DEMO" : "LIVE";
-}
-
-function renderVerification(verify) {
-  const badge = $("verifyBadge");
-  badge.textContent = verify.verified ? "✓ VERIFIED" : "✗ FAILED";
-  badge.className = verify.verified ? "verified" : "failed";
-  const roots = [["State Root", verify.stateRoot], ["Receipt Root", verify.receiptRoot], ["World Hash", verify.worldHash], ["Continuity", verify.continuityRoot], ["Replayed State", verify.replayedStateRoot], ["Replayed Receipt", verify.replayedReceiptRoot], ["Replayed World", verify.replayedWorldHash], ["Replayed Continuity", verify.replayedContinuityRoot]].filter(([, value]) => value);
-  $("roots").innerHTML = roots.map(([label, value]) => `<div class="root-row"><span>${label}</span><code title="${value}">${value}</code><button type="button" data-copy="${value}">Copy</button></div>`).join("");
-}
-
-function renderCombat() {
-  $("combatLog").innerHTML = state.combat.map(e => `<li>${e.text}<small>tick ${e.tick} · damage ${e.damage} · ${e.at}</small></li>`).join("") || "<li>No attacks observed yet.</li>";
-}
-
-function renderTimeline(journal) {
-  const entries = [...journal].slice(-MAX_EVENTS).reverse();
-  $("timeline").innerHTML = entries.map((entry, index) => `<li>${formatJournal(entry)}<small>journal offset ${entries.length - index}</small></li>`).join("") || "<li>Waiting for Join, Move, and Attack entries.</li>";
-}
-
-function formatJournal(entry) {
-  if (typeof entry === "string") return entry.split(":").pop()?.toUpperCase() ?? entry;
-  return entry.type ?? entry.kind ?? JSON.stringify(entry);
-}
-
-function renderCommitments() {
-  $("commitmentHistory").innerHTML = state.commitments.map(c => `<details><summary>Tick ${c.tick} · ${c.status}</summary><dl><div><dt>State Root</dt><dd>${c.stateRoot}</dd></div><div><dt>Receipt Root</dt><dd>${c.receiptRoot}</dd></div><div><dt>World Hash</dt><dd>${c.worldHash}</dd></div><div><dt>Continuity</dt><dd>${c.continuityRoot}</dd></div></dl></details>`).join("");
-}
-
-document.addEventListener("click", event => {
-  const value = event.target?.dataset?.copy;
-  if (!value) return;
-  navigator.clipboard?.writeText(value);
-  event.target.textContent = "Copied";
-  setTimeout(() => { event.target.textContent = "Copy"; }, 900);
-});
-
-async function poll() {
-  try { await fetchAuthoritativeState(); }
-  catch (error) { setConnection(false, error.message); }
-  finally { setTimeout(poll, POLL_MS); }
-}
-
-poll();
+function demoWorldFromSeed(seed) { return { ...seed.world, journal: seed.events, combat_events: seed.events.filter(e => e.type === "attack"), replayStatus: publicMode.toUpperCase(), journalSize: seed.events.length }; }
+function normalizeVerify(raw, normalized) { const roots = raw.roots ?? raw.commitment ?? raw; const ok = raw.ok ?? raw.verified ?? true; return { verified: Boolean(ok), status: ok ? "VERIFIED" : "FAILED", stateRoot: roots.stateRoot ?? roots.state_root ?? `state:arena-vanguard:tick:${normalized.tick}`, receiptRoot: roots.receiptRoot ?? roots.receipt_root ?? `receipt:arena-vanguard:entries:${normalized.receiptCount}`, worldHash: roots.worldHash ?? roots.world_hash ?? `world:arena-vanguard:players:${normalized.players.length}`, continuityRoot: roots.continuityRoot ?? roots.continuity_root ?? "continuity:arena-vanguard:live" }; }
+function short(v) { return String(v ?? "—").replace(/^(.{18}).+(.{8})$/, "$1…$2"); }
+function addCombat(event, fallbackTick) { const text = typeof event === "string" ? event : (event.label ?? event.description ?? `${event.attacker ?? "player"} attacked ${event.target ?? "target"}`); const tick = event.tick ?? fallbackTick; const key = `${tick}:${text}`; if (state.seenCombat.has(key)) return; state.seenCombat.add(key); state.combat.unshift({ tick, text, damage: event.damage ?? text.match(/(\d+) damage/)?.[1] ?? 28, at: new Date().toLocaleTimeString() }); state.combat = state.combat.slice(0, MAX_EVENTS); }
+function rememberCommitment(world, verify) { const record = { tick: world.tick, ...verify }; if (state.commitments[0]?.stateRoot === record.stateRoot) return; state.commitments.unshift(record); state.commitments = state.commitments.slice(0, 80); }
+function setConnection(ok, error = "") { $("connectionDot").className = `dot ${ok ? "dot-ok" : "dot-fail"}`; $("connectionStatus").textContent = ok ? "Reference projection connected" : "Projection unavailable"; $("lastRefresh").textContent = ok ? `Mode ${publicMode} · updated ${new Date().toLocaleTimeString()}` : error; }
+function render() { const world = state.lastState, verify = state.lastVerify; if (!world || !verify) return; drawArena(world); renderRuntime(world, verify); renderVerification(verify); renderPlayers(world.players); renderTimeline(world.events); renderFeed(world); renderOperators(world, verify); renderCommitments(); }
+function drawArena(world) { const w = canvas.width, h = canvas.height, cx = w/2, cy = h/2, cell = 48; ctx.clearRect(0,0,w,h); ctx.fillStyle="#050d18"; ctx.fillRect(0,0,w,h); ctx.strokeStyle="rgba(96,165,250,.18)"; for(let x=cx%cell;x<w;x+=cell){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,h);ctx.stroke();} for(let y=cy%cell;y<h;y+=cell){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke();} ctx.strokeStyle="rgba(53,228,138,.55)"; ctx.lineWidth=3; ctx.strokeRect(78,58,w-156,h-116); ctx.strokeStyle="rgba(180,140,255,.35)"; ctx.beginPath(); ctx.arc(cx,cy,250,0,Math.PI*2); ctx.stroke(); ctx.fillStyle="#91a6bf"; ctx.font="12px ui-sans-serif"; ["NW REGION","NE REGION","SW REGION","SE REGION","SPAWN α","SPAWN β","OPERATOR OBSERVATION RING"].forEach((t,i)=>ctx.fillText(t,[96,640,96,640,120,730,376][i],[92,92,560,560,145,505,82][i])); world.entities.forEach(e=>drawEntity(e)); world.enemies.forEach(e=>drawEntity({...e,type:"enemy"})); world.players.forEach(p=>drawPlayer(p)); }
+function xy(x,y){return [canvas.width/2+x*48, canvas.height/2-y*48];}
+function drawEntity(e){const [px,py]=xy(e.position?.x??e.x??0,e.position?.y??e.y??0); const enemy=e.type==="enemy"; ctx.strokeStyle=enemy?"#ff5b6e":"#ffd166"; ctx.fillStyle=enemy?"rgba(255,91,110,.25)":"rgba(255,209,102,.18)"; ctx.beginPath(); ctx.rect(px-15,py-15,30,30); ctx.fill(); ctx.stroke(); ctx.fillStyle="#eef6ff"; ctx.fillText(`${enemy?"◆":"◇"} ${e.id}`,px-30,py-22); ctx.strokeStyle=enemy?"#ff5b6e":"#ffd166"; ctx.beginPath(); ctx.arc(px,py,22,-Math.PI/2,(-Math.PI/2)+(Math.PI*2*((e.health??100)/100))); ctx.stroke();}
+function drawPlayer(p){ const [px,py]=xy(p.x,p.y); ctx.strokeStyle="rgba(96,165,250,.45)"; ctx.beginPath(); (p.trail||[]).forEach((t,i)=>{const q=xy(t.x,t.y); i?ctx.lineTo(...q):ctx.moveTo(...q)}); ctx.lineTo(px,py); ctx.stroke(); ctx.fillStyle=p.connected?"#35e48a":"#64748b"; ctx.beginPath(); ctx.arc(px,py,17,0,Math.PI*2); ctx.fill(); ctx.strokeStyle="#eef6ff"; ctx.stroke(); ctx.shadowColor="#60a5fa"; ctx.shadowBlur=18; ctx.strokeRect(px-24,py-31,48,7); ctx.shadowBlur=0; ctx.fillStyle="#eef6ff"; ctx.fillText(`${p.id} · S${p.score}`,px-30,py-36); ctx.fillText(`HP ${p.health} · ${p.lastAction}`,px-34,py+38);}
+function renderRuntime(w,v){ tickValue.textContent=w.tick; epochValue.textContent=w.epoch; stateRootShort.textContent=short(v.stateRoot); worldHashShort.textContent=short(v.worldHash); receiptCount.textContent=w.receiptCount; journalSize.textContent=w.journalSize; replayStatus.textContent=v.status; playerCount.textContent=w.players.length; runtimeMode.textContent=publicMode.toUpperCase(); }
+function renderVerification(v){ verifyBadge.textContent=v.verified?"✓ VERIFIED":"✗ FAILED"; verifyBadge.className=v.verified?"verified":"failed"; roots.innerHTML=[["State Root",v.stateRoot],["Receipt Root",v.receiptRoot],["World Hash",v.worldHash],["Continuity",v.continuityRoot]].map(([l,val])=>`<div class="root-row"><span>${l}</span><code title="${val}">${val}</code><button type="button" data-copy="${val}">Copy</button></div>`).join("");}
+function renderPlayers(players){ playerList.innerHTML=players.map(p=>`<article class="player-card ${p.connected?"":"offline"}"><strong>${p.id}<em>${p.connected?"●":"○"}</em></strong><span>(${p.x}, ${p.y}) · ${p.zone} · HP ${p.health}</span><span class="badge">Inventory ${p.inventory.items?.length??0} · ${p.inventory.last_event}</span><div class="bars"><i style="width:${Math.max(0,Math.min(100,p.health))}%"></i></div></article>`).join(""); }
+function renderTimeline(events){ timelineMarkers.innerHTML=events.map(e=>`<button class="marker ${e.type}" style="left:${e.tick}%" title="${e.label}">${e.type}</button>`).join(""); }
+function renderFeed(w){ const extras=[w.market&&{type:"trade",label:w.market.status,detail:`${w.market.seller} → ${w.market.buyer} · ${w.market.quantity} ${w.market.item} · ${w.market.currency} credits`}, w.governance&&{type:"vote",label:w.governance.status,detail:`${w.governance.proposal_id} yes ${w.governance.yes} no ${w.governance.no} abstain ${w.governance.abstain}`}].filter(Boolean); eventFeed.innerHTML=[...w.events,...extras].slice(-MAX_EVENTS).reverse().map(e=>`<li class="${e.type}"><b>${e.label}</b><small>tick ${e.tick??w.tick} · ${e.detail??"operator roots matched"}</small></li>`).join(""); combatLine.textContent=state.combat[0]?.text ?? "combat.attack(): awaiting verified receipt"; }
+function renderOperators(w,v){ operatorBanner.textContent=state.seed?.operator?.root_match===false?"DIVERGENCE DETECTED":"ROOTS MATCH"; operatorCards.innerHTML=(state.seed?.operator?.nodes??["Operator A","Operator B","Operator C"]).map(n=>`<article><strong>${n}</strong><span>status: healthy</span><code>${short(v.stateRoot)}</code><code>${short(v.worldHash)}</code><span>last tick ${w.tick} · verification ${v.status}</span></article>`).join(""); }
+function renderCommitments(){ commitmentHistory.innerHTML=state.commitments.map(c=>`<details><summary>Tick ${c.tick} · ${c.status}</summary><code>${c.stateRoot}</code><code>${c.worldHash}</code></details>`).join(""); }
+document.addEventListener("click", e=>{ if(e.target?.dataset?.copy){navigator.clipboard?.writeText(e.target.dataset.copy); e.target.textContent="Copied"; setTimeout(()=>e.target.textContent="Copy",900);} if(e.target?.dataset?.speed){state.speed=Number(e.target.dataset.speed); document.querySelectorAll('[data-speed]').forEach(b=>b.classList.toggle('active',b===e.target));}});
+fetchAuthoritativeState(); setInterval(fetchAuthoritativeState, POLL_MS);

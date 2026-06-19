@@ -1,45 +1,206 @@
 {
-  "demo_id": "everarcade-release-demo-production",
+  "demo_id": "arena-vanguard-reference-projection",
   "duration_target_seconds": 300,
   "world": {
-    "name": "Arena Vanguard: Sovereign Outpost",
+    "name": "Arena Vanguard: Reference Projection",
     "seed": "everarcade-public-demo-2026-06-19",
     "tick": 1280,
     "objective": "Prove a live deterministic world can be watched, replayed, migrated, and restored without trusting the projection UI.",
     "players": [
-      { "id": "alice", "x": -2, "y": 1, "zone": "Outpost", "health": 92, "score": 410, "connected": true },
-      { "id": "bruno", "x": 1, "y": 0, "zone": "Outpost", "health": 76, "score": 355, "connected": true },
-      { "id": "chen", "x": 3, "y": -2, "zone": "Relic Gate", "health": 100, "score": 520, "connected": false }
+      {
+        "id": "alice",
+        "x": -2,
+        "y": 1,
+        "zone": "Outpost",
+        "health": 92,
+        "score": 410,
+        "connected": true,
+        "inventory": {
+          "items": [
+            "relay-key"
+          ],
+          "last_event": "pickup"
+        },
+        "last_action": "move",
+        "trail": [
+          {
+            "x": -3,
+            "y": 1
+          },
+          {
+            "x": -2,
+            "y": 1
+          }
+        ]
+      },
+      {
+        "id": "bruno",
+        "x": 1,
+        "y": 0,
+        "zone": "Outpost",
+        "health": 76,
+        "score": 355,
+        "connected": true,
+        "inventory": {
+          "items": [
+            "relay-key",
+            "medkit"
+          ],
+          "last_event": "transfer"
+        },
+        "last_action": "attack",
+        "trail": [
+          {
+            "x": 0,
+            "y": 0
+          },
+          {
+            "x": 1,
+            "y": 0
+          }
+        ]
+      },
+      {
+        "id": "chen",
+        "x": 3,
+        "y": -2,
+        "zone": "Relic Gate",
+        "health": 100,
+        "score": 520,
+        "connected": false,
+        "inventory": {
+          "items": [
+            "relay-key",
+            "medkit",
+            "ore"
+          ],
+          "last_event": "pickup"
+        },
+        "last_action": "trade",
+        "trail": [
+          {
+            "x": 2,
+            "y": -2
+          },
+          {
+            "x": 3,
+            "y": -2
+          }
+        ]
+      }
     ],
     "enemies": [
-      { "id": "drone-7", "x": 2, "y": 2, "health": 48 },
-      { "id": "sentinel-2", "x": -3, "y": -1, "health": 64 }
+      {
+        "id": "drone-7",
+        "x": 2,
+        "y": 2,
+        "health": 48
+      },
+      {
+        "id": "sentinel-2",
+        "x": -3,
+        "y": -1,
+        "health": 64
+      }
+    ],
+    "epoch": 7,
+    "receipt_count": 42,
+    "entities": [
+      {
+        "id": "relic-cache",
+        "type": "neutral",
+        "x": 0,
+        "y": -3,
+        "health": 100
+      },
+      {
+        "id": "market-kiosk",
+        "type": "neutral",
+        "x": -1,
+        "y": 2,
+        "health": 100
+      }
     ]
   },
   "operator": {
     "status": "LIVE_RUNNABLE",
     "network": "local-demo-federation",
-    "nodes": ["validator-a", "validator-b", "observer-c"],
-    "controls": ["start", "pause", "migrate", "restore", "replay"]
+    "nodes": [
+      "Operator A",
+      "Operator B",
+      "Operator C"
+    ],
+    "controls": [
+      "view roots",
+      "scrub replay",
+      "event details",
+      "certification",
+      "toggle labels"
+    ],
+    "root_match": true
   },
   "timelines": {
     "replay": [
-      { "tick": 1268, "label": "Genesis seed loaded", "root": "replay:seed:1268" },
-      { "tick": 1272, "label": "Alice joins and moves", "root": "replay:join-move:1272" },
-      { "tick": 1278, "label": "Bruno defeats drone-7", "root": "replay:combat:1278" },
-      { "tick": 1280, "label": "Live projection verified", "root": "replay:verified:1280" }
+      {
+        "tick": 1268,
+        "label": "Genesis seed loaded",
+        "root": "replay:seed:1268"
+      },
+      {
+        "tick": 1272,
+        "label": "Alice joins and moves",
+        "root": "replay:join-move:1272"
+      },
+      {
+        "tick": 1278,
+        "label": "Bruno defeats drone-7",
+        "root": "replay:combat:1278"
+      },
+      {
+        "tick": 1280,
+        "label": "Live projection verified",
+        "root": "replay:verified:1280"
+      }
     ],
     "migration": [
-      { "phase": "freeze", "seconds": 0, "label": "Seal input window" },
-      { "phase": "export", "seconds": 8, "label": "Export checkpoint and receipts" },
-      { "phase": "transfer", "seconds": 18, "label": "Move world to validator-b" },
-      { "phase": "resume", "seconds": 28, "label": "Resume at same world root" }
+      {
+        "phase": "freeze",
+        "seconds": 0,
+        "label": "Seal input window"
+      },
+      {
+        "phase": "export",
+        "seconds": 8,
+        "label": "Export checkpoint and receipts"
+      },
+      {
+        "phase": "transfer",
+        "seconds": 18,
+        "label": "Move world to validator-b"
+      },
+      {
+        "phase": "resume",
+        "seconds": 28,
+        "label": "Resume at same world root"
+      }
     ],
     "restore": [
-      { "seconds": 0, "label": "Select checkpoint 1278" },
-      { "seconds": 6, "label": "Replay receipts 1279-1280" },
-      { "seconds": 12, "label": "Compare roots" },
-      { "seconds": 18, "label": "Reconnect players" }
+      {
+        "seconds": 0,
+        "label": "Select checkpoint 1278"
+      },
+      {
+        "seconds": 6,
+        "label": "Replay receipts 1279-1280"
+      },
+      {
+        "seconds": 12,
+        "label": "Compare roots"
+      },
+      {
+        "seconds": 18,
+        "label": "Reconnect players"
+      }
     ]
   },
   "commitments": {
@@ -47,5 +208,70 @@
     "receipt_root": "receipt:arena-vanguard:entries:42",
     "world_hash": "world:arena-vanguard:players:3",
     "continuity_root": "continuity:arena-vanguard:live"
+  },
+  "events": [
+    {
+      "tick": 0,
+      "type": "join",
+      "label": "player joined: alice",
+      "detail": "receipt emitted"
+    },
+    {
+      "tick": 25,
+      "type": "move",
+      "label": "player moved: bruno",
+      "detail": "state_root updated"
+    },
+    {
+      "tick": 50,
+      "type": "attack",
+      "label": "combat.attack(): bruno \u2192 drone-7",
+      "detail": "28 damage \u00b7 verified"
+    },
+    {
+      "tick": 60,
+      "type": "inventory",
+      "label": "inventory.transfer(): relay-key",
+      "detail": "pickup/transfer indicator"
+    },
+    {
+      "tick": 75,
+      "type": "trade",
+      "label": "market.trade(): VERIFIED",
+      "detail": "alice \u2192 chen \u00b7 2 ore \u00b7 14 credits"
+    },
+    {
+      "tick": 85,
+      "type": "vote",
+      "label": "governance.vote(): VERIFIED",
+      "detail": "proposal AV-17 yes 2 no 0 abstain 1"
+    },
+    {
+      "tick": 92,
+      "type": "restore",
+      "label": "RESTORE VERIFIED",
+      "detail": "checkpoint \u2192 restore \u2192 continue"
+    },
+    {
+      "tick": 100,
+      "type": "migration",
+      "label": "MIGRATION VERIFIED",
+      "detail": "source \u2192 package \u2192 destination"
+    }
+  ],
+  "market": {
+    "seller": "alice",
+    "buyer": "chen",
+    "item": "ore",
+    "quantity": 2,
+    "currency": 14,
+    "status": "market.trade(): VERIFIED"
+  },
+  "governance": {
+    "proposal_id": "AV-17",
+    "yes": 2,
+    "no": 0,
+    "abstain": 1,
+    "status": "governance.vote(): VERIFIED"
   }
 }
