@@ -2,6 +2,7 @@ use std::collections::{BTreeMap, BTreeSet};
 
 pub const RUSTRIG_ID: &str = "market.trade";
 pub const RUSTRIG_VERSION: &str = "1.0.0";
+pub const CANDIDATE_MUTATIONS: &[&str] = &["market.list", "market.cancel", "market.bid", "market.accept_bid", "market.settle_auction", "market.collect_fee"];
 pub const CERTIFICATION_STATUS: &str = "RUSTRIG MARKET TRADE CERTIFICATION: PASS";
 
 #[derive(Clone, Debug, PartialEq, Eq)]

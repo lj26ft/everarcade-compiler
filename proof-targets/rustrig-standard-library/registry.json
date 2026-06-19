@@ -1,0 +1,664 @@
+[
+  {
+    "mutation": "identity.join",
+    "domain": "identity",
+    "maturity": "CANDIDATE",
+    "crate": "crates/rustrigs/identity",
+    "proof_target": "proof-targets/rustrig-standard-library/identity-join",
+    "invariants": [
+      "ID-001",
+      "ID-002",
+      "ID-003",
+      "ID-004",
+      "ID-005",
+      "ID-006"
+    ],
+    "status": "candidate_review_target"
+  },
+  {
+    "mutation": "identity.leave",
+    "domain": "identity",
+    "maturity": "CANDIDATE",
+    "crate": "crates/rustrigs/identity",
+    "proof_target": "proof-targets/rustrig-standard-library/identity-leave",
+    "invariants": [
+      "ID-LEAVE-001",
+      "ID-LEAVE-002",
+      "ID-LEAVE-003",
+      "ID-LEAVE-004"
+    ],
+    "status": "candidate_review_target"
+  },
+  {
+    "mutation": "position.move",
+    "domain": "movement",
+    "maturity": "CANDIDATE",
+    "crate": "crates/rustrigs/movement",
+    "proof_target": "proof-targets/rustrig-standard-library/position-move",
+    "invariants": [
+      "MOVE-001",
+      "MOVE-002",
+      "MOVE-003",
+      "MOVE-004",
+      "MOVE-005",
+      "MOVE-006",
+      "MOVE-007"
+    ],
+    "status": "candidate_review_target"
+  },
+  {
+    "mutation": "world.spawn",
+    "domain": "world",
+    "maturity": "CANDIDATE",
+    "crate": "crates/rustrigs/world",
+    "proof_target": "proof-targets/rustrig-standard-library/world-spawn",
+    "invariants": [
+      "SPAWN-001",
+      "SPAWN-002",
+      "SPAWN-003",
+      "SPAWN-004"
+    ],
+    "status": "candidate_review_target"
+  },
+  {
+    "mutation": "world.despawn",
+    "domain": "world",
+    "maturity": "CANDIDATE",
+    "crate": "crates/rustrigs/world",
+    "proof_target": "proof-targets/rustrig-standard-library/world-despawn",
+    "invariants": [
+      "DESPAWN-001",
+      "DESPAWN-002",
+      "DESPAWN-003",
+      "DESPAWN-004"
+    ],
+    "status": "candidate_review_target"
+  },
+  {
+    "mutation": "combat.attack",
+    "domain": "combat",
+    "maturity": "CERTIFIED",
+    "crate": "crates/rustrigs/combat",
+    "proof_target": "proof-targets/rustrig-standard-library/combat-attack",
+    "invariants": [
+      "Determinism",
+      "Receipt",
+      "Replay",
+      "Root"
+    ],
+    "status": "ready_for_independent_review"
+  },
+  {
+    "mutation": "combat.heal",
+    "domain": "combat",
+    "maturity": "CANDIDATE",
+    "crate": "crates/rustrigs/combat",
+    "proof_target": "proof-targets/rustrig-standard-library/combat-heal",
+    "invariants": [
+      "Determinism",
+      "Receipt",
+      "Replay",
+      "Root"
+    ],
+    "status": "candidate_review_target"
+  },
+  {
+    "mutation": "combat.revive",
+    "domain": "combat",
+    "maturity": "CANDIDATE",
+    "crate": "crates/rustrigs/combat",
+    "proof_target": "proof-targets/rustrig-standard-library/combat-revive",
+    "invariants": [
+      "Determinism",
+      "Receipt",
+      "Replay",
+      "Root"
+    ],
+    "status": "candidate_review_target"
+  },
+  {
+    "mutation": "combat.apply_status",
+    "domain": "combat",
+    "maturity": "CANDIDATE",
+    "crate": "crates/rustrigs/combat",
+    "proof_target": "proof-targets/rustrig-standard-library/combat-apply-status",
+    "invariants": [
+      "Determinism",
+      "Receipt",
+      "Replay",
+      "Root"
+    ],
+    "status": "candidate_review_target"
+  },
+  {
+    "mutation": "combat.remove_status",
+    "domain": "combat",
+    "maturity": "CANDIDATE",
+    "crate": "crates/rustrigs/combat",
+    "proof_target": "proof-targets/rustrig-standard-library/combat-remove-status",
+    "invariants": [
+      "Determinism",
+      "Receipt",
+      "Replay",
+      "Root"
+    ],
+    "status": "candidate_review_target"
+  },
+  {
+    "mutation": "combat.area_attack",
+    "domain": "combat",
+    "maturity": "CANDIDATE",
+    "crate": "crates/rustrigs/combat",
+    "proof_target": "proof-targets/rustrig-standard-library/combat-area-attack",
+    "invariants": [
+      "Determinism",
+      "Receipt",
+      "Replay",
+      "Root"
+    ],
+    "status": "candidate_review_target"
+  },
+  {
+    "mutation": "inventory.transfer",
+    "domain": "inventory",
+    "maturity": "CERTIFIED",
+    "crate": "crates/rustrigs/inventory",
+    "proof_target": "proof-targets/rustrig-standard-library/inventory-transfer",
+    "invariants": [
+      "Determinism",
+      "Receipt",
+      "Replay",
+      "Root"
+    ],
+    "status": "ready_for_independent_review"
+  },
+  {
+    "mutation": "inventory.pickup",
+    "domain": "inventory",
+    "maturity": "CANDIDATE",
+    "crate": "crates/rustrigs/inventory",
+    "proof_target": "proof-targets/rustrig-standard-library/inventory-pickup",
+    "invariants": [
+      "Determinism",
+      "Receipt",
+      "Replay",
+      "Root"
+    ],
+    "status": "candidate_review_target"
+  },
+  {
+    "mutation": "inventory.drop",
+    "domain": "inventory",
+    "maturity": "CANDIDATE",
+    "crate": "crates/rustrigs/inventory",
+    "proof_target": "proof-targets/rustrig-standard-library/inventory-drop",
+    "invariants": [
+      "Determinism",
+      "Receipt",
+      "Replay",
+      "Root"
+    ],
+    "status": "candidate_review_target"
+  },
+  {
+    "mutation": "inventory.equip",
+    "domain": "inventory",
+    "maturity": "CANDIDATE",
+    "crate": "crates/rustrigs/inventory",
+    "proof_target": "proof-targets/rustrig-standard-library/inventory-equip",
+    "invariants": [
+      "Determinism",
+      "Receipt",
+      "Replay",
+      "Root"
+    ],
+    "status": "candidate_review_target"
+  },
+  {
+    "mutation": "inventory.unequip",
+    "domain": "inventory",
+    "maturity": "CANDIDATE",
+    "crate": "crates/rustrigs/inventory",
+    "proof_target": "proof-targets/rustrig-standard-library/inventory-unequip",
+    "invariants": [
+      "Determinism",
+      "Receipt",
+      "Replay",
+      "Root"
+    ],
+    "status": "candidate_review_target"
+  },
+  {
+    "mutation": "inventory.consume",
+    "domain": "inventory",
+    "maturity": "CANDIDATE",
+    "crate": "crates/rustrigs/inventory",
+    "proof_target": "proof-targets/rustrig-standard-library/inventory-consume",
+    "invariants": [
+      "Determinism",
+      "Receipt",
+      "Replay",
+      "Root"
+    ],
+    "status": "candidate_review_target"
+  },
+  {
+    "mutation": "resource.harvest",
+    "domain": "resources",
+    "maturity": "CANDIDATE",
+    "crate": "crates/rustrigs/resources",
+    "proof_target": "proof-targets/rustrig-standard-library/resource-harvest",
+    "invariants": [
+      "RES-001",
+      "RES-002",
+      "RES-003",
+      "RES-004",
+      "RES-005",
+      "RES-006"
+    ],
+    "status": "candidate_review_target"
+  },
+  {
+    "mutation": "resource.regenerate",
+    "domain": "resources",
+    "maturity": "CANDIDATE",
+    "crate": "crates/rustrigs/resources",
+    "proof_target": "proof-targets/rustrig-standard-library/resource-regenerate",
+    "invariants": [
+      "RES-REGEN-001",
+      "RES-REGEN-002",
+      "RES-REGEN-003"
+    ],
+    "status": "candidate_review_target"
+  },
+  {
+    "mutation": "crafting.craft",
+    "domain": "crafting",
+    "maturity": "CANDIDATE",
+    "crate": "crates/rustrigs/crafting",
+    "proof_target": "proof-targets/rustrig-standard-library/crafting-craft",
+    "invariants": [
+      "CRAFT-001",
+      "CRAFT-002",
+      "CRAFT-003",
+      "CRAFT-004",
+      "CRAFT-005"
+    ],
+    "status": "candidate_review_target"
+  },
+  {
+    "mutation": "structure.build",
+    "domain": "structures",
+    "maturity": "CANDIDATE",
+    "crate": "crates/rustrigs/structures",
+    "proof_target": "proof-targets/rustrig-standard-library/structure-build",
+    "invariants": [
+      "STRUCT-BUILD-001",
+      "STRUCT-BUILD-002",
+      "STRUCT-BUILD-003",
+      "STRUCT-BUILD-004",
+      "STRUCT-BUILD-005"
+    ],
+    "status": "candidate_review_target"
+  },
+  {
+    "mutation": "structure.decay",
+    "domain": "structures",
+    "maturity": "CANDIDATE",
+    "crate": "crates/rustrigs/structures",
+    "proof_target": "proof-targets/rustrig-standard-library/structure-decay",
+    "invariants": [
+      "STRUCT-DECAY-001",
+      "STRUCT-DECAY-002",
+      "STRUCT-DECAY-003"
+    ],
+    "status": "candidate_review_target"
+  },
+  {
+    "mutation": "structure.repair",
+    "domain": "structures",
+    "maturity": "CANDIDATE",
+    "crate": "crates/rustrigs/structures",
+    "proof_target": "proof-targets/rustrig-standard-library/structure-repair",
+    "invariants": [
+      "STRUCT-REPAIR-001",
+      "STRUCT-REPAIR-002",
+      "STRUCT-REPAIR-003"
+    ],
+    "status": "candidate_review_target"
+  },
+  {
+    "mutation": "market.trade",
+    "domain": "market",
+    "maturity": "CERTIFIED",
+    "crate": "crates/rustrigs/market",
+    "proof_target": "proof-targets/rustrig-standard-library/market-trade",
+    "invariants": [
+      "Determinism",
+      "Receipt",
+      "Replay",
+      "Root"
+    ],
+    "status": "ready_for_independent_review"
+  },
+  {
+    "mutation": "market.list",
+    "domain": "market",
+    "maturity": "CANDIDATE",
+    "crate": "crates/rustrigs/market",
+    "proof_target": "proof-targets/rustrig-standard-library/market-list",
+    "invariants": [
+      "Determinism",
+      "Receipt",
+      "Replay",
+      "Root"
+    ],
+    "status": "candidate_review_target"
+  },
+  {
+    "mutation": "market.cancel",
+    "domain": "market",
+    "maturity": "CANDIDATE",
+    "crate": "crates/rustrigs/market",
+    "proof_target": "proof-targets/rustrig-standard-library/market-cancel",
+    "invariants": [
+      "Determinism",
+      "Receipt",
+      "Replay",
+      "Root"
+    ],
+    "status": "candidate_review_target"
+  },
+  {
+    "mutation": "market.bid",
+    "domain": "market",
+    "maturity": "CANDIDATE",
+    "crate": "crates/rustrigs/market",
+    "proof_target": "proof-targets/rustrig-standard-library/market-bid",
+    "invariants": [
+      "Determinism",
+      "Receipt",
+      "Replay",
+      "Root"
+    ],
+    "status": "candidate_review_target"
+  },
+  {
+    "mutation": "market.accept_bid",
+    "domain": "market",
+    "maturity": "CANDIDATE",
+    "crate": "crates/rustrigs/market",
+    "proof_target": "proof-targets/rustrig-standard-library/market-accept-bid",
+    "invariants": [
+      "Determinism",
+      "Receipt",
+      "Replay",
+      "Root"
+    ],
+    "status": "candidate_review_target"
+  },
+  {
+    "mutation": "market.settle_auction",
+    "domain": "market",
+    "maturity": "CANDIDATE",
+    "crate": "crates/rustrigs/market",
+    "proof_target": "proof-targets/rustrig-standard-library/market-settle-auction",
+    "invariants": [
+      "Determinism",
+      "Receipt",
+      "Replay",
+      "Root"
+    ],
+    "status": "candidate_review_target"
+  },
+  {
+    "mutation": "market.collect_fee",
+    "domain": "market",
+    "maturity": "CANDIDATE",
+    "crate": "crates/rustrigs/market",
+    "proof_target": "proof-targets/rustrig-standard-library/market-collect-fee",
+    "invariants": [
+      "Determinism",
+      "Receipt",
+      "Replay",
+      "Root"
+    ],
+    "status": "candidate_review_target"
+  },
+  {
+    "mutation": "governance.vote",
+    "domain": "governance",
+    "maturity": "CERTIFIED",
+    "crate": "crates/rustrigs/governance",
+    "proof_target": "proof-targets/rustrig-standard-library/governance-vote",
+    "invariants": [
+      "Determinism",
+      "Receipt",
+      "Replay",
+      "Root"
+    ],
+    "status": "ready_for_independent_review"
+  },
+  {
+    "mutation": "governance.create_proposal",
+    "domain": "governance",
+    "maturity": "CANDIDATE",
+    "crate": "crates/rustrigs/governance",
+    "proof_target": "proof-targets/rustrig-standard-library/governance-create-proposal",
+    "invariants": [
+      "Determinism",
+      "Receipt",
+      "Replay",
+      "Root"
+    ],
+    "status": "candidate_review_target"
+  },
+  {
+    "mutation": "governance.finalize_proposal",
+    "domain": "governance",
+    "maturity": "CANDIDATE",
+    "crate": "crates/rustrigs/governance",
+    "proof_target": "proof-targets/rustrig-standard-library/governance-finalize-proposal",
+    "invariants": [
+      "Determinism",
+      "Receipt",
+      "Replay",
+      "Root"
+    ],
+    "status": "candidate_review_target"
+  },
+  {
+    "mutation": "governance.cancel_proposal",
+    "domain": "governance",
+    "maturity": "CANDIDATE",
+    "crate": "crates/rustrigs/governance",
+    "proof_target": "proof-targets/rustrig-standard-library/governance-cancel-proposal",
+    "invariants": [
+      "Determinism",
+      "Receipt",
+      "Replay",
+      "Root"
+    ],
+    "status": "candidate_review_target"
+  },
+  {
+    "mutation": "governance.delegate_vote",
+    "domain": "governance",
+    "maturity": "CANDIDATE",
+    "crate": "crates/rustrigs/governance",
+    "proof_target": "proof-targets/rustrig-standard-library/governance-delegate-vote",
+    "invariants": [
+      "Determinism",
+      "Receipt",
+      "Replay",
+      "Root"
+    ],
+    "status": "candidate_review_target"
+  },
+  {
+    "mutation": "governance.amend_policy",
+    "domain": "governance",
+    "maturity": "CANDIDATE",
+    "crate": "crates/rustrigs/governance",
+    "proof_target": "proof-targets/rustrig-standard-library/governance-amend-policy",
+    "invariants": [
+      "Determinism",
+      "Receipt",
+      "Replay",
+      "Root"
+    ],
+    "status": "candidate_review_target"
+  },
+  {
+    "mutation": "faction.create",
+    "domain": "factions",
+    "maturity": "CANDIDATE",
+    "crate": "crates/rustrigs/factions",
+    "proof_target": "proof-targets/rustrig-standard-library/faction-create",
+    "invariants": [
+      "FACTION-CREATE-001",
+      "FACTION-CREATE-002",
+      "FACTION-CREATE-003"
+    ],
+    "status": "candidate_review_target"
+  },
+  {
+    "mutation": "faction.join",
+    "domain": "factions",
+    "maturity": "CANDIDATE",
+    "crate": "crates/rustrigs/factions",
+    "proof_target": "proof-targets/rustrig-standard-library/faction-join",
+    "invariants": [
+      "FACTION-JOIN-001",
+      "FACTION-JOIN-002",
+      "FACTION-JOIN-003"
+    ],
+    "status": "candidate_review_target"
+  },
+  {
+    "mutation": "faction.leave",
+    "domain": "factions",
+    "maturity": "CANDIDATE",
+    "crate": "crates/rustrigs/factions",
+    "proof_target": "proof-targets/rustrig-standard-library/faction-leave",
+    "invariants": [
+      "FACTION-LEAVE-001",
+      "FACTION-LEAVE-002"
+    ],
+    "status": "candidate_review_target"
+  },
+  {
+    "mutation": "quest.start",
+    "domain": "quests",
+    "maturity": "CANDIDATE",
+    "crate": "crates/rustrigs/quests",
+    "proof_target": "proof-targets/rustrig-standard-library/quest-start",
+    "invariants": [
+      "QUEST-START-001",
+      "QUEST-START-002",
+      "QUEST-START-003"
+    ],
+    "status": "candidate_review_target"
+  },
+  {
+    "mutation": "quest.progress",
+    "domain": "quests",
+    "maturity": "CANDIDATE",
+    "crate": "crates/rustrigs/quests",
+    "proof_target": "proof-targets/rustrig-standard-library/quest-progress",
+    "invariants": [
+      "QUEST-PROGRESS-001",
+      "QUEST-PROGRESS-002"
+    ],
+    "status": "candidate_review_target"
+  },
+  {
+    "mutation": "quest.complete",
+    "domain": "quests",
+    "maturity": "CANDIDATE",
+    "crate": "crates/rustrigs/quests",
+    "proof_target": "proof-targets/rustrig-standard-library/quest-complete",
+    "invariants": [
+      "QUEST-COMPLETE-001",
+      "QUEST-COMPLETE-002",
+      "QUEST-COMPLETE-003"
+    ],
+    "status": "candidate_review_target"
+  },
+  {
+    "mutation": "continuity.advance",
+    "domain": "continuity",
+    "maturity": "CANDIDATE",
+    "crate": "crates/rustrigs/continuity",
+    "proof_target": "proof-targets/rustrig-standard-library/continuity-advance",
+    "invariants": [
+      "CONT-ADVANCE-001",
+      "CONT-ADVANCE-002",
+      "CONT-ADVANCE-003"
+    ],
+    "status": "candidate_review_target"
+  },
+  {
+    "mutation": "continuity.record_event",
+    "domain": "continuity",
+    "maturity": "CANDIDATE",
+    "crate": "crates/rustrigs/continuity",
+    "proof_target": "proof-targets/rustrig-standard-library/continuity-record-event",
+    "invariants": [
+      "CONT-EVENT-001",
+      "CONT-EVENT-002",
+      "CONT-EVENT-003"
+    ],
+    "status": "candidate_review_target"
+  },
+  {
+    "mutation": "continuity.create_ruin",
+    "domain": "continuity",
+    "maturity": "CANDIDATE",
+    "crate": "crates/rustrigs/continuity",
+    "proof_target": "proof-targets/rustrig-standard-library/continuity-create-ruin",
+    "invariants": [
+      "CONT-RUIN-001",
+      "CONT-RUIN-002",
+      "CONT-RUIN-003"
+    ],
+    "status": "candidate_review_target"
+  },
+  {
+    "mutation": "operation.checkpoint",
+    "domain": "operations",
+    "maturity": "CANDIDATE",
+    "crate": "crates/rustrigs/operations",
+    "proof_target": "proof-targets/rustrig-standard-library/operation-checkpoint",
+    "invariants": [
+      "OPS-CHECKPOINT-001",
+      "OPS-CHECKPOINT-002"
+    ],
+    "status": "candidate_review_target"
+  },
+  {
+    "mutation": "operation.restore",
+    "domain": "operations",
+    "maturity": "CANDIDATE",
+    "crate": "crates/rustrigs/operations",
+    "proof_target": "proof-targets/rustrig-standard-library/operation-restore",
+    "invariants": [
+      "OPS-RESTORE-001",
+      "OPS-RESTORE-002"
+    ],
+    "status": "candidate_review_target"
+  },
+  {
+    "mutation": "operation.migrate",
+    "domain": "operations",
+    "maturity": "CANDIDATE",
+    "crate": "crates/rustrigs/operations",
+    "proof_target": "proof-targets/rustrig-standard-library/operation-migrate",
+    "invariants": [
+      "OPS-MIGRATE-001",
+      "OPS-MIGRATE-002",
+      "OPS-MIGRATE-003"
+    ],
+    "status": "candidate_review_target"
+  }
+]
