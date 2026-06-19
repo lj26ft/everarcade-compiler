@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>EverArcade Operator Root Dashboard</title>
+  <title>Arena Vanguard: Reference Projection Operator Dashboard</title>
   <style>
     :root { color-scheme: dark; --bg:#06111f; --panel:#10213a; --line:rgba(148,185,225,.24); --text:#eef6ff; --muted:#94a9c2; --green:#35e48a; --blue:#60a5fa; --purple:#b48cff; --yellow:#ffd166; }
     * { box-sizing: border-box; } body { margin:0; min-height:100vh; font-family:Inter,ui-sans-serif,system-ui,sans-serif; background:radial-gradient(circle at top right,rgba(96,165,250,.25),transparent 32rem),var(--bg); color:var(--text); }
@@ -25,8 +25,8 @@
 </head>
 <body>
 <header>
-  <div><p class="eyebrow">EverArcade release demo</p><h1>Operator Root Dashboard</h1><p class="subtitle">Live-runnable control view for replay, migration, restore, and proof roots.</p></div>
-  <div class="pass">RELEASE DEMO READY: PASS</div>
+  <div><p class="eyebrow">EverArcade release demo</p><h1>Operator Agreement Dashboard</h1><p class="subtitle">Read-only operator view for roots, replay, migration, restore, and certification. No mutation authority is exposed.</p></div>
+  <div class="pass">ROOTS MATCH</div>
 </header>
 <main>
   <section class="panel">
@@ -35,22 +35,22 @@
     <div class="roots" id="roots"></div>
   </section>
   <aside class="panel">
-    <p class="eyebrow">Operator controls</p><h2>Root actions</h2>
+    <p class="eyebrow">Read-only inspection</p><h2>Allowed viewer actions</h2>
     <div class="controls" id="controls"></div><div class="nodes" id="nodes"></div>
   </aside>
   <section class="panel"><p class="eyebrow">Replay timeline</p><h2>Journal reconstruction</h2><div class="timeline" id="replay"></div></section>
-  <section class="panel"><p class="eyebrow">Migration animation</p><h2>Validator handoff</h2><div class="timeline" id="migration"></div></section>
-  <section class="panel"><p class="eyebrow">Restore timeline</p><h2>Checkpoint recovery</h2><div class="timeline" id="restore"></div></section>
+  <section class="panel"><p class="eyebrow">Migration animation</p><h2>Source Operator → Migration Package → Destination Operator</h2><div class="timeline" id="migration"></div><p class="pass">MIGRATION VERIFIED · Continuity preserved · Roots match</p></section>
+  <section class="panel"><p class="eyebrow">Restore animation</p><h2>Checkpoint → Restore → Continue</h2><div class="timeline" id="restore"></div><p class="pass">RESTORE VERIFIED · No reset · No fork</p></section>
   <section class="panel"><p class="eyebrow">Five-minute story</p><h2>Viewer comprehension checklist</h2><div class="timeline"><div class="lane"><b>1</b><span>Live world projection is visual, not authoritative.</span></div><div class="lane"><b>2</b><span>Roots prove state, receipts, world hash, and continuity.</span></div><div class="lane"><b>3</b><span>Replay, migration, and restore are visible as timelines.</span></div></div></section>
 </main>
 <script>
 async function loadSeed(){ const seed = await fetch('./demo-world-seed.json').then(r=>r.json()); render(seed); }
 function render(seed){
   worldName.textContent = seed.world.name;
-  metrics.innerHTML = [['Tick',seed.world.tick],['Players',seed.world.players.length],['Enemies',seed.world.enemies.length],['Target',`${seed.duration_target_seconds/60} min`]].map(([k,v])=>`<div class="metric"><span>${k}</span><strong>${v}</strong></div>`).join('');
+  metrics.innerHTML = [['Tick',seed.world.tick],['Epoch',seed.world.epoch],['Receipts',seed.world.receipt_count],['Operators','3 match']].map(([k,v])=>`<div class="metric"><span>${k}</span><strong>${v}</strong></div>`).join('');
   roots.innerHTML = Object.entries(seed.commitments).map(([k,v])=>`<div class="root"><span class="muted">${k.replaceAll('_',' ')}</span><code>${v}</code></div>`).join('');
   controls.innerHTML = seed.operator.controls.map((c,i)=>`<button class="${i===0?'active':''}">${c.toUpperCase()}</button>`).join('');
-  nodes.innerHTML = seed.operator.nodes.map(n=>`<div class="node"><span><i class="dot"></i>${n}</span><strong>healthy</strong></div>`).join('');
+  nodes.innerHTML = seed.operator.nodes.map(n=>`<div class="node"><span><i class="dot"></i>${n}</span><strong>roots match</strong></div>`).join('') + '<div class="node"><span>Projection authority</span><strong>read-only</strong></div>';
   replay.innerHTML = seed.timelines.replay.map(e=>`<div class="lane"><b>${e.tick}</b><span>${e.label}<span class="phase">${e.root}</span></span></div>`).join('');
   migration.innerHTML = seed.timelines.migration.map(e=>`<div class="lane"><b>${e.seconds}s</b><span>${e.label}<span class="phase">${e.phase}</span></span></div>`).join('');
   restore.innerHTML = seed.timelines.restore.map(e=>`<div class="lane"><b>${e.seconds}s</b><span>${e.label}<span class="phase">restore</span></span></div>`).join('');

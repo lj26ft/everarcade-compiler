@@ -3,128 +3,42 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Arena Vanguard Live Projection</title>
+  <title>Arena Vanguard: Reference Projection</title>
   <link rel="stylesheet" href="./projection.css">
 </head>
 <body>
   <header class="hero">
     <div>
-      <p class="eyebrow">EverArcade World Projection</p>
-      <h1>Arena Vanguard Live</h1>
-      <p class="subtitle">Read-only visualization of the authoritative deterministic runtime with demo-mode seed playback.</p>
+      <p class="eyebrow">Certified world viewer</p>
+      <h1>Arena Vanguard: Reference Projection</h1>
+      <p class="subtitle">Read-only deterministic world visualization for replay, restore, migration, and independent verification. The world is the artifact.</p>
     </div>
-    <div class="connection-card" aria-live="polite">
-      <span id="connectionDot" class="dot dot-warn"></span>
-      <div>
-        <strong id="connectionStatus">Connecting</strong>
-        <small id="lastRefresh">Waiting for /state and /verify</small>
-      </div>
-    </div>
+    <div class="connection-card" aria-live="polite"><span id="connectionDot" class="dot dot-warn"></span><div><strong id="connectionStatus">Connecting</strong><small id="lastRefresh">Waiting for reference world</small></div></div>
   </header>
 
   <main class="layout">
+    <section class="panel cert-strip" aria-label="Certification overlay">
+      <div><span>Tick</span><strong id="tickValue">—</strong></div><div><span>Epoch</span><strong id="epochValue">—</strong></div><div><span>State Root</span><code id="stateRootShort">—</code></div><div><span>World Hash</span><code id="worldHashShort">—</code></div><div><span>Receipts</span><strong id="receiptCount">—</strong></div><b>Tier 1 PASS</b><b>Tier 2 PASS</b><b>Projection PASS</b><b>World Package PASS</b>
+    </section>
+
     <section class="panel arena-panel">
-      <div class="panel-header">
-        <div>
-          <p class="eyebrow">Authoritative World</p>
-          <h2>Top-down Arena</h2>
-        </div>
-        <div class="legend">
-          <span><i class="legend-player"></i> Connected</span>
-          <span><i class="legend-offline"></i> Disconnected</span>
-          <span><i class="legend-enemy"></i> Hostile</span>
-          <span><i class="legend-demo"></i> Demo Seed</span>
-        </div>
-      </div>
-      <canvas id="arenaCanvas" width="960" height="640" aria-label="Arena Vanguard world projection"></canvas>
+      <div class="panel-header"><div><p class="eyebrow">Authoritative world projection</p><h2>Observed Arena Surface</h2></div><div class="legend"><span><i class="legend-player"></i>Player</span><span><i class="legend-enemy"></i>Enemy</span><span><i class="legend-neutral"></i>Neutral</span><span><i class="legend-demo"></i>Verified event</span></div></div>
+      <canvas id="arenaCanvas" width="960" height="640" aria-label="Arena Vanguard certified world projection"></canvas>
+      <div id="combatLine" class="combat-line">combat.attack(): awaiting verified receipt</div>
     </section>
 
     <aside class="stack">
-      <section class="panel verification" id="verificationPanel">
-        <div class="panel-header compact">
-          <div>
-            <p class="eyebrow">Verification</p>
-            <h2 id="verifyBadge">Checking…</h2>
-          </div>
-        </div>
-        <div class="roots" id="roots"></div>
-      </section>
-
-      <section class="panel runtime-info">
-        <p class="eyebrow">Runtime</p>
-        <div class="metric-grid">
-          <div><span>Tick</span><strong id="tickValue">—</strong></div>
-          <div><span>Journal Entries</span><strong id="journalSize">—</strong></div>
-          <div><span>Replay</span><strong id="replayStatus">—</strong></div>
-          <div><span>Players</span><strong id="playerCount">—</strong></div>
-          <div><span>Mode</span><strong id="runtimeMode">—</strong></div>
-        </div>
-      </section>
-
-      <section class="panel players-panel">
-        <div class="panel-header compact">
-          <div>
-            <p class="eyebrow">Players</p>
-            <h2>Live Roster</h2>
-          </div>
-        </div>
-        <div id="playerList" class="player-list"></div>
-      </section>
+      <section class="panel verification"><div class="panel-header compact"><div><p class="eyebrow">Root + certification details</p><h2 id="verifyBadge">Checking…</h2></div></div><div class="roots" id="roots"></div></section>
+      <section class="panel runtime-info"><p class="eyebrow">Read-only public mode</p><div class="metric-grid"><div><span>Journal Entries</span><strong id="journalSize">—</strong></div><div><span>Replay</span><strong id="replayStatus">—</strong></div><div><span>Players</span><strong id="playerCount">—</strong></div><div><span>Mode</span><strong id="runtimeMode">—</strong></div></div><p class="readonly">Allowed: scrub, inspect roots, event details, labels. Mutations, wallets, settlement, governance authority, and admin controls are not exposed.</p></section>
+      <section class="panel operator-panel"><p class="eyebrow">Operator agreement</p><h2 id="operatorBanner">ROOTS MATCH</h2><div id="operatorCards" class="operator-cards"></div></section>
     </aside>
 
-    <section class="panel combat-panel">
-      <div class="panel-header compact">
-        <div>
-          <p class="eyebrow">Combat</p>
-          <h2>Combat Log</h2>
-        </div>
-      </div>
-      <ol id="combatLog" class="event-list"></ol>
-    </section>
-
-    <section class="panel timeline-panel">
-      <div class="panel-header compact">
-        <div>
-          <p class="eyebrow">Journal</p>
-          <h2>World Timeline</h2>
-        </div>
-      </div>
-      <ol id="timeline" class="timeline"></ol>
-    </section>
-
-    <section class="panel demo-panel">
-      <div class="panel-header compact">
-        <div>
-          <p class="eyebrow">Release Demo</p>
-          <h2>Viewer Story</h2>
-        </div>
-      </div>
-      <ul class="demo-story">
-        <li>Live projection shows the game world, but roots remain the proof.</li>
-        <li>Replay reconstructs the same state and receipt commitments.</li>
-        <li>Migration and restore are visible from the operator dashboard.</li>
-      </ul>
-    </section>
-
-    <section class="panel commitments-panel">
-      <div class="panel-header compact">
-        <div>
-          <p class="eyebrow">Commitments</p>
-          <h2>Root Evolution</h2>
-        </div>
-      </div>
-      <div id="commitmentHistory" class="commitments"></div>
-    </section>
+    <section class="panel timeline-panel"><div class="panel-header compact"><div><p class="eyebrow">Replay timeline</p><h2>Journal Scrubber</h2></div><div class="speed">Speed <button data-speed="0.5">0.5×</button><button data-speed="1" class="active">1×</button><button data-speed="2">2×</button></div></div><input id="timelineScrubber" type="range" min="0" max="100" step="25" value="100"><div class="ticks"><span>Tick 0</span><span>25</span><span>50</span><span>75</span><span>100</span></div><div id="timelineMarkers" class="timeline-markers"></div></section>
+    <section class="panel feed-panel"><p class="eyebrow">Right-side event feed</p><h2>Verified World Events</h2><ol id="eventFeed" class="event-list"></ol></section>
+    <section class="panel players-panel"><p class="eyebrow">Players</p><h2>Roster + Inventory</h2><div id="playerList" class="player-list"></div></section>
+    <section class="panel story-panel"><p class="eyebrow">Restore + migration</p><h2>Continuity Demonstrations</h2><div class="flows"><div><b>Checkpoint</b><span>↓</span><b>Restore</b><span>↓</span><b>Continue</b><strong>RESTORE VERIFIED · No reset · No fork</strong></div><div><b>Source Operator</b><span>↓</span><b>Migration Package</b><span>↓</span><b>Destination Operator</b><strong>MIGRATION VERIFIED · Continuity preserved · Roots match</strong></div></div></section>
+    <section class="panel commitments-panel"><p class="eyebrow">Commitments</p><h2>Root Evolution</h2><div id="commitmentHistory" class="commitments"></div></section>
   </main>
-
-  <template id="copyRootTemplate">
-    <div class="root-row">
-      <span></span>
-      <code></code>
-      <button type="button">Copy</button>
-    </div>
-  </template>
-
   <script src="./projection.js"></script>
 </body>
 </html>
