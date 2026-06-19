@@ -1,0 +1,9 @@
+ARENA VANGUARD REPLAY REPORT: PASS
+
+Replay journal covers:
+- first kill: combat.attack() alice -> wolf-001 at tick 34
+- first trade: market.trade() bruno -> chen at tick 612
+- first governance vote: governance.vote() passed at tick 1440
+- first migration: Operator A -> Operator B at tick 1800
+
+Replay result: historical journal can be loaded and scrubbed without changing the current world state.

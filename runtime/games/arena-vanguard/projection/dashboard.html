@@ -18,7 +18,7 @@
 
   <main class="layout">
     <section class="panel cert-strip" aria-label="Certification overlay">
-      <div><span>Tick</span><strong id="tickValue">—</strong></div><div><span>Epoch</span><strong id="epochValue">—</strong></div><div><span>State Root</span><code id="stateRootShort">—</code></div><div><span>World Hash</span><code id="worldHashShort">—</code></div><div><span>Receipts</span><strong id="receiptCount">—</strong></div><b>Tier 1 PASS</b><b>Tier 2 PASS</b><b>Projection PASS</b><b>World Package PASS</b>
+      <div><span>Tick</span><strong id="tickValue">—</strong></div><div><span>World Age</span><strong id="worldAgeValue">—</strong></div><div><span>Epoch</span><strong id="epochValue">—</strong></div><div><span>State Root</span><code id="stateRootShort">—</code></div><div><span>World Hash</span><code id="worldHashShort">—</code></div><div><span>Receipts</span><strong id="receiptCount">—</strong></div><b>Tier 1 PASS</b><b>Tier 2 PASS</b><b>Projection PASS</b><b>Continuity PASS</b>
     </section>
 
     <section class="panel arena-panel">
@@ -36,6 +36,7 @@
     <section class="panel timeline-panel"><div class="panel-header compact"><div><p class="eyebrow">Replay timeline</p><h2>Journal Scrubber</h2></div><div class="speed">Speed <button data-speed="0.5">0.5×</button><button data-speed="1" class="active">1×</button><button data-speed="2">2×</button></div></div><input id="timelineScrubber" type="range" min="0" max="100" step="25" value="100"><div class="ticks"><span>Tick 0</span><span>25</span><span>50</span><span>75</span><span>100</span></div><div id="timelineMarkers" class="timeline-markers"></div></section>
     <section class="panel feed-panel"><p class="eyebrow">Right-side event feed</p><h2>Verified World Events</h2><ol id="eventFeed" class="event-list"></ol></section>
     <section class="panel players-panel"><p class="eyebrow">Players</p><h2>Roster + Inventory</h2><div id="playerList" class="player-list"></div></section>
+    <section class="panel history-panel"><p class="eyebrow">World memory</p><h2>History, Timeline, Regions, and Ruins</h2><div id="historyPanel" class="history-grid"></div></section>
     <section class="panel story-panel"><p class="eyebrow">Restore + migration</p><h2>Continuity Demonstrations</h2><div class="flows"><div><b>Checkpoint</b><span>↓</span><b>Restore</b><span>↓</span><b>Continue</b><strong>RESTORE VERIFIED · No reset · No fork</strong></div><div><b>Source Operator</b><span>↓</span><b>Migration Package</b><span>↓</span><b>Destination Operator</b><strong>MIGRATION VERIFIED · Continuity preserved · Roots match</strong></div></div></section>
     <section class="panel commitments-panel"><p class="eyebrow">Commitments</p><h2>Root Evolution</h2><div id="commitmentHistory" class="commitments"></div></section>
   </main>

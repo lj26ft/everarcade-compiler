@@ -1,0 +1,13 @@
+ARENA VANGUARD OPERATOR REPORT: PASS
+
+Operators:
+- Operator A: healthy
+- Operator B: healthy
+- Operator C: healthy
+
+Agreement:
+- roots match: true
+- verification status: VERIFIED
+- operator turnover: survived migration
+
+Operator conclusion: independent operators observe the same world root, world hash, receipts, and continuity root.
