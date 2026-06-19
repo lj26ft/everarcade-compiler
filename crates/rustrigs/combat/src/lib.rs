@@ -2,6 +2,7 @@ use std::collections::{BTreeMap, BTreeSet};
 
 pub const RUSTRIG_ID: &str = "combat.attack";
 pub const RUSTRIG_VERSION: &str = "1.0.0";
+pub const CANDIDATE_MUTATIONS: &[&str] = &["combat.heal", "combat.revive", "combat.apply_status", "combat.remove_status", "combat.area_attack"];
 pub const CERTIFICATION_STATUS: &str = "RUSTRIG COMBAT CERTIFICATION: PASS";
 
 #[derive(Clone, Debug, PartialEq, Eq)]
