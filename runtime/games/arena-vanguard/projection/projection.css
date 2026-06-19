@@ -42,7 +42,7 @@ h2 { font-size: 1.05rem; }
 #arenaCanvas { width: 100%; aspect-ratio: 3 / 2; display: block; border-radius: 18px; background: #081827; border: 1px solid var(--line); }
 .legend { display: flex; gap: 10px; flex-wrap: wrap; color: var(--muted); font-size: 0.78rem; }
 .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 999px; margin-right: 4px; }
-.legend-player { background: var(--green); } .legend-offline { background: #64748b; } .legend-enemy { background: var(--red); }
+.legend-player { background: var(--green); } .legend-offline { background: #64748b; } .legend-enemy { background: var(--red); } .legend-demo { background: var(--yellow); }
 .stack { display: grid; gap: 16px; }
 .metric-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
 .metric-grid div, .player-card, .root-row, details { background: rgba(255,255,255,0.045); border: 1px solid var(--line); border-radius: 14px; padding: 10px; }
@@ -60,11 +60,13 @@ button:hover { border-color: var(--blue); }
 .player-card.offline { opacity: 0.62; border-style: dashed; }
 .bars { height: 8px; border-radius: 999px; background: #1f2937; overflow: hidden; }
 .bars i { display: block; height: 100%; background: linear-gradient(90deg, var(--red), var(--yellow), var(--green)); }
-.combat-panel, .timeline-panel, .commitments-panel { min-height: 260px; }
+.combat-panel, .timeline-panel, .commitments-panel, .demo-panel { min-height: 260px; }
 .event-list, .timeline { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; max-height: 420px; overflow: auto; }
 .event-list li, .timeline li { border-left: 3px solid var(--purple); background: rgba(255,255,255,0.045); border-radius: 12px; padding: 10px; color: #d9e7f7; }
 .event-list small, .timeline small { color: var(--muted); display: block; margin-top: 4px; }
 .commitments { display: grid; gap: 8px; max-height: 420px; overflow: auto; }
+.demo-story { margin: 0; padding-left: 1.1rem; color: #d9e7f7; display: grid; gap: 10px; }
+.demo-story li { background: rgba(255,255,255,0.045); border: 1px solid var(--line); border-radius: 12px; padding: 10px; }
 details summary { cursor: pointer; color: #dbeafe; }
 details dl { display: grid; gap: 6px; margin: 10px 0 0; }
 details div { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 8px; }
