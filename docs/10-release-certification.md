@@ -51,6 +51,11 @@ Upgrade validation must prove that the old runtime can stop safely, a pre-upgrad
 
 Evernode certification additionally requires provider install validation, host configuration review, capacity baseline, storage retention policy, backup location, network assumptions, and operator access controls.
 
+
+## v0.1 Architecture Refreeze Gate
+
+The v0.1 architecture refreeze requires the deterministic adversarial linter to pass Tier 1 canonical-document checks and Tier 2 claim-boundary checks. The gate is intentionally documentation-scoped: it prevents unqualified production, commercial, or live-settlement claims from entering the canonical release documents unless the corresponding release scope and evidence are updated first.
+
 ## Release Approval Process
 
 A release is approved only when all required gates pass or documented waivers are accepted by the release owner. Waivers must include risk, scope, expiration, and mitigation.

@@ -97,6 +97,11 @@ The following systems must never be treated as the source of canonical world sta
 - **Operator boundary:** operator commands must not bypass validation.
 - **Deployment boundary:** host installation must verify artifacts before activation.
 
+
+## v0.1 Freeze Boundary
+
+The v0.1 authority path is frozen in `docs/14-v0.1-architecture-freeze.md`. For v0.1, the production claim boundary remains a deterministic single-world runtime path with package loading, execution, state roots, receipts, journals, checkpoints, replay verification, recovery, and operator-visible status. Renderer/history/federation must remain non-authoritative unless a later certification explicitly widens the release scope.
+
 ## Future Architecture
 
 Future architecture work must harden, not blur, boundaries. Multi-host federation, XRPL settlement, ZK proofs, marketplace publishing, and commercial hosting must integrate as external or adjacent domains that consume runtime evidence. They must not replace the runtime as the authority source.
