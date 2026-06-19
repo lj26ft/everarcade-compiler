@@ -1,0 +1,28 @@
+[template]
+template_id = "social"
+name = "Social World"
+version = 1
+description = "Community and social worlds."
+example_world = "Community Hub"
+
+[world]
+world_type = "community"
+continuity_enabled = true
+
+[rustrigs]
+enabled = [
+  "identity.join",
+  "faction.create",
+  "faction.join",
+  "guild.create",
+  "quest.start",
+  "quest.complete",
+]
+
+[projection]
+default_projection = "social-community-view"
+description = "Starter community + events view."
+
+[certification]
+level = 2
+mapping = "registry/certification.toml"

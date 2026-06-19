@@ -1,0 +1,4 @@
+[continuity]
+enabled = true
+behavior = "institutional: market history, ownership records, and enacted proposals remain durable"
+record_events = true

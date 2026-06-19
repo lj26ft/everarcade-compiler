@@ -1,0 +1,4 @@
+World Template Certification Report
+
+Certification mapping: Template -> World Contract -> RustRig Set -> World Package -> Certification -> Deployment
+Status: PASS

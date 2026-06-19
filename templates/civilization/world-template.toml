@@ -1,0 +1,42 @@
+[template]
+template_id = "civilization"
+name = "Civilization World"
+version = 1
+description = "Full Continuity Engine worlds."
+example_world = "Digital Republic"
+
+[world]
+world_type = "civilization"
+continuity_enabled = true
+
+[rustrigs]
+enabled = [
+  "identity.join",
+  "position.move",
+  "resource.harvest",
+  "inventory.transfer",
+  "structure.build",
+  "structure.repair",
+  "structure.decay",
+  "market.list",
+  "market.trade",
+  "governance.create_proposal",
+  "governance.vote",
+  "faction.create",
+  "faction.join",
+  "guild.create",
+  "quest.start",
+  "quest.complete",
+  "continuity.advance",
+  "continuity.record_event",
+  "migration.prepare",
+  "migration.apply",
+]
+
+[projection]
+default_projection = "civilization-institutions-view"
+description = "Starter history + institutions view."
+
+[certification]
+level = 4
+mapping = "registry/certification.toml"

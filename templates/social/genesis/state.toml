@@ -1,0 +1,7 @@
+[genesis]
+world_name = "Community Hub"
+template_id = "social"
+seed = "example-only-social"
+
+[genesis.note]
+text = "Example genesis state for Social World; customize before production deployment."

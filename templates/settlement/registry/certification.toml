@@ -1,0 +1,5 @@
+[certification]
+template_id = "settlement"
+level = 3
+path = ["Template", "World Contract", "RustRig Set", "World Package", "Certification", "Deployment"]
+checks = ["manifest-schema", "contract-rustrigs", "authority-rules", "receipt-mapping", "continuity-config"]

@@ -1,0 +1,5 @@
+[projection]
+id = "arena-combat-view"
+template_id = "arena"
+view = "combat-focused view"
+example_panels = ["overview", "activity", "receipts"]

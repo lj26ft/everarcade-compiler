@@ -1,0 +1,5 @@
+[projection]
+id = "social-community-view"
+template_id = "social"
+view = "community + events view"
+example_panels = ["overview", "activity", "receipts"]

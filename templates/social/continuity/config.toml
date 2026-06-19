@@ -1,0 +1,4 @@
+[continuity]
+enabled = true
+behavior = "social: membership, events, guild milestones, and completed quests are recorded"
+record_events = true

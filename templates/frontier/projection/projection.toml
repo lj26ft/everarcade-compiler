@@ -1,0 +1,5 @@
+[projection]
+id = "frontier-dashboard"
+template_id = "frontier"
+view = "resource + settlement view"
+example_panels = ["overview", "activity", "receipts"]

@@ -1,0 +1,40 @@
+[contract]
+template_id = "frontier"
+editable = true
+purpose = "Persistent survival and exploration worlds."
+
+[contract.rustrigs]
+allowed = [
+  "identity.join",
+  "position.move",
+  "resource.harvest",
+  "inventory.transfer",
+  "structure.build",
+  "structure.repair",
+  "structure.decay",
+  "continuity.advance",
+  "continuity.record_event",
+]
+
+[contract.authority]
+rules = [
+  "joined identities may move explorers",
+  "harvest requires region availability",
+  "build and repair require inventory ownership",
+  "continuity.advance is scheduler-authorized",
+]
+
+[contract.receipts]
+required = [
+  "join_receipt",
+  "movement_receipt",
+  "harvest_receipt",
+  "build_receipt",
+  "repair_receipt",
+  "decay_receipt",
+  "continuity_receipt",
+]
+
+[contract.continuity]
+enabled = true
+behavior = "persistent: aging, ruins, settlement history, and event records are advanced on scheduled ticks"

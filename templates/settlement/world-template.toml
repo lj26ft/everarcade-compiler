@@ -1,0 +1,28 @@
+[template]
+template_id = "settlement"
+name = "Settlement World"
+version = 1
+description = "Economic and governance worlds."
+example_world = "Sovereign City"
+
+[world]
+world_type = "economic"
+continuity_enabled = true
+
+[rustrigs]
+enabled = [
+  "market.trade",
+  "market.list",
+  "governance.vote",
+  "governance.create_proposal",
+  "structure.build",
+  "inventory.transfer",
+]
+
+[projection]
+default_projection = "settlement-governance-view"
+description = "Starter economy + governance view."
+
+[certification]
+level = 3
+mapping = "registry/certification.toml"

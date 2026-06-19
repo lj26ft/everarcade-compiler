@@ -1,0 +1,4 @@
+[continuity]
+enabled = true
+behavior = "persistent: aging, ruins, settlement history, and event records are advanced on scheduled ticks"
+record_events = true

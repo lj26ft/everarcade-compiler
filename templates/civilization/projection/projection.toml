@@ -1,0 +1,5 @@
+[projection]
+id = "civilization-institutions-view"
+template_id = "civilization"
+view = "history + institutions view"
+example_panels = ["overview", "activity", "receipts"]

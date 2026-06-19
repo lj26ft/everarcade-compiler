@@ -1,0 +1,4 @@
+[continuity]
+enabled = true
+behavior = "full: economy, governance, history, factions, settlements, continuity, and migration are linked into a durable timeline"
+record_events = true

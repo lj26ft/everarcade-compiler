@@ -1,0 +1,5 @@
+[projection]
+id = "settlement-governance-view"
+template_id = "settlement"
+view = "economy + governance view"
+example_panels = ["overview", "activity", "receipts"]
