@@ -11,7 +11,7 @@
     <div>
       <p class="eyebrow">EverArcade World Projection</p>
       <h1>Arena Vanguard Live</h1>
-      <p class="subtitle">Read-only visualization of the authoritative deterministic runtime.</p>
+      <p class="subtitle">Read-only visualization of the authoritative deterministic runtime with demo-mode seed playback.</p>
     </div>
     <div class="connection-card" aria-live="polite">
       <span id="connectionDot" class="dot dot-warn"></span>
@@ -33,6 +33,7 @@
           <span><i class="legend-player"></i> Connected</span>
           <span><i class="legend-offline"></i> Disconnected</span>
           <span><i class="legend-enemy"></i> Hostile</span>
+          <span><i class="legend-demo"></i> Demo Seed</span>
         </div>
       </div>
       <canvas id="arenaCanvas" width="960" height="640" aria-label="Arena Vanguard world projection"></canvas>
@@ -56,6 +57,7 @@
           <div><span>Journal Entries</span><strong id="journalSize">—</strong></div>
           <div><span>Replay</span><strong id="replayStatus">—</strong></div>
           <div><span>Players</span><strong id="playerCount">—</strong></div>
+          <div><span>Mode</span><strong id="runtimeMode">—</strong></div>
         </div>
       </section>
 
@@ -88,6 +90,20 @@
         </div>
       </div>
       <ol id="timeline" class="timeline"></ol>
+    </section>
+
+    <section class="panel demo-panel">
+      <div class="panel-header compact">
+        <div>
+          <p class="eyebrow">Release Demo</p>
+          <h2>Viewer Story</h2>
+        </div>
+      </div>
+      <ul class="demo-story">
+        <li>Live projection shows the game world, but roots remain the proof.</li>
+        <li>Replay reconstructs the same state and receipt commitments.</li>
+        <li>Migration and restore are visible from the operator dashboard.</li>
+      </ul>
     </section>
 
     <section class="panel commitments-panel">

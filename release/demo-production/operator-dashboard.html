@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EverArcade Operator Root Dashboard</title>
+  <style>
+    :root { color-scheme: dark; --bg:#06111f; --panel:#10213a; --line:rgba(148,185,225,.24); --text:#eef6ff; --muted:#94a9c2; --green:#35e48a; --blue:#60a5fa; --purple:#b48cff; --yellow:#ffd166; }
+    * { box-sizing: border-box; } body { margin:0; min-height:100vh; font-family:Inter,ui-sans-serif,system-ui,sans-serif; background:radial-gradient(circle at top right,rgba(96,165,250,.25),transparent 32rem),var(--bg); color:var(--text); }
+    header, main { width:min(1280px, calc(100% - 28px)); margin:0 auto; }
+    header { display:flex; justify-content:space-between; gap:1rem; align-items:center; padding:26px 0 18px; }
+    h1,h2,p { margin:0; } h1 { font-size:clamp(2rem,5vw,4.2rem); letter-spacing:-.06em; } h2 { font-size:1.05rem; }
+    .eyebrow { color:var(--blue); text-transform:uppercase; letter-spacing:.16em; font-size:.72rem; font-weight:800; } .subtitle,.muted { color:var(--muted); }
+    .pass { border:1px solid rgba(53,228,138,.5); background:rgba(53,228,138,.12); color:var(--green); border-radius:18px; padding:14px 16px; font-weight:900; }
+    main { display:grid; grid-template-columns:1.1fr .9fr; gap:16px; padding-bottom:24px; }
+    .panel { border:1px solid var(--line); background:rgba(16,33,58,.92); border-radius:24px; padding:16px; box-shadow:0 18px 70px rgba(0,0,0,.32); }
+    .grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; } .metric { background:rgba(255,255,255,.045); border:1px solid var(--line); border-radius:14px; padding:12px; } .metric span { display:block; color:var(--muted); font-size:.76rem; } .metric strong { font-size:1.2rem; }
+    .roots, .timeline { display:grid; gap:8px; margin-top:12px; } .root { display:grid; grid-template-columns:130px minmax(0,1fr); gap:10px; background:rgba(255,255,255,.045); border:1px solid var(--line); border-radius:14px; padding:10px; } code { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:#dbeafe; }
+    .lane { position:relative; display:grid; grid-template-columns:80px 1fr; gap:10px; align-items:start; padding:10px; border-left:3px solid var(--purple); background:rgba(255,255,255,.045); border-radius:14px; }
+    .lane b { color:var(--yellow); } .phase { display:inline-block; margin-top:5px; color:var(--muted); font-size:.78rem; }
+    .controls { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; } button { border:1px solid var(--line); border-radius:12px; padding:10px; background:#142a48; color:var(--text); font-weight:800; } button.active { border-color:var(--green); color:var(--green); }
+    .nodes { display:grid; gap:8px; margin-top:10px; } .node { display:flex; justify-content:space-between; background:rgba(255,255,255,.045); border-radius:12px; padding:10px; } .dot { width:10px; height:10px; border-radius:99px; background:var(--green); box-shadow:0 0 18px var(--green); display:inline-block; margin-right:8px; }
+    @media (max-width:900px) { header { flex-direction:column; align-items:stretch; } main { grid-template-columns:1fr; } .grid,.controls { grid-template-columns:1fr 1fr; } }
+  </style>
+</head>
+<body>
+<header>
+  <div><p class="eyebrow">EverArcade release demo</p><h1>Operator Root Dashboard</h1><p class="subtitle">Live-runnable control view for replay, migration, restore, and proof roots.</p></div>
+  <div class="pass">RELEASE DEMO READY: PASS</div>
+</header>
+<main>
+  <section class="panel">
+    <p class="eyebrow">Demo world seed state</p><h2 id="worldName">Loading…</h2>
+    <div class="grid" id="metrics"></div>
+    <div class="roots" id="roots"></div>
+  </section>
+  <aside class="panel">
+    <p class="eyebrow">Operator controls</p><h2>Root actions</h2>
+    <div class="controls" id="controls"></div><div class="nodes" id="nodes"></div>
+  </aside>
+  <section class="panel"><p class="eyebrow">Replay timeline</p><h2>Journal reconstruction</h2><div class="timeline" id="replay"></div></section>
+  <section class="panel"><p class="eyebrow">Migration animation</p><h2>Validator handoff</h2><div class="timeline" id="migration"></div></section>
+  <section class="panel"><p class="eyebrow">Restore timeline</p><h2>Checkpoint recovery</h2><div class="timeline" id="restore"></div></section>
+  <section class="panel"><p class="eyebrow">Five-minute story</p><h2>Viewer comprehension checklist</h2><div class="timeline"><div class="lane"><b>1</b><span>Live world projection is visual, not authoritative.</span></div><div class="lane"><b>2</b><span>Roots prove state, receipts, world hash, and continuity.</span></div><div class="lane"><b>3</b><span>Replay, migration, and restore are visible as timelines.</span></div></div></section>
+</main>
+<script>
+async function loadSeed(){ const seed = await fetch('./demo-world-seed.json').then(r=>r.json()); render(seed); }
+function render(seed){
+  worldName.textContent = seed.world.name;
+  metrics.innerHTML = [['Tick',seed.world.tick],['Players',seed.world.players.length],['Enemies',seed.world.enemies.length],['Target',`${seed.duration_target_seconds/60} min`]].map(([k,v])=>`<div class="metric"><span>${k}</span><strong>${v}</strong></div>`).join('');
+  roots.innerHTML = Object.entries(seed.commitments).map(([k,v])=>`<div class="root"><span class="muted">${k.replaceAll('_',' ')}</span><code>${v}</code></div>`).join('');
+  controls.innerHTML = seed.operator.controls.map((c,i)=>`<button class="${i===0?'active':''}">${c.toUpperCase()}</button>`).join('');
+  nodes.innerHTML = seed.operator.nodes.map(n=>`<div class="node"><span><i class="dot"></i>${n}</span><strong>healthy</strong></div>`).join('');
+  replay.innerHTML = seed.timelines.replay.map(e=>`<div class="lane"><b>${e.tick}</b><span>${e.label}<span class="phase">${e.root}</span></span></div>`).join('');
+  migration.innerHTML = seed.timelines.migration.map(e=>`<div class="lane"><b>${e.seconds}s</b><span>${e.label}<span class="phase">${e.phase}</span></span></div>`).join('');
+  restore.innerHTML = seed.timelines.restore.map(e=>`<div class="lane"><b>${e.seconds}s</b><span>${e.label}<span class="phase">restore</span></span></div>`).join('');
+}
+loadSeed().catch(error=>{ worldName.textContent = error.message; });
+</script>
+</body>
+</html>

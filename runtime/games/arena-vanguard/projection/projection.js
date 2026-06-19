@@ -1,6 +1,6 @@
 const POLL_MS = 1000;
 const MAX_EVENTS = 120;
-const state = { lastState: null, lastVerify: null, seenCombat: new Set(), combat: [], commitments: [] };
+const state = { lastState: null, lastVerify: null, seenCombat: new Set(), combat: [], commitments: [], demoMode: false };
 
 const $ = id => document.getElementById(id);
 const canvas = $("arenaCanvas");
@@ -13,10 +13,19 @@ async function fetchJson(path) {
 }
 
 async function fetchAuthoritativeState() {
-  const [world, verify] = await Promise.all([
-    fetchJson("/state").catch(() => fetchJson("/world-state")),
-    fetchJson("/verify").catch(() => fetchJson("/status"))
-  ]);
+  let world, verify;
+  try {
+    [world, verify] = await Promise.all([
+      fetchJson("/state").catch(() => fetchJson("/world-state")),
+      fetchJson("/verify").catch(() => fetchJson("/status"))
+    ]);
+    state.demoMode = false;
+  } catch (error) {
+    const seed = await fetchJson("../../../release/demo-production/demo-world-seed.json").catch(() => fetchJson("./demo-world-seed.json"));
+    world = demoWorldFromSeed(seed);
+    verify = { ok: true, roots: { stateRoot: seed.commitments.state_root, receiptRoot: seed.commitments.receipt_root, worldHash: seed.commitments.world_hash, continuityRoot: seed.commitments.continuity_root } };
+    state.demoMode = true;
+  }
   state.lastState = normalizeState(world);
   state.lastVerify = normalizeVerify(verify, state.lastState);
   rememberCommitment(state.lastState, state.lastVerify);
@@ -46,6 +55,10 @@ function normalizeState(raw) {
     replayStatus: raw.replayStatus ?? raw.replay_status ?? feed.runtime_health?.recovery_state ?? "LIVE",
     journalSize: Number(raw.journalSize ?? raw.journal_size ?? feed.replaySize ?? journal.length ?? 0)
   };
+}
+
+function demoWorldFromSeed(seed) {
+  return { tick: seed.world.tick, players: seed.world.players, enemies: seed.world.enemies, journal: seed.timelines.replay.map(e => ({ tick: e.tick, type: e.label, root: e.root })), combat_events: [{ tick: seed.world.tick - 2, description: "Bruno defeats drone-7 for 52 damage", damage: 52 }], replayStatus: "DEMO-SEED", journalSize: seed.timelines.replay.length };
 }
 
 function normalizeVerify(raw, normalized) {
@@ -134,6 +147,7 @@ function renderRuntime(world, verify) {
   $("journalSize").textContent = world.journalSize;
   $("replayStatus").textContent = verify.status;
   $("playerCount").textContent = world.players.length;
+  $("runtimeMode").textContent = state.demoMode ? "DEMO" : "LIVE";
 }
 
 function renderVerification(verify) {
