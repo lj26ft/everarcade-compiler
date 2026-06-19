@@ -3,42 +3,80 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Arena Vanguard: Reference Projection</title>
+  <title>Arena Vanguard: Persistent PvE World</title>
   <link rel="stylesheet" href="./projection.css">
 </head>
 <body>
   <header class="hero">
-    <div>
-      <p class="eyebrow">Certified world viewer</p>
-      <h1>Arena Vanguard: Reference Projection</h1>
-      <p class="subtitle">Read-only deterministic world visualization for replay, restore, migration, and independent verification. The world is the artifact.</p>
+    <div class="hero-copy">
+      <p class="eyebrow">Persistent PvE world demo</p>
+      <h1>Arena Vanguard Frontier</h1>
+      <p class="subtitle">A read-only projection of a living frontier where players come and go, creatures roam, resources regenerate, structures age, and ruins remember what happened.</p>
     </div>
     <div class="connection-card" aria-live="polite"><span id="connectionDot" class="dot dot-warn"></span><div><strong id="connectionStatus">Connecting</strong><small id="lastRefresh">Waiting for reference world</small></div></div>
   </header>
 
-  <main class="layout">
-    <section class="panel cert-strip" aria-label="Certification overlay">
-      <div><span>Tick</span><strong id="tickValue">—</strong></div><div><span>World Age</span><strong id="worldAgeValue">—</strong></div><div><span>Epoch</span><strong id="epochValue">—</strong></div><div><span>State Root</span><code id="stateRootShort">—</code></div><div><span>World Hash</span><code id="worldHashShort">—</code></div><div><span>Receipts</span><strong id="receiptCount">—</strong></div><b>Tier 1 PASS</b><b>Tier 2 PASS</b><b>Projection PASS</b><b>Continuity PASS</b>
+  <main class="world-shell">
+    <section class="panel world-stage" aria-label="Arena Vanguard world map">
+      <div class="stage-header">
+        <div>
+          <p class="eyebrow">Named world map</p>
+          <h2 id="worldName">Arena Vanguard Frontier</h2>
+          <p id="worldObjective" class="panel-note">The world is loaded from deterministic state and cannot be edited from this projection.</p>
+        </div>
+        <div class="world-age-card">
+          <span>World Age</span>
+          <strong id="worldAgeValue">—</strong>
+          <small id="tickValue">tick —</small>
+        </div>
+      </div>
+      <canvas id="arenaCanvas" width="1120" height="720" aria-label="Read-only map of Citadel, Frontier, Wilderness, and Ruins"></canvas>
+      <div class="map-legend" aria-label="Map object legend">
+        <span><i class="legend-player"></i>Players</span><span><i class="legend-creature"></i>Creatures</span><span><i class="legend-resource"></i>Resources</span><span><i class="legend-structure"></i>Structures</span><span><i class="legend-ruin"></i>Ruins</span>
+      </div>
     </section>
 
-    <section class="panel arena-panel">
-      <div class="panel-header"><div><p class="eyebrow">Authoritative world projection</p><h2>Observed Arena Surface</h2></div><div class="legend"><span><i class="legend-player"></i>Player</span><span><i class="legend-enemy"></i>Enemy</span><span><i class="legend-neutral"></i>Neutral</span><span><i class="legend-demo"></i>Verified event</span></div></div>
-      <canvas id="arenaCanvas" width="960" height="640" aria-label="Arena Vanguard certified world projection"></canvas>
-      <div id="combatLine" class="combat-line">combat.attack(): awaiting verified receipt</div>
-    </section>
-
-    <aside class="stack">
-      <section class="panel verification"><div class="panel-header compact"><div><p class="eyebrow">Root + certification details</p><h2 id="verifyBadge">Checking…</h2></div></div><div class="roots" id="roots"></div></section>
-      <section class="panel runtime-info"><p class="eyebrow">Read-only public mode</p><div class="metric-grid"><div><span>Journal Entries</span><strong id="journalSize">—</strong></div><div><span>Replay</span><strong id="replayStatus">—</strong></div><div><span>Players</span><strong id="playerCount">—</strong></div><div><span>Mode</span><strong id="runtimeMode">—</strong></div></div><p class="readonly">Allowed: scrub, inspect roots, event details, labels. Mutations, wallets, settlement, governance authority, and admin controls are not exposed.</p></section>
-      <section class="panel operator-panel"><p class="eyebrow">Operator agreement</p><h2 id="operatorBanner">ROOTS MATCH</h2><div id="operatorCards" class="operator-cards"></div></section>
+    <aside class="world-sidebar">
+      <section class="panel memory-panel">
+        <p class="eyebrow">World Memory</p>
+        <h2>What this world remembers</h2>
+        <div id="memoryCards" class="memory-cards"></div>
+      </section>
+      <section class="panel feed-panel">
+        <p class="eyebrow">Plain-English event feed</p>
+        <h2>What is happening now</h2>
+        <ol id="eventFeed" class="event-list"></ol>
+      </section>
     </aside>
 
-    <section class="panel timeline-panel"><div class="panel-header compact"><div><p class="eyebrow">Replay timeline</p><h2>Journal Scrubber</h2></div><div class="speed">Speed <button data-speed="0.5">0.5×</button><button data-speed="1" class="active">1×</button><button data-speed="2">2×</button></div></div><input id="timelineScrubber" type="range" min="0" max="100" step="25" value="100"><div class="ticks"><span>Tick 0</span><span>25</span><span>50</span><span>75</span><span>100</span></div><div id="timelineMarkers" class="timeline-markers"></div></section>
-    <section class="panel feed-panel"><p class="eyebrow">Right-side event feed</p><h2>Verified World Events</h2><ol id="eventFeed" class="event-list"></ol></section>
-    <section class="panel players-panel"><p class="eyebrow">Players</p><h2>Roster + Inventory</h2><div id="playerList" class="player-list"></div></section>
-    <section class="panel history-panel"><p class="eyebrow">World memory</p><h2>History, Timeline, Regions, and Ruins</h2><div id="historyPanel" class="history-grid"></div></section>
-    <section class="panel story-panel"><p class="eyebrow">Restore + migration</p><h2>Continuity Demonstrations</h2><div class="flows"><div><b>Checkpoint</b><span>↓</span><b>Restore</b><span>↓</span><b>Continue</b><strong>RESTORE VERIFIED · No reset · No fork</strong></div><div><b>Source Operator</b><span>↓</span><b>Migration Package</b><span>↓</span><b>Destination Operator</b><strong>MIGRATION VERIFIED · Continuity preserved · Roots match</strong></div></div></section>
-    <section class="panel commitments-panel"><p class="eyebrow">Commitments</p><h2>Root Evolution</h2><div id="commitmentHistory" class="commitments"></div></section>
+    <section class="panel object-panel">
+      <div class="panel-heading"><div><p class="eyebrow">World objects</p><h2>Players, creatures, resources, structures, and ruins</h2></div><p class="readonly">Read-only viewer: inspect position, age, inventory, memory, and roots. No mutations or admin controls are exposed.</p></div>
+      <div id="objectCards" class="object-grid"></div>
+    </section>
+
+    <section class="panel timeline-panel">
+      <div class="panel-heading"><div><p class="eyebrow">Historical timeline</p><h2>How the world aged</h2></div><div class="speed">Replay speed <button data-speed="0.5">0.5×</button><button data-speed="1" class="active">1×</button><button data-speed="2">2×</button></div></div>
+      <input id="timelineScrubber" type="range" min="0" max="100" step="25" value="100" aria-label="Read-only replay scrubber">
+      <div class="ticks"><span>Genesis</span><span>Day 25</span><span>Day 50</span><span>Day 75</span><span>Now</span></div>
+      <div id="timelineMarkers" class="timeline-markers"></div>
+      <ol id="historyTimeline" class="timeline-list"></ol>
+    </section>
+
+    <section class="panel verification-zone">
+      <div class="verification-intro">
+        <p class="eyebrow">Verification underneath the world</p>
+        <h2>Certification, roots, and continuity</h2>
+        <p class="panel-note">The world presentation stays primary; deterministic roots remain visible as the proof layer below it.</p>
+      </div>
+      <div class="cert-strip" aria-label="Certification summary">
+        <div><span>Epoch</span><strong id="epochValue">—</strong></div><div><span>Receipts</span><strong id="receiptCount">—</strong></div><div><span>Journal</span><strong id="journalSize">—</strong></div><div><span>Replay</span><strong id="replayStatus">—</strong></div><div><span>Players</span><strong id="playerCount">—</strong></div><div><span>Mode</span><strong id="runtimeMode">—</strong></div><b>Tier 1 PASS</b><b>Tier 2 PASS</b><b>Continuity PASS</b>
+      </div>
+      <div class="verification-grid">
+        <section class="verification-card"><p class="eyebrow">Roots</p><h3 id="verifyBadge">Checking…</h3><div class="roots" id="roots"></div></section>
+        <section class="verification-card"><p class="eyebrow">Operator agreement</p><h3 id="operatorBanner">ROOTS MATCH</h3><div id="operatorCards" class="operator-cards"></div></section>
+        <section class="verification-card"><p class="eyebrow">Root evolution</p><h3>Commitments</h3><div id="commitmentHistory" class="commitments"></div></section>
+      </div>
+    </section>
   </main>
   <script src="./projection.js"></script>
 </body>
