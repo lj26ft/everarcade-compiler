@@ -1,0 +1,49 @@
+Creator SDK Audit v1
+
+Objective: reduce Creator SDK and world creation friction for first-time developers.
+
+Primary metric: Time To First World.
+Current estimate: 20-45 minutes for a first-time developer who follows README exactly; 60+ minutes if they detour into architecture docs.
+Target: under 30 minutes.
+Stretch goal: under 10 minutes.
+
+Current shortest Running World path:
+1. node creator-sdk/cli/everarcade.mjs new --template arena --name arena-demo --dir "$PROJECT"
+2. node creator-sdk/cli/everarcade.mjs build --project "$PROJECT"
+3. node creator-sdk/cli/everarcade.mjs test --project "$PROJECT"
+4. node creator-sdk/cli/everarcade.mjs package --project "$PROJECT"
+5. CARGO_BUILD_JOBS=1 node creator-sdk/cli/everarcade.mjs play-local --project "$PROJECT" --template arena --runtime-root "$RUNTIME_ROOT"
+
+Desired path:
+1. everarcade world init --template frontier
+2. everarcade world add-rustrig combat
+3. everarcade world run
+4. everarcade world package
+5. everarcade world verify
+6. everarcade world deploy
+
+Critical friction:
+- F4: no single world verify command.
+- F4: no add-rustrig command.
+- F4: no creator projection command.
+- F3: CLI invocation exposes repo internals.
+- F3: template discovery is not command-driven.
+- F3: package artifact naming does not match world.evr expectation.
+
+Immediate fixes:
+- Add world lifecycle aliases.
+- Add template listing.
+- Add concept-to-file map.
+- Add RustRig listing with maturity/certification labels.
+- Add one “first world” quick start that hides architecture internals.
+
+Files produced:
+- docs/creator-sdk-audit-v1.md
+- docs/creator-sdk-roadmap-v1.md
+- reports/creator-sdk-audit/friction-report.md
+- reports/creator-sdk-audit/command-surface-report.md
+- reports/creator-sdk-audit/onboarding-report.md
+- reports/creator-sdk-audit/immediate-fixes.md
+- reports/creator-sdk-audit/sdk-audit-report.txt
+
+CREATOR SDK AUDIT V1: PASS
