@@ -1,0 +1,17 @@
+{
+  "world_id": "frontier-validation",
+  "tick": 0,
+  "regions": [
+    { "id": "frontier-outpost", "name": "Frontier Outpost", "status": "active" }
+  ],
+  "actors": [
+    { "id": "founder-001", "identity": "developer", "region": "frontier-outpost", "position": [0, 0] }
+  ],
+  "resources": [
+    { "id": "ore", "quantity": 1000 },
+    { "id": "food", "quantity": 500 }
+  ],
+  "inventory": [
+    { "actor": "founder-001", "items": ["starter-tool", "field-pack"] }
+  ]
+}

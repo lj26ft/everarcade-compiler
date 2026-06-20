@@ -1,0 +1,8 @@
+{
+  "world_id": "frontier-validation",
+  "name": "Frontier Validation",
+  "description": "A canonical first-world validation exercise for the EverArcade world creation flow.",
+  "template": "frontier",
+  "author": "EverArcade developer experience validation",
+  "onboarding_target_minutes": 30
+}

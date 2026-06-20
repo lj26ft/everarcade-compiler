@@ -1,0 +1,7 @@
+{
+  "world_id": "frontier-validation",
+  "checkpoint": "genesis",
+  "restoration_ready": true,
+  "last_verified_tick": 0,
+  "continuity_policy": "frontier-validation-default"
+}

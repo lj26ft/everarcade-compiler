@@ -81,3 +81,6 @@ build/
 .next/
 out/
 coverage/
+
+# Generated world packages
+*.evr
