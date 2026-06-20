@@ -72,6 +72,19 @@ Start with [`docs/first-world.md`](docs/first-world.md) and the generated projec
 - Open-source readiness audit: [`OPEN_SOURCE_READINESS.md`](OPEN_SOURCE_READINESS.md)
 - v0.1 public release readiness: [`docs/open-source/v0.1-public-release-readiness.md`](docs/open-source/v0.1-public-release-readiness.md)
 
+
+## Open Source Launch Package
+
+For public v0.1 onboarding, start with the Open Source Launch Package:
+
+- [Launch overview](docs/open-source-launch/launch-overview.md)
+- [Why EverArcade?](docs/open-source-launch/why-everarcade.md)
+- [What can I build?](docs/open-source-launch/what-can-i-build.md)
+- [Verification overview](docs/open-source-launch/verification-overview.md)
+- [Contributor guide](docs/open-source-launch/contributor-guide.md)
+- [Example gallery](docs/open-source-launch/example-gallery.md)
+- [Launch assets](docs/open-source-launch/launch-assets.md)
+
 ## Contributing
 
 Start with [`CONTRIBUTING.md`](CONTRIBUTING.md), then read the contributor guide under `docs/`. Prefer targeted validation scripts over full workspace test runs unless a change requires broader validation.

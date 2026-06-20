@@ -19,6 +19,17 @@ This documentation portal is the canonical public onboarding experience. Instead
 - [What Are RustRigs?](./concepts/rustrigs)
 - [World Package Certification vNext](./world-package-certification.md)
 
+
+## Open source launch
+
+- [Launch overview](./open-source-launch/launch-overview.md) explains EverArcade, Worlds, World Packages, World Contracts, RustRigs, and the Continuity Engine.
+- [Why EverArcade?](./open-source-launch/why-everarcade.md) explains why the architecture exists.
+- [What can I build?](./open-source-launch/what-can-i-build.md) shows arena, frontier, settlement, social, and civilization examples.
+- [Verification overview](./open-source-launch/verification-overview.md) summarizes World Contracts, RustRig invariants, certification, replay, restore, migration, and independent verification.
+- [Contributor guide](./open-source-launch/contributor-guide.md) routes developers, operators, verifiers, documentation contributors, and community contributors.
+- [Example gallery](./open-source-launch/example-gallery.md) makes the World Template Library, Frontier Validation World, Arena Vanguard, Reference Certified World, and First World easy to discover.
+- [Launch assets](./open-source-launch/launch-assets.md) collects public summaries and announcement copy.
+
 ## Technical depth
 
 Architecture remains available for readers who need implementation detail, but it is no longer the first step for everyone. Start with the [architecture overview](./architecture/).
