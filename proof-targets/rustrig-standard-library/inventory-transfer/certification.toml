@@ -1,6 +1,5 @@
-rustrig_name = "inventory.transfer"
-maturity_status = "CERTIFIED"
-proof_tier = 2
+mutation = "inventory.transfer"
+maturity = "CERTIFIED"
 implementation_hash = "sha256:c10d328a689095e84dc088be8ce04b0b6892390f09d277f38b4154d473e52d35"
 certification_status = "void_if_hash_changes"
 void_on_modify = true

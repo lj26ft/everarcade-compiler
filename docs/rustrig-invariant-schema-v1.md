@@ -15,32 +15,59 @@ src/
 
 ## Required Declaration Files
 
-- `invariants.toml`: canonical mutation identity, state domains, mutation authority, and invariant rules.
+- `invariants.toml`: canonical mutation identity, state domains, mutation authority, implementation hash, and invariant rules.
 - `properties.md`: verifier-readable property targets written as Given/When/Then claims.
-- `certification.toml`: maturity, proof tier, invariant count, and verifier review metadata.
+- `certification.toml`: maturity, proof tier, invariant count, implementation hash binding, and verifier review metadata.
+
+## Invariant Classes
+
+Certified RustRigs MUST separately declare both INTEGRITY and SAFETY invariant sections: Integrity Invariants and Safety Invariants.
+
+- **Safety** invariants are domain safety obligations: conservation, authorization, bounds, atomic rejection, no double spend, tally correctness, and other properties that prevent valid-looking deterministic execution from violating game rules.
+- **Integrity** invariants are execution-integrity obligations: deterministic behavior and consistency of receipts, replay, and state roots.
+- **Replay**, **Root**, **Receipt**, and **Determinism** are integrity sub-classes that MAY be used when a declaration needs machine-reviewable specificity.
+
+Allowed categories: `Safety`, `Integrity`, `Replay`, `Root`, `Receipt`, `Determinism`.
 
 ## Invariant Rule Schema
 
-Each `[[invariants.rule]]` entry MUST declare:
+Each `[[invariants.rule]]` or `[[rustrig.invariants.rule]]` entry MUST declare:
 
 | Field | Requirement |
 | --- | --- |
-| `id` | Stable ID such as `INV-001`. |
+| `id` | Stable ID such as `INV-SAFE-001`. |
 | `name` | Human-readable invariant name. |
 | `category` | One allowed invariant category. |
 | `description` | Verifier-readable claim. |
 | `severity` | One allowed severity. |
-| `proof_status` | One allowed proof status. |
-
-Allowed categories: `Safety`, `Authorization`, `Conservation`, `Integrity`, `Continuity`, `Ordering`, `Economic`, `Governance`, `Ownership`, `Liveness`.
+| `verification_method` | One allowed verification method. |
+| `proof_status` | One allowed proof status for this invariant. |
+| `artifact_hash_binding` | Exact `sha256:<hash>` implementation artifact hash this invariant evidence binds to. |
 
 Allowed severity values: `Critical`, `High`, `Medium`, `Low`.
 
-Allowed proof status values: `Unverified`, `Property-Tested`, `Differential-Tested`, `Certified`, `Formally-Proven`.
+Allowed verification method values: `differential`, `replay`, `property-test`, `formal-proof`, `manual-review`, `independent-review`, `zk-target`.
+
+Allowed proof status values: `Unverified`, `Property-Tested`, `Differential-Tested`, `Independently-Reviewed`, `Certified`, `Formally-Proven`, `ZK-Targeted`.
+
+`verification_method` records how the invariant is discharged, such as integrity/differential checking, safety property testing, formal proof, independent review, or future ZK proof.
+
+`proof_status` is per invariant. A RustRig-level certification status MUST NOT obscure which individual claims are unverified, property-tested, independently reviewed, certified, formally proven, or ZK-targeted.
+
+## Certification Metadata Schema
+
+Certification metadata MUST bind to the exact implementation artifact:
+
+```toml
+implementation_hash = "sha256:<hash>"
+certification_status = "void_if_hash_changes"
+```
+
+Void-on-modify rule: If the implementation hash changes, certification is void until re-certified.
 
 ## Proof Harness Consumption Model
 
-A verifier consumes `RustRig Source + Invariant Declaration + Property Targets`. The source supplies executable behavior, `invariants.toml` supplies the intended state domains and forbidden failures, and `properties.md` supplies testable claims. The verifier does not need to reverse-engineer intent from implementation code before building property tests, differential harnesses, formal models, or independent review packets.
+A verifier consumes `RustRig Source + Invariant Declaration + Property Targets + Certification Metadata`. The source supplies executable behavior, invariant declarations supply intended safety and integrity obligations, properties supply testable claims, and certification metadata binds evidence to an implementation hash. The verifier does not need to reverse-engineer intent from implementation code before building property tests, differential harnesses, formal models, ZK targets, or independent review packets.
 
 ## Certification Ladder
 
@@ -50,22 +77,25 @@ A verifier consumes `RustRig Source + Invariant Declaration + Property Targets`.
 | 1 | Property Tested | Properties exercise declared invariants. |
 | 2 | Differential Tested | Independent implementation or oracle comparison exists. |
 | 3 | Independent Review | External verifier reviewed declarations and evidence. |
-| 4 | Certified | Certification metadata records approved status. |
+| 4 | Certified | Certification metadata records approved status for the bound implementation hash. |
 | 5 | Formally Proven | Machine-checked proof covers the declared invariant set. |
+| 6 | ZK Targeted | Invariant is included in a future zero-knowledge proof target. |
 
 ## Registry Extension
 
-Registry entries SHOULD include invariant IDs and proof status:
+Registry entries SHOULD separate integrity and safety invariant IDs and include implementation hash binding:
 
 ```json
 {
   "mutation": "inventory.transfer",
   "maturity": "CERTIFIED",
-  "invariants": ["INV-001", "INV-002", "INV-003"],
-  "proof_status": "Independent Review"
+  "integrity_invariants": ["INT-DET-001", "INT-REC-001", "INT-REP-001", "INT-ROOT-001"],
+  "safety_invariants": ["INV-SAFE-001", "INV-SAFE-002"],
+  "implementation_hash": "sha256:<hash>",
+  "certification_status": "void_if_hash_changes"
 }
 ```
 
 ## Success Criteria
 
-A verifier should be able to answer what the RustRig mutates, what can go wrong, what must remain true, what is being proven, and what certification level exists without reading implementation code.
+A verifier should be able to answer what integrity claims are made, what safety claims are made, how each claim is verified, the current proof status for each claim, which implementation hash the certification binds to, and whether changing the implementation voids certification without reading implementation code.

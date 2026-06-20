@@ -80,13 +80,23 @@
     "maturity": "CERTIFIED",
     "crate": "crates/rustrigs/combat",
     "proof_target": "proof-targets/rustrig-standard-library/combat-attack",
-    "invariants": [
-      "Determinism",
-      "Receipt",
-      "Replay",
-      "Root"
+    "status": "certified_void_if_hash_changes",
+    "integrity_invariants": [
+      "INT-DET-001",
+      "INT-REC-001",
+      "INT-REP-001",
+      "INT-ROOT-001"
     ],
-    "status": "ready_for_independent_review"
+    "safety_invariants": [
+      "COMBAT-SAFE-001",
+      "COMBAT-SAFE-002",
+      "COMBAT-SAFE-003",
+      "COMBAT-SAFE-004",
+      "COMBAT-SAFE-005",
+      "COMBAT-SAFE-006"
+    ],
+    "implementation_hash": "sha256:e643650694903152bf46db4c7c7efcf78b31920f8536941d6ad12891eaa213d1",
+    "certification_status": "void_if_hash_changes"
   },
   {
     "mutation": "combat.heal",
@@ -164,13 +174,21 @@
     "maturity": "CERTIFIED",
     "crate": "crates/rustrigs/inventory",
     "proof_target": "proof-targets/rustrig-standard-library/inventory-transfer",
-    "invariants": [
-      "Determinism",
-      "Receipt",
-      "Replay",
-      "Root"
+    "status": "certified_void_if_hash_changes",
+    "integrity_invariants": [
+      "INT-DET-001",
+      "INT-REC-001",
+      "INT-REP-001",
+      "INT-ROOT-001"
     ],
-    "status": "ready_for_independent_review"
+    "safety_invariants": [
+      "INV-SAFE-001",
+      "INV-SAFE-002",
+      "INV-SAFE-003",
+      "INV-SAFE-004"
+    ],
+    "implementation_hash": "sha256:c10d328a689095e84dc088be8ce04b0b6892390f09d277f38b4154d473e52d35",
+    "certification_status": "void_if_hash_changes"
   },
   {
     "mutation": "inventory.pickup",
@@ -333,13 +351,23 @@
     "maturity": "CERTIFIED",
     "crate": "crates/rustrigs/market",
     "proof_target": "proof-targets/rustrig-standard-library/market-trade",
-    "invariants": [
-      "Determinism",
-      "Receipt",
-      "Replay",
-      "Root"
+    "status": "certified_void_if_hash_changes",
+    "integrity_invariants": [
+      "INT-DET-001",
+      "INT-REC-001",
+      "INT-REP-001",
+      "INT-ROOT-001"
     ],
-    "status": "ready_for_independent_review"
+    "safety_invariants": [
+      "MARKET-SAFE-001",
+      "MARKET-SAFE-002",
+      "MARKET-SAFE-003",
+      "MARKET-SAFE-004",
+      "MARKET-SAFE-005",
+      "MARKET-SAFE-006"
+    ],
+    "implementation_hash": "sha256:b058dc38c631eee352906d00ce0fd1b150c3a9e36c49ebfe3daf62b4454301dc",
+    "certification_status": "void_if_hash_changes"
   },
   {
     "mutation": "market.list",
@@ -431,13 +459,22 @@
     "maturity": "CERTIFIED",
     "crate": "crates/rustrigs/governance",
     "proof_target": "proof-targets/rustrig-standard-library/governance-vote",
-    "invariants": [
-      "Determinism",
-      "Receipt",
-      "Replay",
-      "Root"
+    "status": "certified_void_if_hash_changes",
+    "integrity_invariants": [
+      "INT-DET-001",
+      "INT-REC-001",
+      "INT-REP-001",
+      "INT-ROOT-001"
     ],
-    "status": "ready_for_independent_review"
+    "safety_invariants": [
+      "GOV-SAFE-001",
+      "GOV-SAFE-002",
+      "GOV-SAFE-003",
+      "GOV-SAFE-004",
+      "GOV-SAFE-005"
+    ],
+    "implementation_hash": "sha256:82ff6ff8d4e9758bca138c04a3ec17ca7812b13cc72c6d5ba4a79ae4269dca67",
+    "certification_status": "void_if_hash_changes"
   },
   {
     "mutation": "governance.create_proposal",

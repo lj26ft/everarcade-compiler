@@ -1,6 +1,5 @@
-rustrig_name = "combat.attack"
-maturity_status = "CERTIFIED"
-proof_tier = 2
+mutation = "combat.attack"
+maturity = "CERTIFIED"
 implementation_hash = "sha256:e643650694903152bf46db4c7c7efcf78b31920f8536941d6ad12891eaa213d1"
 certification_status = "void_if_hash_changes"
 void_on_modify = true
