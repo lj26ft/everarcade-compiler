@@ -1,0 +1,9 @@
+world_id = "frontier-validation"
+
+[proofs]
+package = "dist/package-manifest.txt"
+contract = "world-contract/world-contract.toml"
+genesis = "genesis/frontier-state.json"
+continuity = "genesis/continuity-state.json"
+projection = "projection/projection.toml"
+registry = "registry/frontier-validation-registry-entry.json"

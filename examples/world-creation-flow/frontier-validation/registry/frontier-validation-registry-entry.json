@@ -1,0 +1,9 @@
+{
+  "world_id": "frontier-validation",
+  "name": "Frontier Validation",
+  "package": "dist/world.evr",
+  "manifest": "manifest/world-manifest.toml",
+  "contract": "world-contract/world-contract.toml",
+  "proof_mapping": "proofs/proof-mapping.toml",
+  "status": "developer-validation"
+}

@@ -1,0 +1,15 @@
+projection_id = "frontier-validation-projection"
+world_id = "frontier-validation"
+
+[views]
+world_state = true
+actors = true
+regions = true
+resources = true
+inventory = true
+replay = true
+continuity = true
+
+[runtime]
+mode = "local-read-only"
+entry = "genesis/frontier-state.json"

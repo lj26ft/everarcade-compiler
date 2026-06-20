@@ -1,0 +1,6 @@
+policy_id = "frontier-validation-default"
+world_id = "frontier-validation"
+checkpoint_interval_ticks = 100
+restore_from_latest_checkpoint = true
+replay_from_genesis_supported = true
+operator_handoff_required = true

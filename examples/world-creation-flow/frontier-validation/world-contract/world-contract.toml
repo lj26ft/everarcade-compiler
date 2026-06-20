@@ -1,0 +1,23 @@
+contract_id = "frontier-validation-contract"
+world_id = "frontier-validation"
+version = "1.0.0"
+
+[capabilities]
+identity = "required"
+movement = "required"
+combat = "certified"
+inventory = "certified"
+resources = "optional"
+crafting = "candidate"
+structures = "candidate"
+market = "certified"
+governance = "certified"
+quests = "optional"
+factions = "optional"
+continuity = "required"
+
+[invariants]
+actors_require_identity = true
+movement_requires_region = true
+inventory_changes_require_receipts = true
+continuity_state_required = true

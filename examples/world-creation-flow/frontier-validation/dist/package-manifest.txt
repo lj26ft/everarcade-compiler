@@ -1,0 +1,9 @@
+continuity/policies.toml
+genesis/continuity-state.json
+genesis/frontier-state.json
+manifest/world-manifest.toml
+metadata/world-metadata.json
+projection/projection.toml
+proofs/proof-mapping.toml
+registry/frontier-validation-registry-entry.json
+world-contract/world-contract.toml
