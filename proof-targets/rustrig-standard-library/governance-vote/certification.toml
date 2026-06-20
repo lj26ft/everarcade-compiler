@@ -1,6 +1,5 @@
-rustrig_name = "governance.vote"
-maturity_status = "CERTIFIED"
-proof_tier = 2
+mutation = "governance.vote"
+maturity = "CERTIFIED"
 implementation_hash = "sha256:82ff6ff8d4e9758bca138c04a3ec17ca7812b13cc72c6d5ba4a79ae4269dca67"
 certification_status = "void_if_hash_changes"
 void_on_modify = true

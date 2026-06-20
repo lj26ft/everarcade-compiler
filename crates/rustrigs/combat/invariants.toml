@@ -4,34 +4,136 @@ version = 1
 state_domains = ["combat"]
 mutation_authority = "declared-rustrig"
 mutation_changes = "canonical combat.attack state transition"
+implementation_hash = "sha256:e643650694903152bf46db4c7c7efcf78b31920f8536941d6ad12891eaa213d1"
+certification_status = "void_if_hash_changes"
 
 [[rustrig.invariants.rule]]
-id = "INV-001"
-name = "Damage Bounds"
+id = "COMBAT-SAFE-001"
+name = "HP Bounds"
 category = "Safety"
 description = """
-Attack resolution cannot apply negative damage or exceed declared attack bounds.
+Health remains in [0, max_hp].
 """
 severity = "Critical"
+verification_method = "property-test"
 proof_status = "Property-Tested"
+artifact_hash_binding = "sha256:e643650694903152bf46db4c7c7efcf78b31920f8536941d6ad12891eaa213d1"
 
 [[rustrig.invariants.rule]]
-id = "INV-002"
-name = "Target Integrity"
-category = "Integrity"
+id = "COMBAT-SAFE-002"
+name = "No Negative Damage"
+category = "Safety"
 description = """
-Only the declared target combat state may be mutated by the attack.
+Damage cannot be negative.
 """
-severity = "High"
+severity = "Critical"
+verification_method = "property-test"
 proof_status = "Property-Tested"
+artifact_hash_binding = "sha256:e643650694903152bf46db4c7c7efcf78b31920f8536941d6ad12891eaa213d1"
 
 [[rustrig.invariants.rule]]
-id = "INV-003"
-name = "Turn Ordering"
-category = "Ordering"
+id = "COMBAT-SAFE-003"
+name = "Bounded Damage"
+category = "Safety"
 description = """
-Attack effects follow deterministic action ordering.
+Damage must not exceed configured max damage.
+"""
+severity = "Critical"
+verification_method = "property-test"
+proof_status = "Property-Tested"
+artifact_hash_binding = "sha256:e643650694903152bf46db4c7c7efcf78b31920f8536941d6ad12891eaa213d1"
+
+[[rustrig.invariants.rule]]
+id = "COMBAT-SAFE-004"
+name = "Death Monotonicity"
+category = "Safety"
+description = """
+Dead entities do not return alive through attack.
+"""
+severity = "Critical"
+verification_method = "property-test"
+proof_status = "Property-Tested"
+artifact_hash_binding = "sha256:e643650694903152bf46db4c7c7efcf78b31920f8536941d6ad12891eaa213d1"
+
+[[rustrig.invariants.rule]]
+id = "COMBAT-SAFE-005"
+name = "Target Validity"
+category = "Safety"
+description = """
+Attacker and target must exist and be alive.
+"""
+severity = "Critical"
+verification_method = "property-test"
+proof_status = "Property-Tested"
+artifact_hash_binding = "sha256:e643650694903152bf46db4c7c7efcf78b31920f8536941d6ad12891eaa213d1"
+
+[[rustrig.invariants.rule]]
+id = "COMBAT-SAFE-006"
+name = "Targeting Authority"
+category = "Safety"
+description = """
+Actor cannot mutate unauthorized entities.
+"""
+severity = "Critical"
+verification_method = "property-test"
+proof_status = "Property-Tested"
+artifact_hash_binding = "sha256:e643650694903152bf46db4c7c7efcf78b31920f8536941d6ad12891eaa213d1"
+
+[[rustrig.invariants.rule]]
+id = "INT-DET-001"
+name = "Determinism"
+category = "Determinism"
+description = """
+Same input and pre-state always produce the same post-state and receipt.
 """
 severity = "High"
-proof_status = "Property-Tested"
+verification_method = "differential"
+proof_status = "Differential-Tested"
+artifact_hash_binding = "sha256:e643650694903152bf46db4c7c7efcf78b31920f8536941d6ad12891eaa213d1"
 
+[[rustrig.invariants.rule]]
+id = "INT-REC-001"
+name = "Receipt Integrity"
+category = "Receipt"
+description = """
+Receipt commits to accepted/rejected status and mutation effects.
+"""
+severity = "High"
+verification_method = "differential"
+proof_status = "Differential-Tested"
+artifact_hash_binding = "sha256:e643650694903152bf46db4c7c7efcf78b31920f8536941d6ad12891eaa213d1"
+
+[[rustrig.invariants.rule]]
+id = "INT-REP-001"
+name = "Replay Equivalence"
+category = "Replay"
+description = """
+Replay over the same ordered inputs produces equivalent state transitions.
+"""
+severity = "High"
+verification_method = "differential"
+proof_status = "Differential-Tested"
+artifact_hash_binding = "sha256:e643650694903152bf46db4c7c7efcf78b31920f8536941d6ad12891eaa213d1"
+
+[[rustrig.invariants.rule]]
+id = "INT-ROOT-001"
+name = "Root Equivalence"
+category = "Root"
+description = """
+Post-state root equals the canonical root computed from resulting state.
+"""
+severity = "High"
+verification_method = "differential"
+proof_status = "Differential-Tested"
+artifact_hash_binding = "sha256:e643650694903152bf46db4c7c7efcf78b31920f8536941d6ad12891eaa213d1"
+
+[[certification]]
+rustrig_name = "combat.attack"
+maturity_status = "CERTIFIED"
+proof_tier = 2
+invariant_count = 10
+invariant_ids = ["COMBAT-SAFE-001", "COMBAT-SAFE-002", "COMBAT-SAFE-003", "COMBAT-SAFE-004", "COMBAT-SAFE-005", "COMBAT-SAFE-006", "INT-DET-001", "INT-REC-001", "INT-REP-001", "INT-ROOT-001"]
+implementation_hash = "sha256:e643650694903152bf46db4c7c7efcf78b31920f8536941d6ad12891eaa213d1"
+certification_status = "void_if_hash_changes"
+void_on_modify = true
+independent_verifier_required = true

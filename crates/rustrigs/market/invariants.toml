@@ -4,34 +4,136 @@ version = 1
 state_domains = ["market"]
 mutation_authority = "declared-rustrig"
 mutation_changes = "canonical market.trade state transition"
+implementation_hash = "sha256:b058dc38c631eee352906d00ce0fd1b150c3a9e36c49ebfe3daf62b4454301dc"
+certification_status = "void_if_hash_changes"
 
 [[rustrig.invariants.rule]]
-id = "INV-001"
-name = "Asset Conservation"
-category = "Conservation"
+id = "MARKET-SAFE-001"
+name = "Value Conservation"
+category = "Safety"
 description = """
-Trades cannot create or destroy escrowed assets.
+No value is minted or destroyed by trade.
 """
 severity = "Critical"
+verification_method = "property-test"
 proof_status = "Property-Tested"
+artifact_hash_binding = "sha256:b058dc38c631eee352906d00ce0fd1b150c3a9e36c49ebfe3daf62b4454301dc"
 
 [[rustrig.invariants.rule]]
-id = "INV-002"
-name = "Price Integrity"
-category = "Economic"
+id = "MARKET-SAFE-002"
+name = "No Double Spend"
+category = "Safety"
 description = """
-Settlement must match the accepted price and quantity.
+Listing/item cannot be sold twice.
 """
 severity = "Critical"
+verification_method = "property-test"
 proof_status = "Property-Tested"
+artifact_hash_binding = "sha256:b058dc38c631eee352906d00ce0fd1b150c3a9e36c49ebfe3daf62b4454301dc"
 
 [[rustrig.invariants.rule]]
-id = "INV-003"
-name = "Counterparty Authorization"
-category = "Authorization"
+id = "MARKET-SAFE-003"
+name = "Atomic Settlement"
+category = "Safety"
 description = """
-Only authorized counterparties may settle the trade.
+Both legs settle or neither does.
+"""
+severity = "Critical"
+verification_method = "property-test"
+proof_status = "Property-Tested"
+artifact_hash_binding = "sha256:b058dc38c631eee352906d00ce0fd1b150c3a9e36c49ebfe3daf62b4454301dc"
+
+[[rustrig.invariants.rule]]
+id = "MARKET-SAFE-004"
+name = "Seller Ownership"
+category = "Safety"
+description = """
+Seller must own listed item.
+"""
+severity = "Critical"
+verification_method = "property-test"
+proof_status = "Property-Tested"
+artifact_hash_binding = "sha256:b058dc38c631eee352906d00ce0fd1b150c3a9e36c49ebfe3daf62b4454301dc"
+
+[[rustrig.invariants.rule]]
+id = "MARKET-SAFE-005"
+name = "Price Bounds"
+category = "Safety"
+description = """
+Price must be non-negative and valid.
+"""
+severity = "Critical"
+verification_method = "property-test"
+proof_status = "Property-Tested"
+artifact_hash_binding = "sha256:b058dc38c631eee352906d00ce0fd1b150c3a9e36c49ebfe3daf62b4454301dc"
+
+[[rustrig.invariants.rule]]
+id = "MARKET-SAFE-006"
+name = "Fee Bounds"
+category = "Safety"
+description = """
+Fee must remain within configured bounds.
+"""
+severity = "Critical"
+verification_method = "property-test"
+proof_status = "Property-Tested"
+artifact_hash_binding = "sha256:b058dc38c631eee352906d00ce0fd1b150c3a9e36c49ebfe3daf62b4454301dc"
+
+[[rustrig.invariants.rule]]
+id = "INT-DET-001"
+name = "Determinism"
+category = "Determinism"
+description = """
+Same input and pre-state always produce the same post-state and receipt.
 """
 severity = "High"
-proof_status = "Property-Tested"
+verification_method = "differential"
+proof_status = "Differential-Tested"
+artifact_hash_binding = "sha256:b058dc38c631eee352906d00ce0fd1b150c3a9e36c49ebfe3daf62b4454301dc"
 
+[[rustrig.invariants.rule]]
+id = "INT-REC-001"
+name = "Receipt Integrity"
+category = "Receipt"
+description = """
+Receipt commits to accepted/rejected status and mutation effects.
+"""
+severity = "High"
+verification_method = "differential"
+proof_status = "Differential-Tested"
+artifact_hash_binding = "sha256:b058dc38c631eee352906d00ce0fd1b150c3a9e36c49ebfe3daf62b4454301dc"
+
+[[rustrig.invariants.rule]]
+id = "INT-REP-001"
+name = "Replay Equivalence"
+category = "Replay"
+description = """
+Replay over the same ordered inputs produces equivalent state transitions.
+"""
+severity = "High"
+verification_method = "differential"
+proof_status = "Differential-Tested"
+artifact_hash_binding = "sha256:b058dc38c631eee352906d00ce0fd1b150c3a9e36c49ebfe3daf62b4454301dc"
+
+[[rustrig.invariants.rule]]
+id = "INT-ROOT-001"
+name = "Root Equivalence"
+category = "Root"
+description = """
+Post-state root equals the canonical root computed from resulting state.
+"""
+severity = "High"
+verification_method = "differential"
+proof_status = "Differential-Tested"
+artifact_hash_binding = "sha256:b058dc38c631eee352906d00ce0fd1b150c3a9e36c49ebfe3daf62b4454301dc"
+
+[[certification]]
+rustrig_name = "market.trade"
+maturity_status = "CERTIFIED"
+proof_tier = 2
+invariant_count = 10
+invariant_ids = ["MARKET-SAFE-001", "MARKET-SAFE-002", "MARKET-SAFE-003", "MARKET-SAFE-004", "MARKET-SAFE-005", "MARKET-SAFE-006", "INT-DET-001", "INT-REC-001", "INT-REP-001", "INT-ROOT-001"]
+implementation_hash = "sha256:b058dc38c631eee352906d00ce0fd1b150c3a9e36c49ebfe3daf62b4454301dc"
+certification_status = "void_if_hash_changes"
+void_on_modify = true
+independent_verifier_required = true

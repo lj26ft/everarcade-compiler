@@ -4,34 +4,124 @@ version = 1
 state_domains = ["governance"]
 mutation_authority = "declared-rustrig"
 mutation_changes = "canonical governance.vote state transition"
+implementation_hash = "sha256:82ff6ff8d4e9758bca138c04a3ec17ca7812b13cc72c6d5ba4a79ae4269dca67"
+certification_status = "void_if_hash_changes"
 
 [[rustrig.invariants.rule]]
-id = "INV-001"
-name = "One Vote Per Authority"
-category = "Governance"
+id = "GOV-SAFE-001"
+name = "One Vote Per Eligible Voter"
+category = "Safety"
 description = """
-A voting authority cannot cast duplicate effective votes for one proposal.
+A voter cannot vote twice on the same proposal.
 """
 severity = "Critical"
+verification_method = "property-test"
 proof_status = "Property-Tested"
+artifact_hash_binding = "sha256:82ff6ff8d4e9758bca138c04a3ec17ca7812b13cc72c6d5ba4a79ae4269dca67"
 
 [[rustrig.invariants.rule]]
-id = "INV-002"
-name = "Eligibility Authorization"
-category = "Authorization"
+id = "GOV-SAFE-002"
+name = "Eligibility"
+category = "Safety"
 description = """
-Only eligible authorities may vote.
+Only eligible voters count.
 """
 severity = "Critical"
+verification_method = "property-test"
 proof_status = "Property-Tested"
+artifact_hash_binding = "sha256:82ff6ff8d4e9758bca138c04a3ec17ca7812b13cc72c6d5ba4a79ae4269dca67"
 
 [[rustrig.invariants.rule]]
-id = "INV-003"
-name = "Tally Continuity"
-category = "Continuity"
+id = "GOV-SAFE-003"
+name = "Tally Integrity"
+category = "Safety"
 description = """
-Vote tallies remain replay-stable across deterministic execution.
+Final tally equals the sum of valid votes.
+"""
+severity = "Critical"
+verification_method = "property-test"
+proof_status = "Property-Tested"
+artifact_hash_binding = "sha256:82ff6ff8d4e9758bca138c04a3ec17ca7812b13cc72c6d5ba4a79ae4269dca67"
+
+[[rustrig.invariants.rule]]
+id = "GOV-SAFE-004"
+name = "Temporal Bound"
+category = "Safety"
+description = """
+Votes after close are rejected.
+"""
+severity = "Critical"
+verification_method = "property-test"
+proof_status = "Property-Tested"
+artifact_hash_binding = "sha256:82ff6ff8d4e9758bca138c04a3ec17ca7812b13cc72c6d5ba4a79ae4269dca67"
+
+[[rustrig.invariants.rule]]
+id = "GOV-SAFE-005"
+name = "Monotonic Tally"
+category = "Safety"
+description = """
+Valid tally updates cannot decrease or inflate incorrectly.
+"""
+severity = "Critical"
+verification_method = "property-test"
+proof_status = "Property-Tested"
+artifact_hash_binding = "sha256:82ff6ff8d4e9758bca138c04a3ec17ca7812b13cc72c6d5ba4a79ae4269dca67"
+
+[[rustrig.invariants.rule]]
+id = "INT-DET-001"
+name = "Determinism"
+category = "Determinism"
+description = """
+Same input and pre-state always produce the same post-state and receipt.
 """
 severity = "High"
-proof_status = "Property-Tested"
+verification_method = "differential"
+proof_status = "Differential-Tested"
+artifact_hash_binding = "sha256:82ff6ff8d4e9758bca138c04a3ec17ca7812b13cc72c6d5ba4a79ae4269dca67"
 
+[[rustrig.invariants.rule]]
+id = "INT-REC-001"
+name = "Receipt Integrity"
+category = "Receipt"
+description = """
+Receipt commits to accepted/rejected status and mutation effects.
+"""
+severity = "High"
+verification_method = "differential"
+proof_status = "Differential-Tested"
+artifact_hash_binding = "sha256:82ff6ff8d4e9758bca138c04a3ec17ca7812b13cc72c6d5ba4a79ae4269dca67"
+
+[[rustrig.invariants.rule]]
+id = "INT-REP-001"
+name = "Replay Equivalence"
+category = "Replay"
+description = """
+Replay over the same ordered inputs produces equivalent state transitions.
+"""
+severity = "High"
+verification_method = "differential"
+proof_status = "Differential-Tested"
+artifact_hash_binding = "sha256:82ff6ff8d4e9758bca138c04a3ec17ca7812b13cc72c6d5ba4a79ae4269dca67"
+
+[[rustrig.invariants.rule]]
+id = "INT-ROOT-001"
+name = "Root Equivalence"
+category = "Root"
+description = """
+Post-state root equals the canonical root computed from resulting state.
+"""
+severity = "High"
+verification_method = "differential"
+proof_status = "Differential-Tested"
+artifact_hash_binding = "sha256:82ff6ff8d4e9758bca138c04a3ec17ca7812b13cc72c6d5ba4a79ae4269dca67"
+
+[[certification]]
+rustrig_name = "governance.vote"
+maturity_status = "CERTIFIED"
+proof_tier = 2
+invariant_count = 9
+invariant_ids = ["GOV-SAFE-001", "GOV-SAFE-002", "GOV-SAFE-003", "GOV-SAFE-004", "GOV-SAFE-005", "INT-DET-001", "INT-REC-001", "INT-REP-001", "INT-ROOT-001"]
+implementation_hash = "sha256:82ff6ff8d4e9758bca138c04a3ec17ca7812b13cc72c6d5ba4a79ae4269dca67"
+certification_status = "void_if_hash_changes"
+void_on_modify = true
+independent_verifier_required = true

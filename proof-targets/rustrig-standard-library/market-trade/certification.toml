@@ -1,6 +1,5 @@
-rustrig_name = "market.trade"
-maturity_status = "CERTIFIED"
-proof_tier = 2
+mutation = "market.trade"
+maturity = "CERTIFIED"
 implementation_hash = "sha256:b058dc38c631eee352906d00ce0fd1b150c3a9e36c49ebfe3daf62b4454301dc"
 certification_status = "void_if_hash_changes"
 void_on_modify = true

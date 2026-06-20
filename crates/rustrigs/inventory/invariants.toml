@@ -1,37 +1,115 @@
 [[rustrig]]
 name = "inventory.transfer"
 version = 1
-state_domains = ["inventory", "ownership"]
+state_domains = ["inventory"]
 mutation_authority = "declared-rustrig"
 mutation_changes = "canonical inventory.transfer state transition"
+implementation_hash = "sha256:c10d328a689095e84dc088be8ce04b0b6892390f09d277f38b4154d473e52d35"
+certification_status = "void_if_hash_changes"
 
 [[rustrig.invariants.rule]]
-id = "INV-001"
+id = "INV-SAFE-001"
 name = "Conservation"
-category = "Conservation"
+category = "Safety"
 description = """
-Transfers cannot create or destroy items.
+Sum of item quantity across all inventories is unchanged.
 """
 severity = "Critical"
+verification_method = "property-test"
 proof_status = "Property-Tested"
+artifact_hash_binding = "sha256:c10d328a689095e84dc088be8ce04b0b6892390f09d277f38b4154d473e52d35"
 
 [[rustrig.invariants.rule]]
-id = "INV-002"
+id = "INV-SAFE-002"
 name = "No Overdraw"
 category = "Safety"
 description = """
-Sender inventory cannot become negative.
+Source inventory cannot transfer more than it holds.
 """
 severity = "Critical"
+verification_method = "property-test"
 proof_status = "Property-Tested"
+artifact_hash_binding = "sha256:c10d328a689095e84dc088be8ce04b0b6892390f09d277f38b4154d473e52d35"
 
 [[rustrig.invariants.rule]]
-id = "INV-003"
+id = "INV-SAFE-003"
 name = "Owner Authorization"
-category = "Authorization"
+category = "Safety"
 description = """
-Only the current owner may initiate transfer.
+Only the holder/controller may transfer owned items.
+"""
+severity = "Critical"
+verification_method = "property-test"
+proof_status = "Property-Tested"
+artifact_hash_binding = "sha256:c10d328a689095e84dc088be8ce04b0b6892390f09d277f38b4154d473e52d35"
+
+[[rustrig.invariants.rule]]
+id = "INV-SAFE-004"
+name = "Atomic Reject"
+category = "Safety"
+description = """
+Rejected transfers leave world state unchanged.
+"""
+severity = "Critical"
+verification_method = "property-test"
+proof_status = "Property-Tested"
+artifact_hash_binding = "sha256:c10d328a689095e84dc088be8ce04b0b6892390f09d277f38b4154d473e52d35"
+
+[[rustrig.invariants.rule]]
+id = "INT-DET-001"
+name = "Determinism"
+category = "Determinism"
+description = """
+Same input and pre-state always produce the same post-state and receipt.
 """
 severity = "High"
-proof_status = "Property-Tested"
+verification_method = "differential"
+proof_status = "Differential-Tested"
+artifact_hash_binding = "sha256:c10d328a689095e84dc088be8ce04b0b6892390f09d277f38b4154d473e52d35"
 
+[[rustrig.invariants.rule]]
+id = "INT-REC-001"
+name = "Receipt Integrity"
+category = "Receipt"
+description = """
+Receipt commits to accepted/rejected status and mutation effects.
+"""
+severity = "High"
+verification_method = "differential"
+proof_status = "Differential-Tested"
+artifact_hash_binding = "sha256:c10d328a689095e84dc088be8ce04b0b6892390f09d277f38b4154d473e52d35"
+
+[[rustrig.invariants.rule]]
+id = "INT-REP-001"
+name = "Replay Equivalence"
+category = "Replay"
+description = """
+Replay over the same ordered inputs produces equivalent state transitions.
+"""
+severity = "High"
+verification_method = "differential"
+proof_status = "Differential-Tested"
+artifact_hash_binding = "sha256:c10d328a689095e84dc088be8ce04b0b6892390f09d277f38b4154d473e52d35"
+
+[[rustrig.invariants.rule]]
+id = "INT-ROOT-001"
+name = "Root Equivalence"
+category = "Root"
+description = """
+Post-state root equals the canonical root computed from resulting state.
+"""
+severity = "High"
+verification_method = "differential"
+proof_status = "Differential-Tested"
+artifact_hash_binding = "sha256:c10d328a689095e84dc088be8ce04b0b6892390f09d277f38b4154d473e52d35"
+
+[[certification]]
+rustrig_name = "inventory.transfer"
+maturity_status = "CERTIFIED"
+proof_tier = 2
+invariant_count = 8
+invariant_ids = ["INV-SAFE-001", "INV-SAFE-002", "INV-SAFE-003", "INV-SAFE-004", "INT-DET-001", "INT-REC-001", "INT-REP-001", "INT-ROOT-001"]
+implementation_hash = "sha256:c10d328a689095e84dc088be8ce04b0b6892390f09d277f38b4154d473e52d35"
+certification_status = "void_if_hash_changes"
+void_on_modify = true
+independent_verifier_required = true
