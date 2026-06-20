@@ -1,0 +1,2 @@
+inventory-transfer: invariant declaration, property targets, certification metadata present.
+RUSTRIG INVARIANT DECLARATION SCHEMA V1: PASS

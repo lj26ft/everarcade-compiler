@@ -1,0 +1,5 @@
+RustRig invariant declaration schema v1 created.
+Certified set: inventory.transfer, combat.attack, market.trade, governance.vote.
+Candidate stubs created for identity, movement, world, resource, crafting, structure, faction, quest, continuity, and operation RustRigs.
+Proof harness consumption model documented.
+RUSTRIG INVARIANT DECLARATION SCHEMA V1: PASS

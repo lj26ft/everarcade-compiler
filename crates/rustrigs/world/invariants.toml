@@ -1,0 +1,74 @@
+[[rustrig]]
+name = "world.spawn"
+version = 1
+state_domains = ["world"]
+mutation_authority = "declared-rustrig"
+mutation_changes = "canonical world.spawn state transition"
+
+[[rustrig.invariants.rule]]
+id = "INV-001"
+name = "Declared Mutation Safety"
+category = "Safety"
+description = """
+world.spawn must reject invalid preconditions before mutating canonical state.
+"""
+severity = "High"
+proof_status = "Unverified"
+
+[[rustrig.invariants.rule]]
+id = "INV-002"
+name = "State Integrity"
+category = "Integrity"
+description = """
+world.spawn must preserve unrelated state domains.
+"""
+severity = "Medium"
+proof_status = "Unverified"
+
+[[rustrig.invariants.rule]]
+id = "INV-003"
+name = "Continuity Trace"
+category = "Continuity"
+description = """
+world.spawn must emit replay-stable evidence for verifier review.
+"""
+severity = "Medium"
+proof_status = "Unverified"
+
+[[rustrig]]
+name = "world.despawn"
+version = 1
+state_domains = ["world"]
+mutation_authority = "declared-rustrig"
+mutation_changes = "canonical world.despawn state transition"
+
+[[rustrig.invariants.rule]]
+id = "INV-001"
+name = "Declared Mutation Safety"
+category = "Safety"
+description = """
+world.despawn must reject invalid preconditions before mutating canonical state.
+"""
+severity = "High"
+proof_status = "Unverified"
+
+[[rustrig.invariants.rule]]
+id = "INV-002"
+name = "State Integrity"
+category = "Integrity"
+description = """
+world.despawn must preserve unrelated state domains.
+"""
+severity = "Medium"
+proof_status = "Unverified"
+
+[[rustrig.invariants.rule]]
+id = "INV-003"
+name = "Continuity Trace"
+category = "Continuity"
+description = """
+world.despawn must emit replay-stable evidence for verifier review.
+"""
+severity = "Medium"
+proof_status = "Unverified"
+

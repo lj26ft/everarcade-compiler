@@ -1,0 +1,111 @@
+[[rustrig]]
+name = "structure.build"
+version = 1
+state_domains = ["structure"]
+mutation_authority = "declared-rustrig"
+mutation_changes = "canonical structure.build state transition"
+
+[[rustrig.invariants.rule]]
+id = "INV-001"
+name = "Declared Mutation Safety"
+category = "Safety"
+description = """
+structure.build must reject invalid preconditions before mutating canonical state.
+"""
+severity = "High"
+proof_status = "Unverified"
+
+[[rustrig.invariants.rule]]
+id = "INV-002"
+name = "State Integrity"
+category = "Integrity"
+description = """
+structure.build must preserve unrelated state domains.
+"""
+severity = "Medium"
+proof_status = "Unverified"
+
+[[rustrig.invariants.rule]]
+id = "INV-003"
+name = "Continuity Trace"
+category = "Continuity"
+description = """
+structure.build must emit replay-stable evidence for verifier review.
+"""
+severity = "Medium"
+proof_status = "Unverified"
+
+[[rustrig]]
+name = "structure.repair"
+version = 1
+state_domains = ["structure"]
+mutation_authority = "declared-rustrig"
+mutation_changes = "canonical structure.repair state transition"
+
+[[rustrig.invariants.rule]]
+id = "INV-001"
+name = "Declared Mutation Safety"
+category = "Safety"
+description = """
+structure.repair must reject invalid preconditions before mutating canonical state.
+"""
+severity = "High"
+proof_status = "Unverified"
+
+[[rustrig.invariants.rule]]
+id = "INV-002"
+name = "State Integrity"
+category = "Integrity"
+description = """
+structure.repair must preserve unrelated state domains.
+"""
+severity = "Medium"
+proof_status = "Unverified"
+
+[[rustrig.invariants.rule]]
+id = "INV-003"
+name = "Continuity Trace"
+category = "Continuity"
+description = """
+structure.repair must emit replay-stable evidence for verifier review.
+"""
+severity = "Medium"
+proof_status = "Unverified"
+
+[[rustrig]]
+name = "structure.decay"
+version = 1
+state_domains = ["structure"]
+mutation_authority = "declared-rustrig"
+mutation_changes = "canonical structure.decay state transition"
+
+[[rustrig.invariants.rule]]
+id = "INV-001"
+name = "Declared Mutation Safety"
+category = "Safety"
+description = """
+structure.decay must reject invalid preconditions before mutating canonical state.
+"""
+severity = "High"
+proof_status = "Unverified"
+
+[[rustrig.invariants.rule]]
+id = "INV-002"
+name = "State Integrity"
+category = "Integrity"
+description = """
+structure.decay must preserve unrelated state domains.
+"""
+severity = "Medium"
+proof_status = "Unverified"
+
+[[rustrig.invariants.rule]]
+id = "INV-003"
+name = "Continuity Trace"
+category = "Continuity"
+description = """
+structure.decay must emit replay-stable evidence for verifier review.
+"""
+severity = "Medium"
+proof_status = "Unverified"
+

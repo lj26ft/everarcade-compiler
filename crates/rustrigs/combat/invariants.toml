@@ -1,0 +1,37 @@
+[[rustrig]]
+name = "combat.attack"
+version = 1
+state_domains = ["combat"]
+mutation_authority = "declared-rustrig"
+mutation_changes = "canonical combat.attack state transition"
+
+[[rustrig.invariants.rule]]
+id = "INV-001"
+name = "Damage Bounds"
+category = "Safety"
+description = """
+Attack resolution cannot apply negative damage or exceed declared attack bounds.
+"""
+severity = "Critical"
+proof_status = "Property-Tested"
+
+[[rustrig.invariants.rule]]
+id = "INV-002"
+name = "Target Integrity"
+category = "Integrity"
+description = """
+Only the declared target combat state may be mutated by the attack.
+"""
+severity = "High"
+proof_status = "Property-Tested"
+
+[[rustrig.invariants.rule]]
+id = "INV-003"
+name = "Turn Ordering"
+category = "Ordering"
+description = """
+Attack effects follow deterministic action ordering.
+"""
+severity = "High"
+proof_status = "Property-Tested"
+
