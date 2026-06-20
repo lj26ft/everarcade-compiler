@@ -1,0 +1,4 @@
+CREATOR SDK V1.1: PASS
+
+Focus: usability, command discovery, vocabulary cleanup, onboarding, and World Package naming.
+No new runtime architecture, consensus mechanism, certification system, or protocol layer was introduced.

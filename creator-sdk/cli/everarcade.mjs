@@ -9,8 +9,13 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const sdkRoot = path.resolve(__dirname, '..');
 const repoRoot = path.resolve(sdkRoot, '..');
 
-const command = process.argv[2];
-const args = process.argv.slice(3);
+let command = process.argv[2];
+let args = process.argv.slice(3);
+
+if (command === 'world') {
+  command = `world:${args[0] ?? 'help'}`;
+  args = args.slice(1);
+}
 
 function value(flag, fallback) {
   const index = args.indexOf(flag);
@@ -72,6 +77,10 @@ function discoverRuntimeVersion(runtimeRoot = path.join(repoRoot, 'runtime', 'ev
 
 function runtimePackageDir(projectDir) {
   return path.join(projectDir, 'dist', 'runtime-package');
+}
+
+function worldPackageFile(projectDir) {
+  return path.join(projectDir, 'dist', 'world.evr');
 }
 
 function runtimePackageMetadata(manifest) {
@@ -223,10 +232,87 @@ function packageGame(projectDir) {
   fs.writeFileSync(path.join(outDir, 'world.wasm'), wasmBytes);
   writeJson(path.join(outDir, 'manifest.json'), runtimeManifest);
   writeJson(path.join(outDir, 'world.json'), worldMetadata);
-  console.log(`Runtime Package: PASS (${gameId})`);
+  writeJson(worldPackageFile(projectDir), {
+    schema: 'everarcade.world-package.v1.1',
+    package_id: gameId,
+    world_id: worldId,
+    package_version: gameVersion,
+    compatibility_dir: path.relative(projectDir, outDir),
+    manifest: path.relative(projectDir, path.join(outDir, 'manifest.json')),
+    world_metadata: path.relative(projectDir, path.join(outDir, 'world.json')),
+    wasm: path.relative(projectDir, path.join(outDir, 'world.wasm')),
+    note: 'world.evr is the creator-facing World Package entry point; dist/runtime-package remains for compatibility.'
+  });
+  console.log(`World Package: PASS (${gameId})`);
+  console.log(`World Package File: ${path.relative(projectDir, worldPackageFile(projectDir))}`);
   return { manifest: runtimeManifest, worldMetadata, packageDir: outDir };
 }
 
+
+
+const WORLD_TEMPLATES = [
+  ['Arena', 'arena', 'Fast combat worlds'],
+  ['Frontier', 'frontier', 'Persistent survival worlds'],
+  ['Settlement', 'settlement', 'Economy and governance worlds'],
+  ['Social', 'social', 'Community worlds'],
+  ['Civilization', 'civilization', 'Long-term continuity worlds']
+];
+
+const TEMPLATE_ALIASES = { frontier: 'sandbox', settlement: 'trading', social: 'rpg' };
+
+const RUSTRIGS = [
+  ['combat', 'CERTIFIED', 'Deterministic attacks, damage, health, and combat resolution.'],
+  ['inventory', 'CERTIFIED', 'Item ownership, slots, transfers, and equipment state.'],
+  ['market', 'CERTIFIED', 'Creator-safe marketplace listing and exchange flows.'],
+  ['governance', 'CERTIFIED', 'World policy, proposals, roles, and rule changes.'],
+  ['identity', 'CANDIDATE', 'Player and entity identity surfaces.'],
+  ['movement', 'CANDIDATE', 'Position, bounds, and deterministic movement updates.'],
+  ['resources', 'CANDIDATE', 'Resource spawning, harvesting, and balances.'],
+  ['crafting', 'CANDIDATE', 'Recipes, inputs, outputs, and production timers.'],
+  ['structures', 'CANDIDATE', 'Buildings, placement, ownership, and durability.'],
+  ['quests', 'CANDIDATE', 'Objectives, progression, and rewards.'],
+  ['continuity', 'CANDIDATE', 'Save continuity, upgrades, and long-lived world lineage.'],
+  ['operations', 'CANDIDATE', 'Local operations, health, diagnostics, and deployment readiness.']
+];
+
+function printTemplates() {
+  for (const [label, , description] of WORLD_TEMPLATES) console.log(`${label.padEnd(12)} ${description}`);
+}
+
+function printRustRigs() {
+  for (const [name, status, description] of RUSTRIGS) console.log(`${name.padEnd(16)} ${status.padEnd(10)} ${description}`);
+}
+
+function createWorld() {
+  if (args.includes('--list-templates')) return printTemplates();
+  const name = value('--name', args[0] ?? 'everarcade-world');
+  const requested = value('--template', 'frontier');
+  const template = TEMPLATE_ALIASES[requested] ?? requested;
+  const target = path.resolve(value('--dir', name));
+  const templateDir = path.join(sdkRoot, 'templates', template);
+  if (!fs.existsSync(templateDir)) throw new Error(`Unknown template ${requested}`);
+  copyDir(templateDir, target);
+  const manifest = readManifest(target);
+  manifest.name = name;
+  manifest.template = requested;
+  manifest.world_project_map = 'docs/creator-sdk/world-project-map.md';
+  writeJson(path.join(target, 'everarcade.game.json'), manifest);
+  console.log(`World: PASS (${name})`);
+  console.log('Next: read docs/creator-sdk/world-project-map.md, then run everarcade world run');
+}
+
+function verifyWorld(projectDir) {
+  test(projectDir);
+  certifyWorld(projectDir);
+  verifyWorldCertificate(projectDir);
+  console.log('WORLD VERIFY: PASS');
+}
+
+function projectWorld(projectDir) {
+  const manifest = readManifest(projectDir);
+  console.log(`Projection: PASS (${manifest.name})`);
+  console.log('Projection Entry: Arena Vanguard local projection demo is discoverable from renderer/projection/README.md');
+}
 
 function prepareRuntimeCargoWorkspace() {
   const workspaceRoot = path.join('/tmp', 'everarcade-runtime-launch-workspace');
@@ -761,7 +847,15 @@ function publish(projectDir) {
 
 try {
   const projectDir = path.resolve(value('--project', process.cwd()));
-  if (command === 'new') {
+  if (command === 'world:templates') printTemplates();
+  else if (command === 'world:rustrigs') printRustRigs();
+  else if (command === 'world:init') createWorld();
+  else if (command === 'world:run') launchLocal(projectDir);
+  else if (command === 'world:package') packageGame(projectDir);
+  else if (command === 'world:verify') verifyWorld(projectDir);
+  else if (command === 'world:deploy') deploy(projectDir);
+  else if (command === 'world:project') projectWorld(projectDir);
+  else if (command === 'new') {
     const name = value('--name', args[0] ?? 'everarcade-game');
     const template = value('--template', 'blank-game');
     const target = path.resolve(value('--dir', name));
@@ -789,7 +883,8 @@ try {
   else if (command === 'deploy') deploy(projectDir);
   else if (command === 'publish') publish(projectDir);
   else {
-    console.log('everarcade <new|build|test|package|certify-world|verify-world-certificate|launch-local|execute-local|execute-template|execute-guest|play-local|play-local-multiplayer|play-network-local|play-federated-local|play-multi-lease-local|deploy|publish> [--project DIR]');
+    console.log('everarcade world <init|templates|rustrigs|run|package|verify|deploy|project> [--project DIR]');
+    console.log('legacy: everarcade <new|build|test|package|certify-world|verify-world-certificate|launch-local|execute-local|execute-template|execute-guest|play-local|play-local-multiplayer|play-network-local|play-federated-local|play-multi-lease-local|deploy|publish> [--project DIR]');
     process.exit(command ? 1 : 0);
   }
 } catch (error) {

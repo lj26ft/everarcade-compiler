@@ -16,10 +16,11 @@ The current goal is clarity and local proof, not live multiplayer federation, pu
 
 You can:
 
-- create a local game from the Creator SDK;
-- build and validate its manifest;
-- package a local runtime bundle;
-- run a playable local Arena session;
+- create a local World from the Creator SDK;
+- discover World templates and RustRigs;
+- build and validate its metadata;
+- package a local World Package;
+- run a playable local World session;
 - inspect generated receipts, journals, state, transcript, and replay proof material;
 - use the documentation to understand which subsystems are alpha, experimental, scaffold, or planned.
 
@@ -39,25 +40,27 @@ Run the targeted developer onboarding validation:
 CARGO_BUILD_JOBS=1 bash scripts/validate_developer_onboarding.sh
 ```
 
-Manual local flow:
+Manual First World flow:
 
 ```bash
 TMPDIR="$(mktemp -d)"
-PROJECT="$TMPDIR/arena-demo"
-RUNTIME_ROOT="$TMPDIR/runtime-root"
+PROJECT="$TMPDIR/frontier-world"
 
-node creator-sdk/cli/everarcade.mjs new --template arena --name arena-demo --dir "$PROJECT"
-node creator-sdk/cli/everarcade.mjs build --project "$PROJECT"
-node creator-sdk/cli/everarcade.mjs test --project "$PROJECT"
-node creator-sdk/cli/everarcade.mjs package --project "$PROJECT"
-CARGO_BUILD_JOBS=1 node creator-sdk/cli/everarcade.mjs play-local --project "$PROJECT" --template arena --runtime-root "$RUNTIME_ROOT"
+node creator-sdk/cli/everarcade.mjs world templates
+node creator-sdk/cli/everarcade.mjs world rustrigs
+node creator-sdk/cli/everarcade.mjs world init --template frontier --name frontier-world --dir "$PROJECT"
+CARGO_BUILD_JOBS=1 node creator-sdk/cli/everarcade.mjs world run --project "$PROJECT"
+node creator-sdk/cli/everarcade.mjs world package --project "$PROJECT"
+node creator-sdk/cli/everarcade.mjs world verify --project "$PROJECT"
 ```
 
 Expected result:
 
 ```text
-Playable Local Game: PASS
+WORLD VERIFY: PASS
 ```
+
+Start with [`docs/first-world.md`](docs/first-world.md) and the generated project map in [`docs/creator-sdk/world-project-map.md`](docs/creator-sdk/world-project-map.md).
 
 ## Where are the docs?
 
