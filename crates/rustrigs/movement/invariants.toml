@@ -1,0 +1,37 @@
+[[rustrig]]
+name = "movement.move"
+version = 1
+state_domains = ["movement"]
+mutation_authority = "declared-rustrig"
+mutation_changes = "canonical movement.move state transition"
+
+[[rustrig.invariants.rule]]
+id = "INV-001"
+name = "Declared Mutation Safety"
+category = "Safety"
+description = """
+movement.move must reject invalid preconditions before mutating canonical state.
+"""
+severity = "High"
+proof_status = "Unverified"
+
+[[rustrig.invariants.rule]]
+id = "INV-002"
+name = "State Integrity"
+category = "Integrity"
+description = """
+movement.move must preserve unrelated state domains.
+"""
+severity = "Medium"
+proof_status = "Unverified"
+
+[[rustrig.invariants.rule]]
+id = "INV-003"
+name = "Continuity Trace"
+category = "Continuity"
+description = """
+movement.move must emit replay-stable evidence for verifier review.
+"""
+severity = "Medium"
+proof_status = "Unverified"
+

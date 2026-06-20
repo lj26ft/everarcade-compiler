@@ -1,0 +1,37 @@
+[[rustrig]]
+name = "governance.vote"
+version = 1
+state_domains = ["governance"]
+mutation_authority = "declared-rustrig"
+mutation_changes = "canonical governance.vote state transition"
+
+[[rustrig.invariants.rule]]
+id = "INV-001"
+name = "One Vote Per Authority"
+category = "Governance"
+description = """
+A voting authority cannot cast duplicate effective votes for one proposal.
+"""
+severity = "Critical"
+proof_status = "Property-Tested"
+
+[[rustrig.invariants.rule]]
+id = "INV-002"
+name = "Eligibility Authorization"
+category = "Authorization"
+description = """
+Only eligible authorities may vote.
+"""
+severity = "Critical"
+proof_status = "Property-Tested"
+
+[[rustrig.invariants.rule]]
+id = "INV-003"
+name = "Tally Continuity"
+category = "Continuity"
+description = """
+Vote tallies remain replay-stable across deterministic execution.
+"""
+severity = "High"
+proof_status = "Property-Tested"
+

@@ -1,0 +1,37 @@
+[[rustrig]]
+name = "inventory.transfer"
+version = 1
+state_domains = ["inventory", "ownership"]
+mutation_authority = "declared-rustrig"
+mutation_changes = "canonical inventory.transfer state transition"
+
+[[rustrig.invariants.rule]]
+id = "INV-001"
+name = "Conservation"
+category = "Conservation"
+description = """
+Transfers cannot create or destroy items.
+"""
+severity = "Critical"
+proof_status = "Property-Tested"
+
+[[rustrig.invariants.rule]]
+id = "INV-002"
+name = "No Overdraw"
+category = "Safety"
+description = """
+Sender inventory cannot become negative.
+"""
+severity = "Critical"
+proof_status = "Property-Tested"
+
+[[rustrig.invariants.rule]]
+id = "INV-003"
+name = "Owner Authorization"
+category = "Authorization"
+description = """
+Only the current owner may initiate transfer.
+"""
+severity = "High"
+proof_status = "Property-Tested"
+

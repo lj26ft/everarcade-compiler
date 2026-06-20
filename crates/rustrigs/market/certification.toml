@@ -1,0 +1,8 @@
+[[certification]]
+rustrig_name = "market.trade"
+maturity_status = "CERTIFIED"
+proof_tier = 2
+invariant_count = 3
+invariant_ids = ["INV-001", "INV-002", "INV-003"]
+independent_verifier_required = true
+

@@ -1,0 +1,6 @@
+[
+  {"mutation":"inventory.transfer","maturity":"CERTIFIED","invariants":["INV-001","INV-002","INV-003"],"proof_status":"Independent Review"},
+  {"mutation":"combat.attack","maturity":"CERTIFIED","invariants":["INV-001","INV-002","INV-003"],"proof_status":"Independent Review"},
+  {"mutation":"market.trade","maturity":"CERTIFIED","invariants":["INV-001","INV-002","INV-003"],"proof_status":"Independent Review"},
+  {"mutation":"governance.vote","maturity":"CERTIFIED","invariants":["INV-001","INV-002","INV-003"],"proof_status":"Independent Review"}
+]

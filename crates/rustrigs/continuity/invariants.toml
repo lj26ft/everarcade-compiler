@@ -1,0 +1,74 @@
+[[rustrig]]
+name = "continuity.advance"
+version = 1
+state_domains = ["continuity", "continuity"]
+mutation_authority = "declared-rustrig"
+mutation_changes = "canonical continuity.advance state transition"
+
+[[rustrig.invariants.rule]]
+id = "INV-001"
+name = "Declared Mutation Safety"
+category = "Safety"
+description = """
+continuity.advance must reject invalid preconditions before mutating canonical state.
+"""
+severity = "High"
+proof_status = "Unverified"
+
+[[rustrig.invariants.rule]]
+id = "INV-002"
+name = "State Integrity"
+category = "Integrity"
+description = """
+continuity.advance must preserve unrelated state domains.
+"""
+severity = "Medium"
+proof_status = "Unverified"
+
+[[rustrig.invariants.rule]]
+id = "INV-003"
+name = "Continuity Trace"
+category = "Continuity"
+description = """
+continuity.advance must emit replay-stable evidence for verifier review.
+"""
+severity = "Medium"
+proof_status = "Unverified"
+
+[[rustrig]]
+name = "continuity.record_event"
+version = 1
+state_domains = ["continuity", "continuity"]
+mutation_authority = "declared-rustrig"
+mutation_changes = "canonical continuity.record_event state transition"
+
+[[rustrig.invariants.rule]]
+id = "INV-001"
+name = "Declared Mutation Safety"
+category = "Safety"
+description = """
+continuity.record_event must reject invalid preconditions before mutating canonical state.
+"""
+severity = "High"
+proof_status = "Unverified"
+
+[[rustrig.invariants.rule]]
+id = "INV-002"
+name = "State Integrity"
+category = "Integrity"
+description = """
+continuity.record_event must preserve unrelated state domains.
+"""
+severity = "Medium"
+proof_status = "Unverified"
+
+[[rustrig.invariants.rule]]
+id = "INV-003"
+name = "Continuity Trace"
+category = "Continuity"
+description = """
+continuity.record_event must emit replay-stable evidence for verifier review.
+"""
+severity = "Medium"
+proof_status = "Unverified"
+

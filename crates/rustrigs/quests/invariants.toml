@@ -1,0 +1,74 @@
+[[rustrig]]
+name = "quest.start"
+version = 1
+state_domains = ["quest"]
+mutation_authority = "declared-rustrig"
+mutation_changes = "canonical quest.start state transition"
+
+[[rustrig.invariants.rule]]
+id = "INV-001"
+name = "Declared Mutation Safety"
+category = "Safety"
+description = """
+quest.start must reject invalid preconditions before mutating canonical state.
+"""
+severity = "High"
+proof_status = "Unverified"
+
+[[rustrig.invariants.rule]]
+id = "INV-002"
+name = "State Integrity"
+category = "Integrity"
+description = """
+quest.start must preserve unrelated state domains.
+"""
+severity = "Medium"
+proof_status = "Unverified"
+
+[[rustrig.invariants.rule]]
+id = "INV-003"
+name = "Continuity Trace"
+category = "Continuity"
+description = """
+quest.start must emit replay-stable evidence for verifier review.
+"""
+severity = "Medium"
+proof_status = "Unverified"
+
+[[rustrig]]
+name = "quest.complete"
+version = 1
+state_domains = ["quest"]
+mutation_authority = "declared-rustrig"
+mutation_changes = "canonical quest.complete state transition"
+
+[[rustrig.invariants.rule]]
+id = "INV-001"
+name = "Declared Mutation Safety"
+category = "Safety"
+description = """
+quest.complete must reject invalid preconditions before mutating canonical state.
+"""
+severity = "High"
+proof_status = "Unverified"
+
+[[rustrig.invariants.rule]]
+id = "INV-002"
+name = "State Integrity"
+category = "Integrity"
+description = """
+quest.complete must preserve unrelated state domains.
+"""
+severity = "Medium"
+proof_status = "Unverified"
+
+[[rustrig.invariants.rule]]
+id = "INV-003"
+name = "Continuity Trace"
+category = "Continuity"
+description = """
+quest.complete must emit replay-stable evidence for verifier review.
+"""
+severity = "Medium"
+proof_status = "Unverified"
+

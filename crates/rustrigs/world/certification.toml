@@ -1,0 +1,16 @@
+[[certification]]
+rustrig_name = "world.spawn"
+maturity_status = "CANDIDATE"
+proof_tier = 0
+invariant_count = 3
+invariant_ids = ["INV-001", "INV-002", "INV-003"]
+independent_verifier_required = false
+
+[[certification]]
+rustrig_name = "world.despawn"
+maturity_status = "CANDIDATE"
+proof_tier = 0
+invariant_count = 3
+invariant_ids = ["INV-001", "INV-002", "INV-003"]
+independent_verifier_required = false
+
