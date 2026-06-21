@@ -1,0 +1,41 @@
+{
+  "schema": "everarcade.hotpocket.arena-wrapper.v0.1.production-replay-oracle-v1.conformance.combat-events",
+  "fixtures": [
+    {
+      "fixture": "journal-001-basic-join-move",
+      "combat_events": []
+    },
+    {
+      "fixture": "journal-002-combat-attack",
+      "combat_events": [
+        {
+          "tick": 3,
+          "attacker": "alice",
+          "target": "bob",
+          "damage": 25,
+          "target_health": 75
+        }
+      ]
+    },
+    {
+      "fixture": "journal-003-score-and-replay",
+      "combat_events": []
+    },
+    {
+      "fixture": "journal-004-reject-invalid-input",
+      "combat_events": []
+    },
+    {
+      "fixture": "journal-005-continuity-chain",
+      "combat_events": [
+        {
+          "tick": 4,
+          "attacker": "alice",
+          "target": "bob",
+          "damage": 25,
+          "target_health": 75
+        }
+      ]
+    }
+  ]
+}
