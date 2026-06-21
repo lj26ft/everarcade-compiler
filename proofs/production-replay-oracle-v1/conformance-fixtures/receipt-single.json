@@ -12,7 +12,8 @@
     "state_before_hash": "dccbc8f1e044909ce5d1ea491d32f392f3b0b84a22d5347d6223454fd41449fc",
     "mutation": "player_joined",
     "state_root": "1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652",
-    "receipt_hash": "d62ed949a10a7c7ba0af23120f4621a389e971fea3d681ee0edceb25bf4d3e53",
+    "temp_receipt_hash": "8c87761cf22dd4c6eed656b901d5e18758742185cc413a237958e0f6a4a11397",
+    "receipt_hash": "09bd33dad18759e2720657aa22de6f717d2183f4cb46dd3e7d9b857af73ac477",
     "output": {
       "accepted": true,
       "action": "join",
@@ -30,14 +31,14 @@
       },
       "combat_events": [],
       "state_root": "1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652",
-      "receipt_root": "c5186d00637916c34aad4bbea770a85a49d8d5173db1f8a7160496749a68f1cb",
+      "receipt_root": "6681ad1bc8807365a510734d4e8c4810bbaf4e5d9453b16536499fc9c2e35400",
       "world_hash": "d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864",
-      "continuity_root": "aa4ec9a9ee7a559f601b1409da3edf0120e2a1015660e0b4e4721780bf6ac714"
+      "continuity_root": "93ec4ae76d76e67d5121a090c1db4e32547475ae218af82c6a6dce200fe759ec"
     },
-    "receipt_root": "c5186d00637916c34aad4bbea770a85a49d8d5173db1f8a7160496749a68f1cb",
+    "receipt_root": "6681ad1bc8807365a510734d4e8c4810bbaf4e5d9453b16536499fc9c2e35400",
     "world_hash": "d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864",
-    "continuity_root": "aa4ec9a9ee7a559f601b1409da3edf0120e2a1015660e0b4e4721780bf6ac714"
+    "continuity_root": "93ec4ae76d76e67d5121a090c1db4e32547475ae218af82c6a6dce200fe759ec"
   },
-  "receipt_hash": "d62ed949a10a7c7ba0af23120f4621a389e971fea3d681ee0edceb25bf4d3e53",
-  "receipt_root": "c5186d00637916c34aad4bbea770a85a49d8d5173db1f8a7160496749a68f1cb"
+  "receipt_hash": "09bd33dad18759e2720657aa22de6f717d2183f4cb46dd3e7d9b857af73ac477",
+  "receipt_root": "6681ad1bc8807365a510734d4e8c4810bbaf4e5d9453b16536499fc9c2e35400"
 }

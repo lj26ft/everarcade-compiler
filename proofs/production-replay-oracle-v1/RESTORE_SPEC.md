@@ -23,7 +23,7 @@ Given:
 - exported world snapshot
 - prior verified root set
 - checkpoint state
-- receipt history or receipt accumulator state
+- receipt accumulator state
 - continuity metadata
 
 Prove:
@@ -78,13 +78,51 @@ A restore fixture contains:
   "genesis_hash": "...",
   "journal_hash": "...",
   "snapshot_hash": "...",
-  "receipt_hashes": ["..."],
+  "receipt_accumulator": {
+    "final_receipt_hashes": ["..."],
+    "last_temp_receipt_hash": "..."
+  },
   "roots": { "state_root": "...", "receipt_root": "...", "world_hash": "...", "continuity_root": "...", "tick": 6 },
   "checkpoint_hash": "..."
 }
 ```
 
-`checkpoint_hash = sha256(canonical(checkpoint_without_checkpoint_hash))`. `receipt_hashes` is sufficient accumulator state for the v1 receipt-root construction because `receipt_root = sha256(canonical(receipt_hashes))`.
+`checkpoint_hash = sha256(canonical(checkpoint_without_checkpoint_hash))`.
+
+### Receipt Accumulator
+
+`receipt_accumulator` is authoritative recomputation state, not merely evidence. A restore verifier must derive `receipt_root` from this accumulator and must not consume a stored `receipt_root` as trusted input.
+
+Structure:
+
+```json
+{
+  "final_receipt_hashes": ["..."],
+  "last_temp_receipt_hash": "..."
+}
+```
+
+Field definitions:
+
+- `final_receipt_hashes`: canonical-order array of finalized receipt hashes for receipts strictly before the receipt currently being committed.
+- `last_temp_receipt_hash`: SHA-256 hash of the last receipt before its final `receipt_root`, `world_hash`, `continuity_root`, `output`, and final `receipt_hash` fields are attached.
+
+Canonical ordering:
+
+- `final_receipt_hashes` preserves replay sequence order.
+- `last_temp_receipt_hash` is paired with that ordered prefix as the final element under construction.
+
+Receipt root construction:
+
+```text
+receipt_root = sha256(canonical([final_receipt_hashes, last_temp_receipt_hash]))
+```
+
+Replay relationship:
+
+- During replay, each accepted action first produces a temporary receipt hash.
+- The receipt root for that action is computed from the prior finalized receipt hashes and the current temporary receipt hash.
+- The receipt is then finalized with the derived roots and final receipt hash for use as prior state by the next action.
 
 ## Restore bundle schema
 
@@ -108,7 +146,7 @@ A restore fixture contains:
 ## Root fields and required hashes
 
 - `world_hash = sha256(canonical({ tick, players, combat_events }))` from `TRANSITION_SPEC.md`.
-- `receipt_root = sha256(canonical(receipt_hashes))`.
+- `receipt_root = sha256(canonical([final_receipt_hashes, last_temp_receipt_hash]))` from `receipt_accumulator`.
 - `state_root = sha256(canonical(full ArenaState including commitments through the restored tick))`.
 - `continuity_root = sha256(canonical({ state_root, receipt_root, world_hash, tick }))`.
 - `snapshot_hash = sha256(canonical(snapshot_without_snapshot_hash))`.
@@ -122,8 +160,10 @@ A restore fixture contains:
 A restore verifier must fail if any of these occur:
 
 - snapshot `state_root` does not match independent replay or snapshot state
-- exported `receipt_root` does not match replayed receipt accumulator
+- exported `receipt_root` does not match the root derived from `receipt_accumulator`
 - restored `continuity_root` differs from exported continuity root
 - checkpoint binds to a different journal than the supplied journal
 - checkpoint or snapshot content is tampered without updating its declared hash
+- `last_temp_receipt_hash` is missing or incorrect
+- `receipt_accumulator` is tampered
 - `world_id`, tick, genesis hash, journal hash, checkpoint hash, or snapshot hash disagree across the fixture, checkpoint, snapshot, export bundle, and restore bundle
