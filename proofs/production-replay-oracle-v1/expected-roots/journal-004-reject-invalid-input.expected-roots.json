@@ -1,0 +1,10 @@
+{
+  "schema": "everarcade.hotpocket.arena-wrapper.v0.1.production-replay-oracle-v1.expected-roots",
+  "fixture": "journal-004-reject-invalid-input",
+  "state_root": "4206a706bc28461cef59b01a11ebe2f6e1f17820c3800b361ad044292118f42c",
+  "receipt_root": "0bfd798775891059834e4faf302026d17bbdf0cd14517abc7471290524e55ce0",
+  "continuity_root": "356cc37e280dbc5b44511bbd43a28a1ac0feff15bc006c662a11d5c342530f19",
+  "world_hash": "c31ff8ea5ece49583eb056c48d9a4e8412995151c71d918ada2afb895669abdf",
+  "tick": 2,
+  "journal_hash": "0f68bb996191c537a929558576ce384db534596b3c56d8872922a8bcedca316e"
+}

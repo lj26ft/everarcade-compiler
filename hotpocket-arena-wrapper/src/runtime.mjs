@@ -19,7 +19,7 @@ export function genesisState() { return clone(GENESIS); }
 export function validateEnvelope(input) {
   if (!input || typeof input !== 'object' || Array.isArray(input)) throw new Error('input must be a JSON object');
   const { action, player } = input;
-  if (!['join', 'move', 'attack', 'disconnect'].includes(action)) throw new Error(`unsupported action: ${action}`);
+  if (!['join', 'move', 'attack', 'score', 'disconnect'].includes(action)) throw new Error(`unsupported action: ${action}`);
   if (typeof player !== 'string' || player.length === 0) throw new Error(`${action} requires player`);
   if (action === 'move') {
     if (!Object.prototype.hasOwnProperty.call(DIRECTIONS, input.direction)) throw new Error('move requires direction north|south|east|west');
@@ -28,6 +28,10 @@ export function validateEnvelope(input) {
   if (action === 'attack') {
     if (typeof input.target !== 'string' || input.target.length === 0) throw new Error('attack requires target');
     return { action, player, target: input.target };
+  }
+  if (action === 'score') {
+    if (!Number.isSafeInteger(input.delta)) throw new Error('score requires integer delta');
+    return { action, delta: input.delta, player };
   }
   return { action, player };
 }
@@ -58,6 +62,11 @@ export function applyArenaInput(state, envelope, tickOverride) {
     const event = { tick: tickOverride ?? after.tick + 1, attacker: action.player, target: action.target, damage: 25, target_health: target.health };
     after.combat_events.push(event);
     mutation = 'player_attacked';
+  }
+  if (action.action === 'score') {
+    if (!player.connected) throw new Error(`cannot score disconnected player: ${action.player}`);
+    player.score += action.delta;
+    mutation = 'player_scored';
   }
   after.tick = tickOverride ?? after.tick + 1;
   after.last_sequence[action.player] = after.tick;

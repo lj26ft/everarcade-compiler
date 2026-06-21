@@ -1,0 +1,12 @@
+{
+  "schema": "everarcade.hotpocket.arena-wrapper.v0.1.production-replay-oracle-v1.genesis",
+  "fixture": "journal-005-continuity-chain",
+  "state": {
+    "tick": 0,
+    "players": {},
+    "combat_events": [],
+    "last_sequence": {},
+    "commitments": []
+  },
+  "genesis_hash": "dccbc8f1e044909ce5d1ea491d32f392f3b0b84a22d5347d6223454fd41449fc"
+}
