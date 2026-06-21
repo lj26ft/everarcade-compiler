@@ -1,0 +1,5 @@
+Restore Harness Report
+Status: PASS
+Command: cargo test restore_harness
+Packaged artifacts: checkpoint, restore input, expected state root, expected continuity root.
+Success marker: RESTORE VERIFIED

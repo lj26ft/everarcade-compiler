@@ -1,0 +1,5 @@
+Replay Harness Report
+Status: PASS
+Command: cargo test replay_harness
+Packaged artifacts: inputs, journal, expected state root, expected world hash, expected continuity root.
+Success marker: REPLAY VERIFIED

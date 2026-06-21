@@ -1,0 +1,5 @@
+Federation Harness Report
+Status: PASS
+Command: cargo test federation_harness
+Packaged artifacts: world A, world B, cross-world operation, expected commitments, expected roots.
+Success marker: FEDERATION VERIFIED

@@ -1,0 +1,6 @@
+Migration Harness Report
+Status: PASS
+Command: cargo test migration_harness
+Packaged artifacts: source world, destination world, migration inputs, expected roots.
+Checks: source root preserved; destination root matches; continuity preserved.
+Success marker: MIGRATION VERIFIED

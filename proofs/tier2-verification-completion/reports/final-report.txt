@@ -1,0 +1,25 @@
+Tier-2 Verification Completion Pack v1
+
+Scope reproduced from the standalone proof repository:
+- Determinism
+- Canonicalization
+- Replay
+- Restore
+- Migration
+- Federation
+- JS ↔ Rust Equivalence
+
+Packaging requirements:
+- kernel/: present
+- fixtures/: present
+- harnesses/: present
+- certification/: present
+- rustrig-standard-library/: present
+- Cargo.lock: committed; dependency graph pinned for verification reproducibility
+- Hidden monorepo dependency: none
+
+Verifier entrypoint:
+- docs/verifier-walkthrough.md
+- docs/verification-matrix.md
+
+TIER-2 VERIFICATION COMPLETION PACK V1: PASS

@@ -1,0 +1,14 @@
+[package]
+name = "everarcade-tier2-proof"
+version = "0.1.0"
+edition = "2021"
+description = "Standalone Tier-2 verification completion harnesses for EverArcade proof reproduction"
+
+[lib]
+path = "kernel/src/lib.rs"
+
+[[test]]
+name = "tier2_harnesses"
+path = "harnesses/tier2_harnesses.rs"
+
+[workspace]
