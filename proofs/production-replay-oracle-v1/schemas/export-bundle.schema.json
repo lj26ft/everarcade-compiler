@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://everarcade.example/schemas/export-bundle.schema.json",
+  "title": "EverArcade Tier2 Export Bundle v1",
+  "type": "object",
+  "required": ["schema", "world_id", "export_sequence", "source_operator", "source_instance", "export_tick", "genesis_hash", "journal_hash", "checkpoint_hash", "snapshot_hash", "receipt_root", "state_root", "world_hash", "continuity_root", "export_hash"],
+  "additionalProperties": false,
+  "properties": {
+    "schema": { "const": "everarcade.hotpocket.arena-wrapper.v0.1.export-bundle-v1" },
+    "world_id": { "type": "string", "minLength": 1 },
+    "export_sequence": { "type": "integer", "minimum": 1 },
+    "source_operator": { "type": "string", "minLength": 1 },
+    "source_instance": { "type": "string", "minLength": 1 },
+    "export_tick": { "type": "integer", "minimum": 0 },
+    "genesis_hash": { "$ref": "#/$defs/sha256" },
+    "journal_hash": { "$ref": "#/$defs/sha256" },
+    "checkpoint_hash": { "$ref": "#/$defs/sha256" },
+    "snapshot_hash": { "$ref": "#/$defs/sha256" },
+    "receipt_root": { "$ref": "#/$defs/sha256" },
+    "state_root": { "$ref": "#/$defs/sha256" },
+    "world_hash": { "$ref": "#/$defs/sha256" },
+    "continuity_root": { "$ref": "#/$defs/sha256" },
+    "package_identity": {
+      "type": "object",
+      "additionalProperties": { "type": ["string", "number", "boolean", "null"] }
+    },
+    "export_hash": { "$ref": "#/$defs/sha256" }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+  }
+}
