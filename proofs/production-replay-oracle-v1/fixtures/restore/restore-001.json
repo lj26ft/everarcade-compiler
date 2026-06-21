@@ -1,0 +1,922 @@
+{
+  "schema": "everarcade.hotpocket.arena-wrapper.v0.1.restore-fixture-v1",
+  "fixture": "restore-001",
+  "genesis": {
+    "schema": "everarcade.hotpocket.arena-wrapper.v0.1.production-replay-oracle-v1.genesis",
+    "fixture": "journal-005-continuity-chain",
+    "state": {
+      "tick": 0,
+      "players": {},
+      "combat_events": [],
+      "last_sequence": {},
+      "commitments": []
+    },
+    "genesis_hash": "dccbc8f1e044909ce5d1ea491d32f392f3b0b84a22d5347d6223454fd41449fc"
+  },
+  "journal": {
+    "schema": "everarcade.hotpocket.arena-wrapper.v0.1.production-replay-oracle-v1.journal",
+    "fixture": "journal-005-continuity-chain",
+    "generated_by": "ArenaHotPocketRuntime.process",
+    "hash_algorithm": "sha256",
+    "canonicalizer": "hotpocket-arena-wrapper/src/runtime.mjs canonicalize/canonicalHash",
+    "genesis_hash": "dccbc8f1e044909ce5d1ea491d32f392f3b0b84a22d5347d6223454fd41449fc",
+    "entries": [
+      {
+        "schema": "everarcade.hotpocket.arena-wrapper.v0.1.journal-entry",
+        "execution_id": "arena-hotpocket-000001",
+        "sequence": 1,
+        "round": 1,
+        "canonical_input": "{\"action\":\"join\",\"player\":\"alice\"}",
+        "canonical_state_before": "{\"combat_events\":[],\"commitments\":[],\"last_sequence\":{},\"players\":{},\"tick\":0}",
+        "canonical_state_after": "{\"combat_events\":[],\"commitments\":[{\"continuity_root\":\"aa4ec9a9ee7a559f601b1409da3edf0120e2a1015660e0b4e4721780bf6ac714\",\"receipt_root\":\"c5186d00637916c34aad4bbea770a85a49d8d5173db1f8a7160496749a68f1cb\",\"state_root\":\"1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652\",\"tick\":1,\"world_hash\":\"d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864\"}],\"last_sequence\":{\"alice\":1},\"players\":{\"alice\":{\"connected\":true,\"health\":100,\"id\":\"alice\",\"score\":0,\"x\":0,\"y\":0}},\"tick\":1}",
+        "action": {
+          "action": "join",
+          "player": "alice"
+        },
+        "state_before": {
+          "tick": 0,
+          "players": {},
+          "combat_events": [],
+          "last_sequence": {},
+          "commitments": []
+        },
+        "state_after": {
+          "tick": 1,
+          "players": {
+            "alice": {
+              "id": "alice",
+              "x": 0,
+              "y": 0,
+              "health": 100,
+              "connected": true,
+              "score": 0
+            }
+          },
+          "combat_events": [],
+          "last_sequence": {
+            "alice": 1
+          },
+          "commitments": [
+            {
+              "tick": 1,
+              "state_root": "1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652",
+              "receipt_root": "c5186d00637916c34aad4bbea770a85a49d8d5173db1f8a7160496749a68f1cb",
+              "world_hash": "d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864",
+              "continuity_root": "aa4ec9a9ee7a559f601b1409da3edf0120e2a1015660e0b4e4721780bf6ac714"
+            }
+          ]
+        },
+        "action_hash": "6a8582f3f8646890ec696183f7b04fd73f8dea1a600233ea7bd5fbcca7588daa",
+        "receipt_hash": "d62ed949a10a7c7ba0af23120f4621a389e971fea3d681ee0edceb25bf4d3e53",
+        "mutation": "player_joined",
+        "tick": 1,
+        "state_root": "1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652",
+        "receipt_root": "c5186d00637916c34aad4bbea770a85a49d8d5173db1f8a7160496749a68f1cb",
+        "world_hash": "d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864",
+        "continuity_root": "aa4ec9a9ee7a559f601b1409da3edf0120e2a1015660e0b4e4721780bf6ac714",
+        "journal_hash": "d1f92ce90a515fdeb19b490dd0e2ea480758d1069cb3e52e137259a1b561c002"
+      },
+      {
+        "schema": "everarcade.hotpocket.arena-wrapper.v0.1.journal-entry",
+        "execution_id": "arena-hotpocket-000002",
+        "sequence": 2,
+        "round": 2,
+        "canonical_input": "{\"action\":\"join\",\"player\":\"bob\"}",
+        "canonical_state_before": "{\"combat_events\":[],\"commitments\":[{\"continuity_root\":\"aa4ec9a9ee7a559f601b1409da3edf0120e2a1015660e0b4e4721780bf6ac714\",\"receipt_root\":\"c5186d00637916c34aad4bbea770a85a49d8d5173db1f8a7160496749a68f1cb\",\"state_root\":\"1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652\",\"tick\":1,\"world_hash\":\"d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864\"}],\"last_sequence\":{\"alice\":1},\"players\":{\"alice\":{\"connected\":true,\"health\":100,\"id\":\"alice\",\"score\":0,\"x\":0,\"y\":0}},\"tick\":1}",
+        "canonical_state_after": "{\"combat_events\":[],\"commitments\":[{\"continuity_root\":\"aa4ec9a9ee7a559f601b1409da3edf0120e2a1015660e0b4e4721780bf6ac714\",\"receipt_root\":\"c5186d00637916c34aad4bbea770a85a49d8d5173db1f8a7160496749a68f1cb\",\"state_root\":\"1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652\",\"tick\":1,\"world_hash\":\"d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864\"},{\"continuity_root\":\"0024230fcb335d7770f25e2b87328496a8b9cc0f05d2cd608f68d6d8a1179aba\",\"receipt_root\":\"055997e166102339794543be3c86dfc5ae667994e4be9519ef7d3c084ca657ba\",\"state_root\":\"26fad3c0b81c4991bc1419185c76c5109319e4014aeb5786d24ee55010892710\",\"tick\":2,\"world_hash\":\"db0511d699e264d401eca5714cde0a8b494d42f4a11d0f910c8a9b7685c30287\"}],\"last_sequence\":{\"alice\":1,\"bob\":2},\"players\":{\"alice\":{\"connected\":true,\"health\":100,\"id\":\"alice\",\"score\":0,\"x\":0,\"y\":0},\"bob\":{\"connected\":true,\"health\":100,\"id\":\"bob\",\"score\":0,\"x\":0,\"y\":0}},\"tick\":2}",
+        "action": {
+          "action": "join",
+          "player": "bob"
+        },
+        "state_before": {
+          "tick": 1,
+          "players": {
+            "alice": {
+              "id": "alice",
+              "x": 0,
+              "y": 0,
+              "health": 100,
+              "connected": true,
+              "score": 0
+            }
+          },
+          "combat_events": [],
+          "last_sequence": {
+            "alice": 1
+          },
+          "commitments": [
+            {
+              "tick": 1,
+              "state_root": "1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652",
+              "receipt_root": "c5186d00637916c34aad4bbea770a85a49d8d5173db1f8a7160496749a68f1cb",
+              "world_hash": "d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864",
+              "continuity_root": "aa4ec9a9ee7a559f601b1409da3edf0120e2a1015660e0b4e4721780bf6ac714"
+            }
+          ]
+        },
+        "state_after": {
+          "tick": 2,
+          "players": {
+            "alice": {
+              "id": "alice",
+              "x": 0,
+              "y": 0,
+              "health": 100,
+              "connected": true,
+              "score": 0
+            },
+            "bob": {
+              "id": "bob",
+              "x": 0,
+              "y": 0,
+              "health": 100,
+              "connected": true,
+              "score": 0
+            }
+          },
+          "combat_events": [],
+          "last_sequence": {
+            "alice": 1,
+            "bob": 2
+          },
+          "commitments": [
+            {
+              "tick": 1,
+              "state_root": "1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652",
+              "receipt_root": "c5186d00637916c34aad4bbea770a85a49d8d5173db1f8a7160496749a68f1cb",
+              "world_hash": "d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864",
+              "continuity_root": "aa4ec9a9ee7a559f601b1409da3edf0120e2a1015660e0b4e4721780bf6ac714"
+            },
+            {
+              "tick": 2,
+              "state_root": "26fad3c0b81c4991bc1419185c76c5109319e4014aeb5786d24ee55010892710",
+              "receipt_root": "055997e166102339794543be3c86dfc5ae667994e4be9519ef7d3c084ca657ba",
+              "world_hash": "db0511d699e264d401eca5714cde0a8b494d42f4a11d0f910c8a9b7685c30287",
+              "continuity_root": "0024230fcb335d7770f25e2b87328496a8b9cc0f05d2cd608f68d6d8a1179aba"
+            }
+          ]
+        },
+        "action_hash": "71f75f8c41dc4f1c1c05667c23b02dfd29e835c19988f02213ac733046105517",
+        "receipt_hash": "eacfa57f80e70a175f422c9850a2baa1c6bb3166087e0d206983b8ae7e449720",
+        "mutation": "player_joined",
+        "tick": 2,
+        "state_root": "26fad3c0b81c4991bc1419185c76c5109319e4014aeb5786d24ee55010892710",
+        "receipt_root": "055997e166102339794543be3c86dfc5ae667994e4be9519ef7d3c084ca657ba",
+        "world_hash": "db0511d699e264d401eca5714cde0a8b494d42f4a11d0f910c8a9b7685c30287",
+        "continuity_root": "0024230fcb335d7770f25e2b87328496a8b9cc0f05d2cd608f68d6d8a1179aba",
+        "journal_hash": "9e4ece06515d23c6f49a1fc098272feb47c6475b5ef8c377b92bbd8e4a347052"
+      },
+      {
+        "schema": "everarcade.hotpocket.arena-wrapper.v0.1.journal-entry",
+        "execution_id": "arena-hotpocket-000003",
+        "sequence": 3,
+        "round": 3,
+        "canonical_input": "{\"action\":\"move\",\"direction\":\"east\",\"player\":\"alice\"}",
+        "canonical_state_before": "{\"combat_events\":[],\"commitments\":[{\"continuity_root\":\"aa4ec9a9ee7a559f601b1409da3edf0120e2a1015660e0b4e4721780bf6ac714\",\"receipt_root\":\"c5186d00637916c34aad4bbea770a85a49d8d5173db1f8a7160496749a68f1cb\",\"state_root\":\"1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652\",\"tick\":1,\"world_hash\":\"d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864\"},{\"continuity_root\":\"0024230fcb335d7770f25e2b87328496a8b9cc0f05d2cd608f68d6d8a1179aba\",\"receipt_root\":\"055997e166102339794543be3c86dfc5ae667994e4be9519ef7d3c084ca657ba\",\"state_root\":\"26fad3c0b81c4991bc1419185c76c5109319e4014aeb5786d24ee55010892710\",\"tick\":2,\"world_hash\":\"db0511d699e264d401eca5714cde0a8b494d42f4a11d0f910c8a9b7685c30287\"}],\"last_sequence\":{\"alice\":1,\"bob\":2},\"players\":{\"alice\":{\"connected\":true,\"health\":100,\"id\":\"alice\",\"score\":0,\"x\":0,\"y\":0},\"bob\":{\"connected\":true,\"health\":100,\"id\":\"bob\",\"score\":0,\"x\":0,\"y\":0}},\"tick\":2}",
+        "canonical_state_after": "{\"combat_events\":[],\"commitments\":[{\"continuity_root\":\"aa4ec9a9ee7a559f601b1409da3edf0120e2a1015660e0b4e4721780bf6ac714\",\"receipt_root\":\"c5186d00637916c34aad4bbea770a85a49d8d5173db1f8a7160496749a68f1cb\",\"state_root\":\"1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652\",\"tick\":1,\"world_hash\":\"d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864\"},{\"continuity_root\":\"0024230fcb335d7770f25e2b87328496a8b9cc0f05d2cd608f68d6d8a1179aba\",\"receipt_root\":\"055997e166102339794543be3c86dfc5ae667994e4be9519ef7d3c084ca657ba\",\"state_root\":\"26fad3c0b81c4991bc1419185c76c5109319e4014aeb5786d24ee55010892710\",\"tick\":2,\"world_hash\":\"db0511d699e264d401eca5714cde0a8b494d42f4a11d0f910c8a9b7685c30287\"},{\"continuity_root\":\"0533549f7d3fe5bc7d63e71f2bbfcf03b8529488a452b2af7b3fb5b65c8f90eb\",\"receipt_root\":\"2ca956a7ef62f98a187515a1e2749e93bc6c162df966fa173854c03948c98f93\",\"state_root\":\"e5193757e1d843a8129b347fcd631fd2f74f1034239fcb80ff513fa95ed622e7\",\"tick\":3,\"world_hash\":\"c719aad740497b96e57c99674368349e9ec393e4347b70975cc09731b2a1acb2\"}],\"last_sequence\":{\"alice\":3,\"bob\":2},\"players\":{\"alice\":{\"connected\":true,\"health\":100,\"id\":\"alice\",\"score\":0,\"x\":1,\"y\":0},\"bob\":{\"connected\":true,\"health\":100,\"id\":\"bob\",\"score\":0,\"x\":0,\"y\":0}},\"tick\":3}",
+        "action": {
+          "action": "move",
+          "direction": "east",
+          "player": "alice"
+        },
+        "state_before": {
+          "tick": 2,
+          "players": {
+            "alice": {
+              "id": "alice",
+              "x": 0,
+              "y": 0,
+              "health": 100,
+              "connected": true,
+              "score": 0
+            },
+            "bob": {
+              "id": "bob",
+              "x": 0,
+              "y": 0,
+              "health": 100,
+              "connected": true,
+              "score": 0
+            }
+          },
+          "combat_events": [],
+          "last_sequence": {
+            "alice": 1,
+            "bob": 2
+          },
+          "commitments": [
+            {
+              "tick": 1,
+              "state_root": "1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652",
+              "receipt_root": "c5186d00637916c34aad4bbea770a85a49d8d5173db1f8a7160496749a68f1cb",
+              "world_hash": "d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864",
+              "continuity_root": "aa4ec9a9ee7a559f601b1409da3edf0120e2a1015660e0b4e4721780bf6ac714"
+            },
+            {
+              "tick": 2,
+              "state_root": "26fad3c0b81c4991bc1419185c76c5109319e4014aeb5786d24ee55010892710",
+              "receipt_root": "055997e166102339794543be3c86dfc5ae667994e4be9519ef7d3c084ca657ba",
+              "world_hash": "db0511d699e264d401eca5714cde0a8b494d42f4a11d0f910c8a9b7685c30287",
+              "continuity_root": "0024230fcb335d7770f25e2b87328496a8b9cc0f05d2cd608f68d6d8a1179aba"
+            }
+          ]
+        },
+        "state_after": {
+          "tick": 3,
+          "players": {
+            "alice": {
+              "id": "alice",
+              "x": 1,
+              "y": 0,
+              "health": 100,
+              "connected": true,
+              "score": 0
+            },
+            "bob": {
+              "id": "bob",
+              "x": 0,
+              "y": 0,
+              "health": 100,
+              "connected": true,
+              "score": 0
+            }
+          },
+          "combat_events": [],
+          "last_sequence": {
+            "alice": 3,
+            "bob": 2
+          },
+          "commitments": [
+            {
+              "tick": 1,
+              "state_root": "1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652",
+              "receipt_root": "c5186d00637916c34aad4bbea770a85a49d8d5173db1f8a7160496749a68f1cb",
+              "world_hash": "d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864",
+              "continuity_root": "aa4ec9a9ee7a559f601b1409da3edf0120e2a1015660e0b4e4721780bf6ac714"
+            },
+            {
+              "tick": 2,
+              "state_root": "26fad3c0b81c4991bc1419185c76c5109319e4014aeb5786d24ee55010892710",
+              "receipt_root": "055997e166102339794543be3c86dfc5ae667994e4be9519ef7d3c084ca657ba",
+              "world_hash": "db0511d699e264d401eca5714cde0a8b494d42f4a11d0f910c8a9b7685c30287",
+              "continuity_root": "0024230fcb335d7770f25e2b87328496a8b9cc0f05d2cd608f68d6d8a1179aba"
+            },
+            {
+              "tick": 3,
+              "state_root": "e5193757e1d843a8129b347fcd631fd2f74f1034239fcb80ff513fa95ed622e7",
+              "receipt_root": "2ca956a7ef62f98a187515a1e2749e93bc6c162df966fa173854c03948c98f93",
+              "world_hash": "c719aad740497b96e57c99674368349e9ec393e4347b70975cc09731b2a1acb2",
+              "continuity_root": "0533549f7d3fe5bc7d63e71f2bbfcf03b8529488a452b2af7b3fb5b65c8f90eb"
+            }
+          ]
+        },
+        "action_hash": "cb24b1c1df1a399b1d796d885701b7b4f31eb88952b35cbac4c909376d877851",
+        "receipt_hash": "bdd563bdd3b6b17c08d5f26a24d45143aa8b75623134343e52d67b65da99954f",
+        "mutation": "player_moved",
+        "tick": 3,
+        "state_root": "e5193757e1d843a8129b347fcd631fd2f74f1034239fcb80ff513fa95ed622e7",
+        "receipt_root": "2ca956a7ef62f98a187515a1e2749e93bc6c162df966fa173854c03948c98f93",
+        "world_hash": "c719aad740497b96e57c99674368349e9ec393e4347b70975cc09731b2a1acb2",
+        "continuity_root": "0533549f7d3fe5bc7d63e71f2bbfcf03b8529488a452b2af7b3fb5b65c8f90eb",
+        "journal_hash": "8e8b2dcb9bf8c83ce1febae3374d7c8d1ed7a93a9720f88c288284fd055e9757"
+      },
+      {
+        "schema": "everarcade.hotpocket.arena-wrapper.v0.1.journal-entry",
+        "execution_id": "arena-hotpocket-000004",
+        "sequence": 4,
+        "round": 4,
+        "canonical_input": "{\"action\":\"attack\",\"player\":\"alice\",\"target\":\"bob\"}",
+        "canonical_state_before": "{\"combat_events\":[],\"commitments\":[{\"continuity_root\":\"aa4ec9a9ee7a559f601b1409da3edf0120e2a1015660e0b4e4721780bf6ac714\",\"receipt_root\":\"c5186d00637916c34aad4bbea770a85a49d8d5173db1f8a7160496749a68f1cb\",\"state_root\":\"1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652\",\"tick\":1,\"world_hash\":\"d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864\"},{\"continuity_root\":\"0024230fcb335d7770f25e2b87328496a8b9cc0f05d2cd608f68d6d8a1179aba\",\"receipt_root\":\"055997e166102339794543be3c86dfc5ae667994e4be9519ef7d3c084ca657ba\",\"state_root\":\"26fad3c0b81c4991bc1419185c76c5109319e4014aeb5786d24ee55010892710\",\"tick\":2,\"world_hash\":\"db0511d699e264d401eca5714cde0a8b494d42f4a11d0f910c8a9b7685c30287\"},{\"continuity_root\":\"0533549f7d3fe5bc7d63e71f2bbfcf03b8529488a452b2af7b3fb5b65c8f90eb\",\"receipt_root\":\"2ca956a7ef62f98a187515a1e2749e93bc6c162df966fa173854c03948c98f93\",\"state_root\":\"e5193757e1d843a8129b347fcd631fd2f74f1034239fcb80ff513fa95ed622e7\",\"tick\":3,\"world_hash\":\"c719aad740497b96e57c99674368349e9ec393e4347b70975cc09731b2a1acb2\"}],\"last_sequence\":{\"alice\":3,\"bob\":2},\"players\":{\"alice\":{\"connected\":true,\"health\":100,\"id\":\"alice\",\"score\":0,\"x\":1,\"y\":0},\"bob\":{\"connected\":true,\"health\":100,\"id\":\"bob\",\"score\":0,\"x\":0,\"y\":0}},\"tick\":3}",
+        "canonical_state_after": "{\"combat_events\":[{\"attacker\":\"alice\",\"damage\":25,\"target\":\"bob\",\"target_health\":75,\"tick\":4}],\"commitments\":[{\"continuity_root\":\"aa4ec9a9ee7a559f601b1409da3edf0120e2a1015660e0b4e4721780bf6ac714\",\"receipt_root\":\"c5186d00637916c34aad4bbea770a85a49d8d5173db1f8a7160496749a68f1cb\",\"state_root\":\"1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652\",\"tick\":1,\"world_hash\":\"d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864\"},{\"continuity_root\":\"0024230fcb335d7770f25e2b87328496a8b9cc0f05d2cd608f68d6d8a1179aba\",\"receipt_root\":\"055997e166102339794543be3c86dfc5ae667994e4be9519ef7d3c084ca657ba\",\"state_root\":\"26fad3c0b81c4991bc1419185c76c5109319e4014aeb5786d24ee55010892710\",\"tick\":2,\"world_hash\":\"db0511d699e264d401eca5714cde0a8b494d42f4a11d0f910c8a9b7685c30287\"},{\"continuity_root\":\"0533549f7d3fe5bc7d63e71f2bbfcf03b8529488a452b2af7b3fb5b65c8f90eb\",\"receipt_root\":\"2ca956a7ef62f98a187515a1e2749e93bc6c162df966fa173854c03948c98f93\",\"state_root\":\"e5193757e1d843a8129b347fcd631fd2f74f1034239fcb80ff513fa95ed622e7\",\"tick\":3,\"world_hash\":\"c719aad740497b96e57c99674368349e9ec393e4347b70975cc09731b2a1acb2\"},{\"continuity_root\":\"45522cdaf0c8ee93177ddd7d0bff3b9ce1fa13872c5323fd41b5d66c48bf3604\",\"receipt_root\":\"bf5e5ca3d43be5d622d8f48cfde13a5085f6c91c418596b4f3eb9efb2bb36bc5\",\"state_root\":\"24fab5a85bb2c61866bc26463757fdff0a82d3eb160dda5d2de2f55ae15ff55f\",\"tick\":4,\"world_hash\":\"e974e913a98f7ad3031c9356c705ee93f0d5cda615d830c8c0496940b39c2d87\"}],\"last_sequence\":{\"alice\":4,\"bob\":2},\"players\":{\"alice\":{\"connected\":true,\"health\":100,\"id\":\"alice\",\"score\":10,\"x\":1,\"y\":0},\"bob\":{\"connected\":true,\"health\":75,\"id\":\"bob\",\"score\":0,\"x\":0,\"y\":0}},\"tick\":4}",
+        "action": {
+          "action": "attack",
+          "player": "alice",
+          "target": "bob"
+        },
+        "state_before": {
+          "tick": 3,
+          "players": {
+            "alice": {
+              "id": "alice",
+              "x": 1,
+              "y": 0,
+              "health": 100,
+              "connected": true,
+              "score": 0
+            },
+            "bob": {
+              "id": "bob",
+              "x": 0,
+              "y": 0,
+              "health": 100,
+              "connected": true,
+              "score": 0
+            }
+          },
+          "combat_events": [],
+          "last_sequence": {
+            "alice": 3,
+            "bob": 2
+          },
+          "commitments": [
+            {
+              "tick": 1,
+              "state_root": "1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652",
+              "receipt_root": "c5186d00637916c34aad4bbea770a85a49d8d5173db1f8a7160496749a68f1cb",
+              "world_hash": "d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864",
+              "continuity_root": "aa4ec9a9ee7a559f601b1409da3edf0120e2a1015660e0b4e4721780bf6ac714"
+            },
+            {
+              "tick": 2,
+              "state_root": "26fad3c0b81c4991bc1419185c76c5109319e4014aeb5786d24ee55010892710",
+              "receipt_root": "055997e166102339794543be3c86dfc5ae667994e4be9519ef7d3c084ca657ba",
+              "world_hash": "db0511d699e264d401eca5714cde0a8b494d42f4a11d0f910c8a9b7685c30287",
+              "continuity_root": "0024230fcb335d7770f25e2b87328496a8b9cc0f05d2cd608f68d6d8a1179aba"
+            },
+            {
+              "tick": 3,
+              "state_root": "e5193757e1d843a8129b347fcd631fd2f74f1034239fcb80ff513fa95ed622e7",
+              "receipt_root": "2ca956a7ef62f98a187515a1e2749e93bc6c162df966fa173854c03948c98f93",
+              "world_hash": "c719aad740497b96e57c99674368349e9ec393e4347b70975cc09731b2a1acb2",
+              "continuity_root": "0533549f7d3fe5bc7d63e71f2bbfcf03b8529488a452b2af7b3fb5b65c8f90eb"
+            }
+          ]
+        },
+        "state_after": {
+          "tick": 4,
+          "players": {
+            "alice": {
+              "id": "alice",
+              "x": 1,
+              "y": 0,
+              "health": 100,
+              "connected": true,
+              "score": 10
+            },
+            "bob": {
+              "id": "bob",
+              "x": 0,
+              "y": 0,
+              "health": 75,
+              "connected": true,
+              "score": 0
+            }
+          },
+          "combat_events": [
+            {
+              "tick": 4,
+              "attacker": "alice",
+              "target": "bob",
+              "damage": 25,
+              "target_health": 75
+            }
+          ],
+          "last_sequence": {
+            "alice": 4,
+            "bob": 2
+          },
+          "commitments": [
+            {
+              "tick": 1,
+              "state_root": "1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652",
+              "receipt_root": "c5186d00637916c34aad4bbea770a85a49d8d5173db1f8a7160496749a68f1cb",
+              "world_hash": "d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864",
+              "continuity_root": "aa4ec9a9ee7a559f601b1409da3edf0120e2a1015660e0b4e4721780bf6ac714"
+            },
+            {
+              "tick": 2,
+              "state_root": "26fad3c0b81c4991bc1419185c76c5109319e4014aeb5786d24ee55010892710",
+              "receipt_root": "055997e166102339794543be3c86dfc5ae667994e4be9519ef7d3c084ca657ba",
+              "world_hash": "db0511d699e264d401eca5714cde0a8b494d42f4a11d0f910c8a9b7685c30287",
+              "continuity_root": "0024230fcb335d7770f25e2b87328496a8b9cc0f05d2cd608f68d6d8a1179aba"
+            },
+            {
+              "tick": 3,
+              "state_root": "e5193757e1d843a8129b347fcd631fd2f74f1034239fcb80ff513fa95ed622e7",
+              "receipt_root": "2ca956a7ef62f98a187515a1e2749e93bc6c162df966fa173854c03948c98f93",
+              "world_hash": "c719aad740497b96e57c99674368349e9ec393e4347b70975cc09731b2a1acb2",
+              "continuity_root": "0533549f7d3fe5bc7d63e71f2bbfcf03b8529488a452b2af7b3fb5b65c8f90eb"
+            },
+            {
+              "tick": 4,
+              "state_root": "24fab5a85bb2c61866bc26463757fdff0a82d3eb160dda5d2de2f55ae15ff55f",
+              "receipt_root": "bf5e5ca3d43be5d622d8f48cfde13a5085f6c91c418596b4f3eb9efb2bb36bc5",
+              "world_hash": "e974e913a98f7ad3031c9356c705ee93f0d5cda615d830c8c0496940b39c2d87",
+              "continuity_root": "45522cdaf0c8ee93177ddd7d0bff3b9ce1fa13872c5323fd41b5d66c48bf3604"
+            }
+          ]
+        },
+        "action_hash": "7998feaa43abf619dc17706d3b8f4aa8f39e989ea3e98b110f1b517590bfaced",
+        "receipt_hash": "b9d1879bdfa685be3fb19d787f72ef43c72d17e9e88541ca436e2c0573a09955",
+        "mutation": "player_attacked",
+        "tick": 4,
+        "state_root": "24fab5a85bb2c61866bc26463757fdff0a82d3eb160dda5d2de2f55ae15ff55f",
+        "receipt_root": "bf5e5ca3d43be5d622d8f48cfde13a5085f6c91c418596b4f3eb9efb2bb36bc5",
+        "world_hash": "e974e913a98f7ad3031c9356c705ee93f0d5cda615d830c8c0496940b39c2d87",
+        "continuity_root": "45522cdaf0c8ee93177ddd7d0bff3b9ce1fa13872c5323fd41b5d66c48bf3604",
+        "journal_hash": "af616fc056eb775b28866df32e4cce7168e384771abb4c4aa53feed2a39bede1"
+      },
+      {
+        "schema": "everarcade.hotpocket.arena-wrapper.v0.1.journal-entry",
+        "execution_id": "arena-hotpocket-000005",
+        "sequence": 5,
+        "round": 5,
+        "canonical_input": "{\"action\":\"score\",\"delta\":3,\"player\":\"bob\"}",
+        "canonical_state_before": "{\"combat_events\":[{\"attacker\":\"alice\",\"damage\":25,\"target\":\"bob\",\"target_health\":75,\"tick\":4}],\"commitments\":[{\"continuity_root\":\"aa4ec9a9ee7a559f601b1409da3edf0120e2a1015660e0b4e4721780bf6ac714\",\"receipt_root\":\"c5186d00637916c34aad4bbea770a85a49d8d5173db1f8a7160496749a68f1cb\",\"state_root\":\"1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652\",\"tick\":1,\"world_hash\":\"d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864\"},{\"continuity_root\":\"0024230fcb335d7770f25e2b87328496a8b9cc0f05d2cd608f68d6d8a1179aba\",\"receipt_root\":\"055997e166102339794543be3c86dfc5ae667994e4be9519ef7d3c084ca657ba\",\"state_root\":\"26fad3c0b81c4991bc1419185c76c5109319e4014aeb5786d24ee55010892710\",\"tick\":2,\"world_hash\":\"db0511d699e264d401eca5714cde0a8b494d42f4a11d0f910c8a9b7685c30287\"},{\"continuity_root\":\"0533549f7d3fe5bc7d63e71f2bbfcf03b8529488a452b2af7b3fb5b65c8f90eb\",\"receipt_root\":\"2ca956a7ef62f98a187515a1e2749e93bc6c162df966fa173854c03948c98f93\",\"state_root\":\"e5193757e1d843a8129b347fcd631fd2f74f1034239fcb80ff513fa95ed622e7\",\"tick\":3,\"world_hash\":\"c719aad740497b96e57c99674368349e9ec393e4347b70975cc09731b2a1acb2\"},{\"continuity_root\":\"45522cdaf0c8ee93177ddd7d0bff3b9ce1fa13872c5323fd41b5d66c48bf3604\",\"receipt_root\":\"bf5e5ca3d43be5d622d8f48cfde13a5085f6c91c418596b4f3eb9efb2bb36bc5\",\"state_root\":\"24fab5a85bb2c61866bc26463757fdff0a82d3eb160dda5d2de2f55ae15ff55f\",\"tick\":4,\"world_hash\":\"e974e913a98f7ad3031c9356c705ee93f0d5cda615d830c8c0496940b39c2d87\"}],\"last_sequence\":{\"alice\":4,\"bob\":2},\"players\":{\"alice\":{\"connected\":true,\"health\":100,\"id\":\"alice\",\"score\":10,\"x\":1,\"y\":0},\"bob\":{\"connected\":true,\"health\":75,\"id\":\"bob\",\"score\":0,\"x\":0,\"y\":0}},\"tick\":4}",
+        "canonical_state_after": "{\"combat_events\":[{\"attacker\":\"alice\",\"damage\":25,\"target\":\"bob\",\"target_health\":75,\"tick\":4}],\"commitments\":[{\"continuity_root\":\"aa4ec9a9ee7a559f601b1409da3edf0120e2a1015660e0b4e4721780bf6ac714\",\"receipt_root\":\"c5186d00637916c34aad4bbea770a85a49d8d5173db1f8a7160496749a68f1cb\",\"state_root\":\"1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652\",\"tick\":1,\"world_hash\":\"d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864\"},{\"continuity_root\":\"0024230fcb335d7770f25e2b87328496a8b9cc0f05d2cd608f68d6d8a1179aba\",\"receipt_root\":\"055997e166102339794543be3c86dfc5ae667994e4be9519ef7d3c084ca657ba\",\"state_root\":\"26fad3c0b81c4991bc1419185c76c5109319e4014aeb5786d24ee55010892710\",\"tick\":2,\"world_hash\":\"db0511d699e264d401eca5714cde0a8b494d42f4a11d0f910c8a9b7685c30287\"},{\"continuity_root\":\"0533549f7d3fe5bc7d63e71f2bbfcf03b8529488a452b2af7b3fb5b65c8f90eb\",\"receipt_root\":\"2ca956a7ef62f98a187515a1e2749e93bc6c162df966fa173854c03948c98f93\",\"state_root\":\"e5193757e1d843a8129b347fcd631fd2f74f1034239fcb80ff513fa95ed622e7\",\"tick\":3,\"world_hash\":\"c719aad740497b96e57c99674368349e9ec393e4347b70975cc09731b2a1acb2\"},{\"continuity_root\":\"45522cdaf0c8ee93177ddd7d0bff3b9ce1fa13872c5323fd41b5d66c48bf3604\",\"receipt_root\":\"bf5e5ca3d43be5d622d8f48cfde13a5085f6c91c418596b4f3eb9efb2bb36bc5\",\"state_root\":\"24fab5a85bb2c61866bc26463757fdff0a82d3eb160dda5d2de2f55ae15ff55f\",\"tick\":4,\"world_hash\":\"e974e913a98f7ad3031c9356c705ee93f0d5cda615d830c8c0496940b39c2d87\"},{\"continuity_root\":\"6ab20ca0b15d6fcfd785c552c7d71cbda4fb8c7e96c387012effc8eba302f48e\",\"receipt_root\":\"75a76fed71e3bbf2618d724685989a2bb13dcb1d734bc24caf2a1f3c66f9c3c4\",\"state_root\":\"ccbc20c409a06a0023e795a78227ab20f8e08ffee0d3a32b034e284b7f074e9e\",\"tick\":5,\"world_hash\":\"7dc6717b2090b2a51fd790b6936e714a221e90679bf41e721dc8e0ecda72d62f\"}],\"last_sequence\":{\"alice\":4,\"bob\":5},\"players\":{\"alice\":{\"connected\":true,\"health\":100,\"id\":\"alice\",\"score\":10,\"x\":1,\"y\":0},\"bob\":{\"connected\":true,\"health\":75,\"id\":\"bob\",\"score\":3,\"x\":0,\"y\":0}},\"tick\":5}",
+        "action": {
+          "action": "score",
+          "delta": 3,
+          "player": "bob"
+        },
+        "state_before": {
+          "tick": 4,
+          "players": {
+            "alice": {
+              "id": "alice",
+              "x": 1,
+              "y": 0,
+              "health": 100,
+              "connected": true,
+              "score": 10
+            },
+            "bob": {
+              "id": "bob",
+              "x": 0,
+              "y": 0,
+              "health": 75,
+              "connected": true,
+              "score": 0
+            }
+          },
+          "combat_events": [
+            {
+              "tick": 4,
+              "attacker": "alice",
+              "target": "bob",
+              "damage": 25,
+              "target_health": 75
+            }
+          ],
+          "last_sequence": {
+            "alice": 4,
+            "bob": 2
+          },
+          "commitments": [
+            {
+              "tick": 1,
+              "state_root": "1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652",
+              "receipt_root": "c5186d00637916c34aad4bbea770a85a49d8d5173db1f8a7160496749a68f1cb",
+              "world_hash": "d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864",
+              "continuity_root": "aa4ec9a9ee7a559f601b1409da3edf0120e2a1015660e0b4e4721780bf6ac714"
+            },
+            {
+              "tick": 2,
+              "state_root": "26fad3c0b81c4991bc1419185c76c5109319e4014aeb5786d24ee55010892710",
+              "receipt_root": "055997e166102339794543be3c86dfc5ae667994e4be9519ef7d3c084ca657ba",
+              "world_hash": "db0511d699e264d401eca5714cde0a8b494d42f4a11d0f910c8a9b7685c30287",
+              "continuity_root": "0024230fcb335d7770f25e2b87328496a8b9cc0f05d2cd608f68d6d8a1179aba"
+            },
+            {
+              "tick": 3,
+              "state_root": "e5193757e1d843a8129b347fcd631fd2f74f1034239fcb80ff513fa95ed622e7",
+              "receipt_root": "2ca956a7ef62f98a187515a1e2749e93bc6c162df966fa173854c03948c98f93",
+              "world_hash": "c719aad740497b96e57c99674368349e9ec393e4347b70975cc09731b2a1acb2",
+              "continuity_root": "0533549f7d3fe5bc7d63e71f2bbfcf03b8529488a452b2af7b3fb5b65c8f90eb"
+            },
+            {
+              "tick": 4,
+              "state_root": "24fab5a85bb2c61866bc26463757fdff0a82d3eb160dda5d2de2f55ae15ff55f",
+              "receipt_root": "bf5e5ca3d43be5d622d8f48cfde13a5085f6c91c418596b4f3eb9efb2bb36bc5",
+              "world_hash": "e974e913a98f7ad3031c9356c705ee93f0d5cda615d830c8c0496940b39c2d87",
+              "continuity_root": "45522cdaf0c8ee93177ddd7d0bff3b9ce1fa13872c5323fd41b5d66c48bf3604"
+            }
+          ]
+        },
+        "state_after": {
+          "tick": 5,
+          "players": {
+            "alice": {
+              "id": "alice",
+              "x": 1,
+              "y": 0,
+              "health": 100,
+              "connected": true,
+              "score": 10
+            },
+            "bob": {
+              "id": "bob",
+              "x": 0,
+              "y": 0,
+              "health": 75,
+              "connected": true,
+              "score": 3
+            }
+          },
+          "combat_events": [
+            {
+              "tick": 4,
+              "attacker": "alice",
+              "target": "bob",
+              "damage": 25,
+              "target_health": 75
+            }
+          ],
+          "last_sequence": {
+            "alice": 4,
+            "bob": 5
+          },
+          "commitments": [
+            {
+              "tick": 1,
+              "state_root": "1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652",
+              "receipt_root": "c5186d00637916c34aad4bbea770a85a49d8d5173db1f8a7160496749a68f1cb",
+              "world_hash": "d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864",
+              "continuity_root": "aa4ec9a9ee7a559f601b1409da3edf0120e2a1015660e0b4e4721780bf6ac714"
+            },
+            {
+              "tick": 2,
+              "state_root": "26fad3c0b81c4991bc1419185c76c5109319e4014aeb5786d24ee55010892710",
+              "receipt_root": "055997e166102339794543be3c86dfc5ae667994e4be9519ef7d3c084ca657ba",
+              "world_hash": "db0511d699e264d401eca5714cde0a8b494d42f4a11d0f910c8a9b7685c30287",
+              "continuity_root": "0024230fcb335d7770f25e2b87328496a8b9cc0f05d2cd608f68d6d8a1179aba"
+            },
+            {
+              "tick": 3,
+              "state_root": "e5193757e1d843a8129b347fcd631fd2f74f1034239fcb80ff513fa95ed622e7",
+              "receipt_root": "2ca956a7ef62f98a187515a1e2749e93bc6c162df966fa173854c03948c98f93",
+              "world_hash": "c719aad740497b96e57c99674368349e9ec393e4347b70975cc09731b2a1acb2",
+              "continuity_root": "0533549f7d3fe5bc7d63e71f2bbfcf03b8529488a452b2af7b3fb5b65c8f90eb"
+            },
+            {
+              "tick": 4,
+              "state_root": "24fab5a85bb2c61866bc26463757fdff0a82d3eb160dda5d2de2f55ae15ff55f",
+              "receipt_root": "bf5e5ca3d43be5d622d8f48cfde13a5085f6c91c418596b4f3eb9efb2bb36bc5",
+              "world_hash": "e974e913a98f7ad3031c9356c705ee93f0d5cda615d830c8c0496940b39c2d87",
+              "continuity_root": "45522cdaf0c8ee93177ddd7d0bff3b9ce1fa13872c5323fd41b5d66c48bf3604"
+            },
+            {
+              "tick": 5,
+              "state_root": "ccbc20c409a06a0023e795a78227ab20f8e08ffee0d3a32b034e284b7f074e9e",
+              "receipt_root": "75a76fed71e3bbf2618d724685989a2bb13dcb1d734bc24caf2a1f3c66f9c3c4",
+              "world_hash": "7dc6717b2090b2a51fd790b6936e714a221e90679bf41e721dc8e0ecda72d62f",
+              "continuity_root": "6ab20ca0b15d6fcfd785c552c7d71cbda4fb8c7e96c387012effc8eba302f48e"
+            }
+          ]
+        },
+        "action_hash": "d157c9291e58f50699dc8e4c62a1bad7eff01c5f6d4a8077668cf7ffb85a8191",
+        "receipt_hash": "ff9e2818275e8329e0a8dde437d472368ded726696a91fad573e64bde267b058",
+        "mutation": "player_scored",
+        "tick": 5,
+        "state_root": "ccbc20c409a06a0023e795a78227ab20f8e08ffee0d3a32b034e284b7f074e9e",
+        "receipt_root": "75a76fed71e3bbf2618d724685989a2bb13dcb1d734bc24caf2a1f3c66f9c3c4",
+        "world_hash": "7dc6717b2090b2a51fd790b6936e714a221e90679bf41e721dc8e0ecda72d62f",
+        "continuity_root": "6ab20ca0b15d6fcfd785c552c7d71cbda4fb8c7e96c387012effc8eba302f48e",
+        "journal_hash": "c412eeeb6486e43ccf93f1d28bcdcf6b47aef42c7a43b16bb57e5503d0b2d891"
+      },
+      {
+        "schema": "everarcade.hotpocket.arena-wrapper.v0.1.journal-entry",
+        "execution_id": "arena-hotpocket-000006",
+        "sequence": 6,
+        "round": 6,
+        "canonical_input": "{\"action\":\"disconnect\",\"player\":\"alice\"}",
+        "canonical_state_before": "{\"combat_events\":[{\"attacker\":\"alice\",\"damage\":25,\"target\":\"bob\",\"target_health\":75,\"tick\":4}],\"commitments\":[{\"continuity_root\":\"aa4ec9a9ee7a559f601b1409da3edf0120e2a1015660e0b4e4721780bf6ac714\",\"receipt_root\":\"c5186d00637916c34aad4bbea770a85a49d8d5173db1f8a7160496749a68f1cb\",\"state_root\":\"1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652\",\"tick\":1,\"world_hash\":\"d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864\"},{\"continuity_root\":\"0024230fcb335d7770f25e2b87328496a8b9cc0f05d2cd608f68d6d8a1179aba\",\"receipt_root\":\"055997e166102339794543be3c86dfc5ae667994e4be9519ef7d3c084ca657ba\",\"state_root\":\"26fad3c0b81c4991bc1419185c76c5109319e4014aeb5786d24ee55010892710\",\"tick\":2,\"world_hash\":\"db0511d699e264d401eca5714cde0a8b494d42f4a11d0f910c8a9b7685c30287\"},{\"continuity_root\":\"0533549f7d3fe5bc7d63e71f2bbfcf03b8529488a452b2af7b3fb5b65c8f90eb\",\"receipt_root\":\"2ca956a7ef62f98a187515a1e2749e93bc6c162df966fa173854c03948c98f93\",\"state_root\":\"e5193757e1d843a8129b347fcd631fd2f74f1034239fcb80ff513fa95ed622e7\",\"tick\":3,\"world_hash\":\"c719aad740497b96e57c99674368349e9ec393e4347b70975cc09731b2a1acb2\"},{\"continuity_root\":\"45522cdaf0c8ee93177ddd7d0bff3b9ce1fa13872c5323fd41b5d66c48bf3604\",\"receipt_root\":\"bf5e5ca3d43be5d622d8f48cfde13a5085f6c91c418596b4f3eb9efb2bb36bc5\",\"state_root\":\"24fab5a85bb2c61866bc26463757fdff0a82d3eb160dda5d2de2f55ae15ff55f\",\"tick\":4,\"world_hash\":\"e974e913a98f7ad3031c9356c705ee93f0d5cda615d830c8c0496940b39c2d87\"},{\"continuity_root\":\"6ab20ca0b15d6fcfd785c552c7d71cbda4fb8c7e96c387012effc8eba302f48e\",\"receipt_root\":\"75a76fed71e3bbf2618d724685989a2bb13dcb1d734bc24caf2a1f3c66f9c3c4\",\"state_root\":\"ccbc20c409a06a0023e795a78227ab20f8e08ffee0d3a32b034e284b7f074e9e\",\"tick\":5,\"world_hash\":\"7dc6717b2090b2a51fd790b6936e714a221e90679bf41e721dc8e0ecda72d62f\"}],\"last_sequence\":{\"alice\":4,\"bob\":5},\"players\":{\"alice\":{\"connected\":true,\"health\":100,\"id\":\"alice\",\"score\":10,\"x\":1,\"y\":0},\"bob\":{\"connected\":true,\"health\":75,\"id\":\"bob\",\"score\":3,\"x\":0,\"y\":0}},\"tick\":5}",
+        "canonical_state_after": "{\"combat_events\":[{\"attacker\":\"alice\",\"damage\":25,\"target\":\"bob\",\"target_health\":75,\"tick\":4}],\"commitments\":[{\"continuity_root\":\"aa4ec9a9ee7a559f601b1409da3edf0120e2a1015660e0b4e4721780bf6ac714\",\"receipt_root\":\"c5186d00637916c34aad4bbea770a85a49d8d5173db1f8a7160496749a68f1cb\",\"state_root\":\"1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652\",\"tick\":1,\"world_hash\":\"d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864\"},{\"continuity_root\":\"0024230fcb335d7770f25e2b87328496a8b9cc0f05d2cd608f68d6d8a1179aba\",\"receipt_root\":\"055997e166102339794543be3c86dfc5ae667994e4be9519ef7d3c084ca657ba\",\"state_root\":\"26fad3c0b81c4991bc1419185c76c5109319e4014aeb5786d24ee55010892710\",\"tick\":2,\"world_hash\":\"db0511d699e264d401eca5714cde0a8b494d42f4a11d0f910c8a9b7685c30287\"},{\"continuity_root\":\"0533549f7d3fe5bc7d63e71f2bbfcf03b8529488a452b2af7b3fb5b65c8f90eb\",\"receipt_root\":\"2ca956a7ef62f98a187515a1e2749e93bc6c162df966fa173854c03948c98f93\",\"state_root\":\"e5193757e1d843a8129b347fcd631fd2f74f1034239fcb80ff513fa95ed622e7\",\"tick\":3,\"world_hash\":\"c719aad740497b96e57c99674368349e9ec393e4347b70975cc09731b2a1acb2\"},{\"continuity_root\":\"45522cdaf0c8ee93177ddd7d0bff3b9ce1fa13872c5323fd41b5d66c48bf3604\",\"receipt_root\":\"bf5e5ca3d43be5d622d8f48cfde13a5085f6c91c418596b4f3eb9efb2bb36bc5\",\"state_root\":\"24fab5a85bb2c61866bc26463757fdff0a82d3eb160dda5d2de2f55ae15ff55f\",\"tick\":4,\"world_hash\":\"e974e913a98f7ad3031c9356c705ee93f0d5cda615d830c8c0496940b39c2d87\"},{\"continuity_root\":\"6ab20ca0b15d6fcfd785c552c7d71cbda4fb8c7e96c387012effc8eba302f48e\",\"receipt_root\":\"75a76fed71e3bbf2618d724685989a2bb13dcb1d734bc24caf2a1f3c66f9c3c4\",\"state_root\":\"ccbc20c409a06a0023e795a78227ab20f8e08ffee0d3a32b034e284b7f074e9e\",\"tick\":5,\"world_hash\":\"7dc6717b2090b2a51fd790b6936e714a221e90679bf41e721dc8e0ecda72d62f\"},{\"continuity_root\":\"4cc09dae306f2a5bff3178a04e0af517dd73bf7208fdee0dcee024bbf6dc4070\",\"receipt_root\":\"5d374ac09698377e26d8e420c7f5d376d7e7529f6652c894dcad5df639c82396\",\"state_root\":\"7a41747955ea8e0202d3cf8be4b560fffb765515585773f63e4621d8a406c36e\",\"tick\":6,\"world_hash\":\"9a9a0611e554134aa668d8f4ae2212a38a4477411e6da5f9089aa12ab4916c41\"}],\"last_sequence\":{\"alice\":6,\"bob\":5},\"players\":{\"alice\":{\"connected\":false,\"health\":100,\"id\":\"alice\",\"score\":10,\"x\":1,\"y\":0},\"bob\":{\"connected\":true,\"health\":75,\"id\":\"bob\",\"score\":3,\"x\":0,\"y\":0}},\"tick\":6}",
+        "action": {
+          "action": "disconnect",
+          "player": "alice"
+        },
+        "state_before": {
+          "tick": 5,
+          "players": {
+            "alice": {
+              "id": "alice",
+              "x": 1,
+              "y": 0,
+              "health": 100,
+              "connected": true,
+              "score": 10
+            },
+            "bob": {
+              "id": "bob",
+              "x": 0,
+              "y": 0,
+              "health": 75,
+              "connected": true,
+              "score": 3
+            }
+          },
+          "combat_events": [
+            {
+              "tick": 4,
+              "attacker": "alice",
+              "target": "bob",
+              "damage": 25,
+              "target_health": 75
+            }
+          ],
+          "last_sequence": {
+            "alice": 4,
+            "bob": 5
+          },
+          "commitments": [
+            {
+              "tick": 1,
+              "state_root": "1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652",
+              "receipt_root": "c5186d00637916c34aad4bbea770a85a49d8d5173db1f8a7160496749a68f1cb",
+              "world_hash": "d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864",
+              "continuity_root": "aa4ec9a9ee7a559f601b1409da3edf0120e2a1015660e0b4e4721780bf6ac714"
+            },
+            {
+              "tick": 2,
+              "state_root": "26fad3c0b81c4991bc1419185c76c5109319e4014aeb5786d24ee55010892710",
+              "receipt_root": "055997e166102339794543be3c86dfc5ae667994e4be9519ef7d3c084ca657ba",
+              "world_hash": "db0511d699e264d401eca5714cde0a8b494d42f4a11d0f910c8a9b7685c30287",
+              "continuity_root": "0024230fcb335d7770f25e2b87328496a8b9cc0f05d2cd608f68d6d8a1179aba"
+            },
+            {
+              "tick": 3,
+              "state_root": "e5193757e1d843a8129b347fcd631fd2f74f1034239fcb80ff513fa95ed622e7",
+              "receipt_root": "2ca956a7ef62f98a187515a1e2749e93bc6c162df966fa173854c03948c98f93",
+              "world_hash": "c719aad740497b96e57c99674368349e9ec393e4347b70975cc09731b2a1acb2",
+              "continuity_root": "0533549f7d3fe5bc7d63e71f2bbfcf03b8529488a452b2af7b3fb5b65c8f90eb"
+            },
+            {
+              "tick": 4,
+              "state_root": "24fab5a85bb2c61866bc26463757fdff0a82d3eb160dda5d2de2f55ae15ff55f",
+              "receipt_root": "bf5e5ca3d43be5d622d8f48cfde13a5085f6c91c418596b4f3eb9efb2bb36bc5",
+              "world_hash": "e974e913a98f7ad3031c9356c705ee93f0d5cda615d830c8c0496940b39c2d87",
+              "continuity_root": "45522cdaf0c8ee93177ddd7d0bff3b9ce1fa13872c5323fd41b5d66c48bf3604"
+            },
+            {
+              "tick": 5,
+              "state_root": "ccbc20c409a06a0023e795a78227ab20f8e08ffee0d3a32b034e284b7f074e9e",
+              "receipt_root": "75a76fed71e3bbf2618d724685989a2bb13dcb1d734bc24caf2a1f3c66f9c3c4",
+              "world_hash": "7dc6717b2090b2a51fd790b6936e714a221e90679bf41e721dc8e0ecda72d62f",
+              "continuity_root": "6ab20ca0b15d6fcfd785c552c7d71cbda4fb8c7e96c387012effc8eba302f48e"
+            }
+          ]
+        },
+        "state_after": {
+          "tick": 6,
+          "players": {
+            "alice": {
+              "id": "alice",
+              "x": 1,
+              "y": 0,
+              "health": 100,
+              "connected": false,
+              "score": 10
+            },
+            "bob": {
+              "id": "bob",
+              "x": 0,
+              "y": 0,
+              "health": 75,
+              "connected": true,
+              "score": 3
+            }
+          },
+          "combat_events": [
+            {
+              "tick": 4,
+              "attacker": "alice",
+              "target": "bob",
+              "damage": 25,
+              "target_health": 75
+            }
+          ],
+          "last_sequence": {
+            "alice": 6,
+            "bob": 5
+          },
+          "commitments": [
+            {
+              "tick": 1,
+              "state_root": "1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652",
+              "receipt_root": "c5186d00637916c34aad4bbea770a85a49d8d5173db1f8a7160496749a68f1cb",
+              "world_hash": "d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864",
+              "continuity_root": "aa4ec9a9ee7a559f601b1409da3edf0120e2a1015660e0b4e4721780bf6ac714"
+            },
+            {
+              "tick": 2,
+              "state_root": "26fad3c0b81c4991bc1419185c76c5109319e4014aeb5786d24ee55010892710",
+              "receipt_root": "055997e166102339794543be3c86dfc5ae667994e4be9519ef7d3c084ca657ba",
+              "world_hash": "db0511d699e264d401eca5714cde0a8b494d42f4a11d0f910c8a9b7685c30287",
+              "continuity_root": "0024230fcb335d7770f25e2b87328496a8b9cc0f05d2cd608f68d6d8a1179aba"
+            },
+            {
+              "tick": 3,
+              "state_root": "e5193757e1d843a8129b347fcd631fd2f74f1034239fcb80ff513fa95ed622e7",
+              "receipt_root": "2ca956a7ef62f98a187515a1e2749e93bc6c162df966fa173854c03948c98f93",
+              "world_hash": "c719aad740497b96e57c99674368349e9ec393e4347b70975cc09731b2a1acb2",
+              "continuity_root": "0533549f7d3fe5bc7d63e71f2bbfcf03b8529488a452b2af7b3fb5b65c8f90eb"
+            },
+            {
+              "tick": 4,
+              "state_root": "24fab5a85bb2c61866bc26463757fdff0a82d3eb160dda5d2de2f55ae15ff55f",
+              "receipt_root": "bf5e5ca3d43be5d622d8f48cfde13a5085f6c91c418596b4f3eb9efb2bb36bc5",
+              "world_hash": "e974e913a98f7ad3031c9356c705ee93f0d5cda615d830c8c0496940b39c2d87",
+              "continuity_root": "45522cdaf0c8ee93177ddd7d0bff3b9ce1fa13872c5323fd41b5d66c48bf3604"
+            },
+            {
+              "tick": 5,
+              "state_root": "ccbc20c409a06a0023e795a78227ab20f8e08ffee0d3a32b034e284b7f074e9e",
+              "receipt_root": "75a76fed71e3bbf2618d724685989a2bb13dcb1d734bc24caf2a1f3c66f9c3c4",
+              "world_hash": "7dc6717b2090b2a51fd790b6936e714a221e90679bf41e721dc8e0ecda72d62f",
+              "continuity_root": "6ab20ca0b15d6fcfd785c552c7d71cbda4fb8c7e96c387012effc8eba302f48e"
+            },
+            {
+              "tick": 6,
+              "state_root": "7a41747955ea8e0202d3cf8be4b560fffb765515585773f63e4621d8a406c36e",
+              "receipt_root": "5d374ac09698377e26d8e420c7f5d376d7e7529f6652c894dcad5df639c82396",
+              "world_hash": "9a9a0611e554134aa668d8f4ae2212a38a4477411e6da5f9089aa12ab4916c41",
+              "continuity_root": "4cc09dae306f2a5bff3178a04e0af517dd73bf7208fdee0dcee024bbf6dc4070"
+            }
+          ]
+        },
+        "action_hash": "b5397c30903646ab04c4e4dda1b3c236532f2e0278231e2ead227e89ef87d060",
+        "receipt_hash": "7ef4a7284ecdc43cd2b3ed8c8012f56eedf1783c21fdfb0f2cf9f323221829aa",
+        "mutation": "player_disconnected",
+        "tick": 6,
+        "state_root": "7a41747955ea8e0202d3cf8be4b560fffb765515585773f63e4621d8a406c36e",
+        "receipt_root": "5d374ac09698377e26d8e420c7f5d376d7e7529f6652c894dcad5df639c82396",
+        "world_hash": "9a9a0611e554134aa668d8f4ae2212a38a4477411e6da5f9089aa12ab4916c41",
+        "continuity_root": "4cc09dae306f2a5bff3178a04e0af517dd73bf7208fdee0dcee024bbf6dc4070",
+        "journal_hash": "cf63dab2f192786f47ed5766d9eecf2039bb7d36430daed1c514978725f0a25a"
+      }
+    ],
+    "rejected_inputs": [],
+    "journal_hash": "89fcc5c732de67e9ab659768399293412774651c29ec50ddc8556c9d1d0daf6c"
+  },
+  "checkpoint": {
+    "schema": "everarcade.hotpocket.arena-wrapper.v0.1.restore.checkpoint-v1",
+    "world_id": "arena-vanguard",
+    "tick": 6,
+    "genesis_hash": "7168097415e464c9bf8a83dbe89e19187079ffdd3d9917aa4073d8aabf07f6ef",
+    "journal_hash": "a1bfae7472ac8949cae8ec24de52bc9344e252ab31408e32cfd66fa6b5d47d7c",
+    "snapshot_hash": "1f1a7b364562f82ddcf34b37a0ba5cdd6a59e385c805cb5772541f7acf19e90f",
+    "receipt_hashes": [
+      "d62ed949a10a7c7ba0af23120f4621a389e971fea3d681ee0edceb25bf4d3e53",
+      "eacfa57f80e70a175f422c9850a2baa1c6bb3166087e0d206983b8ae7e449720",
+      "bdd563bdd3b6b17c08d5f26a24d45143aa8b75623134343e52d67b65da99954f",
+      "b9d1879bdfa685be3fb19d787f72ef43c72d17e9e88541ca436e2c0573a09955",
+      "ff9e2818275e8329e0a8dde437d472368ded726696a91fad573e64bde267b058",
+      "7ef4a7284ecdc43cd2b3ed8c8012f56eedf1783c21fdfb0f2cf9f323221829aa"
+    ],
+    "roots": {
+      "tick": 6,
+      "state_root": "7a41747955ea8e0202d3cf8be4b560fffb765515585773f63e4621d8a406c36e",
+      "receipt_root": "5d374ac09698377e26d8e420c7f5d376d7e7529f6652c894dcad5df639c82396",
+      "world_hash": "9a9a0611e554134aa668d8f4ae2212a38a4477411e6da5f9089aa12ab4916c41",
+      "continuity_root": "4cc09dae306f2a5bff3178a04e0af517dd73bf7208fdee0dcee024bbf6dc4070"
+    },
+    "checkpoint_hash": "e88a3d078230509847d7bf360c1d043e3b60047cdaf9c9e7c480cccba8a7b06c"
+  },
+  "snapshot": {
+    "schema": "everarcade.hotpocket.arena-wrapper.v0.1.restore.snapshot-v1",
+    "world_id": "arena-vanguard",
+    "tick": 6,
+    "state": {
+      "tick": 6,
+      "players": {
+        "alice": {
+          "id": "alice",
+          "x": 1,
+          "y": 0,
+          "health": 100,
+          "connected": false,
+          "score": 10
+        },
+        "bob": {
+          "id": "bob",
+          "x": 0,
+          "y": 0,
+          "health": 75,
+          "connected": true,
+          "score": 3
+        }
+      },
+      "combat_events": [
+        {
+          "tick": 4,
+          "attacker": "alice",
+          "target": "bob",
+          "damage": 25,
+          "target_health": 75
+        }
+      ],
+      "last_sequence": {
+        "alice": 6,
+        "bob": 5
+      },
+      "commitments": [
+        {
+          "tick": 1,
+          "state_root": "1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652",
+          "receipt_root": "c5186d00637916c34aad4bbea770a85a49d8d5173db1f8a7160496749a68f1cb",
+          "world_hash": "d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864",
+          "continuity_root": "aa4ec9a9ee7a559f601b1409da3edf0120e2a1015660e0b4e4721780bf6ac714"
+        },
+        {
+          "tick": 2,
+          "state_root": "26fad3c0b81c4991bc1419185c76c5109319e4014aeb5786d24ee55010892710",
+          "receipt_root": "055997e166102339794543be3c86dfc5ae667994e4be9519ef7d3c084ca657ba",
+          "world_hash": "db0511d699e264d401eca5714cde0a8b494d42f4a11d0f910c8a9b7685c30287",
+          "continuity_root": "0024230fcb335d7770f25e2b87328496a8b9cc0f05d2cd608f68d6d8a1179aba"
+        },
+        {
+          "tick": 3,
+          "state_root": "e5193757e1d843a8129b347fcd631fd2f74f1034239fcb80ff513fa95ed622e7",
+          "receipt_root": "2ca956a7ef62f98a187515a1e2749e93bc6c162df966fa173854c03948c98f93",
+          "world_hash": "c719aad740497b96e57c99674368349e9ec393e4347b70975cc09731b2a1acb2",
+          "continuity_root": "0533549f7d3fe5bc7d63e71f2bbfcf03b8529488a452b2af7b3fb5b65c8f90eb"
+        },
+        {
+          "tick": 4,
+          "state_root": "24fab5a85bb2c61866bc26463757fdff0a82d3eb160dda5d2de2f55ae15ff55f",
+          "receipt_root": "bf5e5ca3d43be5d622d8f48cfde13a5085f6c91c418596b4f3eb9efb2bb36bc5",
+          "world_hash": "e974e913a98f7ad3031c9356c705ee93f0d5cda615d830c8c0496940b39c2d87",
+          "continuity_root": "45522cdaf0c8ee93177ddd7d0bff3b9ce1fa13872c5323fd41b5d66c48bf3604"
+        },
+        {
+          "tick": 5,
+          "state_root": "ccbc20c409a06a0023e795a78227ab20f8e08ffee0d3a32b034e284b7f074e9e",
+          "receipt_root": "75a76fed71e3bbf2618d724685989a2bb13dcb1d734bc24caf2a1f3c66f9c3c4",
+          "world_hash": "7dc6717b2090b2a51fd790b6936e714a221e90679bf41e721dc8e0ecda72d62f",
+          "continuity_root": "6ab20ca0b15d6fcfd785c552c7d71cbda4fb8c7e96c387012effc8eba302f48e"
+        },
+        {
+          "tick": 6,
+          "state_root": "7a41747955ea8e0202d3cf8be4b560fffb765515585773f63e4621d8a406c36e",
+          "receipt_root": "5d374ac09698377e26d8e420c7f5d376d7e7529f6652c894dcad5df639c82396",
+          "world_hash": "9a9a0611e554134aa668d8f4ae2212a38a4477411e6da5f9089aa12ab4916c41",
+          "continuity_root": "4cc09dae306f2a5bff3178a04e0af517dd73bf7208fdee0dcee024bbf6dc4070"
+        }
+      ]
+    },
+    "roots": {
+      "tick": 6,
+      "state_root": "7a41747955ea8e0202d3cf8be4b560fffb765515585773f63e4621d8a406c36e",
+      "receipt_root": "5d374ac09698377e26d8e420c7f5d376d7e7529f6652c894dcad5df639c82396",
+      "world_hash": "9a9a0611e554134aa668d8f4ae2212a38a4477411e6da5f9089aa12ab4916c41",
+      "continuity_root": "4cc09dae306f2a5bff3178a04e0af517dd73bf7208fdee0dcee024bbf6dc4070"
+    },
+    "snapshot_hash": "1f1a7b364562f82ddcf34b37a0ba5cdd6a59e385c805cb5772541f7acf19e90f"
+  },
+  "expected_pre_export_roots": {
+    "tick": 6,
+    "state_root": "7a41747955ea8e0202d3cf8be4b560fffb765515585773f63e4621d8a406c36e",
+    "receipt_root": "5d374ac09698377e26d8e420c7f5d376d7e7529f6652c894dcad5df639c82396",
+    "world_hash": "9a9a0611e554134aa668d8f4ae2212a38a4477411e6da5f9089aa12ab4916c41",
+    "continuity_root": "4cc09dae306f2a5bff3178a04e0af517dd73bf7208fdee0dcee024bbf6dc4070"
+  },
+  "restore_bundle": {
+    "schema": "everarcade.hotpocket.arena-wrapper.v0.1.restore-bundle-v1",
+    "world_id": "arena-vanguard",
+    "restore_sequence": 1,
+    "destination_operator": "operator-b",
+    "destination_instance": "instance-b",
+    "export_hash": "66f96bbf3aeb8c5348e604e98a28067ed5e9433920a6782c23d4d56c069ea93f",
+    "snapshot_hash": "1f1a7b364562f82ddcf34b37a0ba5cdd6a59e385c805cb5772541f7acf19e90f",
+    "checkpoint_hash": "e88a3d078230509847d7bf360c1d043e3b60047cdaf9c9e7c480cccba8a7b06c",
+    "restored_roots": {
+      "tick": 6,
+      "state_root": "7a41747955ea8e0202d3cf8be4b560fffb765515585773f63e4621d8a406c36e",
+      "receipt_root": "5d374ac09698377e26d8e420c7f5d376d7e7529f6652c894dcad5df639c82396",
+      "world_hash": "9a9a0611e554134aa668d8f4ae2212a38a4477411e6da5f9089aa12ab4916c41",
+      "continuity_root": "4cc09dae306f2a5bff3178a04e0af517dd73bf7208fdee0dcee024bbf6dc4070"
+    },
+    "restored_state_root": "7a41747955ea8e0202d3cf8be4b560fffb765515585773f63e4621d8a406c36e",
+    "restored_receipt_root": "5d374ac09698377e26d8e420c7f5d376d7e7529f6652c894dcad5df639c82396",
+    "restored_continuity_root": "4cc09dae306f2a5bff3178a04e0af517dd73bf7208fdee0dcee024bbf6dc4070"
+  },
+  "export_bundle": {
+    "schema": "everarcade.hotpocket.arena-wrapper.v0.1.export-bundle-v1",
+    "world_id": "arena-vanguard",
+    "export_sequence": 1,
+    "source_operator": "operator-a",
+    "source_instance": "instance-a",
+    "export_tick": 6,
+    "genesis_hash": "7168097415e464c9bf8a83dbe89e19187079ffdd3d9917aa4073d8aabf07f6ef",
+    "journal_hash": "a1bfae7472ac8949cae8ec24de52bc9344e252ab31408e32cfd66fa6b5d47d7c",
+    "checkpoint_hash": "e88a3d078230509847d7bf360c1d043e3b60047cdaf9c9e7c480cccba8a7b06c",
+    "snapshot_hash": "1f1a7b364562f82ddcf34b37a0ba5cdd6a59e385c805cb5772541f7acf19e90f",
+    "receipt_root": "5d374ac09698377e26d8e420c7f5d376d7e7529f6652c894dcad5df639c82396",
+    "state_root": "7a41747955ea8e0202d3cf8be4b560fffb765515585773f63e4621d8a406c36e",
+    "world_hash": "9a9a0611e554134aa668d8f4ae2212a38a4477411e6da5f9089aa12ab4916c41",
+    "continuity_root": "4cc09dae306f2a5bff3178a04e0af517dd73bf7208fdee0dcee024bbf6dc4070",
+    "package_identity": {
+      "runtime": "hotpocket-arena-wrapper",
+      "transition_spec": "production-replay-oracle-v1"
+    },
+    "export_hash": "66f96bbf3aeb8c5348e604e98a28067ed5e9433920a6782c23d4d56c069ea93f"
+  },
+  "expected_restored_roots": {
+    "tick": 6,
+    "state_root": "7a41747955ea8e0202d3cf8be4b560fffb765515585773f63e4621d8a406c36e",
+    "receipt_root": "5d374ac09698377e26d8e420c7f5d376d7e7529f6652c894dcad5df639c82396",
+    "world_hash": "9a9a0611e554134aa668d8f4ae2212a38a4477411e6da5f9089aa12ab4916c41",
+    "continuity_root": "4cc09dae306f2a5bff3178a04e0af517dd73bf7208fdee0dcee024bbf6dc4070"
+  }
+}
