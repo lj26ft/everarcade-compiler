@@ -9,10 +9,10 @@ Status values follow `MATURITY.md`: **PRODUCTION**, **ALPHA**, **EXPERIMENTAL**,
 | Replay verification | ALPHA | Operators, protocol engineers | Independent recomputation of receipts and state roots. | [Replay verification](../architecture/replay-verification.md) |
 | Checkpoint restore | ALPHA | Operators | Recovery from compact verified state points. | [Checkpointing](../architecture/checkpointing.md) |
 | Execution receipts | ALPHA | Operators, protocol engineers | Auditable execution evidence per window. | [Technical architecture](../architecture/technical-architecture.md) |
-| Continuity roots | ALPHA | Protocol engineers | Lineage evidence that chains state and receipt history. | [Continuity engine](../concepts/continuity-engine.md) |
+| Continuity roots | ALPHA | Protocol engineers | Lineage evidence that chains state and receipt history. | [Runtime continuity validation](../runtime/continuity_validation.md) |
 | Federation | SCAFFOLD | Operators, protocol engineers | Design path for multi-operator convergence. | [Federation](../architecture/federation.md) |
-| World Contracts | EXPERIMENTAL | Developers, protocol engineers | Deterministic mutation boundaries. | [World Contract](../concepts/world-contract.md) |
-| RustRigs | ALPHA | Developers | Reusable gameplay domain libraries and examples. | [RustRigs](../concepts/rustrigs.md) |
+| World Contracts | EXPERIMENTAL | Developers, protocol engineers | Deterministic mutation boundaries. | [World contracts](../world-contracts/index.md) |
+| RustRigs | ALPHA | Developers | Reusable gameplay domain libraries and examples. | [RustRigs](../rustrigs/index.md) |
 | Creator SDK | ALPHA | Developers | Local project creation, build, package, and play-local flows. | [Creator SDK quick start](../creator-sdk/quick-start.md) |
 | Operator proof bundles | ALPHA | Operators | Replayable evidence for execution windows. | [Operator technical operations](../operators/technical-operations.md) |
 | XRPL/Xahau anchoring | SCAFFOLD | Protocol engineers | Boundary for ledger references to runtime evidence. | [XRPL anchoring](../architecture/xrpl-anchoring.md) |

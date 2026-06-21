@@ -1,0 +1,9 @@
+package_id = "arena-vanguard-economy"
+name = "Economy"
+version = "0.1.0"
+author = "everarcade-core"
+description = "Arena Vanguard Economy deterministic marketplace module"
+dependencies = []
+record_types = ["EconomyRecord"]
+protocol_version = "everarcade-protocol-1"
+hash = "5ab8b11c6acaba5f05584cafe5f2908c2e74e2dfb7547acbce0d2394f384eb32"

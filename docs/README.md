@@ -31,3 +31,8 @@ Older documents under `docs/architecture/`, `docs/runtime/`, `docs/security/`, `
 ## Documentation Rule
 
 Do not add new architecture documents unless the concept cannot fit into the canonical set. Update the owning canonical document instead.
+
+
+## Public Frontend Boundary
+
+Public websites, `docs.everarcade.games`, `vision.everarcade.games`, and the world portal live in `everarcade-frontend`. Keep compiler docs focused on implementation-critical runtime, proof/oracle, CLI, packaging, registry, marketplace, treasury, and verification material.

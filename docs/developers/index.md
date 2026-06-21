@@ -19,4 +19,4 @@ Developers build worlds and capabilities for EverArcade.
 4. Add restore and migration fixtures.
 5. Publish to the world portal.
 
-[Read capability docs](./capabilities.md) or [apply for Founding Worlds](../founding-worlds.md).
+[Read capability docs](./capabilities.md). Public Founding Worlds onboarding now lives in `everarcade-frontend` / `https://docs.everarcade.games`.

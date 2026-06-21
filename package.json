@@ -1,8 +1,8 @@
 {
-  "name": "everarcade-frontend-workspace",
+  "name": "everarcade-compiler-workspace",
   "private": true,
   "version": "0.1.0",
-  "description": "EverArcade creator, player, operator, and gateway frontend workspace.",
+  "description": "EverArcade deterministic compiler/runtime validation workspace.",
   "workspaces": [
     "frontend/creator-dashboard",
     "frontend/player-portal",
@@ -16,9 +16,6 @@
   "scripts": {
     "test": "node --test frontend/tests/run_frontend_integration_tests.mjs",
     "frontend:validate": "bash scripts/run_frontend_validation.sh",
-    "docs:start": "docusaurus start",
-    "docs:build": "docusaurus build",
-    "docs:serve": "docusaurus serve",
     "certify:federation": "node runtime/arena_hotpocket/validation/certify-federation.js",
     "certify:restore": "node runtime/arena_hotpocket/validation/certify-restore.js",
     "certify:migration": "node runtime/arena_hotpocket/validation/certify-migration.js",
@@ -34,10 +31,6 @@
     "vite": "latest"
   },
   "dependencies": {
-    "@docusaurus/core": "^3.8.1",
-    "@docusaurus/preset-classic": "^3.8.1",
-    "@docusaurus/theme-mermaid": "^3.8.1",
-    "@easyops-cn/docusaurus-search-local": "^0.52.1",
     "@mermaid-js/layout-elk": "^0.1.9",
     "clsx": "^2.1.1"
   }
