@@ -44,13 +44,24 @@ A migration fixture contains:
 
 ## Export bundle schema
 
-The formal JSON Schema is `schemas/export-bundle.schema.json`. The v1 production fixture fields are `world_id`, `export_sequence`, `source_operator`, `source_instance`, `export_tick`, `genesis_hash`, `journal_hash`, `checkpoint_hash`, `snapshot_hash`, `receipt_root`, `state_root`, `world_hash`, `continuity_root`, optional `package_identity`, and `export_hash`.
+The formal JSON Schema is `schemas/export-bundle.schema.json`. The v1 production fixture fields are `world_id`, `export_sequence`, `source_operator`, `source_instance`, `export_tick`, `genesis_hash`, `journal_hash`, `checkpoint_hash`, `snapshot_hash`, `receipt_root`, `state_root`, `world_hash`, `continuity_root`, `receipt_accumulator`, optional `package_identity`, and `export_hash`.
+
+Migration export must carry the receipt accumulator across the boundary:
+
+```json
+{
+  "final_receipt_hashes": [],
+  "last_temp_receipt_hash": ""
+}
+```
+
+In valid exports, both fields are populated according to `RESTORE_SPEC.md`: `final_receipt_hashes` is the ordered finalized prefix before the export-boundary receipt and `last_temp_receipt_hash` is the export-boundary temporary receipt hash. `receipt_root` is reconstructed as `sha256(canonical([final_receipt_hashes, last_temp_receipt_hash]))`.
 
 `export_hash = sha256(canonical(export_bundle_without_export_hash))`.
 
 ## Destination restore schema
 
-The destination restore bundle uses the restore bundle schema from `RESTORE_SPEC.md`. It must bind to the same `world_id`, `export_hash`, `checkpoint_hash`, `snapshot_hash`, `state_root`, `receipt_root`, and `continuity_root` exported by the source.
+The destination restore bundle uses the restore bundle schema from `RESTORE_SPEC.md`. It must bind to the same `world_id`, `export_hash`, `checkpoint_hash`, `snapshot_hash`, `state_root`, `receipt_root`, and `continuity_root` exported by the source. The destination must reconstruct `receipt_root` from `export_bundle.receipt_accumulator` and must not consume source stored root values as trusted inputs.
 
 ## Identity fields
 
@@ -82,7 +93,7 @@ The destination restore bundle uses the restore bundle schema from `RESTORE_SPEC
 
 A migration verifier must fail if any of these occur:
 
-- source root mismatch between replay, fixture, and export bundle
+- source root mismatch between replay, accumulator-derived roots, fixture, and export bundle
 - destination restore root mismatch against export bundle
 - broken continuity link or recomputed `migration_hash`
 - wrong operator/world id where bundle identities no longer match

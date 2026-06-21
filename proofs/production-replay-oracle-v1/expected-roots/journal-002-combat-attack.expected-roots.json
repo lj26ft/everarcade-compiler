@@ -1,10 +1,10 @@
 {
   "schema": "everarcade.hotpocket.arena-wrapper.v0.1.production-replay-oracle-v1.expected-roots",
   "fixture": "journal-002-combat-attack",
-  "state_root": "a85958b15c506c9d68087b5a233b036a5a61c753ac2b20c3ef4ef825ce97ef5c",
-  "receipt_root": "08c4c74c92a11d94333e022dc4b4fd20802e1e23b2d1742ca54fc2a9f9f1f772",
-  "continuity_root": "9f00599677bf9ce42f1df133effa2a69f65e8ba862ba3d604e643d1022127726",
+  "state_root": "2e97300cbf9f8ba5165eaf064b16142191885e8f54b4bbb72d466dcb55f7a9b8",
+  "receipt_root": "cef8fa7e7723547015df4fa263f7d3625371e6e23d0863dc48cf7e67f2ff2ca2",
+  "continuity_root": "4a5e2293963633b482e96e2cb8fd98b2f824789cf10e2ff354bab12aa8e3a94e",
   "world_hash": "11a9db66a6b0944b521682d233c043346a435d62ef26e7e4a91f4786aed2ce69",
   "tick": 3,
-  "journal_hash": "72953a4b45c551d359e26aa68f5ef19474d5b52b269f8dac6b20c565048bd90b"
+  "journal_hash": "619d10490b247bdbc70434cffd411876a530f7952012fc205f63c17d8b58690d"
 }

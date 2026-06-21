@@ -766,7 +766,7 @@
     "checkpoint_hash": "8328f0b3bfdda1d29f6f67e305b3a12b46eeada0972fc8a7043ab3f51257bfea",
     "receipt_accumulator": {
       "final_receipt_hashes": [
-        "09bd33dad18759e2720657aa22de6f717d2183f4cb46dd3e7d9b857af73ac477",
+        "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
         "76a2be134ea015522525bcf0232973d087d707b7fc2fad2ccc3fc1a53ba578a9",
         "010b210fd605501b81b604bcca15f1da6a6afaac9d4e738bf6cdad4a0aeda26b",
         "3aad00b3b3618423558b0467e5ed18311afc9258b57f205844dc5cd83c1b5212",

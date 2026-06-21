@@ -73,10 +73,23 @@ export function applyArenaInput(state, envelope, tickOverride) {
   return { action, before, after, mutation };
 }
 
+export function receiptAccumulator(receipts) {
+  const final_receipt_hashes = receipts.slice(0, -1).map((receipt) => receipt.receipt_hash);
+  const last_temp_receipt_hash = receipts.at(-1)?.temp_receipt_hash;
+  if (typeof last_temp_receipt_hash !== 'string' || last_temp_receipt_hash.length === 0) throw new Error('missing last_temp_receipt_hash');
+  return { final_receipt_hashes, last_temp_receipt_hash };
+}
+
+export function receiptRootFromAccumulator(accumulator) {
+  if (!accumulator || !Array.isArray(accumulator.final_receipt_hashes)) throw new Error('missing final_receipt_hashes');
+  if (typeof accumulator.last_temp_receipt_hash !== 'string' || accumulator.last_temp_receipt_hash.length === 0) throw new Error('missing last_temp_receipt_hash');
+  return canonicalHash([accumulator.final_receipt_hashes, accumulator.last_temp_receipt_hash]);
+}
+
 export function commitFor(state, receipts) {
   const world = { tick: state.tick, players: state.players, combat_events: state.combat_events };
   const world_hash = canonicalHash(world);
-  const receipt_root = canonicalHash(receipts.map((receipt) => receipt.receipt_hash));
+  const receipt_root = receipts.length ? receiptRootFromAccumulator(receiptAccumulator(receipts)) : canonicalHash([[], canonicalHash({})]);
   const state_root = canonicalHash(state);
   const continuity_root = canonicalHash({ state_root, receipt_root, world_hash, tick: state.tick });
   return { tick: state.tick, state_root, receipt_root, world_hash, continuity_root };
@@ -90,12 +103,13 @@ export function executeInput(state, envelope, sequence, priorReceipts = [], tick
   const execution_id = `arena-hotpocket-${String(sequence).padStart(6, '0')}`;
   const baseReceipt = { schema: `${SCHEMA}.receipt`, execution_id, sequence, round: after.tick, status: 'accepted', generated_at: '1970-01-01T00:00:00.000Z', action_hash, state_before_hash, mutation };
   const tempReceipt = { ...baseReceipt, state_root: canonicalHash(after) };
-  const receipt = { ...tempReceipt, receipt_hash: canonicalHash(tempReceipt) };
+  const temp_receipt_hash = canonicalHash(tempReceipt);
+  const receipt = { ...tempReceipt, temp_receipt_hash, receipt_hash: temp_receipt_hash };
   const commitments = commitFor(after, [...priorReceipts, receipt]);
   after.commitments.push(commitments);
   const output = { accepted: true, action: action.action, mutation, tick: after.tick, players: clone(after.players), combat_events: clone(after.combat_events), ...commitments };
   Object.assign(receipt, { output, state_root: commitments.state_root, receipt_root: commitments.receipt_root, world_hash: commitments.world_hash, continuity_root: commitments.continuity_root });
-  receipt.receipt_hash = canonicalHash({ ...receipt, receipt_hash: undefined });
+  receipt.receipt_hash = canonicalHash({ ...receipt, receipt_hash: undefined, temp_receipt_hash: undefined });
   const journalBase = { schema: `${SCHEMA}.journal-entry`, execution_id, sequence, round: after.tick, canonical_input, canonical_state_before: canonicalize(before), canonical_state_after: canonicalize(after), action, state_before: before, state_after: after, action_hash, receipt_hash: receipt.receipt_hash, mutation, ...commitments };
   const journal = { ...journalBase, journal_hash: canonicalHash(journalBase) };
   return { state: after, receipt, journal, output, commitments };

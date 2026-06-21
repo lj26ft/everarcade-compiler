@@ -28,7 +28,7 @@
         "round": 1,
         "canonical_input": "{\"action\":\"join\",\"player\":\"alice\"}",
         "canonical_state_before": "{\"combat_events\":[],\"commitments\":[],\"last_sequence\":{},\"players\":{},\"tick\":0}",
-        "canonical_state_after": "{\"combat_events\":[],\"commitments\":[{\"continuity_root\":\"aa4ec9a9ee7a559f601b1409da3edf0120e2a1015660e0b4e4721780bf6ac714\",\"receipt_root\":\"c5186d00637916c34aad4bbea770a85a49d8d5173db1f8a7160496749a68f1cb\",\"state_root\":\"1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652\",\"tick\":1,\"world_hash\":\"d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864\"}],\"last_sequence\":{\"alice\":1},\"players\":{\"alice\":{\"connected\":true,\"health\":100,\"id\":\"alice\",\"score\":0,\"x\":0,\"y\":0}},\"tick\":1}",
+        "canonical_state_after": "{\"combat_events\":[],\"commitments\":[{\"continuity_root\":\"93ec4ae76d76e67d5121a090c1db4e32547475ae218af82c6a6dce200fe759ec\",\"receipt_root\":\"6681ad1bc8807365a510734d4e8c4810bbaf4e5d9453b16536499fc9c2e35400\",\"state_root\":\"1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652\",\"tick\":1,\"world_hash\":\"d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864\"}],\"last_sequence\":{\"alice\":1},\"players\":{\"alice\":{\"connected\":true,\"health\":100,\"id\":\"alice\",\"score\":0,\"x\":0,\"y\":0}},\"tick\":1}",
         "action": {
           "action": "join",
           "player": "alice"
@@ -60,21 +60,21 @@
             {
               "tick": 1,
               "state_root": "1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652",
-              "receipt_root": "c5186d00637916c34aad4bbea770a85a49d8d5173db1f8a7160496749a68f1cb",
+              "receipt_root": "6681ad1bc8807365a510734d4e8c4810bbaf4e5d9453b16536499fc9c2e35400",
               "world_hash": "d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864",
-              "continuity_root": "aa4ec9a9ee7a559f601b1409da3edf0120e2a1015660e0b4e4721780bf6ac714"
+              "continuity_root": "93ec4ae76d76e67d5121a090c1db4e32547475ae218af82c6a6dce200fe759ec"
             }
           ]
         },
         "action_hash": "6a8582f3f8646890ec696183f7b04fd73f8dea1a600233ea7bd5fbcca7588daa",
-        "receipt_hash": "d62ed949a10a7c7ba0af23120f4621a389e971fea3d681ee0edceb25bf4d3e53",
+        "receipt_hash": "09bd33dad18759e2720657aa22de6f717d2183f4cb46dd3e7d9b857af73ac477",
         "mutation": "player_joined",
         "tick": 1,
         "state_root": "1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652",
-        "receipt_root": "c5186d00637916c34aad4bbea770a85a49d8d5173db1f8a7160496749a68f1cb",
+        "receipt_root": "6681ad1bc8807365a510734d4e8c4810bbaf4e5d9453b16536499fc9c2e35400",
         "world_hash": "d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864",
-        "continuity_root": "aa4ec9a9ee7a559f601b1409da3edf0120e2a1015660e0b4e4721780bf6ac714",
-        "journal_hash": "d1f92ce90a515fdeb19b490dd0e2ea480758d1069cb3e52e137259a1b561c002"
+        "continuity_root": "93ec4ae76d76e67d5121a090c1db4e32547475ae218af82c6a6dce200fe759ec",
+        "journal_hash": "d38e5c23afc150291394543853959b0a62840ba0ece588ef0e5c9266527957b6"
       },
       {
         "schema": "everarcade.hotpocket.arena-wrapper.v0.1.journal-entry",
@@ -82,8 +82,8 @@
         "sequence": 2,
         "round": 2,
         "canonical_input": "{\"action\":\"join\",\"player\":\"bob\"}",
-        "canonical_state_before": "{\"combat_events\":[],\"commitments\":[{\"continuity_root\":\"aa4ec9a9ee7a559f601b1409da3edf0120e2a1015660e0b4e4721780bf6ac714\",\"receipt_root\":\"c5186d00637916c34aad4bbea770a85a49d8d5173db1f8a7160496749a68f1cb\",\"state_root\":\"1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652\",\"tick\":1,\"world_hash\":\"d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864\"}],\"last_sequence\":{\"alice\":1},\"players\":{\"alice\":{\"connected\":true,\"health\":100,\"id\":\"alice\",\"score\":0,\"x\":0,\"y\":0}},\"tick\":1}",
-        "canonical_state_after": "{\"combat_events\":[],\"commitments\":[{\"continuity_root\":\"aa4ec9a9ee7a559f601b1409da3edf0120e2a1015660e0b4e4721780bf6ac714\",\"receipt_root\":\"c5186d00637916c34aad4bbea770a85a49d8d5173db1f8a7160496749a68f1cb\",\"state_root\":\"1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652\",\"tick\":1,\"world_hash\":\"d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864\"},{\"continuity_root\":\"0024230fcb335d7770f25e2b87328496a8b9cc0f05d2cd608f68d6d8a1179aba\",\"receipt_root\":\"055997e166102339794543be3c86dfc5ae667994e4be9519ef7d3c084ca657ba\",\"state_root\":\"26fad3c0b81c4991bc1419185c76c5109319e4014aeb5786d24ee55010892710\",\"tick\":2,\"world_hash\":\"db0511d699e264d401eca5714cde0a8b494d42f4a11d0f910c8a9b7685c30287\"}],\"last_sequence\":{\"alice\":1,\"bob\":2},\"players\":{\"alice\":{\"connected\":true,\"health\":100,\"id\":\"alice\",\"score\":0,\"x\":0,\"y\":0},\"bob\":{\"connected\":true,\"health\":100,\"id\":\"bob\",\"score\":0,\"x\":0,\"y\":0}},\"tick\":2}",
+        "canonical_state_before": "{\"combat_events\":[],\"commitments\":[{\"continuity_root\":\"93ec4ae76d76e67d5121a090c1db4e32547475ae218af82c6a6dce200fe759ec\",\"receipt_root\":\"6681ad1bc8807365a510734d4e8c4810bbaf4e5d9453b16536499fc9c2e35400\",\"state_root\":\"1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652\",\"tick\":1,\"world_hash\":\"d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864\"}],\"last_sequence\":{\"alice\":1},\"players\":{\"alice\":{\"connected\":true,\"health\":100,\"id\":\"alice\",\"score\":0,\"x\":0,\"y\":0}},\"tick\":1}",
+        "canonical_state_after": "{\"combat_events\":[],\"commitments\":[{\"continuity_root\":\"93ec4ae76d76e67d5121a090c1db4e32547475ae218af82c6a6dce200fe759ec\",\"receipt_root\":\"6681ad1bc8807365a510734d4e8c4810bbaf4e5d9453b16536499fc9c2e35400\",\"state_root\":\"1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652\",\"tick\":1,\"world_hash\":\"d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864\"},{\"continuity_root\":\"21c9585c2e5e541751696dd8a449a83a822b5f89074bcad950443db5218fd676\",\"receipt_root\":\"3a353f912e9be0c1b3cc430edd26cd93bf649bf174268784f688c1b62063f904\",\"state_root\":\"92bc1f88590f134b4ed624948e48eac34e7605030afb2451ca37b75358e88688\",\"tick\":2,\"world_hash\":\"db0511d699e264d401eca5714cde0a8b494d42f4a11d0f910c8a9b7685c30287\"}],\"last_sequence\":{\"alice\":1,\"bob\":2},\"players\":{\"alice\":{\"connected\":true,\"health\":100,\"id\":\"alice\",\"score\":0,\"x\":0,\"y\":0},\"bob\":{\"connected\":true,\"health\":100,\"id\":\"bob\",\"score\":0,\"x\":0,\"y\":0}},\"tick\":2}",
         "action": {
           "action": "join",
           "player": "bob"
@@ -108,9 +108,9 @@
             {
               "tick": 1,
               "state_root": "1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652",
-              "receipt_root": "c5186d00637916c34aad4bbea770a85a49d8d5173db1f8a7160496749a68f1cb",
+              "receipt_root": "6681ad1bc8807365a510734d4e8c4810bbaf4e5d9453b16536499fc9c2e35400",
               "world_hash": "d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864",
-              "continuity_root": "aa4ec9a9ee7a559f601b1409da3edf0120e2a1015660e0b4e4721780bf6ac714"
+              "continuity_root": "93ec4ae76d76e67d5121a090c1db4e32547475ae218af82c6a6dce200fe759ec"
             }
           ]
         },
@@ -143,28 +143,28 @@
             {
               "tick": 1,
               "state_root": "1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652",
-              "receipt_root": "c5186d00637916c34aad4bbea770a85a49d8d5173db1f8a7160496749a68f1cb",
+              "receipt_root": "6681ad1bc8807365a510734d4e8c4810bbaf4e5d9453b16536499fc9c2e35400",
               "world_hash": "d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864",
-              "continuity_root": "aa4ec9a9ee7a559f601b1409da3edf0120e2a1015660e0b4e4721780bf6ac714"
+              "continuity_root": "93ec4ae76d76e67d5121a090c1db4e32547475ae218af82c6a6dce200fe759ec"
             },
             {
               "tick": 2,
-              "state_root": "26fad3c0b81c4991bc1419185c76c5109319e4014aeb5786d24ee55010892710",
-              "receipt_root": "055997e166102339794543be3c86dfc5ae667994e4be9519ef7d3c084ca657ba",
+              "state_root": "92bc1f88590f134b4ed624948e48eac34e7605030afb2451ca37b75358e88688",
+              "receipt_root": "3a353f912e9be0c1b3cc430edd26cd93bf649bf174268784f688c1b62063f904",
               "world_hash": "db0511d699e264d401eca5714cde0a8b494d42f4a11d0f910c8a9b7685c30287",
-              "continuity_root": "0024230fcb335d7770f25e2b87328496a8b9cc0f05d2cd608f68d6d8a1179aba"
+              "continuity_root": "21c9585c2e5e541751696dd8a449a83a822b5f89074bcad950443db5218fd676"
             }
           ]
         },
         "action_hash": "71f75f8c41dc4f1c1c05667c23b02dfd29e835c19988f02213ac733046105517",
-        "receipt_hash": "eacfa57f80e70a175f422c9850a2baa1c6bb3166087e0d206983b8ae7e449720",
+        "receipt_hash": "76a2be134ea015522525bcf0232973d087d707b7fc2fad2ccc3fc1a53ba578a9",
         "mutation": "player_joined",
         "tick": 2,
-        "state_root": "26fad3c0b81c4991bc1419185c76c5109319e4014aeb5786d24ee55010892710",
-        "receipt_root": "055997e166102339794543be3c86dfc5ae667994e4be9519ef7d3c084ca657ba",
+        "state_root": "92bc1f88590f134b4ed624948e48eac34e7605030afb2451ca37b75358e88688",
+        "receipt_root": "3a353f912e9be0c1b3cc430edd26cd93bf649bf174268784f688c1b62063f904",
         "world_hash": "db0511d699e264d401eca5714cde0a8b494d42f4a11d0f910c8a9b7685c30287",
-        "continuity_root": "0024230fcb335d7770f25e2b87328496a8b9cc0f05d2cd608f68d6d8a1179aba",
-        "journal_hash": "9e4ece06515d23c6f49a1fc098272feb47c6475b5ef8c377b92bbd8e4a347052"
+        "continuity_root": "21c9585c2e5e541751696dd8a449a83a822b5f89074bcad950443db5218fd676",
+        "journal_hash": "790d49fdd43f0a6377bb5d04aaa9305ecaa27f08eb5fa58badd4f1f57e9f6a49"
       },
       {
         "schema": "everarcade.hotpocket.arena-wrapper.v0.1.journal-entry",
@@ -172,8 +172,8 @@
         "sequence": 3,
         "round": 3,
         "canonical_input": "{\"action\":\"move\",\"direction\":\"east\",\"player\":\"alice\"}",
-        "canonical_state_before": "{\"combat_events\":[],\"commitments\":[{\"continuity_root\":\"aa4ec9a9ee7a559f601b1409da3edf0120e2a1015660e0b4e4721780bf6ac714\",\"receipt_root\":\"c5186d00637916c34aad4bbea770a85a49d8d5173db1f8a7160496749a68f1cb\",\"state_root\":\"1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652\",\"tick\":1,\"world_hash\":\"d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864\"},{\"continuity_root\":\"0024230fcb335d7770f25e2b87328496a8b9cc0f05d2cd608f68d6d8a1179aba\",\"receipt_root\":\"055997e166102339794543be3c86dfc5ae667994e4be9519ef7d3c084ca657ba\",\"state_root\":\"26fad3c0b81c4991bc1419185c76c5109319e4014aeb5786d24ee55010892710\",\"tick\":2,\"world_hash\":\"db0511d699e264d401eca5714cde0a8b494d42f4a11d0f910c8a9b7685c30287\"}],\"last_sequence\":{\"alice\":1,\"bob\":2},\"players\":{\"alice\":{\"connected\":true,\"health\":100,\"id\":\"alice\",\"score\":0,\"x\":0,\"y\":0},\"bob\":{\"connected\":true,\"health\":100,\"id\":\"bob\",\"score\":0,\"x\":0,\"y\":0}},\"tick\":2}",
-        "canonical_state_after": "{\"combat_events\":[],\"commitments\":[{\"continuity_root\":\"aa4ec9a9ee7a559f601b1409da3edf0120e2a1015660e0b4e4721780bf6ac714\",\"receipt_root\":\"c5186d00637916c34aad4bbea770a85a49d8d5173db1f8a7160496749a68f1cb\",\"state_root\":\"1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652\",\"tick\":1,\"world_hash\":\"d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864\"},{\"continuity_root\":\"0024230fcb335d7770f25e2b87328496a8b9cc0f05d2cd608f68d6d8a1179aba\",\"receipt_root\":\"055997e166102339794543be3c86dfc5ae667994e4be9519ef7d3c084ca657ba\",\"state_root\":\"26fad3c0b81c4991bc1419185c76c5109319e4014aeb5786d24ee55010892710\",\"tick\":2,\"world_hash\":\"db0511d699e264d401eca5714cde0a8b494d42f4a11d0f910c8a9b7685c30287\"},{\"continuity_root\":\"0533549f7d3fe5bc7d63e71f2bbfcf03b8529488a452b2af7b3fb5b65c8f90eb\",\"receipt_root\":\"2ca956a7ef62f98a187515a1e2749e93bc6c162df966fa173854c03948c98f93\",\"state_root\":\"e5193757e1d843a8129b347fcd631fd2f74f1034239fcb80ff513fa95ed622e7\",\"tick\":3,\"world_hash\":\"c719aad740497b96e57c99674368349e9ec393e4347b70975cc09731b2a1acb2\"}],\"last_sequence\":{\"alice\":3,\"bob\":2},\"players\":{\"alice\":{\"connected\":true,\"health\":100,\"id\":\"alice\",\"score\":0,\"x\":1,\"y\":0},\"bob\":{\"connected\":true,\"health\":100,\"id\":\"bob\",\"score\":0,\"x\":0,\"y\":0}},\"tick\":3}",
+        "canonical_state_before": "{\"combat_events\":[],\"commitments\":[{\"continuity_root\":\"93ec4ae76d76e67d5121a090c1db4e32547475ae218af82c6a6dce200fe759ec\",\"receipt_root\":\"6681ad1bc8807365a510734d4e8c4810bbaf4e5d9453b16536499fc9c2e35400\",\"state_root\":\"1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652\",\"tick\":1,\"world_hash\":\"d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864\"},{\"continuity_root\":\"21c9585c2e5e541751696dd8a449a83a822b5f89074bcad950443db5218fd676\",\"receipt_root\":\"3a353f912e9be0c1b3cc430edd26cd93bf649bf174268784f688c1b62063f904\",\"state_root\":\"92bc1f88590f134b4ed624948e48eac34e7605030afb2451ca37b75358e88688\",\"tick\":2,\"world_hash\":\"db0511d699e264d401eca5714cde0a8b494d42f4a11d0f910c8a9b7685c30287\"}],\"last_sequence\":{\"alice\":1,\"bob\":2},\"players\":{\"alice\":{\"connected\":true,\"health\":100,\"id\":\"alice\",\"score\":0,\"x\":0,\"y\":0},\"bob\":{\"connected\":true,\"health\":100,\"id\":\"bob\",\"score\":0,\"x\":0,\"y\":0}},\"tick\":2}",
+        "canonical_state_after": "{\"combat_events\":[],\"commitments\":[{\"continuity_root\":\"93ec4ae76d76e67d5121a090c1db4e32547475ae218af82c6a6dce200fe759ec\",\"receipt_root\":\"6681ad1bc8807365a510734d4e8c4810bbaf4e5d9453b16536499fc9c2e35400\",\"state_root\":\"1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652\",\"tick\":1,\"world_hash\":\"d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864\"},{\"continuity_root\":\"21c9585c2e5e541751696dd8a449a83a822b5f89074bcad950443db5218fd676\",\"receipt_root\":\"3a353f912e9be0c1b3cc430edd26cd93bf649bf174268784f688c1b62063f904\",\"state_root\":\"92bc1f88590f134b4ed624948e48eac34e7605030afb2451ca37b75358e88688\",\"tick\":2,\"world_hash\":\"db0511d699e264d401eca5714cde0a8b494d42f4a11d0f910c8a9b7685c30287\"},{\"continuity_root\":\"afad9f4ee8f031701600a0ea228f2aac20bb3075b2c9a78cb27dad61a6534704\",\"receipt_root\":\"8d80e6c72006f48c2459d604139229746d897feeb2f827b3266c5e9370595d0c\",\"state_root\":\"7fa98f2b5617d715c0f1ab222cc75a81e92099fe2d78c7a964912f6ecb676dee\",\"tick\":3,\"world_hash\":\"c719aad740497b96e57c99674368349e9ec393e4347b70975cc09731b2a1acb2\"}],\"last_sequence\":{\"alice\":3,\"bob\":2},\"players\":{\"alice\":{\"connected\":true,\"health\":100,\"id\":\"alice\",\"score\":0,\"x\":1,\"y\":0},\"bob\":{\"connected\":true,\"health\":100,\"id\":\"bob\",\"score\":0,\"x\":0,\"y\":0}},\"tick\":3}",
         "action": {
           "action": "move",
           "direction": "east",
@@ -208,16 +208,16 @@
             {
               "tick": 1,
               "state_root": "1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652",
-              "receipt_root": "c5186d00637916c34aad4bbea770a85a49d8d5173db1f8a7160496749a68f1cb",
+              "receipt_root": "6681ad1bc8807365a510734d4e8c4810bbaf4e5d9453b16536499fc9c2e35400",
               "world_hash": "d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864",
-              "continuity_root": "aa4ec9a9ee7a559f601b1409da3edf0120e2a1015660e0b4e4721780bf6ac714"
+              "continuity_root": "93ec4ae76d76e67d5121a090c1db4e32547475ae218af82c6a6dce200fe759ec"
             },
             {
               "tick": 2,
-              "state_root": "26fad3c0b81c4991bc1419185c76c5109319e4014aeb5786d24ee55010892710",
-              "receipt_root": "055997e166102339794543be3c86dfc5ae667994e4be9519ef7d3c084ca657ba",
+              "state_root": "92bc1f88590f134b4ed624948e48eac34e7605030afb2451ca37b75358e88688",
+              "receipt_root": "3a353f912e9be0c1b3cc430edd26cd93bf649bf174268784f688c1b62063f904",
               "world_hash": "db0511d699e264d401eca5714cde0a8b494d42f4a11d0f910c8a9b7685c30287",
-              "continuity_root": "0024230fcb335d7770f25e2b87328496a8b9cc0f05d2cd608f68d6d8a1179aba"
+              "continuity_root": "21c9585c2e5e541751696dd8a449a83a822b5f89074bcad950443db5218fd676"
             }
           ]
         },
@@ -250,35 +250,35 @@
             {
               "tick": 1,
               "state_root": "1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652",
-              "receipt_root": "c5186d00637916c34aad4bbea770a85a49d8d5173db1f8a7160496749a68f1cb",
+              "receipt_root": "6681ad1bc8807365a510734d4e8c4810bbaf4e5d9453b16536499fc9c2e35400",
               "world_hash": "d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864",
-              "continuity_root": "aa4ec9a9ee7a559f601b1409da3edf0120e2a1015660e0b4e4721780bf6ac714"
+              "continuity_root": "93ec4ae76d76e67d5121a090c1db4e32547475ae218af82c6a6dce200fe759ec"
             },
             {
               "tick": 2,
-              "state_root": "26fad3c0b81c4991bc1419185c76c5109319e4014aeb5786d24ee55010892710",
-              "receipt_root": "055997e166102339794543be3c86dfc5ae667994e4be9519ef7d3c084ca657ba",
+              "state_root": "92bc1f88590f134b4ed624948e48eac34e7605030afb2451ca37b75358e88688",
+              "receipt_root": "3a353f912e9be0c1b3cc430edd26cd93bf649bf174268784f688c1b62063f904",
               "world_hash": "db0511d699e264d401eca5714cde0a8b494d42f4a11d0f910c8a9b7685c30287",
-              "continuity_root": "0024230fcb335d7770f25e2b87328496a8b9cc0f05d2cd608f68d6d8a1179aba"
+              "continuity_root": "21c9585c2e5e541751696dd8a449a83a822b5f89074bcad950443db5218fd676"
             },
             {
               "tick": 3,
-              "state_root": "e5193757e1d843a8129b347fcd631fd2f74f1034239fcb80ff513fa95ed622e7",
-              "receipt_root": "2ca956a7ef62f98a187515a1e2749e93bc6c162df966fa173854c03948c98f93",
+              "state_root": "7fa98f2b5617d715c0f1ab222cc75a81e92099fe2d78c7a964912f6ecb676dee",
+              "receipt_root": "8d80e6c72006f48c2459d604139229746d897feeb2f827b3266c5e9370595d0c",
               "world_hash": "c719aad740497b96e57c99674368349e9ec393e4347b70975cc09731b2a1acb2",
-              "continuity_root": "0533549f7d3fe5bc7d63e71f2bbfcf03b8529488a452b2af7b3fb5b65c8f90eb"
+              "continuity_root": "afad9f4ee8f031701600a0ea228f2aac20bb3075b2c9a78cb27dad61a6534704"
             }
           ]
         },
         "action_hash": "cb24b1c1df1a399b1d796d885701b7b4f31eb88952b35cbac4c909376d877851",
-        "receipt_hash": "bdd563bdd3b6b17c08d5f26a24d45143aa8b75623134343e52d67b65da99954f",
+        "receipt_hash": "010b210fd605501b81b604bcca15f1da6a6afaac9d4e738bf6cdad4a0aeda26b",
         "mutation": "player_moved",
         "tick": 3,
-        "state_root": "e5193757e1d843a8129b347fcd631fd2f74f1034239fcb80ff513fa95ed622e7",
-        "receipt_root": "2ca956a7ef62f98a187515a1e2749e93bc6c162df966fa173854c03948c98f93",
+        "state_root": "7fa98f2b5617d715c0f1ab222cc75a81e92099fe2d78c7a964912f6ecb676dee",
+        "receipt_root": "8d80e6c72006f48c2459d604139229746d897feeb2f827b3266c5e9370595d0c",
         "world_hash": "c719aad740497b96e57c99674368349e9ec393e4347b70975cc09731b2a1acb2",
-        "continuity_root": "0533549f7d3fe5bc7d63e71f2bbfcf03b8529488a452b2af7b3fb5b65c8f90eb",
-        "journal_hash": "8e8b2dcb9bf8c83ce1febae3374d7c8d1ed7a93a9720f88c288284fd055e9757"
+        "continuity_root": "afad9f4ee8f031701600a0ea228f2aac20bb3075b2c9a78cb27dad61a6534704",
+        "journal_hash": "c4bb154d67e56a2f93f92f6ba81eb004fd8b301b3e1b5d7817deff32e94b5970"
       },
       {
         "schema": "everarcade.hotpocket.arena-wrapper.v0.1.journal-entry",
@@ -286,8 +286,8 @@
         "sequence": 4,
         "round": 4,
         "canonical_input": "{\"action\":\"attack\",\"player\":\"alice\",\"target\":\"bob\"}",
-        "canonical_state_before": "{\"combat_events\":[],\"commitments\":[{\"continuity_root\":\"aa4ec9a9ee7a559f601b1409da3edf0120e2a1015660e0b4e4721780bf6ac714\",\"receipt_root\":\"c5186d00637916c34aad4bbea770a85a49d8d5173db1f8a7160496749a68f1cb\",\"state_root\":\"1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652\",\"tick\":1,\"world_hash\":\"d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864\"},{\"continuity_root\":\"0024230fcb335d7770f25e2b87328496a8b9cc0f05d2cd608f68d6d8a1179aba\",\"receipt_root\":\"055997e166102339794543be3c86dfc5ae667994e4be9519ef7d3c084ca657ba\",\"state_root\":\"26fad3c0b81c4991bc1419185c76c5109319e4014aeb5786d24ee55010892710\",\"tick\":2,\"world_hash\":\"db0511d699e264d401eca5714cde0a8b494d42f4a11d0f910c8a9b7685c30287\"},{\"continuity_root\":\"0533549f7d3fe5bc7d63e71f2bbfcf03b8529488a452b2af7b3fb5b65c8f90eb\",\"receipt_root\":\"2ca956a7ef62f98a187515a1e2749e93bc6c162df966fa173854c03948c98f93\",\"state_root\":\"e5193757e1d843a8129b347fcd631fd2f74f1034239fcb80ff513fa95ed622e7\",\"tick\":3,\"world_hash\":\"c719aad740497b96e57c99674368349e9ec393e4347b70975cc09731b2a1acb2\"}],\"last_sequence\":{\"alice\":3,\"bob\":2},\"players\":{\"alice\":{\"connected\":true,\"health\":100,\"id\":\"alice\",\"score\":0,\"x\":1,\"y\":0},\"bob\":{\"connected\":true,\"health\":100,\"id\":\"bob\",\"score\":0,\"x\":0,\"y\":0}},\"tick\":3}",
-        "canonical_state_after": "{\"combat_events\":[{\"attacker\":\"alice\",\"damage\":25,\"target\":\"bob\",\"target_health\":75,\"tick\":4}],\"commitments\":[{\"continuity_root\":\"aa4ec9a9ee7a559f601b1409da3edf0120e2a1015660e0b4e4721780bf6ac714\",\"receipt_root\":\"c5186d00637916c34aad4bbea770a85a49d8d5173db1f8a7160496749a68f1cb\",\"state_root\":\"1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652\",\"tick\":1,\"world_hash\":\"d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864\"},{\"continuity_root\":\"0024230fcb335d7770f25e2b87328496a8b9cc0f05d2cd608f68d6d8a1179aba\",\"receipt_root\":\"055997e166102339794543be3c86dfc5ae667994e4be9519ef7d3c084ca657ba\",\"state_root\":\"26fad3c0b81c4991bc1419185c76c5109319e4014aeb5786d24ee55010892710\",\"tick\":2,\"world_hash\":\"db0511d699e264d401eca5714cde0a8b494d42f4a11d0f910c8a9b7685c30287\"},{\"continuity_root\":\"0533549f7d3fe5bc7d63e71f2bbfcf03b8529488a452b2af7b3fb5b65c8f90eb\",\"receipt_root\":\"2ca956a7ef62f98a187515a1e2749e93bc6c162df966fa173854c03948c98f93\",\"state_root\":\"e5193757e1d843a8129b347fcd631fd2f74f1034239fcb80ff513fa95ed622e7\",\"tick\":3,\"world_hash\":\"c719aad740497b96e57c99674368349e9ec393e4347b70975cc09731b2a1acb2\"},{\"continuity_root\":\"45522cdaf0c8ee93177ddd7d0bff3b9ce1fa13872c5323fd41b5d66c48bf3604\",\"receipt_root\":\"bf5e5ca3d43be5d622d8f48cfde13a5085f6c91c418596b4f3eb9efb2bb36bc5\",\"state_root\":\"24fab5a85bb2c61866bc26463757fdff0a82d3eb160dda5d2de2f55ae15ff55f\",\"tick\":4,\"world_hash\":\"e974e913a98f7ad3031c9356c705ee93f0d5cda615d830c8c0496940b39c2d87\"}],\"last_sequence\":{\"alice\":4,\"bob\":2},\"players\":{\"alice\":{\"connected\":true,\"health\":100,\"id\":\"alice\",\"score\":10,\"x\":1,\"y\":0},\"bob\":{\"connected\":true,\"health\":75,\"id\":\"bob\",\"score\":0,\"x\":0,\"y\":0}},\"tick\":4}",
+        "canonical_state_before": "{\"combat_events\":[],\"commitments\":[{\"continuity_root\":\"93ec4ae76d76e67d5121a090c1db4e32547475ae218af82c6a6dce200fe759ec\",\"receipt_root\":\"6681ad1bc8807365a510734d4e8c4810bbaf4e5d9453b16536499fc9c2e35400\",\"state_root\":\"1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652\",\"tick\":1,\"world_hash\":\"d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864\"},{\"continuity_root\":\"21c9585c2e5e541751696dd8a449a83a822b5f89074bcad950443db5218fd676\",\"receipt_root\":\"3a353f912e9be0c1b3cc430edd26cd93bf649bf174268784f688c1b62063f904\",\"state_root\":\"92bc1f88590f134b4ed624948e48eac34e7605030afb2451ca37b75358e88688\",\"tick\":2,\"world_hash\":\"db0511d699e264d401eca5714cde0a8b494d42f4a11d0f910c8a9b7685c30287\"},{\"continuity_root\":\"afad9f4ee8f031701600a0ea228f2aac20bb3075b2c9a78cb27dad61a6534704\",\"receipt_root\":\"8d80e6c72006f48c2459d604139229746d897feeb2f827b3266c5e9370595d0c\",\"state_root\":\"7fa98f2b5617d715c0f1ab222cc75a81e92099fe2d78c7a964912f6ecb676dee\",\"tick\":3,\"world_hash\":\"c719aad740497b96e57c99674368349e9ec393e4347b70975cc09731b2a1acb2\"}],\"last_sequence\":{\"alice\":3,\"bob\":2},\"players\":{\"alice\":{\"connected\":true,\"health\":100,\"id\":\"alice\",\"score\":0,\"x\":1,\"y\":0},\"bob\":{\"connected\":true,\"health\":100,\"id\":\"bob\",\"score\":0,\"x\":0,\"y\":0}},\"tick\":3}",
+        "canonical_state_after": "{\"combat_events\":[{\"attacker\":\"alice\",\"damage\":25,\"target\":\"bob\",\"target_health\":75,\"tick\":4}],\"commitments\":[{\"continuity_root\":\"93ec4ae76d76e67d5121a090c1db4e32547475ae218af82c6a6dce200fe759ec\",\"receipt_root\":\"6681ad1bc8807365a510734d4e8c4810bbaf4e5d9453b16536499fc9c2e35400\",\"state_root\":\"1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652\",\"tick\":1,\"world_hash\":\"d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864\"},{\"continuity_root\":\"21c9585c2e5e541751696dd8a449a83a822b5f89074bcad950443db5218fd676\",\"receipt_root\":\"3a353f912e9be0c1b3cc430edd26cd93bf649bf174268784f688c1b62063f904\",\"state_root\":\"92bc1f88590f134b4ed624948e48eac34e7605030afb2451ca37b75358e88688\",\"tick\":2,\"world_hash\":\"db0511d699e264d401eca5714cde0a8b494d42f4a11d0f910c8a9b7685c30287\"},{\"continuity_root\":\"afad9f4ee8f031701600a0ea228f2aac20bb3075b2c9a78cb27dad61a6534704\",\"receipt_root\":\"8d80e6c72006f48c2459d604139229746d897feeb2f827b3266c5e9370595d0c\",\"state_root\":\"7fa98f2b5617d715c0f1ab222cc75a81e92099fe2d78c7a964912f6ecb676dee\",\"tick\":3,\"world_hash\":\"c719aad740497b96e57c99674368349e9ec393e4347b70975cc09731b2a1acb2\"},{\"continuity_root\":\"f4c47f2cf4302f27fd3bef1e3ae136e007300472e12d9f83d6fd2e6f8a2a6261\",\"receipt_root\":\"44eee42ec796be82011cb31e06a0d0975eeb7306788ec53d5da4039ba64984e6\",\"state_root\":\"e8088bb09c23d98076de2005459fe8b4f59eaa11bc2238a3f6803c02a087602e\",\"tick\":4,\"world_hash\":\"e974e913a98f7ad3031c9356c705ee93f0d5cda615d830c8c0496940b39c2d87\"}],\"last_sequence\":{\"alice\":4,\"bob\":2},\"players\":{\"alice\":{\"connected\":true,\"health\":100,\"id\":\"alice\",\"score\":10,\"x\":1,\"y\":0},\"bob\":{\"connected\":true,\"health\":75,\"id\":\"bob\",\"score\":0,\"x\":0,\"y\":0}},\"tick\":4}",
         "action": {
           "action": "attack",
           "player": "alice",
@@ -322,23 +322,23 @@
             {
               "tick": 1,
               "state_root": "1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652",
-              "receipt_root": "c5186d00637916c34aad4bbea770a85a49d8d5173db1f8a7160496749a68f1cb",
+              "receipt_root": "6681ad1bc8807365a510734d4e8c4810bbaf4e5d9453b16536499fc9c2e35400",
               "world_hash": "d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864",
-              "continuity_root": "aa4ec9a9ee7a559f601b1409da3edf0120e2a1015660e0b4e4721780bf6ac714"
+              "continuity_root": "93ec4ae76d76e67d5121a090c1db4e32547475ae218af82c6a6dce200fe759ec"
             },
             {
               "tick": 2,
-              "state_root": "26fad3c0b81c4991bc1419185c76c5109319e4014aeb5786d24ee55010892710",
-              "receipt_root": "055997e166102339794543be3c86dfc5ae667994e4be9519ef7d3c084ca657ba",
+              "state_root": "92bc1f88590f134b4ed624948e48eac34e7605030afb2451ca37b75358e88688",
+              "receipt_root": "3a353f912e9be0c1b3cc430edd26cd93bf649bf174268784f688c1b62063f904",
               "world_hash": "db0511d699e264d401eca5714cde0a8b494d42f4a11d0f910c8a9b7685c30287",
-              "continuity_root": "0024230fcb335d7770f25e2b87328496a8b9cc0f05d2cd608f68d6d8a1179aba"
+              "continuity_root": "21c9585c2e5e541751696dd8a449a83a822b5f89074bcad950443db5218fd676"
             },
             {
               "tick": 3,
-              "state_root": "e5193757e1d843a8129b347fcd631fd2f74f1034239fcb80ff513fa95ed622e7",
-              "receipt_root": "2ca956a7ef62f98a187515a1e2749e93bc6c162df966fa173854c03948c98f93",
+              "state_root": "7fa98f2b5617d715c0f1ab222cc75a81e92099fe2d78c7a964912f6ecb676dee",
+              "receipt_root": "8d80e6c72006f48c2459d604139229746d897feeb2f827b3266c5e9370595d0c",
               "world_hash": "c719aad740497b96e57c99674368349e9ec393e4347b70975cc09731b2a1acb2",
-              "continuity_root": "0533549f7d3fe5bc7d63e71f2bbfcf03b8529488a452b2af7b3fb5b65c8f90eb"
+              "continuity_root": "afad9f4ee8f031701600a0ea228f2aac20bb3075b2c9a78cb27dad61a6534704"
             }
           ]
         },
@@ -379,42 +379,42 @@
             {
               "tick": 1,
               "state_root": "1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652",
-              "receipt_root": "c5186d00637916c34aad4bbea770a85a49d8d5173db1f8a7160496749a68f1cb",
+              "receipt_root": "6681ad1bc8807365a510734d4e8c4810bbaf4e5d9453b16536499fc9c2e35400",
               "world_hash": "d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864",
-              "continuity_root": "aa4ec9a9ee7a559f601b1409da3edf0120e2a1015660e0b4e4721780bf6ac714"
+              "continuity_root": "93ec4ae76d76e67d5121a090c1db4e32547475ae218af82c6a6dce200fe759ec"
             },
             {
               "tick": 2,
-              "state_root": "26fad3c0b81c4991bc1419185c76c5109319e4014aeb5786d24ee55010892710",
-              "receipt_root": "055997e166102339794543be3c86dfc5ae667994e4be9519ef7d3c084ca657ba",
+              "state_root": "92bc1f88590f134b4ed624948e48eac34e7605030afb2451ca37b75358e88688",
+              "receipt_root": "3a353f912e9be0c1b3cc430edd26cd93bf649bf174268784f688c1b62063f904",
               "world_hash": "db0511d699e264d401eca5714cde0a8b494d42f4a11d0f910c8a9b7685c30287",
-              "continuity_root": "0024230fcb335d7770f25e2b87328496a8b9cc0f05d2cd608f68d6d8a1179aba"
+              "continuity_root": "21c9585c2e5e541751696dd8a449a83a822b5f89074bcad950443db5218fd676"
             },
             {
               "tick": 3,
-              "state_root": "e5193757e1d843a8129b347fcd631fd2f74f1034239fcb80ff513fa95ed622e7",
-              "receipt_root": "2ca956a7ef62f98a187515a1e2749e93bc6c162df966fa173854c03948c98f93",
+              "state_root": "7fa98f2b5617d715c0f1ab222cc75a81e92099fe2d78c7a964912f6ecb676dee",
+              "receipt_root": "8d80e6c72006f48c2459d604139229746d897feeb2f827b3266c5e9370595d0c",
               "world_hash": "c719aad740497b96e57c99674368349e9ec393e4347b70975cc09731b2a1acb2",
-              "continuity_root": "0533549f7d3fe5bc7d63e71f2bbfcf03b8529488a452b2af7b3fb5b65c8f90eb"
+              "continuity_root": "afad9f4ee8f031701600a0ea228f2aac20bb3075b2c9a78cb27dad61a6534704"
             },
             {
               "tick": 4,
-              "state_root": "24fab5a85bb2c61866bc26463757fdff0a82d3eb160dda5d2de2f55ae15ff55f",
-              "receipt_root": "bf5e5ca3d43be5d622d8f48cfde13a5085f6c91c418596b4f3eb9efb2bb36bc5",
+              "state_root": "e8088bb09c23d98076de2005459fe8b4f59eaa11bc2238a3f6803c02a087602e",
+              "receipt_root": "44eee42ec796be82011cb31e06a0d0975eeb7306788ec53d5da4039ba64984e6",
               "world_hash": "e974e913a98f7ad3031c9356c705ee93f0d5cda615d830c8c0496940b39c2d87",
-              "continuity_root": "45522cdaf0c8ee93177ddd7d0bff3b9ce1fa13872c5323fd41b5d66c48bf3604"
+              "continuity_root": "f4c47f2cf4302f27fd3bef1e3ae136e007300472e12d9f83d6fd2e6f8a2a6261"
             }
           ]
         },
         "action_hash": "7998feaa43abf619dc17706d3b8f4aa8f39e989ea3e98b110f1b517590bfaced",
-        "receipt_hash": "b9d1879bdfa685be3fb19d787f72ef43c72d17e9e88541ca436e2c0573a09955",
+        "receipt_hash": "3aad00b3b3618423558b0467e5ed18311afc9258b57f205844dc5cd83c1b5212",
         "mutation": "player_attacked",
         "tick": 4,
-        "state_root": "24fab5a85bb2c61866bc26463757fdff0a82d3eb160dda5d2de2f55ae15ff55f",
-        "receipt_root": "bf5e5ca3d43be5d622d8f48cfde13a5085f6c91c418596b4f3eb9efb2bb36bc5",
+        "state_root": "e8088bb09c23d98076de2005459fe8b4f59eaa11bc2238a3f6803c02a087602e",
+        "receipt_root": "44eee42ec796be82011cb31e06a0d0975eeb7306788ec53d5da4039ba64984e6",
         "world_hash": "e974e913a98f7ad3031c9356c705ee93f0d5cda615d830c8c0496940b39c2d87",
-        "continuity_root": "45522cdaf0c8ee93177ddd7d0bff3b9ce1fa13872c5323fd41b5d66c48bf3604",
-        "journal_hash": "af616fc056eb775b28866df32e4cce7168e384771abb4c4aa53feed2a39bede1"
+        "continuity_root": "f4c47f2cf4302f27fd3bef1e3ae136e007300472e12d9f83d6fd2e6f8a2a6261",
+        "journal_hash": "6ef58d9fff0bcc4957ad09ed31303a86bfe8534470dea221230ab3b4e4bf3cd5"
       },
       {
         "schema": "everarcade.hotpocket.arena-wrapper.v0.1.journal-entry",
@@ -422,8 +422,8 @@
         "sequence": 5,
         "round": 5,
         "canonical_input": "{\"action\":\"score\",\"delta\":3,\"player\":\"bob\"}",
-        "canonical_state_before": "{\"combat_events\":[{\"attacker\":\"alice\",\"damage\":25,\"target\":\"bob\",\"target_health\":75,\"tick\":4}],\"commitments\":[{\"continuity_root\":\"aa4ec9a9ee7a559f601b1409da3edf0120e2a1015660e0b4e4721780bf6ac714\",\"receipt_root\":\"c5186d00637916c34aad4bbea770a85a49d8d5173db1f8a7160496749a68f1cb\",\"state_root\":\"1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652\",\"tick\":1,\"world_hash\":\"d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864\"},{\"continuity_root\":\"0024230fcb335d7770f25e2b87328496a8b9cc0f05d2cd608f68d6d8a1179aba\",\"receipt_root\":\"055997e166102339794543be3c86dfc5ae667994e4be9519ef7d3c084ca657ba\",\"state_root\":\"26fad3c0b81c4991bc1419185c76c5109319e4014aeb5786d24ee55010892710\",\"tick\":2,\"world_hash\":\"db0511d699e264d401eca5714cde0a8b494d42f4a11d0f910c8a9b7685c30287\"},{\"continuity_root\":\"0533549f7d3fe5bc7d63e71f2bbfcf03b8529488a452b2af7b3fb5b65c8f90eb\",\"receipt_root\":\"2ca956a7ef62f98a187515a1e2749e93bc6c162df966fa173854c03948c98f93\",\"state_root\":\"e5193757e1d843a8129b347fcd631fd2f74f1034239fcb80ff513fa95ed622e7\",\"tick\":3,\"world_hash\":\"c719aad740497b96e57c99674368349e9ec393e4347b70975cc09731b2a1acb2\"},{\"continuity_root\":\"45522cdaf0c8ee93177ddd7d0bff3b9ce1fa13872c5323fd41b5d66c48bf3604\",\"receipt_root\":\"bf5e5ca3d43be5d622d8f48cfde13a5085f6c91c418596b4f3eb9efb2bb36bc5\",\"state_root\":\"24fab5a85bb2c61866bc26463757fdff0a82d3eb160dda5d2de2f55ae15ff55f\",\"tick\":4,\"world_hash\":\"e974e913a98f7ad3031c9356c705ee93f0d5cda615d830c8c0496940b39c2d87\"}],\"last_sequence\":{\"alice\":4,\"bob\":2},\"players\":{\"alice\":{\"connected\":true,\"health\":100,\"id\":\"alice\",\"score\":10,\"x\":1,\"y\":0},\"bob\":{\"connected\":true,\"health\":75,\"id\":\"bob\",\"score\":0,\"x\":0,\"y\":0}},\"tick\":4}",
-        "canonical_state_after": "{\"combat_events\":[{\"attacker\":\"alice\",\"damage\":25,\"target\":\"bob\",\"target_health\":75,\"tick\":4}],\"commitments\":[{\"continuity_root\":\"aa4ec9a9ee7a559f601b1409da3edf0120e2a1015660e0b4e4721780bf6ac714\",\"receipt_root\":\"c5186d00637916c34aad4bbea770a85a49d8d5173db1f8a7160496749a68f1cb\",\"state_root\":\"1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652\",\"tick\":1,\"world_hash\":\"d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864\"},{\"continuity_root\":\"0024230fcb335d7770f25e2b87328496a8b9cc0f05d2cd608f68d6d8a1179aba\",\"receipt_root\":\"055997e166102339794543be3c86dfc5ae667994e4be9519ef7d3c084ca657ba\",\"state_root\":\"26fad3c0b81c4991bc1419185c76c5109319e4014aeb5786d24ee55010892710\",\"tick\":2,\"world_hash\":\"db0511d699e264d401eca5714cde0a8b494d42f4a11d0f910c8a9b7685c30287\"},{\"continuity_root\":\"0533549f7d3fe5bc7d63e71f2bbfcf03b8529488a452b2af7b3fb5b65c8f90eb\",\"receipt_root\":\"2ca956a7ef62f98a187515a1e2749e93bc6c162df966fa173854c03948c98f93\",\"state_root\":\"e5193757e1d843a8129b347fcd631fd2f74f1034239fcb80ff513fa95ed622e7\",\"tick\":3,\"world_hash\":\"c719aad740497b96e57c99674368349e9ec393e4347b70975cc09731b2a1acb2\"},{\"continuity_root\":\"45522cdaf0c8ee93177ddd7d0bff3b9ce1fa13872c5323fd41b5d66c48bf3604\",\"receipt_root\":\"bf5e5ca3d43be5d622d8f48cfde13a5085f6c91c418596b4f3eb9efb2bb36bc5\",\"state_root\":\"24fab5a85bb2c61866bc26463757fdff0a82d3eb160dda5d2de2f55ae15ff55f\",\"tick\":4,\"world_hash\":\"e974e913a98f7ad3031c9356c705ee93f0d5cda615d830c8c0496940b39c2d87\"},{\"continuity_root\":\"6ab20ca0b15d6fcfd785c552c7d71cbda4fb8c7e96c387012effc8eba302f48e\",\"receipt_root\":\"75a76fed71e3bbf2618d724685989a2bb13dcb1d734bc24caf2a1f3c66f9c3c4\",\"state_root\":\"ccbc20c409a06a0023e795a78227ab20f8e08ffee0d3a32b034e284b7f074e9e\",\"tick\":5,\"world_hash\":\"7dc6717b2090b2a51fd790b6936e714a221e90679bf41e721dc8e0ecda72d62f\"}],\"last_sequence\":{\"alice\":4,\"bob\":5},\"players\":{\"alice\":{\"connected\":true,\"health\":100,\"id\":\"alice\",\"score\":10,\"x\":1,\"y\":0},\"bob\":{\"connected\":true,\"health\":75,\"id\":\"bob\",\"score\":3,\"x\":0,\"y\":0}},\"tick\":5}",
+        "canonical_state_before": "{\"combat_events\":[{\"attacker\":\"alice\",\"damage\":25,\"target\":\"bob\",\"target_health\":75,\"tick\":4}],\"commitments\":[{\"continuity_root\":\"93ec4ae76d76e67d5121a090c1db4e32547475ae218af82c6a6dce200fe759ec\",\"receipt_root\":\"6681ad1bc8807365a510734d4e8c4810bbaf4e5d9453b16536499fc9c2e35400\",\"state_root\":\"1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652\",\"tick\":1,\"world_hash\":\"d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864\"},{\"continuity_root\":\"21c9585c2e5e541751696dd8a449a83a822b5f89074bcad950443db5218fd676\",\"receipt_root\":\"3a353f912e9be0c1b3cc430edd26cd93bf649bf174268784f688c1b62063f904\",\"state_root\":\"92bc1f88590f134b4ed624948e48eac34e7605030afb2451ca37b75358e88688\",\"tick\":2,\"world_hash\":\"db0511d699e264d401eca5714cde0a8b494d42f4a11d0f910c8a9b7685c30287\"},{\"continuity_root\":\"afad9f4ee8f031701600a0ea228f2aac20bb3075b2c9a78cb27dad61a6534704\",\"receipt_root\":\"8d80e6c72006f48c2459d604139229746d897feeb2f827b3266c5e9370595d0c\",\"state_root\":\"7fa98f2b5617d715c0f1ab222cc75a81e92099fe2d78c7a964912f6ecb676dee\",\"tick\":3,\"world_hash\":\"c719aad740497b96e57c99674368349e9ec393e4347b70975cc09731b2a1acb2\"},{\"continuity_root\":\"f4c47f2cf4302f27fd3bef1e3ae136e007300472e12d9f83d6fd2e6f8a2a6261\",\"receipt_root\":\"44eee42ec796be82011cb31e06a0d0975eeb7306788ec53d5da4039ba64984e6\",\"state_root\":\"e8088bb09c23d98076de2005459fe8b4f59eaa11bc2238a3f6803c02a087602e\",\"tick\":4,\"world_hash\":\"e974e913a98f7ad3031c9356c705ee93f0d5cda615d830c8c0496940b39c2d87\"}],\"last_sequence\":{\"alice\":4,\"bob\":2},\"players\":{\"alice\":{\"connected\":true,\"health\":100,\"id\":\"alice\",\"score\":10,\"x\":1,\"y\":0},\"bob\":{\"connected\":true,\"health\":75,\"id\":\"bob\",\"score\":0,\"x\":0,\"y\":0}},\"tick\":4}",
+        "canonical_state_after": "{\"combat_events\":[{\"attacker\":\"alice\",\"damage\":25,\"target\":\"bob\",\"target_health\":75,\"tick\":4}],\"commitments\":[{\"continuity_root\":\"93ec4ae76d76e67d5121a090c1db4e32547475ae218af82c6a6dce200fe759ec\",\"receipt_root\":\"6681ad1bc8807365a510734d4e8c4810bbaf4e5d9453b16536499fc9c2e35400\",\"state_root\":\"1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652\",\"tick\":1,\"world_hash\":\"d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864\"},{\"continuity_root\":\"21c9585c2e5e541751696dd8a449a83a822b5f89074bcad950443db5218fd676\",\"receipt_root\":\"3a353f912e9be0c1b3cc430edd26cd93bf649bf174268784f688c1b62063f904\",\"state_root\":\"92bc1f88590f134b4ed624948e48eac34e7605030afb2451ca37b75358e88688\",\"tick\":2,\"world_hash\":\"db0511d699e264d401eca5714cde0a8b494d42f4a11d0f910c8a9b7685c30287\"},{\"continuity_root\":\"afad9f4ee8f031701600a0ea228f2aac20bb3075b2c9a78cb27dad61a6534704\",\"receipt_root\":\"8d80e6c72006f48c2459d604139229746d897feeb2f827b3266c5e9370595d0c\",\"state_root\":\"7fa98f2b5617d715c0f1ab222cc75a81e92099fe2d78c7a964912f6ecb676dee\",\"tick\":3,\"world_hash\":\"c719aad740497b96e57c99674368349e9ec393e4347b70975cc09731b2a1acb2\"},{\"continuity_root\":\"f4c47f2cf4302f27fd3bef1e3ae136e007300472e12d9f83d6fd2e6f8a2a6261\",\"receipt_root\":\"44eee42ec796be82011cb31e06a0d0975eeb7306788ec53d5da4039ba64984e6\",\"state_root\":\"e8088bb09c23d98076de2005459fe8b4f59eaa11bc2238a3f6803c02a087602e\",\"tick\":4,\"world_hash\":\"e974e913a98f7ad3031c9356c705ee93f0d5cda615d830c8c0496940b39c2d87\"},{\"continuity_root\":\"5f7ad4b423e8efdfe426727e5768f9b957e858d932abd37943f91ea881e52607\",\"receipt_root\":\"c909ed34da92a1932e42e1afe7dfca1e79ca93da9004e4e42ad170fb3ce20f09\",\"state_root\":\"66e964995ce235f831d37973ef9f292e8a91eb03163f393cf4c235a4f2c1b771\",\"tick\":5,\"world_hash\":\"7dc6717b2090b2a51fd790b6936e714a221e90679bf41e721dc8e0ecda72d62f\"}],\"last_sequence\":{\"alice\":4,\"bob\":5},\"players\":{\"alice\":{\"connected\":true,\"health\":100,\"id\":\"alice\",\"score\":10,\"x\":1,\"y\":0},\"bob\":{\"connected\":true,\"health\":75,\"id\":\"bob\",\"score\":3,\"x\":0,\"y\":0}},\"tick\":5}",
         "action": {
           "action": "score",
           "delta": 3,
@@ -466,30 +466,30 @@
             {
               "tick": 1,
               "state_root": "1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652",
-              "receipt_root": "c5186d00637916c34aad4bbea770a85a49d8d5173db1f8a7160496749a68f1cb",
+              "receipt_root": "6681ad1bc8807365a510734d4e8c4810bbaf4e5d9453b16536499fc9c2e35400",
               "world_hash": "d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864",
-              "continuity_root": "aa4ec9a9ee7a559f601b1409da3edf0120e2a1015660e0b4e4721780bf6ac714"
+              "continuity_root": "93ec4ae76d76e67d5121a090c1db4e32547475ae218af82c6a6dce200fe759ec"
             },
             {
               "tick": 2,
-              "state_root": "26fad3c0b81c4991bc1419185c76c5109319e4014aeb5786d24ee55010892710",
-              "receipt_root": "055997e166102339794543be3c86dfc5ae667994e4be9519ef7d3c084ca657ba",
+              "state_root": "92bc1f88590f134b4ed624948e48eac34e7605030afb2451ca37b75358e88688",
+              "receipt_root": "3a353f912e9be0c1b3cc430edd26cd93bf649bf174268784f688c1b62063f904",
               "world_hash": "db0511d699e264d401eca5714cde0a8b494d42f4a11d0f910c8a9b7685c30287",
-              "continuity_root": "0024230fcb335d7770f25e2b87328496a8b9cc0f05d2cd608f68d6d8a1179aba"
+              "continuity_root": "21c9585c2e5e541751696dd8a449a83a822b5f89074bcad950443db5218fd676"
             },
             {
               "tick": 3,
-              "state_root": "e5193757e1d843a8129b347fcd631fd2f74f1034239fcb80ff513fa95ed622e7",
-              "receipt_root": "2ca956a7ef62f98a187515a1e2749e93bc6c162df966fa173854c03948c98f93",
+              "state_root": "7fa98f2b5617d715c0f1ab222cc75a81e92099fe2d78c7a964912f6ecb676dee",
+              "receipt_root": "8d80e6c72006f48c2459d604139229746d897feeb2f827b3266c5e9370595d0c",
               "world_hash": "c719aad740497b96e57c99674368349e9ec393e4347b70975cc09731b2a1acb2",
-              "continuity_root": "0533549f7d3fe5bc7d63e71f2bbfcf03b8529488a452b2af7b3fb5b65c8f90eb"
+              "continuity_root": "afad9f4ee8f031701600a0ea228f2aac20bb3075b2c9a78cb27dad61a6534704"
             },
             {
               "tick": 4,
-              "state_root": "24fab5a85bb2c61866bc26463757fdff0a82d3eb160dda5d2de2f55ae15ff55f",
-              "receipt_root": "bf5e5ca3d43be5d622d8f48cfde13a5085f6c91c418596b4f3eb9efb2bb36bc5",
+              "state_root": "e8088bb09c23d98076de2005459fe8b4f59eaa11bc2238a3f6803c02a087602e",
+              "receipt_root": "44eee42ec796be82011cb31e06a0d0975eeb7306788ec53d5da4039ba64984e6",
               "world_hash": "e974e913a98f7ad3031c9356c705ee93f0d5cda615d830c8c0496940b39c2d87",
-              "continuity_root": "45522cdaf0c8ee93177ddd7d0bff3b9ce1fa13872c5323fd41b5d66c48bf3604"
+              "continuity_root": "f4c47f2cf4302f27fd3bef1e3ae136e007300472e12d9f83d6fd2e6f8a2a6261"
             }
           ]
         },
@@ -530,49 +530,49 @@
             {
               "tick": 1,
               "state_root": "1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652",
-              "receipt_root": "c5186d00637916c34aad4bbea770a85a49d8d5173db1f8a7160496749a68f1cb",
+              "receipt_root": "6681ad1bc8807365a510734d4e8c4810bbaf4e5d9453b16536499fc9c2e35400",
               "world_hash": "d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864",
-              "continuity_root": "aa4ec9a9ee7a559f601b1409da3edf0120e2a1015660e0b4e4721780bf6ac714"
+              "continuity_root": "93ec4ae76d76e67d5121a090c1db4e32547475ae218af82c6a6dce200fe759ec"
             },
             {
               "tick": 2,
-              "state_root": "26fad3c0b81c4991bc1419185c76c5109319e4014aeb5786d24ee55010892710",
-              "receipt_root": "055997e166102339794543be3c86dfc5ae667994e4be9519ef7d3c084ca657ba",
+              "state_root": "92bc1f88590f134b4ed624948e48eac34e7605030afb2451ca37b75358e88688",
+              "receipt_root": "3a353f912e9be0c1b3cc430edd26cd93bf649bf174268784f688c1b62063f904",
               "world_hash": "db0511d699e264d401eca5714cde0a8b494d42f4a11d0f910c8a9b7685c30287",
-              "continuity_root": "0024230fcb335d7770f25e2b87328496a8b9cc0f05d2cd608f68d6d8a1179aba"
+              "continuity_root": "21c9585c2e5e541751696dd8a449a83a822b5f89074bcad950443db5218fd676"
             },
             {
               "tick": 3,
-              "state_root": "e5193757e1d843a8129b347fcd631fd2f74f1034239fcb80ff513fa95ed622e7",
-              "receipt_root": "2ca956a7ef62f98a187515a1e2749e93bc6c162df966fa173854c03948c98f93",
+              "state_root": "7fa98f2b5617d715c0f1ab222cc75a81e92099fe2d78c7a964912f6ecb676dee",
+              "receipt_root": "8d80e6c72006f48c2459d604139229746d897feeb2f827b3266c5e9370595d0c",
               "world_hash": "c719aad740497b96e57c99674368349e9ec393e4347b70975cc09731b2a1acb2",
-              "continuity_root": "0533549f7d3fe5bc7d63e71f2bbfcf03b8529488a452b2af7b3fb5b65c8f90eb"
+              "continuity_root": "afad9f4ee8f031701600a0ea228f2aac20bb3075b2c9a78cb27dad61a6534704"
             },
             {
               "tick": 4,
-              "state_root": "24fab5a85bb2c61866bc26463757fdff0a82d3eb160dda5d2de2f55ae15ff55f",
-              "receipt_root": "bf5e5ca3d43be5d622d8f48cfde13a5085f6c91c418596b4f3eb9efb2bb36bc5",
+              "state_root": "e8088bb09c23d98076de2005459fe8b4f59eaa11bc2238a3f6803c02a087602e",
+              "receipt_root": "44eee42ec796be82011cb31e06a0d0975eeb7306788ec53d5da4039ba64984e6",
               "world_hash": "e974e913a98f7ad3031c9356c705ee93f0d5cda615d830c8c0496940b39c2d87",
-              "continuity_root": "45522cdaf0c8ee93177ddd7d0bff3b9ce1fa13872c5323fd41b5d66c48bf3604"
+              "continuity_root": "f4c47f2cf4302f27fd3bef1e3ae136e007300472e12d9f83d6fd2e6f8a2a6261"
             },
             {
               "tick": 5,
-              "state_root": "ccbc20c409a06a0023e795a78227ab20f8e08ffee0d3a32b034e284b7f074e9e",
-              "receipt_root": "75a76fed71e3bbf2618d724685989a2bb13dcb1d734bc24caf2a1f3c66f9c3c4",
+              "state_root": "66e964995ce235f831d37973ef9f292e8a91eb03163f393cf4c235a4f2c1b771",
+              "receipt_root": "c909ed34da92a1932e42e1afe7dfca1e79ca93da9004e4e42ad170fb3ce20f09",
               "world_hash": "7dc6717b2090b2a51fd790b6936e714a221e90679bf41e721dc8e0ecda72d62f",
-              "continuity_root": "6ab20ca0b15d6fcfd785c552c7d71cbda4fb8c7e96c387012effc8eba302f48e"
+              "continuity_root": "5f7ad4b423e8efdfe426727e5768f9b957e858d932abd37943f91ea881e52607"
             }
           ]
         },
         "action_hash": "d157c9291e58f50699dc8e4c62a1bad7eff01c5f6d4a8077668cf7ffb85a8191",
-        "receipt_hash": "ff9e2818275e8329e0a8dde437d472368ded726696a91fad573e64bde267b058",
+        "receipt_hash": "af87befce82d915a4783171af6e8df18dc2d893de07c162eeaeba10086c85240",
         "mutation": "player_scored",
         "tick": 5,
-        "state_root": "ccbc20c409a06a0023e795a78227ab20f8e08ffee0d3a32b034e284b7f074e9e",
-        "receipt_root": "75a76fed71e3bbf2618d724685989a2bb13dcb1d734bc24caf2a1f3c66f9c3c4",
+        "state_root": "66e964995ce235f831d37973ef9f292e8a91eb03163f393cf4c235a4f2c1b771",
+        "receipt_root": "c909ed34da92a1932e42e1afe7dfca1e79ca93da9004e4e42ad170fb3ce20f09",
         "world_hash": "7dc6717b2090b2a51fd790b6936e714a221e90679bf41e721dc8e0ecda72d62f",
-        "continuity_root": "6ab20ca0b15d6fcfd785c552c7d71cbda4fb8c7e96c387012effc8eba302f48e",
-        "journal_hash": "c412eeeb6486e43ccf93f1d28bcdcf6b47aef42c7a43b16bb57e5503d0b2d891"
+        "continuity_root": "5f7ad4b423e8efdfe426727e5768f9b957e858d932abd37943f91ea881e52607",
+        "journal_hash": "e76926dc34fc8a8bf441a625d0aed526f0489ea26daa4b6adf09d332346aae1e"
       },
       {
         "schema": "everarcade.hotpocket.arena-wrapper.v0.1.journal-entry",
@@ -580,8 +580,8 @@
         "sequence": 6,
         "round": 6,
         "canonical_input": "{\"action\":\"disconnect\",\"player\":\"alice\"}",
-        "canonical_state_before": "{\"combat_events\":[{\"attacker\":\"alice\",\"damage\":25,\"target\":\"bob\",\"target_health\":75,\"tick\":4}],\"commitments\":[{\"continuity_root\":\"aa4ec9a9ee7a559f601b1409da3edf0120e2a1015660e0b4e4721780bf6ac714\",\"receipt_root\":\"c5186d00637916c34aad4bbea770a85a49d8d5173db1f8a7160496749a68f1cb\",\"state_root\":\"1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652\",\"tick\":1,\"world_hash\":\"d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864\"},{\"continuity_root\":\"0024230fcb335d7770f25e2b87328496a8b9cc0f05d2cd608f68d6d8a1179aba\",\"receipt_root\":\"055997e166102339794543be3c86dfc5ae667994e4be9519ef7d3c084ca657ba\",\"state_root\":\"26fad3c0b81c4991bc1419185c76c5109319e4014aeb5786d24ee55010892710\",\"tick\":2,\"world_hash\":\"db0511d699e264d401eca5714cde0a8b494d42f4a11d0f910c8a9b7685c30287\"},{\"continuity_root\":\"0533549f7d3fe5bc7d63e71f2bbfcf03b8529488a452b2af7b3fb5b65c8f90eb\",\"receipt_root\":\"2ca956a7ef62f98a187515a1e2749e93bc6c162df966fa173854c03948c98f93\",\"state_root\":\"e5193757e1d843a8129b347fcd631fd2f74f1034239fcb80ff513fa95ed622e7\",\"tick\":3,\"world_hash\":\"c719aad740497b96e57c99674368349e9ec393e4347b70975cc09731b2a1acb2\"},{\"continuity_root\":\"45522cdaf0c8ee93177ddd7d0bff3b9ce1fa13872c5323fd41b5d66c48bf3604\",\"receipt_root\":\"bf5e5ca3d43be5d622d8f48cfde13a5085f6c91c418596b4f3eb9efb2bb36bc5\",\"state_root\":\"24fab5a85bb2c61866bc26463757fdff0a82d3eb160dda5d2de2f55ae15ff55f\",\"tick\":4,\"world_hash\":\"e974e913a98f7ad3031c9356c705ee93f0d5cda615d830c8c0496940b39c2d87\"},{\"continuity_root\":\"6ab20ca0b15d6fcfd785c552c7d71cbda4fb8c7e96c387012effc8eba302f48e\",\"receipt_root\":\"75a76fed71e3bbf2618d724685989a2bb13dcb1d734bc24caf2a1f3c66f9c3c4\",\"state_root\":\"ccbc20c409a06a0023e795a78227ab20f8e08ffee0d3a32b034e284b7f074e9e\",\"tick\":5,\"world_hash\":\"7dc6717b2090b2a51fd790b6936e714a221e90679bf41e721dc8e0ecda72d62f\"}],\"last_sequence\":{\"alice\":4,\"bob\":5},\"players\":{\"alice\":{\"connected\":true,\"health\":100,\"id\":\"alice\",\"score\":10,\"x\":1,\"y\":0},\"bob\":{\"connected\":true,\"health\":75,\"id\":\"bob\",\"score\":3,\"x\":0,\"y\":0}},\"tick\":5}",
-        "canonical_state_after": "{\"combat_events\":[{\"attacker\":\"alice\",\"damage\":25,\"target\":\"bob\",\"target_health\":75,\"tick\":4}],\"commitments\":[{\"continuity_root\":\"aa4ec9a9ee7a559f601b1409da3edf0120e2a1015660e0b4e4721780bf6ac714\",\"receipt_root\":\"c5186d00637916c34aad4bbea770a85a49d8d5173db1f8a7160496749a68f1cb\",\"state_root\":\"1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652\",\"tick\":1,\"world_hash\":\"d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864\"},{\"continuity_root\":\"0024230fcb335d7770f25e2b87328496a8b9cc0f05d2cd608f68d6d8a1179aba\",\"receipt_root\":\"055997e166102339794543be3c86dfc5ae667994e4be9519ef7d3c084ca657ba\",\"state_root\":\"26fad3c0b81c4991bc1419185c76c5109319e4014aeb5786d24ee55010892710\",\"tick\":2,\"world_hash\":\"db0511d699e264d401eca5714cde0a8b494d42f4a11d0f910c8a9b7685c30287\"},{\"continuity_root\":\"0533549f7d3fe5bc7d63e71f2bbfcf03b8529488a452b2af7b3fb5b65c8f90eb\",\"receipt_root\":\"2ca956a7ef62f98a187515a1e2749e93bc6c162df966fa173854c03948c98f93\",\"state_root\":\"e5193757e1d843a8129b347fcd631fd2f74f1034239fcb80ff513fa95ed622e7\",\"tick\":3,\"world_hash\":\"c719aad740497b96e57c99674368349e9ec393e4347b70975cc09731b2a1acb2\"},{\"continuity_root\":\"45522cdaf0c8ee93177ddd7d0bff3b9ce1fa13872c5323fd41b5d66c48bf3604\",\"receipt_root\":\"bf5e5ca3d43be5d622d8f48cfde13a5085f6c91c418596b4f3eb9efb2bb36bc5\",\"state_root\":\"24fab5a85bb2c61866bc26463757fdff0a82d3eb160dda5d2de2f55ae15ff55f\",\"tick\":4,\"world_hash\":\"e974e913a98f7ad3031c9356c705ee93f0d5cda615d830c8c0496940b39c2d87\"},{\"continuity_root\":\"6ab20ca0b15d6fcfd785c552c7d71cbda4fb8c7e96c387012effc8eba302f48e\",\"receipt_root\":\"75a76fed71e3bbf2618d724685989a2bb13dcb1d734bc24caf2a1f3c66f9c3c4\",\"state_root\":\"ccbc20c409a06a0023e795a78227ab20f8e08ffee0d3a32b034e284b7f074e9e\",\"tick\":5,\"world_hash\":\"7dc6717b2090b2a51fd790b6936e714a221e90679bf41e721dc8e0ecda72d62f\"},{\"continuity_root\":\"4cc09dae306f2a5bff3178a04e0af517dd73bf7208fdee0dcee024bbf6dc4070\",\"receipt_root\":\"5d374ac09698377e26d8e420c7f5d376d7e7529f6652c894dcad5df639c82396\",\"state_root\":\"7a41747955ea8e0202d3cf8be4b560fffb765515585773f63e4621d8a406c36e\",\"tick\":6,\"world_hash\":\"9a9a0611e554134aa668d8f4ae2212a38a4477411e6da5f9089aa12ab4916c41\"}],\"last_sequence\":{\"alice\":6,\"bob\":5},\"players\":{\"alice\":{\"connected\":false,\"health\":100,\"id\":\"alice\",\"score\":10,\"x\":1,\"y\":0},\"bob\":{\"connected\":true,\"health\":75,\"id\":\"bob\",\"score\":3,\"x\":0,\"y\":0}},\"tick\":6}",
+        "canonical_state_before": "{\"combat_events\":[{\"attacker\":\"alice\",\"damage\":25,\"target\":\"bob\",\"target_health\":75,\"tick\":4}],\"commitments\":[{\"continuity_root\":\"93ec4ae76d76e67d5121a090c1db4e32547475ae218af82c6a6dce200fe759ec\",\"receipt_root\":\"6681ad1bc8807365a510734d4e8c4810bbaf4e5d9453b16536499fc9c2e35400\",\"state_root\":\"1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652\",\"tick\":1,\"world_hash\":\"d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864\"},{\"continuity_root\":\"21c9585c2e5e541751696dd8a449a83a822b5f89074bcad950443db5218fd676\",\"receipt_root\":\"3a353f912e9be0c1b3cc430edd26cd93bf649bf174268784f688c1b62063f904\",\"state_root\":\"92bc1f88590f134b4ed624948e48eac34e7605030afb2451ca37b75358e88688\",\"tick\":2,\"world_hash\":\"db0511d699e264d401eca5714cde0a8b494d42f4a11d0f910c8a9b7685c30287\"},{\"continuity_root\":\"afad9f4ee8f031701600a0ea228f2aac20bb3075b2c9a78cb27dad61a6534704\",\"receipt_root\":\"8d80e6c72006f48c2459d604139229746d897feeb2f827b3266c5e9370595d0c\",\"state_root\":\"7fa98f2b5617d715c0f1ab222cc75a81e92099fe2d78c7a964912f6ecb676dee\",\"tick\":3,\"world_hash\":\"c719aad740497b96e57c99674368349e9ec393e4347b70975cc09731b2a1acb2\"},{\"continuity_root\":\"f4c47f2cf4302f27fd3bef1e3ae136e007300472e12d9f83d6fd2e6f8a2a6261\",\"receipt_root\":\"44eee42ec796be82011cb31e06a0d0975eeb7306788ec53d5da4039ba64984e6\",\"state_root\":\"e8088bb09c23d98076de2005459fe8b4f59eaa11bc2238a3f6803c02a087602e\",\"tick\":4,\"world_hash\":\"e974e913a98f7ad3031c9356c705ee93f0d5cda615d830c8c0496940b39c2d87\"},{\"continuity_root\":\"5f7ad4b423e8efdfe426727e5768f9b957e858d932abd37943f91ea881e52607\",\"receipt_root\":\"c909ed34da92a1932e42e1afe7dfca1e79ca93da9004e4e42ad170fb3ce20f09\",\"state_root\":\"66e964995ce235f831d37973ef9f292e8a91eb03163f393cf4c235a4f2c1b771\",\"tick\":5,\"world_hash\":\"7dc6717b2090b2a51fd790b6936e714a221e90679bf41e721dc8e0ecda72d62f\"}],\"last_sequence\":{\"alice\":4,\"bob\":5},\"players\":{\"alice\":{\"connected\":true,\"health\":100,\"id\":\"alice\",\"score\":10,\"x\":1,\"y\":0},\"bob\":{\"connected\":true,\"health\":75,\"id\":\"bob\",\"score\":3,\"x\":0,\"y\":0}},\"tick\":5}",
+        "canonical_state_after": "{\"combat_events\":[{\"attacker\":\"alice\",\"damage\":25,\"target\":\"bob\",\"target_health\":75,\"tick\":4}],\"commitments\":[{\"continuity_root\":\"93ec4ae76d76e67d5121a090c1db4e32547475ae218af82c6a6dce200fe759ec\",\"receipt_root\":\"6681ad1bc8807365a510734d4e8c4810bbaf4e5d9453b16536499fc9c2e35400\",\"state_root\":\"1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652\",\"tick\":1,\"world_hash\":\"d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864\"},{\"continuity_root\":\"21c9585c2e5e541751696dd8a449a83a822b5f89074bcad950443db5218fd676\",\"receipt_root\":\"3a353f912e9be0c1b3cc430edd26cd93bf649bf174268784f688c1b62063f904\",\"state_root\":\"92bc1f88590f134b4ed624948e48eac34e7605030afb2451ca37b75358e88688\",\"tick\":2,\"world_hash\":\"db0511d699e264d401eca5714cde0a8b494d42f4a11d0f910c8a9b7685c30287\"},{\"continuity_root\":\"afad9f4ee8f031701600a0ea228f2aac20bb3075b2c9a78cb27dad61a6534704\",\"receipt_root\":\"8d80e6c72006f48c2459d604139229746d897feeb2f827b3266c5e9370595d0c\",\"state_root\":\"7fa98f2b5617d715c0f1ab222cc75a81e92099fe2d78c7a964912f6ecb676dee\",\"tick\":3,\"world_hash\":\"c719aad740497b96e57c99674368349e9ec393e4347b70975cc09731b2a1acb2\"},{\"continuity_root\":\"f4c47f2cf4302f27fd3bef1e3ae136e007300472e12d9f83d6fd2e6f8a2a6261\",\"receipt_root\":\"44eee42ec796be82011cb31e06a0d0975eeb7306788ec53d5da4039ba64984e6\",\"state_root\":\"e8088bb09c23d98076de2005459fe8b4f59eaa11bc2238a3f6803c02a087602e\",\"tick\":4,\"world_hash\":\"e974e913a98f7ad3031c9356c705ee93f0d5cda615d830c8c0496940b39c2d87\"},{\"continuity_root\":\"5f7ad4b423e8efdfe426727e5768f9b957e858d932abd37943f91ea881e52607\",\"receipt_root\":\"c909ed34da92a1932e42e1afe7dfca1e79ca93da9004e4e42ad170fb3ce20f09\",\"state_root\":\"66e964995ce235f831d37973ef9f292e8a91eb03163f393cf4c235a4f2c1b771\",\"tick\":5,\"world_hash\":\"7dc6717b2090b2a51fd790b6936e714a221e90679bf41e721dc8e0ecda72d62f\"},{\"continuity_root\":\"1c7c4ed343087c0ef67bad030a39e121e780c9fda8d4e79f558982c1700fa85b\",\"receipt_root\":\"e1f7664d2583869cd2d7f42fa81f8faaae046f0f8291d565d16942cee6220cae\",\"state_root\":\"8a7ebc339011bd6e7df8b592d83cd8ceb60b422ec4ec247282d5dafc928ac2f1\",\"tick\":6,\"world_hash\":\"9a9a0611e554134aa668d8f4ae2212a38a4477411e6da5f9089aa12ab4916c41\"}],\"last_sequence\":{\"alice\":6,\"bob\":5},\"players\":{\"alice\":{\"connected\":false,\"health\":100,\"id\":\"alice\",\"score\":10,\"x\":1,\"y\":0},\"bob\":{\"connected\":true,\"health\":75,\"id\":\"bob\",\"score\":3,\"x\":0,\"y\":0}},\"tick\":6}",
         "action": {
           "action": "disconnect",
           "player": "alice"
@@ -623,37 +623,37 @@
             {
               "tick": 1,
               "state_root": "1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652",
-              "receipt_root": "c5186d00637916c34aad4bbea770a85a49d8d5173db1f8a7160496749a68f1cb",
+              "receipt_root": "6681ad1bc8807365a510734d4e8c4810bbaf4e5d9453b16536499fc9c2e35400",
               "world_hash": "d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864",
-              "continuity_root": "aa4ec9a9ee7a559f601b1409da3edf0120e2a1015660e0b4e4721780bf6ac714"
+              "continuity_root": "93ec4ae76d76e67d5121a090c1db4e32547475ae218af82c6a6dce200fe759ec"
             },
             {
               "tick": 2,
-              "state_root": "26fad3c0b81c4991bc1419185c76c5109319e4014aeb5786d24ee55010892710",
-              "receipt_root": "055997e166102339794543be3c86dfc5ae667994e4be9519ef7d3c084ca657ba",
+              "state_root": "92bc1f88590f134b4ed624948e48eac34e7605030afb2451ca37b75358e88688",
+              "receipt_root": "3a353f912e9be0c1b3cc430edd26cd93bf649bf174268784f688c1b62063f904",
               "world_hash": "db0511d699e264d401eca5714cde0a8b494d42f4a11d0f910c8a9b7685c30287",
-              "continuity_root": "0024230fcb335d7770f25e2b87328496a8b9cc0f05d2cd608f68d6d8a1179aba"
+              "continuity_root": "21c9585c2e5e541751696dd8a449a83a822b5f89074bcad950443db5218fd676"
             },
             {
               "tick": 3,
-              "state_root": "e5193757e1d843a8129b347fcd631fd2f74f1034239fcb80ff513fa95ed622e7",
-              "receipt_root": "2ca956a7ef62f98a187515a1e2749e93bc6c162df966fa173854c03948c98f93",
+              "state_root": "7fa98f2b5617d715c0f1ab222cc75a81e92099fe2d78c7a964912f6ecb676dee",
+              "receipt_root": "8d80e6c72006f48c2459d604139229746d897feeb2f827b3266c5e9370595d0c",
               "world_hash": "c719aad740497b96e57c99674368349e9ec393e4347b70975cc09731b2a1acb2",
-              "continuity_root": "0533549f7d3fe5bc7d63e71f2bbfcf03b8529488a452b2af7b3fb5b65c8f90eb"
+              "continuity_root": "afad9f4ee8f031701600a0ea228f2aac20bb3075b2c9a78cb27dad61a6534704"
             },
             {
               "tick": 4,
-              "state_root": "24fab5a85bb2c61866bc26463757fdff0a82d3eb160dda5d2de2f55ae15ff55f",
-              "receipt_root": "bf5e5ca3d43be5d622d8f48cfde13a5085f6c91c418596b4f3eb9efb2bb36bc5",
+              "state_root": "e8088bb09c23d98076de2005459fe8b4f59eaa11bc2238a3f6803c02a087602e",
+              "receipt_root": "44eee42ec796be82011cb31e06a0d0975eeb7306788ec53d5da4039ba64984e6",
               "world_hash": "e974e913a98f7ad3031c9356c705ee93f0d5cda615d830c8c0496940b39c2d87",
-              "continuity_root": "45522cdaf0c8ee93177ddd7d0bff3b9ce1fa13872c5323fd41b5d66c48bf3604"
+              "continuity_root": "f4c47f2cf4302f27fd3bef1e3ae136e007300472e12d9f83d6fd2e6f8a2a6261"
             },
             {
               "tick": 5,
-              "state_root": "ccbc20c409a06a0023e795a78227ab20f8e08ffee0d3a32b034e284b7f074e9e",
-              "receipt_root": "75a76fed71e3bbf2618d724685989a2bb13dcb1d734bc24caf2a1f3c66f9c3c4",
+              "state_root": "66e964995ce235f831d37973ef9f292e8a91eb03163f393cf4c235a4f2c1b771",
+              "receipt_root": "c909ed34da92a1932e42e1afe7dfca1e79ca93da9004e4e42ad170fb3ce20f09",
               "world_hash": "7dc6717b2090b2a51fd790b6936e714a221e90679bf41e721dc8e0ecda72d62f",
-              "continuity_root": "6ab20ca0b15d6fcfd785c552c7d71cbda4fb8c7e96c387012effc8eba302f48e"
+              "continuity_root": "5f7ad4b423e8efdfe426727e5768f9b957e858d932abd37943f91ea881e52607"
             }
           ]
         },
@@ -694,67 +694,67 @@
             {
               "tick": 1,
               "state_root": "1a7250d79909057dfaf4c245b5b4bc50a93785c27eeb81c3fe978a51eef52652",
-              "receipt_root": "c5186d00637916c34aad4bbea770a85a49d8d5173db1f8a7160496749a68f1cb",
+              "receipt_root": "6681ad1bc8807365a510734d4e8c4810bbaf4e5d9453b16536499fc9c2e35400",
               "world_hash": "d1950d329aef7a5ffd3aee21e70322271e003747237464a1e9742981d1daa864",
-              "continuity_root": "aa4ec9a9ee7a559f601b1409da3edf0120e2a1015660e0b4e4721780bf6ac714"
+              "continuity_root": "93ec4ae76d76e67d5121a090c1db4e32547475ae218af82c6a6dce200fe759ec"
             },
             {
               "tick": 2,
-              "state_root": "26fad3c0b81c4991bc1419185c76c5109319e4014aeb5786d24ee55010892710",
-              "receipt_root": "055997e166102339794543be3c86dfc5ae667994e4be9519ef7d3c084ca657ba",
+              "state_root": "92bc1f88590f134b4ed624948e48eac34e7605030afb2451ca37b75358e88688",
+              "receipt_root": "3a353f912e9be0c1b3cc430edd26cd93bf649bf174268784f688c1b62063f904",
               "world_hash": "db0511d699e264d401eca5714cde0a8b494d42f4a11d0f910c8a9b7685c30287",
-              "continuity_root": "0024230fcb335d7770f25e2b87328496a8b9cc0f05d2cd608f68d6d8a1179aba"
+              "continuity_root": "21c9585c2e5e541751696dd8a449a83a822b5f89074bcad950443db5218fd676"
             },
             {
               "tick": 3,
-              "state_root": "e5193757e1d843a8129b347fcd631fd2f74f1034239fcb80ff513fa95ed622e7",
-              "receipt_root": "2ca956a7ef62f98a187515a1e2749e93bc6c162df966fa173854c03948c98f93",
+              "state_root": "7fa98f2b5617d715c0f1ab222cc75a81e92099fe2d78c7a964912f6ecb676dee",
+              "receipt_root": "8d80e6c72006f48c2459d604139229746d897feeb2f827b3266c5e9370595d0c",
               "world_hash": "c719aad740497b96e57c99674368349e9ec393e4347b70975cc09731b2a1acb2",
-              "continuity_root": "0533549f7d3fe5bc7d63e71f2bbfcf03b8529488a452b2af7b3fb5b65c8f90eb"
+              "continuity_root": "afad9f4ee8f031701600a0ea228f2aac20bb3075b2c9a78cb27dad61a6534704"
             },
             {
               "tick": 4,
-              "state_root": "24fab5a85bb2c61866bc26463757fdff0a82d3eb160dda5d2de2f55ae15ff55f",
-              "receipt_root": "bf5e5ca3d43be5d622d8f48cfde13a5085f6c91c418596b4f3eb9efb2bb36bc5",
+              "state_root": "e8088bb09c23d98076de2005459fe8b4f59eaa11bc2238a3f6803c02a087602e",
+              "receipt_root": "44eee42ec796be82011cb31e06a0d0975eeb7306788ec53d5da4039ba64984e6",
               "world_hash": "e974e913a98f7ad3031c9356c705ee93f0d5cda615d830c8c0496940b39c2d87",
-              "continuity_root": "45522cdaf0c8ee93177ddd7d0bff3b9ce1fa13872c5323fd41b5d66c48bf3604"
+              "continuity_root": "f4c47f2cf4302f27fd3bef1e3ae136e007300472e12d9f83d6fd2e6f8a2a6261"
             },
             {
               "tick": 5,
-              "state_root": "ccbc20c409a06a0023e795a78227ab20f8e08ffee0d3a32b034e284b7f074e9e",
-              "receipt_root": "75a76fed71e3bbf2618d724685989a2bb13dcb1d734bc24caf2a1f3c66f9c3c4",
+              "state_root": "66e964995ce235f831d37973ef9f292e8a91eb03163f393cf4c235a4f2c1b771",
+              "receipt_root": "c909ed34da92a1932e42e1afe7dfca1e79ca93da9004e4e42ad170fb3ce20f09",
               "world_hash": "7dc6717b2090b2a51fd790b6936e714a221e90679bf41e721dc8e0ecda72d62f",
-              "continuity_root": "6ab20ca0b15d6fcfd785c552c7d71cbda4fb8c7e96c387012effc8eba302f48e"
+              "continuity_root": "5f7ad4b423e8efdfe426727e5768f9b957e858d932abd37943f91ea881e52607"
             },
             {
               "tick": 6,
-              "state_root": "7a41747955ea8e0202d3cf8be4b560fffb765515585773f63e4621d8a406c36e",
-              "receipt_root": "5d374ac09698377e26d8e420c7f5d376d7e7529f6652c894dcad5df639c82396",
+              "state_root": "8a7ebc339011bd6e7df8b592d83cd8ceb60b422ec4ec247282d5dafc928ac2f1",
+              "receipt_root": "e1f7664d2583869cd2d7f42fa81f8faaae046f0f8291d565d16942cee6220cae",
               "world_hash": "9a9a0611e554134aa668d8f4ae2212a38a4477411e6da5f9089aa12ab4916c41",
-              "continuity_root": "4cc09dae306f2a5bff3178a04e0af517dd73bf7208fdee0dcee024bbf6dc4070"
+              "continuity_root": "1c7c4ed343087c0ef67bad030a39e121e780c9fda8d4e79f558982c1700fa85b"
             }
           ]
         },
         "action_hash": "b5397c30903646ab04c4e4dda1b3c236532f2e0278231e2ead227e89ef87d060",
-        "receipt_hash": "7ef4a7284ecdc43cd2b3ed8c8012f56eedf1783c21fdfb0f2cf9f323221829aa",
+        "receipt_hash": "cf1cf111c68070940f63f2ea3f0628007b2ea69ae9b6511e86fb7f1d00f72615",
         "mutation": "player_disconnected",
         "tick": 6,
-        "state_root": "7a41747955ea8e0202d3cf8be4b560fffb765515585773f63e4621d8a406c36e",
-        "receipt_root": "5d374ac09698377e26d8e420c7f5d376d7e7529f6652c894dcad5df639c82396",
+        "state_root": "8a7ebc339011bd6e7df8b592d83cd8ceb60b422ec4ec247282d5dafc928ac2f1",
+        "receipt_root": "e1f7664d2583869cd2d7f42fa81f8faaae046f0f8291d565d16942cee6220cae",
         "world_hash": "9a9a0611e554134aa668d8f4ae2212a38a4477411e6da5f9089aa12ab4916c41",
-        "continuity_root": "4cc09dae306f2a5bff3178a04e0af517dd73bf7208fdee0dcee024bbf6dc4070",
-        "journal_hash": "cf63dab2f192786f47ed5766d9eecf2039bb7d36430daed1c514978725f0a25a"
+        "continuity_root": "1c7c4ed343087c0ef67bad030a39e121e780c9fda8d4e79f558982c1700fa85b",
+        "journal_hash": "41b8694e189d527d09771ae7816af7decd0b203e867805307b4dbd2b0455b58d"
       }
     ],
     "rejected_inputs": [],
-    "journal_hash": "89fcc5c732de67e9ab659768399293412774651c29ec50ddc8556c9d1d0daf6c"
+    "journal_hash": "59cb9432ec0db8369c5c5565066957e81b640daee908d1265a1df081e8a48765"
   },
   "source_final_roots": {
     "tick": 6,
-    "state_root": "7a41747955ea8e0202d3cf8be4b560fffb765515585773f63e4621d8a406c36e",
-    "receipt_root": "5d374ac09698377e26d8e420c7f5d376d7e7529f6652c894dcad5df639c82396",
+    "state_root": "8a7ebc339011bd6e7df8b592d83cd8ceb60b422ec4ec247282d5dafc928ac2f1",
+    "receipt_root": "e1f7664d2583869cd2d7f42fa81f8faaae046f0f8291d565d16942cee6220cae",
     "world_hash": "9a9a0611e554134aa668d8f4ae2212a38a4477411e6da5f9089aa12ab4916c41",
-    "continuity_root": "4cc09dae306f2a5bff3178a04e0af517dd73bf7208fdee0dcee024bbf6dc4070"
+    "continuity_root": "1c7c4ed343087c0ef67bad030a39e121e780c9fda8d4e79f558982c1700fa85b"
   },
   "export_bundle": {
     "schema": "everarcade.hotpocket.arena-wrapper.v0.1.export-bundle-v1",
@@ -764,18 +764,28 @@
     "source_instance": "instance-a",
     "export_tick": 6,
     "genesis_hash": "7168097415e464c9bf8a83dbe89e19187079ffdd3d9917aa4073d8aabf07f6ef",
-    "journal_hash": "a1bfae7472ac8949cae8ec24de52bc9344e252ab31408e32cfd66fa6b5d47d7c",
+    "journal_hash": "4d47631b323b494c641a467eca917c89e18f667be6c67009a746e8572ff20eb7",
     "checkpoint_hash": "e88a3d078230509847d7bf360c1d043e3b60047cdaf9c9e7c480cccba8a7b06c",
     "snapshot_hash": "1f1a7b364562f82ddcf34b37a0ba5cdd6a59e385c805cb5772541f7acf19e90f",
-    "receipt_root": "5d374ac09698377e26d8e420c7f5d376d7e7529f6652c894dcad5df639c82396",
-    "state_root": "7a41747955ea8e0202d3cf8be4b560fffb765515585773f63e4621d8a406c36e",
+    "receipt_root": "e1f7664d2583869cd2d7f42fa81f8faaae046f0f8291d565d16942cee6220cae",
+    "state_root": "8a7ebc339011bd6e7df8b592d83cd8ceb60b422ec4ec247282d5dafc928ac2f1",
     "world_hash": "9a9a0611e554134aa668d8f4ae2212a38a4477411e6da5f9089aa12ab4916c41",
-    "continuity_root": "4cc09dae306f2a5bff3178a04e0af517dd73bf7208fdee0dcee024bbf6dc4070",
+    "continuity_root": "1c7c4ed343087c0ef67bad030a39e121e780c9fda8d4e79f558982c1700fa85b",
     "package_identity": {
       "runtime": "hotpocket-arena-wrapper",
       "transition_spec": "production-replay-oracle-v1"
     },
-    "export_hash": "66f96bbf3aeb8c5348e604e98a28067ed5e9433920a6782c23d4d56c069ea93f"
+    "export_hash": "7064717eed72b7577c10c70ac99b33d6fd08f9de22e6cb03dd4353e14269133f",
+    "receipt_accumulator": {
+      "final_receipt_hashes": [
+        "09bd33dad18759e2720657aa22de6f717d2183f4cb46dd3e7d9b857af73ac477",
+        "76a2be134ea015522525bcf0232973d087d707b7fc2fad2ccc3fc1a53ba578a9",
+        "010b210fd605501b81b604bcca15f1da6a6afaac9d4e738bf6cdad4a0aeda26b",
+        "3aad00b3b3618423558b0467e5ed18311afc9258b57f205844dc5cd83c1b5212",
+        "af87befce82d915a4783171af6e8df18dc2d893de07c162eeaeba10086c85240"
+      ],
+      "last_temp_receipt_hash": "a3831616654eb5c106bd2439dddffc3b11707fd2a2a2d310f03206a6c39c330f"
+    }
   },
   "destination_restore_bundle": {
     "schema": "everarcade.hotpocket.arena-wrapper.v0.1.restore-bundle-v1",
@@ -783,19 +793,19 @@
     "restore_sequence": 2,
     "destination_operator": "operator-b",
     "destination_instance": "instance-b",
-    "export_hash": "66f96bbf3aeb8c5348e604e98a28067ed5e9433920a6782c23d4d56c069ea93f",
+    "export_hash": "7064717eed72b7577c10c70ac99b33d6fd08f9de22e6cb03dd4353e14269133f",
     "snapshot_hash": "1f1a7b364562f82ddcf34b37a0ba5cdd6a59e385c805cb5772541f7acf19e90f",
     "checkpoint_hash": "e88a3d078230509847d7bf360c1d043e3b60047cdaf9c9e7c480cccba8a7b06c",
     "restored_roots": {
       "tick": 6,
-      "state_root": "7a41747955ea8e0202d3cf8be4b560fffb765515585773f63e4621d8a406c36e",
-      "receipt_root": "5d374ac09698377e26d8e420c7f5d376d7e7529f6652c894dcad5df639c82396",
+      "state_root": "8a7ebc339011bd6e7df8b592d83cd8ceb60b422ec4ec247282d5dafc928ac2f1",
+      "receipt_root": "e1f7664d2583869cd2d7f42fa81f8faaae046f0f8291d565d16942cee6220cae",
       "world_hash": "9a9a0611e554134aa668d8f4ae2212a38a4477411e6da5f9089aa12ab4916c41",
-      "continuity_root": "4cc09dae306f2a5bff3178a04e0af517dd73bf7208fdee0dcee024bbf6dc4070"
+      "continuity_root": "1c7c4ed343087c0ef67bad030a39e121e780c9fda8d4e79f558982c1700fa85b"
     },
-    "restored_state_root": "7a41747955ea8e0202d3cf8be4b560fffb765515585773f63e4621d8a406c36e",
-    "restored_receipt_root": "5d374ac09698377e26d8e420c7f5d376d7e7529f6652c894dcad5df639c82396",
-    "restored_continuity_root": "4cc09dae306f2a5bff3178a04e0af517dd73bf7208fdee0dcee024bbf6dc4070"
+    "restored_state_root": "8a7ebc339011bd6e7df8b592d83cd8ceb60b422ec4ec247282d5dafc928ac2f1",
+    "restored_receipt_root": "e1f7664d2583869cd2d7f42fa81f8faaae046f0f8291d565d16942cee6220cae",
+    "restored_continuity_root": "1c7c4ed343087c0ef67bad030a39e121e780c9fda8d4e79f558982c1700fa85b"
   },
   "destination_continuation_journal": {
     "schema": "everarcade.hotpocket.arena-wrapper.v0.1.journal-v1",
@@ -822,17 +832,17 @@
   "migration_link": {
     "schema": "everarcade.hotpocket.arena-wrapper.v0.1.migration-link-v1",
     "world_id": "arena-vanguard",
-    "source_continuity_root": "4cc09dae306f2a5bff3178a04e0af517dd73bf7208fdee0dcee024bbf6dc4070",
-    "destination_restore_continuity_root": "4cc09dae306f2a5bff3178a04e0af517dd73bf7208fdee0dcee024bbf6dc4070",
-    "destination_final_continuity_root": "c8fc3474adf17ed2ec4d8fe87105dcb681c900e625f5f750e5ee660c25e90736",
+    "source_continuity_root": "1c7c4ed343087c0ef67bad030a39e121e780c9fda8d4e79f558982c1700fa85b",
+    "destination_restore_continuity_root": "1c7c4ed343087c0ef67bad030a39e121e780c9fda8d4e79f558982c1700fa85b",
+    "destination_final_continuity_root": "2cac47bbc40ad1cc00213caf77b71d5c368f22ca55958ec51d910d2d54d9a0a8",
     "continuation_journal_hash": "fe30ae1e36a920cff08e0a04c825926ce1aee0912adefa05157df823c792b874",
-    "migration_hash": "bb31057f440cd6fd99f7ceba2ced576468ea6c93e602201a36c8f458f6241bc4"
+    "migration_hash": "a1c19e701dfafda476d1b87854820aa3858d8eab87a5d0044e30da6ec313a43d"
   },
   "expected_destination_roots": {
     "tick": 8,
-    "state_root": "6b6e838f734dd8eaebdacbbf122ef0d41029443f6a5a12d28b8f656420a02e5f",
-    "receipt_root": "e38eff04aed4b03459d8b384a31bba94e9d4d20637d29cb70498a81895c0fb61",
+    "state_root": "9eac913f987a2d40f7884747790bfc760e0a4796dcd0581e5a50531f21aee20a",
+    "receipt_root": "0bb13396892bda61de43738ef179b5a6185f3adb603005cd6bb08a3a1fcc1e7c",
     "world_hash": "d1c82913827c2cf99a57c57b4c06013e1ce3ea89345459bfe9628a5c8ff1f81c",
-    "continuity_root": "c8fc3474adf17ed2ec4d8fe87105dcb681c900e625f5f750e5ee660c25e90736"
+    "continuity_root": "2cac47bbc40ad1cc00213caf77b71d5c368f22ca55958ec51d910d2d54d9a0a8"
   }
 }
