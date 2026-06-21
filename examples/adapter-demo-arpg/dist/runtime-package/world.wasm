@@ -1,0 +1,10 @@
+{
+  "classification": "deterministic-placeholder-wasm",
+  "entry": "src/game.js",
+  "format": "everarcade-runtime-placeholder-world-wasm",
+  "game_id": "adapter-demo-arpg",
+  "game_name": "Adapter Demo ARPG",
+  "runtime_compatibility": "everarcade-runtime-v0.1",
+  "template": "rpg",
+  "world_id": "adapter-demo-arpg-world"
+}

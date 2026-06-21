@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EverArcade Adapter Demo ARPG</title>
+  <link rel="stylesheet" href="src/styles.css" />
+</head>
+<body>
+  <main>
+    <section class="game-shell">
+      <canvas id="game" width="800" height="520" aria-label="Top-down ARPG demo canvas"></canvas>
+      <aside>
+        <h1>Adapter Demo ARPG</h1>
+        <p class="tagline">Keep your engine. Keep your assets. Replace the authoritative server.</p>
+        <div id="hud"></div>
+        <h2>World Memory</h2>
+        <ol id="memory"></ol>
+      </aside>
+    </section>
+    <section class="controls">
+      <strong>Controls:</strong> WASD/Arrows move, Space/click attacks, E picks up loot, R restore, M migrate.
+    </section>
+  </main>
+  <script type="module" src="src/game.js"></script>
+</body>
+</html>

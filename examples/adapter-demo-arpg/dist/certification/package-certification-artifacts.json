@@ -1,0 +1,16 @@
+{
+  "schema": "everarcade.package-certification-artifacts.vnext",
+  "flow": [
+    "world.evr",
+    "certified kernel(s)",
+    "signed certificate",
+    "independent verification",
+    "deploy"
+  ],
+  "artifacts": {
+    "proof_registry": "dist/certification/formal-proof-registry.json",
+    "signed_certificate": "dist/certification/world-package-certificate.json",
+    "independent_recheck": "dist/certification/independent-proof-recheck.json"
+  },
+  "status": "PASS"
+}

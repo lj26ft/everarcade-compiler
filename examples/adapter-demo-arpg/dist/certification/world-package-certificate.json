@@ -1,0 +1,51 @@
+{
+  "schema": "everarcade.world-package-certificate.vnext",
+  "certificate_id": "adapter-demo-arpg-world:adapter-demo-arpg:e21d5667d9f02b57",
+  "issued_at": "2026-06-21T13:52:51.529Z",
+  "world": {
+    "source": "world.evr",
+    "world_id": "adapter-demo-arpg-world",
+    "package_id": "adapter-demo-arpg",
+    "package_version": "0.1.0"
+  },
+  "certified_kernels": [
+    {
+      "kernel_id": "everarcade-runtime",
+      "runtime_version": "everarcade-runtime-v0.1",
+      "compatibility": "everarcade-runtime-v0.1",
+      "package_wasm_hash": "e21d5667d9f02b57bb16fe51b1b5670c10cddb83a36f1da77a5da094909fe99a",
+      "status": "CERTIFIED"
+    }
+  ],
+  "proof_registry": {
+    "artifact": "dist/certification/formal-proof-registry.json",
+    "digest": "e0dd03282b173ad5183fc6e6c7cee08745689d60675654f4d18fd405333c6b98",
+    "required_proofs": 3
+  },
+  "package_artifacts": {
+    "manifest": {
+      "artifact": "dist/runtime-package/manifest.json",
+      "digest": "ee1342f53b42d680c2e82f2eaa507dec3716f0487185060a5456507dc13ff6ed"
+    },
+    "world": {
+      "artifact": "dist/runtime-package/world.json",
+      "digest": "49e8801aaa8d5d75016d8e44c81e02f89a5b09b104bad193561b86235cfc9e0a"
+    },
+    "wasm": {
+      "artifact": "dist/runtime-package/world.wasm",
+      "digest": "e21d5667d9f02b57bb16fe51b1b5670c10cddb83a36f1da77a5da094909fe99a"
+    }
+  },
+  "independent_recheck": {
+    "status": "PASS",
+    "verifier": "everarcade.independent-proof-recheck.vnext",
+    "artifact": "dist/certification/independent-proof-recheck.json"
+  },
+  "scope": "Map formal proof artifacts into World Package certification for local deployment gating.",
+  "non_goals": [
+    "No changes to v0.1 architecture",
+    "No changes to runtime authority",
+    "No changes to canonicalizer"
+  ],
+  "signature": "sha256:3a25abe3d5573b49e21e9bdd15fbe8f1e8d1d5caff9845b978e340a103824a3b"
+}

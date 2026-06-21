@@ -1,0 +1,13 @@
+{
+  "type": "Deployment",
+  "project": "Adapter Demo ARPG",
+  "target": "local",
+  "authority": "protocol-interface",
+  "settlement": "testnet-simulated",
+  "replay": "enabled",
+  "certification": {
+    "certificate": "dist/certification/world-package-certificate.json",
+    "signature": "sha256:3a25abe3d5573b49e21e9bdd15fbe8f1e8d1d5caff9845b978e340a103824a3b",
+    "independent_recheck": "PASS"
+  }
+}

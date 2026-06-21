@@ -1,0 +1,11 @@
+{
+  "id": "adapter-demo-arpg",
+  "world_id": "adapter-demo-arpg-world",
+  "name": "Adapter Demo ARPG",
+  "version": "0.1.0",
+  "template": "rpg",
+  "entry": "src/game.js",
+  "runtime": "browser-everarcade-adapter",
+  "assets": ["assets/placeholder-sprites.svg"],
+  "monetization": "demo-only"
+}

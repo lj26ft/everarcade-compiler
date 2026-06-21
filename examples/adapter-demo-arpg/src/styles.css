@@ -1,0 +1,11 @@
+body { margin: 0; background: #0b0d13; color: #f4f7fb; font-family: Inter, system-ui, sans-serif; }
+main { padding: 24px; }
+.game-shell { display: grid; grid-template-columns: 800px minmax(280px, 1fr); gap: 20px; align-items: start; }
+canvas { border: 2px solid #3b4561; border-radius: 12px; background: #10131c; }
+aside { background: #151a27; border: 1px solid #303850; border-radius: 12px; padding: 18px; }
+h1 { margin-top: 0; }
+.tagline { color: #8dd7ff; font-weight: 700; }
+dl { display: grid; grid-template-columns: 110px 1fr; gap: 8px; font-size: 14px; }
+dt { color: #9aa8c7; } dd { margin: 0; overflow-wrap: anywhere; }
+li { margin-bottom: 8px; }
+.controls { margin-top: 14px; color: #cbd5e1; }

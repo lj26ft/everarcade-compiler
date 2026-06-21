@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="64" viewBox="0 0 256 64" role="img" aria-label="Original placeholder ARPG sprites">
+  <rect width="256" height="64" fill="#151821"/>
+  <circle cx="32" cy="32" r="18" fill="#65d6ff"/><path d="M24 39h16l-8 12z" fill="#eaf7ff"/>
+  <circle cx="96" cy="32" r="18" fill="#b85cff"/><path d="M84 27l12-15 12 15" fill="#ffcc66"/>
+  <rect x="146" y="18" width="28" height="28" rx="5" fill="#f2b84b"/><path d="M151 26h18M151 36h18" stroke="#7a4a12" stroke-width="3"/>
+  <path d="M218 14l20 18-20 18-20-18z" fill="#5dff9c"/><circle cx="218" cy="32" r="7" fill="#0a4224"/>
+</svg>
