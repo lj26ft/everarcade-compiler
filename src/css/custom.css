@@ -351,3 +351,114 @@ html[data-theme='light'],
   background: #f7c948 !important;
   border-color: #ffd86a !important;
 }
+
+/* Public manifesto page for vision.everarcade.games. */
+.visionHero .hero__title {
+  max-width: 980px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.visionPage h2 {
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  letter-spacing: -.04em;
+}
+
+.visionNav {
+  position: sticky;
+  top: var(--ifm-navbar-height);
+  z-index: 5;
+  background: rgba(9, 7, 13, .88);
+  border-bottom: 1px solid rgba(240, 182, 75, .24);
+  backdrop-filter: blur(14px);
+}
+
+.visionNav .container {
+  display: flex;
+  gap: .75rem;
+  overflow-x: auto;
+  padding-bottom: .75rem;
+  padding-top: .75rem;
+}
+
+.visionNav a {
+  color: #ffe3a8;
+  white-space: nowrap;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.visionStatement {
+  font-size: clamp(1.55rem, 3vw, 2.55rem);
+  line-height: 1.14;
+  text-align: center;
+}
+
+.visionStatement p {
+  max-width: 980px;
+  margin: 0 auto 1.25rem;
+}
+
+.visionDefinition {
+  border: 1px solid rgba(240, 182, 75, .5);
+  border-radius: 22px;
+  background: linear-gradient(135deg, rgba(240, 182, 75, .12), rgba(29, 242, 164, .08));
+  margin: 1.5rem 0;
+  padding: 1.5rem;
+}
+
+.visionDefinition code {
+  display: inline-block;
+  font-size: clamp(2rem, 6vw, 5rem);
+  font-weight: 900;
+  margin-bottom: .5rem;
+}
+
+.visionDefinition p {
+  color: #fff3dc;
+  font-size: clamp(1.3rem, 3vw, 2rem);
+  font-weight: 800;
+  margin: 0;
+}
+
+.visionPills {
+  justify-content: center;
+  margin: 2rem 0;
+}
+
+.visionPills li {
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.visionModel {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: .55rem;
+  justify-content: center;
+  min-height: 300px;
+  text-align: center;
+}
+
+.visionModel div {
+  border: 1px solid rgba(29, 242, 164, .34);
+  border-radius: 999px;
+  color: #fff3dc;
+  font-size: 1.25rem;
+  font-weight: 900;
+  min-width: 180px;
+  padding: .55rem 1rem;
+}
+
+.visionModel span {
+  color: var(--everarcade-amber);
+  font-size: 1.6rem;
+  font-weight: 900;
+}
+
+.visionFinal p:not(.kicker) {
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+}
