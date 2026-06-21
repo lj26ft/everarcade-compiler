@@ -283,6 +283,123 @@ function printRustRigs() {
   for (const [name, status, description] of RUSTRIGS) console.log(`${name.padEnd(16)} ${status.padEnd(10)} ${description}`);
 }
 
+const WORLD_REGISTRY_CATEGORIES = ['MMO', 'RPG', 'Simulation', 'Strategy', 'Education', 'Commerce', 'Governance', 'Social', 'Sandbox'];
+
+function registryFixture() {
+  return [
+    {
+      world_id: 'frontier.evr',
+      world_hash: 'sha256:frontier-genesis-root',
+      world_name: 'Frontier',
+      description: 'A sandbox RPG frontier world with player settlements, economy, and open contributor projects.',
+      category: 'RPG',
+      tags: ['rpg', 'sandbox', 'economy', 'governance'],
+      created_at: '2026-01-01T00:00:00.000Z',
+      operator_id: 'operator:frontier-foundation',
+      governance_model: 'constitutional-council',
+      registry_root: 'registry-root:frontier-v1',
+      population: { active_players: 1280, player_retention: 0.71 },
+      contributors: [
+        { contributor_id: 'contrib:quest-ada', role: 'Quest Designer', merged_contributions: 42, review_history: 38, reputation_score: 94, maintainer: true },
+        { contributor_id: 'contrib:econ-turing', role: 'Economy Designer', merged_contributions: 27, review_history: 31, reputation_score: 91, maintainer: false }
+      ],
+      treasury_status: { status: 'healthy', runway_days: 240, audit_root: 'treasury-audit:frontier' },
+      proof_status: { replay: 'Replay Certified', restore: 'Restore Certified', migration: 'Migration Certified' },
+      trust_signals: {
+        replay_verified: true,
+        restore_verified: true,
+        migration_verified: true,
+        operator_history: ['operator:frontier-labs', 'operator:frontier-foundation'],
+        governance_activity: 18,
+        audit_root: 'trust-audit:frontier'
+      },
+      governance: {
+        constitution: 'ipfs://frontier-constitution-v1',
+        maintainers: ['contrib:quest-ada'],
+        reviewers: ['contrib:econ-turing', 'contrib:moderator-noether'],
+        council_members: ['council:builders', 'council:players', 'council:operators'],
+        activity: 18
+      },
+      contributor_manifest: {
+        wanted_roles: ['Quest Designers Needed', 'Economy Designers Needed', 'Moderators Needed', 'Artists Needed'],
+        open_projects: ['frontier-season-one', 'settlement-economy-rebalance'],
+        reward_models: ['bounty', 'revenue-share', 'governance-grants'],
+        contribution_opportunities: ['quests', 'markets', 'moderation', 'environment-art']
+      },
+      activity: { active_contributors: 36, merge_activity: 74, governance_activity: 18, economic_activity: 9200 },
+      lineage: { origin_world: 'frontier.evr', forks: ['frontier-classic.evr', 'frontier-hardcore.evr', 'frontier-social.evr'], merges: ['frontier-economy-v2'], migration_history: ['migration:frontier-v1-v2'], restore_events: ['restore:frontier-2026-03-14'] },
+      capabilities: ['Housing Module', 'Economy Module', 'Governance Module', 'Guild Module', 'Marketplace Module'],
+      health: { treasury_health: 'healthy', governance_health: 'active', contributor_retention: 0.82, player_retention: 0.71, verification_status: 'fully-certified' }
+    },
+    {
+      world_id: 'civilization.evr',
+      world_hash: 'sha256:civilization-genesis-root',
+      world_name: 'Civilization',
+      description: 'A governance and education simulation for long-running civic experiments.',
+      category: 'Governance',
+      tags: ['governance', 'education', 'simulation'],
+      created_at: '2026-02-01T00:00:00.000Z',
+      operator_id: 'operator:civic-guild',
+      governance_model: 'token-weighted-deliberation',
+      registry_root: 'registry-root:civilization-v1',
+      population: { active_players: 410, player_retention: 0.64 },
+      contributors: [{ contributor_id: 'contrib:civic-hopper', role: 'Governance Designer', merged_contributions: 19, review_history: 25, reputation_score: 88, maintainer: true }],
+      treasury_status: { status: 'stable', runway_days: 160, audit_root: 'treasury-audit:civilization' },
+      proof_status: { replay: 'Replay Certified', restore: 'Restore Certified', migration: 'Migration Candidate' },
+      trust_signals: { replay_verified: true, restore_verified: true, migration_verified: false, operator_history: ['operator:civic-guild'], governance_activity: 31, audit_root: 'trust-audit:civilization' },
+      governance: { constitution: 'ipfs://civilization-constitution-v1', maintainers: ['contrib:civic-hopper'], reviewers: ['contrib:policy-lovelace'], council_members: ['council:educators', 'council:citizens'], activity: 31 },
+      contributor_manifest: { wanted_roles: ['Moderators Needed', 'Policy Designers Needed'], open_projects: ['civic-curriculum'], reward_models: ['governance-grants'], contribution_opportunities: ['policy', 'education', 'moderation'] },
+      activity: { active_contributors: 14, merge_activity: 28, governance_activity: 31, economic_activity: 1200 },
+      lineage: { origin_world: 'civilization.evr', forks: [], merges: [], migration_history: [], restore_events: [] },
+      capabilities: ['Governance Module', 'Guild Module', 'Marketplace Module'],
+      health: { treasury_health: 'stable', governance_health: 'high-activity', contributor_retention: 0.76, player_retention: 0.64, verification_status: 'partially-certified' }
+    }
+  ];
+}
+
+function registryRecords(projectDir) {
+  const localPath = path.join(projectDir, 'world.registry.json');
+  return fs.existsSync(localPath) ? JSON.parse(fs.readFileSync(localPath, 'utf8')).worlds : registryFixture();
+}
+
+function scoreWorld(world) {
+  return (world.population?.active_players ?? 0) + (world.activity?.active_contributors ?? 0) * 25 + (world.activity?.governance_activity ?? 0) * 10;
+}
+
+function searchRegistry(projectDir) {
+  const query = String(args[0] ?? '').toLowerCase();
+  const category = value('--category', null);
+  const tag = value('--tag', null);
+  let worlds = registryRecords(projectDir).filter(world => {
+    const haystack = [world.world_id, world.world_name, world.description, world.category, ...(world.tags ?? [])].join(' ').toLowerCase();
+    return (!query || haystack.includes(query)) && (!category || world.category === category) && (!tag || (world.tags ?? []).includes(tag));
+  });
+  worlds = worlds.sort((a, b) => scoreWorld(b) - scoreWorld(a));
+  console.log(JSON.stringify({ schema: 'everarcade.world-registry.search.v1', query, categories: WORLD_REGISTRY_CATEGORIES, count: worlds.length, worlds }, null, 2));
+}
+
+function lookupWorld(projectDir) {
+  const worldId = args[0];
+  const world = registryRecords(projectDir).find(record => record.world_id === worldId);
+  if (!world) throw new Error(`World not found: ${worldId}`);
+  console.log(JSON.stringify({ schema: 'everarcade.world-registry.lookup.v1', world }, null, 2));
+}
+
+function contributorsForWorld(projectDir) {
+  const worldId = args[0];
+  const world = registryRecords(projectDir).find(record => record.world_id === worldId);
+  if (!world) throw new Error(`World not found: ${worldId}`);
+  console.log(JSON.stringify({ schema: 'everarcade.world-registry.contributors.v1', world_id: worldId, contributors: world.contributors, contributor_manifest: world.contributor_manifest }, null, 2));
+}
+
+function lineageForWorld(projectDir) {
+  const worldId = args[0];
+  const world = registryRecords(projectDir).find(record => record.world_id === worldId);
+  if (!world) throw new Error(`World not found: ${worldId}`);
+  console.log(JSON.stringify({ schema: 'everarcade.world-registry.lineage.v1', world_id: worldId, lineage: world.lineage }, null, 2));
+}
+
+
 function createWorld() {
   if (args.includes('--list-templates')) return printTemplates();
   const name = value('--name', args[0] ?? 'everarcade-world');
@@ -855,6 +972,10 @@ try {
   else if (command === 'world:verify') verifyWorld(projectDir);
   else if (command === 'world:deploy') deploy(projectDir);
   else if (command === 'world:project') projectWorld(projectDir);
+  else if (command === 'world:search') searchRegistry(projectDir);
+  else if (command === 'world:lookup') lookupWorld(projectDir);
+  else if (command === 'world:contributors') contributorsForWorld(projectDir);
+  else if (command === 'world:lineage') lineageForWorld(projectDir);
   else if (command === 'new') {
     const name = value('--name', args[0] ?? 'everarcade-game');
     const template = value('--template', 'blank-game');
@@ -883,7 +1004,7 @@ try {
   else if (command === 'deploy') deploy(projectDir);
   else if (command === 'publish') publish(projectDir);
   else {
-    console.log('everarcade world <init|templates|rustrigs|run|package|verify|deploy|project> [--project DIR]');
+    console.log('everarcade world <init|templates|rustrigs|run|package|verify|deploy|project|search|lookup|contributors|lineage> [--project DIR]');
     console.log('legacy: everarcade <new|build|test|package|certify-world|verify-world-certificate|launch-local|execute-local|execute-template|execute-guest|play-local|play-local-multiplayer|play-network-local|play-federated-local|play-multi-lease-local|deploy|publish> [--project DIR]');
     process.exit(command ? 1 : 0);
   }
