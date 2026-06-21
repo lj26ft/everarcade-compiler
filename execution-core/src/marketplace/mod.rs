@@ -1,3 +1,4 @@
+pub mod capability;
 use rustrigs::dependency::DependencyGraph;
 use rustrigs::package::{reproducible, RustrigPackageManifest};
 use serde::{Deserialize, Serialize};
