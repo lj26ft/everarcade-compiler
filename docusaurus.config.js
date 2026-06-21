@@ -42,6 +42,7 @@ const config = {
       title: 'EverArcade',
       items: [
         { to: '/', label: 'Home', position: 'left' },
+        { to: '/vision', label: 'Vision', position: 'left' },
         { to: '/worlds', label: 'Worlds', position: 'left' },
         { to: '/developers', label: 'Developers', position: 'left' },
         { to: '/operators', label: 'Operators', position: 'left' },
@@ -56,7 +57,7 @@ const config = {
     footer: {
       style: 'dark',
       links: [
-        { title: 'Start', items: [{ label: 'Explore Worlds', to: '/worlds' }, { label: 'Founding Developers', to: '/founding-developers' }] },
+        { title: 'Start', items: [{ label: 'Vision Manifesto', to: '/vision' }, { label: 'Explore Worlds', to: '/worlds' }, { label: 'Founding Developers', to: '/founding-developers' }] },
         { title: 'Paths', items: [{ label: 'Developers', to: '/developers' }, { label: 'Operators', to: '/operators' }, { label: 'Players', to: '/players' }, { label: 'Contributors', to: '/contributors' }] },
         { title: 'Reference', items: [{ label: 'Continuity Engine', to: '/continuity-engine' }, { label: 'Roadmap', to: '/roadmap' }, { label: 'Open Source Repo — Coming Soon', to: '/open-source' }] },
       ],
