@@ -64,7 +64,8 @@ Start with [`docs/first-world.md`](docs/first-world.md) and the generated projec
 
 ## Where are the docs?
 
-- Documentation root: [`docs/index.md`](docs/index.md)
+- Compiler documentation root: [`docs/index.md`](docs/index.md)
+- Public websites, `docs.everarcade.games`, `vision.everarcade.games`, and the world portal live in `everarcade-frontend`. See [`docs/public-frontend-surface.md`](docs/public-frontend-surface.md).
 - Documentation policy: [`docs/DOCUMENTATION_POLICY.md`](docs/DOCUMENTATION_POLICY.md)
 - Maturity classifications: [`MATURITY.md`](MATURITY.md)
 - Repository map: [`REPOSITORY_MAP.md`](REPOSITORY_MAP.md)
@@ -73,17 +74,15 @@ Start with [`docs/first-world.md`](docs/first-world.md) and the generated projec
 - v0.1 public release readiness: [`docs/open-source/v0.1-public-release-readiness.md`](docs/open-source/v0.1-public-release-readiness.md)
 
 
-## Open Source Launch Package
+## Public Websites and Portal UI
 
-For public v0.1 onboarding, start with the Open Source Launch Package:
+Public websites, `docs.everarcade.games`, `vision.everarcade.games`, and the world portal live in `everarcade-frontend`. This compiler repository links to those surfaces but does not own their Vercel/Docusaurus/portal presentation.
 
-- [Launch overview](docs/open-source-launch/launch-overview.md)
-- [Why EverArcade?](docs/open-source-launch/why-everarcade.md)
-- [What can I build?](docs/open-source-launch/what-can-i-build.md)
-- [Verification overview](docs/open-source-launch/verification-overview.md)
-- [Contributor guide](docs/open-source-launch/contributor-guide.md)
-- [Example gallery](docs/open-source-launch/example-gallery.md)
-- [Launch assets](docs/open-source-launch/launch-assets.md)
+Placeholders:
+
+- `everarcade-frontend`
+- `https://docs.everarcade.games`
+- `https://vision.everarcade.games`
 
 ## Contributing
 

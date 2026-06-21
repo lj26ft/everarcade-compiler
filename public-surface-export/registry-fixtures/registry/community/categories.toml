@@ -1,0 +1,55 @@
+[[category]]
+name = "Combat"
+deterministic_only = true
+
+[[category]]
+name = "Inventory"
+deterministic_only = true
+
+[[category]]
+name = "Quests"
+deterministic_only = true
+
+[[category]]
+name = "Dialogue"
+deterministic_only = true
+
+[[category]]
+name = "Economy"
+deterministic_only = true
+
+[[category]]
+name = "Crafting"
+deterministic_only = true
+
+[[category]]
+name = "World"
+deterministic_only = true
+
+[[category]]
+name = "AI"
+deterministic_only = true
+
+[[category]]
+name = "Factions"
+deterministic_only = true
+
+[[category]]
+name = "Civilizations"
+deterministic_only = true
+
+[[category]]
+name = "UI"
+deterministic_only = true
+
+[[category]]
+name = "Utilities"
+deterministic_only = true
+
+[[category]]
+name = "XRPL"
+deterministic_only = true
+
+[[category]]
+name = "Deployment"
+deterministic_only = true

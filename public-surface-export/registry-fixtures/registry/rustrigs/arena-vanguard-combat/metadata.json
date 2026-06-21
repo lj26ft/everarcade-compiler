@@ -1,0 +1,11 @@
+{
+  "reputation": {
+    "downloads": 0,
+    "installs": 0,
+    "validation_passes": 1,
+    "dependency_count": 0,
+    "compatibility_score": 100
+  },
+  "certified": true,
+  "authority": "records-only"
+}
