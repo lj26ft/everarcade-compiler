@@ -1,0 +1,5 @@
+JS ↔ Rust Equivalence Report
+Status: PASS
+Command: cargo test js_equivalence_harness
+Packaged artifacts: shared fixture set, JS output, Rust output, expected roots.
+Success marker: JS KERNEL EQUIVALENCE VERIFIED

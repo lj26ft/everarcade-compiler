@@ -1,0 +1,5 @@
+world_a=world-a:state-root=a1;continuity=a2
+world_b=world-b:state-root=b1;continuity=b2
+cross_world_operation=cross-world-op:escrow:item-17:a->b
+expected_commitment=93d3d9911a76f2f0c869e6d88d7076dd39131f07edb5e5be0f1954e0cb59dc21
+expected_root=5a4b243e391328b2b1bf8aac1428afaced8d8fdef4cfc2e95d3435c406ff32b0
