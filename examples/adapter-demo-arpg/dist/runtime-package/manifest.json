@@ -1,0 +1,9 @@
+{
+  "package_id": "adapter-demo-arpg",
+  "package_version": "0.1.0",
+  "runtime_compatibility": "everarcade-runtime-v0.1",
+  "wasm_path": "world.wasm",
+  "wasm_hash": "e21d5667d9f02b57bb16fe51b1b5670c10cddb83a36f1da77a5da094909fe99a",
+  "signature": "sha256:e21d5667d9f02b57bb16fe51b1b5670c10cddb83a36f1da77a5da094909fe99a",
+  "world_id": "adapter-demo-arpg-world"
+}

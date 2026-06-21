@@ -1,0 +1,11 @@
+{
+  "world_id": "adapter-demo-arpg-world",
+  "game_id": "adapter-demo-arpg",
+  "game_name": "Adapter Demo ARPG",
+  "template": "rpg",
+  "classification": "deterministic-placeholder-wasm",
+  "package_classification": "placeholder-runtime-package",
+  "created_by": "everarcade-creator-sdk",
+  "runtime_package_version": "0.1",
+  "runtime_compatibility": "everarcade-runtime-v0.1"
+}

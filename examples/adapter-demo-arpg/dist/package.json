@@ -1,0 +1,8 @@
+{
+  "type": "Package",
+  "project": "Adapter Demo ARPG",
+  "assets": [
+    "assets/placeholder-sprites.svg"
+  ],
+  "entry": "src/game.js"
+}

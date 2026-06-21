@@ -1,0 +1,27 @@
+{
+  "schema": "everarcade.independent-proof-recheck.vnext",
+  "certificate": "dist/certification/world-package-certificate.json",
+  "checks": [
+    {
+      "id": "certificate-signature",
+      "status": "PASS"
+    },
+    {
+      "id": "manifest-digest",
+      "status": "PASS"
+    },
+    {
+      "id": "world-digest",
+      "status": "PASS"
+    },
+    {
+      "id": "wasm-digest",
+      "status": "PASS"
+    },
+    {
+      "id": "proof-registry-digest",
+      "status": "PASS"
+    }
+  ],
+  "status": "PASS"
+}

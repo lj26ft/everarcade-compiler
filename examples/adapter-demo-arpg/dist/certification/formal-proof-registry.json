@@ -1,0 +1,39 @@
+{
+  "schema": "everarcade.formal-proof-registry.vnext",
+  "world_source": "world.evr",
+  "world_id": "adapter-demo-arpg-world",
+  "package_id": "adapter-demo-arpg",
+  "runtime_compatibility": "everarcade-runtime-v0.1",
+  "proofs": [
+    {
+      "id": "world-package-manifest-integrity",
+      "artifact": "dist/runtime-package/manifest.json",
+      "algorithm": "sha256",
+      "digest": "ee1342f53b42d680c2e82f2eaa507dec3716f0487185060a5456507dc13ff6ed",
+      "required": true
+    },
+    {
+      "id": "world-metadata-integrity",
+      "artifact": "dist/runtime-package/world.json",
+      "algorithm": "sha256",
+      "digest": "49e8801aaa8d5d75016d8e44c81e02f89a5b09b104bad193561b86235cfc9e0a",
+      "required": true
+    },
+    {
+      "id": "certified-kernel-wasm-integrity",
+      "artifact": "dist/runtime-package/world.wasm",
+      "algorithm": "sha256",
+      "digest": "e21d5667d9f02b57bb16fe51b1b5670c10cddb83a36f1da77a5da094909fe99a",
+      "required": true
+    }
+  ],
+  "certified_kernels": [
+    {
+      "kernel_id": "everarcade-runtime",
+      "runtime_version": "everarcade-runtime-v0.1",
+      "compatibility": "everarcade-runtime-v0.1",
+      "package_wasm_hash": "e21d5667d9f02b57bb16fe51b1b5670c10cddb83a36f1da77a5da094909fe99a",
+      "status": "CERTIFIED"
+    }
+  ]
+}
