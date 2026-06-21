@@ -18,6 +18,8 @@ This documentation portal is the canonical public onboarding experience. Instead
 - [What Is A Continuity Engine?](./concepts/continuity-engine)
 - [What Are RustRigs?](./concepts/rustrigs)
 - [World Package Certification vNext](./world-package-certification.md)
+- [World Git Economic Model](./concepts/world-git-economic-model.md)
+- [World Contribution Merge Model](./concepts/world-contribution-merge-model.md)
 
 
 ## Open source launch

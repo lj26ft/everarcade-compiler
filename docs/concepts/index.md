@@ -10,6 +10,8 @@ Core EverArcade concepts:
 
 Useful references:
 
+- [World Git economic model](./world-git-economic-model.md)
+- [World contribution merge model](./world-contribution-merge-model.md)
 - [System architecture](../architecture/system-overview.md)
 - [World runtime](../architecture/world/world-runtime.md)
 - [Runtime capabilities](../runtime-capabilities.md)
