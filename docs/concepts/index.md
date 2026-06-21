@@ -16,3 +16,4 @@ Useful references:
 - [World runtime](../architecture/world/world-runtime.md)
 - [Runtime capabilities](../runtime-capabilities.md)
 - [Settlement boundary](../runtime/settlement_boundary.md)
+- [World Trust, Reputation, and Governance Layer](world-trust-reputation-governance-layer.md)
