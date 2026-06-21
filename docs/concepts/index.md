@@ -1,19 +1,20 @@
 # Concepts
 
-Core EverArcade concepts:
+EverArcade is verified world infrastructure centered on `world.evr`.
 
-- **World** — a packaged deterministic game/simulation state machine.
-- **Runtime** — the local execution host that records receipts, journals, replay material, and state.
-- **Replay verification** — re-executing recorded inputs to validate deterministic outcomes.
-- **Continuity** — preserving world state across checkpoints, archive, restore, and continued execution.
-- **Ownership and identity** — protocol-facing concepts for assets, wallets, players, and operators; most live settlement surfaces are not production-ready.
+## Core concepts
 
-Useful references:
+- **world.evr:** a portable world artifact containing package metadata, operator context, proof status, restore or migration evidence, capability metadata, treasury policy, and discovery fields.
+- **World Git:** the lineage model for contributing to, reviewing, merging, and forking worlds.
+- **Verified replay:** a verifier recomputes world results from journals and transition rules.
+- **Restore:** a verifier proves a world can be recovered from bundle data.
+- **Migration:** a verifier proves continuity survives moving a world to a new operator or instance.
+- **Registry:** the discovery layer where worlds publish identity, proof status, and calls for contributors.
+- **Capability Marketplace:** reusable modules authored by builders and installed by worlds.
+- **Treasury execution:** explicit world policy for rewards, funding, operations, and payouts.
 
-- [World Git economic model](./world-git-economic-model.md)
-- [World contribution merge model](./world-contribution-merge-model.md)
-- [System architecture](../architecture/system-overview.md)
-- [World runtime](../architecture/world/world-runtime.md)
-- [Runtime capabilities](../runtime-capabilities.md)
-- [Settlement boundary](../runtime/settlement_boundary.md)
-- [World Trust, Reputation, and Governance Layer](world-trust-reputation-governance-layer.md)
+## Join
+
+- [Explore the Vision](../vision.md)
+- [Browse Worlds](../worlds.md)
+- [Apply for Founding Worlds](../founding-worlds.md)
