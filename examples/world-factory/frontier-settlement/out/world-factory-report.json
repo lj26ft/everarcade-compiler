@@ -1,0 +1,15 @@
+{
+  "world_id": "frontier-settlement-demo",
+  "world_name": "Frontier Settlement Demo",
+  "blueprint_schema": "WORLD_BLUEPRINT_V1",
+  "contract_plan_schema": "WORLD_CONTRACT_PLAN_V1",
+  "package_spec": "WORLD_EVR_PACKAGE_SPEC_V1",
+  "package_hash": "43d43e80ef09c0851ed1fc3d5294683e4ef241ec820085c65c85539c0ef502b1",
+  "capabilities": [
+    "inventory.transfer",
+    "market.trade",
+    "governance.vote"
+  ],
+  "runtime_profile": "small",
+  "verification_status": "PASS"
+}

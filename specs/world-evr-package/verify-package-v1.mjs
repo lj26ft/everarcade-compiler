@@ -74,6 +74,12 @@ function verify(dir) {
   return packageHash;
 }
 
+const target = process.argv[2];
+if (target) {
+  try { console.log(`PASS ${relative(process.cwd(), target)} ${verify(target)}`); process.exit(0); }
+  catch (e) { console.error(`FAIL ${relative(process.cwd(), target)}: ${e.message}`); process.exit(1); }
+}
+
 const valid = join(root, 'fixtures/world-package-valid-001');
 const failures = readdirSync(join(root, 'failure-fixtures')).map(n => join(root, 'failure-fixtures', n));
 let ok = true;
