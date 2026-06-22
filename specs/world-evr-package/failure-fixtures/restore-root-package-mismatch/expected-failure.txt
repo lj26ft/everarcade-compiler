@@ -1,0 +1,1 @@
+restore/checkpoint.json.root_package must equal manifest.package_name, even after hash-manifest repair.

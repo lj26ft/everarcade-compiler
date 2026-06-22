@@ -1,0 +1,1 @@
+manifest.runtime.runtime_id must equal runtime/runtime.json.runtime_id, even after hash-manifest repair.
