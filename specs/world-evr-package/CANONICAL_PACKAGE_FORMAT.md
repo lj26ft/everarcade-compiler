@@ -1,6 +1,6 @@
 # Canonical Package Format
 
-Canonical package bytes are protocol truth. For `WORLD_EVR_PACKAGE_SPEC_RC2`, the authoritative `world.evr` package hash is the `hash-manifest.json` recipe, not the older Rust envelope description below.
+Canonical package bytes are protocol truth. For `WORLD_EVR_PACKAGE_SPEC_V1`, the authoritative `world.evr` package hash is the `hash-manifest.json` recipe, not the older Rust envelope description below.
 
 ## Envelope
 
@@ -15,13 +15,13 @@ Canonical package bytes are protocol truth. For `WORLD_EVR_PACKAGE_SPEC_RC2`, th
 Version is explicit and decoded through `PackageVersion { major, minor }`.
 Unsupported versions are rejected.
 
-## RC2 authoritative hash-manifest encoding
+## V1 authoritative hash-manifest encoding
 
-For RC2, `package_hash = sha256(package_hash_stream)`, where `package_hash_stream` is built by iterating `hash-manifest.files` sorted byte-lex by path and appending `path_utf8 || 0x00 || sha256(file_bytes)_hex || 0x0a` for each entry. Any Rust envelope or `execution-core/src/codec/package_encode.rs` description is non-authoritative for `world.evr` unless it produces byte-identical hash-manifest output.
+For V1, `package_hash = sha256(package_hash_stream)`, where `package_hash_stream` is built by iterating `hash-manifest.files` sorted byte-lex by path and appending `path_utf8 || 0x00 || sha256(file_bytes)_hex || 0x0a` for each entry. Any Rust envelope or `execution-core/src/codec/package_encode.rs` description is non-authoritative for `world.evr` unless it produces byte-identical hash-manifest output.
 
 ## Legacy envelope encoding
 
-The older envelope description below is retained as background for non-RC2 package work; it does not override the RC2 hash-manifest recipe.
+The older envelope description below is retained as background for non-V1 package work; it does not override the V1 hash-manifest recipe.
 
 ## Decode semantics
 

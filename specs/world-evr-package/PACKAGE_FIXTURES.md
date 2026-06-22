@@ -1,59 +1,43 @@
-# world.evr Package Fixtures RC2
+# world.evr Package Fixtures V1
 
-Fixtures are intentionally small, text-based package directories so an independent verifier can inspect and recompute hashes without importing EverArcade runtime code.
+These fixtures exercise the frozen `WORLD_EVR_PACKAGE_SPEC_V1` package artifact format.
 
-## Authoritative RC2 hash recipe
+## Authoritative V1 hash recipe
 
-1. Parse `hash-manifest.json`.
-2. Reject unless `hash_alg` is `sha256`, `file_order` is `lexicographic-by-path`, and every `files[].path` is already sorted byte-lexicographically.
-3. For each listed file, compute SHA-256 over exact file bytes and compare it to `files[].sha256`.
-4. Build the package-hash input by concatenating each sorted entry as:
+For V1, `package_hash = sha256(package_hash_stream)`, where `package_hash_stream` is built by iterating `hash-manifest.files` sorted byte-lex by path and appending:
 
-   ```text
-   path_utf8 || 0x00 || sha256(file_bytes)_hex || 0x0a
-   ```
+```text
+path_utf8 || 0x00 || sha256(file_bytes)_hex || 0x0a
+```
 
-5. SHA-256 hash that byte stream. The result must match `expected-package-hash.txt` and any archive-level expected package hash.
-6. Reject unknown must-understand fields, missing required files, unlisted load-bearing files, and all explicit cross-artifact binding predicate failures.
+The package hash is reproducible from package contents and the public spec only. No EverArcade runtime code is required.
 
-## Mandatory semantic predicates
+## Canonical runtime version field
 
-RC2 removes vague “mutually bound” wording. A valid package must satisfy all predicates in `WORLD_EVR_PACKAGE_SPEC_RC2.md`, including:
+`runtime_version` is the canonical runtime version field in both `manifest.runtime.runtime_version` and `runtime/runtime.json.runtime_version`.
 
-- manifest world, runtime, contract, and artifact hash bindings;
-- restore checkpoint package identity and world identity bindings;
-- recomputation of `restore/checkpoint.json.roots.continuity_root` from included restore accumulator data (`restore/journal.json` in these fixtures);
-- proof/certification world and runtime bindings when present.
+Compatibility aliases are non-canonical and should not appear in V1 fixtures.
 
 ## Valid fixture
 
-### `fixtures/world-package-valid-001/`
-
-Contains:
-
-- `manifest.json`
-- `genesis/genesis.json`
-- `runtime/runtime.json`
-- `world-contract/world-contract.json`
-- `hash-manifest.json`
-- `expected-package-hash.txt`
-- optional proof, checkpoint, and journal files
-
-Expected result: **accept**. The verifier should recompute the package hash from `hash-manifest.json`, confirm every load-bearing file is listed, and confirm each mandatory predicate passes.
+- `fixtures/world-package-valid-001/` — valid V1 package fixture. It binds manifest, genesis, runtime, world contract, restore checkpoint, restore journal, certification proof, hash manifest, and expected package hash.
 
 ## Failure fixtures
 
-- `failure-fixtures/wrong-world-id/` — manifest `world_id` is spoofed relative to bundled genesis data. Expected: **reject**.
-- `failure-fixtures/manifest-runtime-mismatch/` — manifest runtime identity disagrees with bundled runtime identity. Expected: **reject**, even after hash-manifest repair.
-- `failure-fixtures/genesis-hash-mismatch/` — manifest declares the wrong genesis digest. Expected: **reject**.
-- `failure-fixtures/extra-unhashed-file/` — includes an unlisted runtime sidecar that could affect consensus. Expected: **reject**.
-- `failure-fixtures/noncanonical-file-order/` — `hash-manifest.json` file entries are not lexicographically sorted. Expected: **reject**.
-- `failure-fixtures/unknown-required-field/` — manifest contains an unknown must-understand consensus extension. Expected: **reject**.
-- `failure-fixtures/missing-required-file/` — required world contract file is absent. Expected: **reject**.
-- `failure-fixtures/restore-root-package-mismatch/` — restore checkpoint binds to the wrong root package. Expected: **reject**, even after hash-manifest repair.
+Each directory under `failure-fixtures/` must fail V1 verification:
 
-Run the fixture harness with:
+- `continuity-root-mismatch/` — fails because `checkpoint.roots.continuity_root` does not equal the recomputed continuity root.
+- `extra-unhashed-file/` — fails because a load-bearing file is present outside `hash-manifest.json`.
+- `genesis-hash-mismatch/` — fails because the manifest genesis hash does not match `genesis/genesis.json`.
+- `manifest-runtime-mismatch/` — fails because manifest runtime identity does not match `runtime/runtime.json`.
+- `missing-required-file/` — fails because a required file is absent.
+- `noncanonical-file-order/` — fails because `hash-manifest.files` is not byte-lexicographically sorted by path.
+- `restore-root-package-mismatch/` — fails because restore checkpoint/journal package binding does not match the manifest package identity.
+- `unknown-required-field/` — fails because an unknown must-understand field is present.
+- `wrong-world-id/` — fails because manifest world identity does not match genesis world identity.
 
-```text
-node specs/world-evr-package/verify-package-rc2.mjs
+## Verification command
+
+```bash
+node specs/world-evr-package/verify-package-v1.mjs
 ```

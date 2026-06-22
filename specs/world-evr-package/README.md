@@ -1,59 +1,43 @@
-# world.evr Package Spec RC2 Handoff
+# world.evr Package Spec V1
 
-This directory is the RC2 handoff bundle for independent Tier2 review of the `world.evr` package format. RC2 is **not** the frozen v1 artifact format; it is the review candidate Dane should inspect, implement against, and try to break before v1 is frozen.
+V1 frozen after RC2 independent review. `WORLD_EVR_PACKAGE_SPEC_V1.md` is the frozen v1 package artifact format for `world.evr` packages.
 
-## Included source specs
+Independent review status:
 
-- `WORLD_EVR_PACKAGE_SPEC_RC2.md` — RC2 package spec with explicit mandatory binding predicates.
-- `WORLD_EVR_PACKAGE_SPEC_RC1.md` — prior review candidate retained for comparison only.
-- `CANONICAL_PACKAGE_FORMAT.md` — canonical package layout, serialization, and RC2 hash-manifest authority notes.
-- `GAME_PACKAGE_FORMAT.md` — game-package background format.
-- `WORLD_PACKAGE_CERTIFICATION.md` and `WORLD_PACKAGE_CERTIFICATION_FRAMEWORK_V1.md` — proof/certification material.
-- `CANONICAL_WORLD_CREATION_FLOW_V1.md` — canonical world creation flow.
-- `DERIVED_ARTIFACTS.md` — generated artifact expectations.
-- `VERIFICATION_MATRIX.md` — review and validation matrix.
-- `PACKAGE_FIXTURES.md` — RC2 fixture index and expected verifier behavior.
-- `verify-package-rc2.mjs` — cold spec-level verifier for the directory fixtures.
+- Python verifier: PASS
+- TypeScript verifier: PASS
+- Cross-implementation agreement: PASS
+- Adversarial repair pass: PASS
 
-## RC2 fixes
+The spec is the trust root. Verifiers are replaceable. The artifact is what is tested.
 
-RC2 addresses the two RC1 binding gaps found by independent verification:
+## Files
 
-1. Runtime identity is explicitly bound: `manifest.runtime.runtime_id == runtime/runtime.json.runtime_id` and `manifest.runtime.version == runtime/runtime.json.version`.
-2. Restore package identity is explicitly bound: `restore/checkpoint.json.root_package == manifest.package_name` and restore continuity roots are recomputed from included accumulator data.
+- `WORLD_EVR_PACKAGE_SPEC_V1.md` — frozen V1 package artifact specification.
+- `WORLD_EVR_PACKAGE_SPEC_RC2.md` — preserved historical RC2 review material.
+- `fixtures/world-package-valid-001/` — valid V1 package fixture.
+- `failure-fixtures/` — negative fixtures that must be rejected by V1 verifiers.
+- `verify-package-v1.mjs` — standalone cold spec-level verifier for the directory fixtures.
+- `PACKAGE_FIXTURES.md` — fixture index and expected verifier behavior.
+- `review/V1_FREEZE_NOTE.md` — freeze handoff note covering RC1 findings, RC2 fixes, independent verdict, and V1 decision.
 
-RC2 also declares the `hash-manifest.json` stream as the authoritative package hash construction and replaces “mutually bound” prose with mandatory binding predicates.
+## V1 binding predicates
 
-## Review scope for Dane
+V1 freezes the RC2 fixes as mandatory semantic predicates:
 
-Please verify whether the specs and fixtures fully define:
+1. Runtime identity is explicitly bound: `manifest.runtime.runtime_id == runtime/runtime.json.runtime_id` and `manifest.runtime.runtime_version == runtime/runtime.json.runtime_version`.
+2. Restore material is package-bound: `checkpoint.root_package == manifest.package_name` and `journal.root_package == manifest.package_name`.
+3. Restore checkpoint continuity is root-bound: `checkpoint.roots.continuity_root` must equal the recomputed continuity root for `restore/journal.json`.
+4. The `hash-manifest.json` stream is the authoritative package hash construction.
 
-- package archive layout
-- required files and optional files
-- manifest schema
-- canonical serialization
-- hash construction and `package_hash`
-- `world_id`, runtime, genesis, journal, checkpoint, restore, and migration bindings
-- proof/certification fields
-- versioning rules
-- invalid package detection
+`runtime_version` is the canonical runtime version field. Aliases are non-canonical and should not appear in V1 fixtures.
 
-## Handoff message
+## Verification
 
-> RC2 is synced.
->
-> It fixes the two RC1 binding gaps:
->
-> 1. runtime identity is explicitly bound:
-> manifest.runtime == runtime/runtime.json
->
-> 2. restore checkpoint is explicitly bound:
-> checkpoint.root_package == package identity
->
-> RC2 also declares the hash-manifest recipe as the authoritative package_hash construction and replaces “mutually bound” prose with mandatory binding predicates.
->
-> Please rerun the Python + TS package verifiers and the adversarial repair pass. If either implementation disagrees, or if a repaired failure fixture survives, RC2 is not v1.
+Run:
 
-## Freeze rule
+```bash
+node specs/world-evr-package/verify-package-v1.mjs
+```
 
-Do not declare `world.evr` package format v1 frozen until Dane reports that RC2 passes cold independent verification and adversarial repair, with no hidden dependency, ambiguity, unhashed artifact, ordering problem, or restore/migration binding gap.
+A conforming V1 verifier must pass the valid fixture and reject every fixture under `failure-fixtures/`, including runtime identity mismatch, restore root package mismatch, non-canonical hash-manifest ordering, and continuity root mismatch.

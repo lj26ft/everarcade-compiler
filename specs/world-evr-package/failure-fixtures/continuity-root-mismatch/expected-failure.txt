@@ -1,0 +1,1 @@
+checkpoint.roots.continuity_root does not equal recomputed continuity root
