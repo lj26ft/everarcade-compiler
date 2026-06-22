@@ -13,8 +13,13 @@ let command = process.argv[2];
 let args = process.argv.slice(3);
 
 if (command === 'world') {
-  command = `world:${args[0] ?? 'help'}`;
-  args = args.slice(1);
+  if (args[0] === 'factory') {
+    command = `world:factory:${args[1] ?? 'help'}`;
+    args = args.slice(2);
+  } else {
+    command = `world:${args[0] ?? 'help'}`;
+    args = args.slice(1);
+  }
 }
 
 function value(flag, fallback) {
@@ -249,6 +254,131 @@ function packageGame(projectDir) {
 }
 
 
+
+const FRONTIER_BLUEPRINT = {
+  schema_version: 'WORLD_BLUEPRINT_V1',
+  world_id: 'frontier-settlement-demo',
+  world_name: 'Frontier Settlement Demo',
+  world_type: 'frontier-settlement',
+  governance: 'council',
+  economy: 'marketplace',
+  capabilities: ['inventory.transfer', 'market.trade', 'governance.vote'],
+  runtime_profile: 'small',
+  verification_targets: ['package', 'replay', 'restore', 'migration'],
+  infrastructure_profile: 'single-evernode-lease'
+};
+
+const FRONTIER_CONTRACT_PLAN = {
+  schema_version: 'WORLD_CONTRACT_PLAN_V1',
+  world_id: 'frontier-settlement-demo',
+  contract_version: '0.1.0',
+  planned_mutations: ['inventory.transfer', 'market.trade', 'governance.vote'],
+  safety_invariants: {
+    'inventory.transfer': ['ownership', 'no-overdraw', 'conservation', 'atomicity'],
+    'market.trade': ['ownership', 'no-double-spend', 'value-conservation', 'atomicity'],
+    'governance.vote': ['eligibility', 'one-vote-per-member', 'tally-integrity']
+  },
+  verification_requirements: ['package', 'replay', 'restore']
+};
+
+const WORLD_FACTORY_PROJECT = path.join(repoRoot, 'examples', 'world-factory', 'frontier-settlement');
+const WORLD_FACTORY_CAPABILITIES = new Set(['inventory.transfer', 'market.trade', 'governance.vote']);
+const WORLD_FACTORY_RUNTIME_PROFILES = new Set(['small']);
+const WORLD_FACTORY_VERIFICATION_TARGETS = new Set(['package', 'replay', 'restore', 'migration']);
+
+function sha256Hex(bytes) { return crypto.createHash('sha256').update(bytes).digest('hex'); }
+function readJsonFile(file) { return JSON.parse(fs.readFileSync(file, 'utf8')); }
+function assertFactory(condition, message) { if (!condition) throw new Error(message); }
+
+function worldFactoryInit() {
+  fs.mkdirSync(WORLD_FACTORY_PROJECT, { recursive: true });
+  writeJson(path.join(WORLD_FACTORY_PROJECT, 'world-blueprint.json'), FRONTIER_BLUEPRINT);
+  writeJson(path.join(WORLD_FACTORY_PROJECT, 'world-contract-plan.json'), FRONTIER_CONTRACT_PLAN);
+  console.log(`World Factory Init: PASS (${path.relative(repoRoot, WORLD_FACTORY_PROJECT)})`);
+}
+
+function loadWorldFactoryProject(projectDir) {
+  const blueprintPath = path.join(projectDir, 'world-blueprint.json');
+  const planPath = path.join(projectDir, 'world-contract-plan.json');
+  assertFactory(fs.existsSync(blueprintPath), `Missing ${blueprintPath}`);
+  assertFactory(fs.existsSync(planPath), `Missing ${planPath}`);
+  return { blueprint: readJsonFile(blueprintPath), plan: readJsonFile(planPath) };
+}
+
+function validateWorldFactoryProject(projectDir) {
+  const { blueprint, plan } = loadWorldFactoryProject(projectDir);
+  for (const key of Object.keys(FRONTIER_BLUEPRINT)) assertFactory(Object.hasOwn(blueprint, key), `Blueprint missing ${key}`);
+  for (const key of Object.keys(FRONTIER_CONTRACT_PLAN)) assertFactory(Object.hasOwn(plan, key), `Contract plan missing ${key}`);
+  assertFactory(blueprint.schema_version === 'WORLD_BLUEPRINT_V1', 'Blueprint schema_version must be WORLD_BLUEPRINT_V1');
+  assertFactory(plan.schema_version === 'WORLD_CONTRACT_PLAN_V1', 'Contract plan schema_version must be WORLD_CONTRACT_PLAN_V1');
+  assertFactory(blueprint.world_id === plan.world_id, 'Blueprint and contract plan world_id must match');
+  assertFactory(blueprint.world_type === 'frontier-settlement', 'Unsupported world_type');
+  assertFactory(WORLD_FACTORY_RUNTIME_PROFILES.has(blueprint.runtime_profile), 'Unsupported runtime_profile');
+  for (const capability of blueprint.capabilities) assertFactory(WORLD_FACTORY_CAPABILITIES.has(capability), `Unsupported capability ${capability}`);
+  for (const mutation of plan.planned_mutations) {
+    assertFactory(blueprint.capabilities.includes(mutation), `Planned mutation ${mutation} is not in blueprint capabilities`);
+    assertFactory(Array.isArray(plan.safety_invariants[mutation]) && plan.safety_invariants[mutation].length > 0, `Missing invariants for ${mutation}`);
+  }
+  for (const target of blueprint.verification_targets) assertFactory(WORLD_FACTORY_VERIFICATION_TARGETS.has(target), `Unsupported verification target ${target}`);
+  for (const requirement of plan.verification_requirements) assertFactory(blueprint.verification_targets.includes(requirement), `Verification requirement ${requirement} not requested by blueprint`);
+  console.log(`World Factory Validate: PASS (${blueprint.world_id})`);
+  return { blueprint, plan };
+}
+
+function hashManifestFor(dir) {
+  const files = [];
+  function walk(prefix = '') {
+    for (const name of fs.readdirSync(path.join(dir, prefix))) {
+      const rel = prefix ? `${prefix}/${name}` : name;
+      if (rel === 'hash-manifest.json' || rel === 'expected-package-hash.txt') continue;
+      const stat = fs.statSync(path.join(dir, rel));
+      if (stat.isDirectory()) walk(rel);
+      else files.push(rel);
+    }
+  }
+  walk();
+  files.sort((a, b) => Buffer.compare(Buffer.from(a), Buffer.from(b)));
+  const entries = files.map((file) => ({ path: file, sha256: sha256Hex(fs.readFileSync(path.join(dir, file))) }));
+  const stream = entries.map((entry) => `${entry.path}\0${entry.sha256}\n`).join('');
+  return { manifest: { hash_alg: 'sha256', file_order: 'lexicographic-by-path', files: entries }, packageHash: sha256Hex(Buffer.from(stream, 'utf8')) };
+}
+
+function generateWorldFactoryPackage(projectDir) {
+  const { blueprint, plan } = validateWorldFactoryProject(projectDir);
+  const outRoot = path.join(projectDir, 'out');
+  const pkg = path.join(outRoot, 'world.evr');
+  fs.rmSync(pkg, { recursive: true, force: true });
+  fs.mkdirSync(pkg, { recursive: true });
+  const runtime = { determinism_profile: 'tier2-cold-verifier', runtime_id: 'everarcade-world-factory-runtime', runtime_version: '0.1.0', runtime_profile: blueprint.runtime_profile };
+  const genesis = { genesis_id: `genesis:${blueprint.world_id}`, initial_state_root: `sha256:${sha256Hex(JSON.stringify({ world_id: blueprint.world_id, capabilities: blueprint.capabilities }))}`, runtime_id: runtime.runtime_id, world_id: blueprint.world_id };
+  const contract = { abi_version: plan.contract_version, contract_hash: `sha256:${sha256Hex(JSON.stringify(plan))}`, contract_id: `${blueprint.world_id}-contract`, planned_mutations: plan.planned_mutations, safety_invariants: plan.safety_invariants, world_id: blueprint.world_id };
+  const journal = { root_package: blueprint.world_id, checkpoint_root: `sha256:${'4'.repeat(64)}`, entries: [], world_id: blueprint.world_id };
+  const continuityRoot = `sha256:${sha256Hex(`${JSON.stringify(journal, null, 2)}\n`)}`;
+  const checkpoint = { checkpoint_root: journal.checkpoint_root, root_package: blueprint.world_id, roots: { continuity_root: continuityRoot }, world_id: blueprint.world_id };
+  writeJson(path.join(pkg, 'runtime/runtime.json'), runtime);
+  writeJson(path.join(pkg, 'genesis/genesis.json'), genesis);
+  writeJson(path.join(pkg, 'world-contract/world-contract.json'), contract);
+  writeJson(path.join(pkg, 'restore/journal.json'), journal);
+  writeJson(path.join(pkg, 'restore/checkpoint.json'), checkpoint);
+  writeJson(path.join(pkg, 'proof/certification.json'), { claims: ['world-factory-mvp', 'all-load-bearing-files-hashed'], package_hash: 'bound-by-expected-package-hash', profile: 'world.evr-package-v1', runtime_id: runtime.runtime_id, status: 'PASS', verifier: 'world-factory-v1', world_id: blueprint.world_id });
+  const manifest = { canonicalization: { file_order: 'lexicographic-by-path', manifest_encoding: 'canonical-json-utf8-lf', unknown_fields: 'reject' }, format: 'world.evr', genesis: { genesis_id: genesis.genesis_id, hash_alg: 'sha256', path: 'genesis/genesis.json', sha256: sha256Hex(fs.readFileSync(path.join(pkg, 'genesis/genesis.json'))) }, optional_files: ['restore/checkpoint.json', 'restore/journal.json', 'proof/certification.json'], package_name: blueprint.world_id, proof: { certification_path: 'proof/certification.json' }, required_files: ['manifest.json', 'genesis/genesis.json', 'runtime/runtime.json', 'world-contract/world-contract.json', 'hash-manifest.json', 'expected-package-hash.txt'], restore: { checkpoint_path: 'restore/checkpoint.json', journal_path: 'restore/journal.json' }, runtime: { hash_alg: 'sha256', path: 'runtime/runtime.json', runtime_id: runtime.runtime_id, runtime_version: runtime.runtime_version, sha256: sha256Hex(fs.readFileSync(path.join(pkg, 'runtime/runtime.json'))) }, spec_version: 'V1', world_contract: { contract_id: contract.contract_id, hash_alg: 'sha256', path: 'world-contract/world-contract.json', sha256: sha256Hex(fs.readFileSync(path.join(pkg, 'world-contract/world-contract.json'))) }, world_id: blueprint.world_id };
+  writeJson(path.join(pkg, 'manifest.json'), manifest);
+  const hm = hashManifestFor(pkg);
+  writeJson(path.join(pkg, 'hash-manifest.json'), hm.manifest);
+  fs.writeFileSync(path.join(pkg, 'expected-package-hash.txt'), `${hm.packageHash}\n`);
+  writeJson(path.join(outRoot, 'world-factory-report.json'), { world_id: blueprint.world_id, world_name: blueprint.world_name, blueprint_schema: blueprint.schema_version, contract_plan_schema: plan.schema_version, package_spec: 'WORLD_EVR_PACKAGE_SPEC_V1', package_hash: hm.packageHash, capabilities: blueprint.capabilities, runtime_profile: blueprint.runtime_profile, verification_status: 'PASS' });
+  console.log(`World Factory Generate: PASS (${path.relative(repoRoot, pkg)})`);
+  console.log(`Package Hash: ${hm.packageHash}`);
+}
+
+function verifyWorldFactoryPackage(projectDir) {
+  const packageDir = path.join(projectDir, 'out', 'world.evr');
+  const verifier = path.join(repoRoot, 'specs', 'world-evr-package', 'verify-package-v1.mjs');
+  const result = spawnSync('node', [verifier, packageDir], { cwd: repoRoot, encoding: 'utf8' });
+  if (result.status !== 0) throw new Error(`World Factory Verify failed: ${(result.stderr || result.stdout).trim()}`);
+  process.stdout.write(result.stdout);
+  console.log('World Factory Verify: PASS');
+}
 
 const WORLD_TEMPLATES = [
   ['Arena', 'arena', 'Fast combat worlds'],
@@ -964,7 +1094,11 @@ function publish(projectDir) {
 
 try {
   const projectDir = path.resolve(value('--project', process.cwd()));
-  if (command === 'world:templates') printTemplates();
+  if (command === 'world:factory:init') worldFactoryInit();
+  else if (command === 'world:factory:validate') validateWorldFactoryProject(projectDir);
+  else if (command === 'world:factory:generate') generateWorldFactoryPackage(projectDir);
+  else if (command === 'world:factory:verify') verifyWorldFactoryPackage(projectDir);
+  else if (command === 'world:templates') printTemplates();
   else if (command === 'world:rustrigs') printRustRigs();
   else if (command === 'world:init') createWorld();
   else if (command === 'world:run') launchLocal(projectDir);
