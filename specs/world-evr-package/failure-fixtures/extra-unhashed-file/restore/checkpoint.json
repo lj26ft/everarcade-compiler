@@ -1,1 +1,1 @@
-{"checkpoint_root":"sha256:4444444444444444444444444444444444444444444444444444444444444444","root_package":"world-package-valid-001","world_id":"world:everarcade:rc1-valid-001"}
+{"checkpoint_root":"sha256:4444444444444444444444444444444444444444444444444444444444444444","root_package":"world-package-valid-001","roots":{"continuity_root":"sha256:62a6f846955a09b922137d2a25a91968ab181d21cca2c905e279e2902b6265a2"},"world_id":"world:everarcade:rc1-valid-001"}
