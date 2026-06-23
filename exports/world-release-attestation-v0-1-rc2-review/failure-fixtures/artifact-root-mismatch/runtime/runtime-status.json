@@ -1,0 +1,9 @@
+{
+  "status": "RUNNING",
+  "tick": 100,
+  "verification": "PASS",
+  "state_root": "sha256:9c1a01f79c885d4a74958f899581031eefa009fc32effc787dd8b20c4f726be8",
+  "receipt_root": "sha256:f07bce421afa4639a3131f285d40a85422fbd50b9250207f5005c0ebeea53de0",
+  "world_hash": "sha256:3295c73a98bfd21df16f438e2bd2092a99e51970beb64329bc6a439ae1a5e6df",
+  "continuity_root": "sha256:bb3390f5015cc70505ef64a4a8bb395f175494df210988109124778d7edb25a1"
+}

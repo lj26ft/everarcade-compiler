@@ -1,0 +1,16 @@
+{
+  "schema_version": "WORLD_RELEASE_ATTESTATION_V0_1_RC2",
+  "world_id": "frontier-settlement-demo",
+  "package_hash": "43d43e80ef09c0851ed1fc3d5294683e4ef241ec820085c65c85539c0ef502b1",
+  "package_verification": "PASS",
+  "replay_verification": "PASS",
+  "remote_verification": "PASS",
+  "world_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "continuity_root": "sha256:bb3390f5015cc70505ef64a4a8bb395f175494df210988109124778d7edb25a1",
+  "timestamp": "2026-06-23T13:20:31.742Z",
+  "attester": {
+    "name": "offline-attester",
+    "public_key": "MCowBQYDK2VwAyEAsJJ+EUPSFgAzoIlFM2psSKff8rAHSWE0GqP3qiXAAuk="
+  },
+  "signature": "QU221zu1Dm4jlYFhIGg3yukvW/6odOBwanXayRXXhmsvrC+WKRGHlPkwy4bA3LAfkCeT8GKpsHv4TlSnAu2WDA=="
+}

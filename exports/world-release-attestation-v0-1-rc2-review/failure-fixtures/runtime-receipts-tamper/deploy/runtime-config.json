@@ -1,0 +1,13 @@
+{
+  "endpoint_profile": "world-factory-phase4-live-http",
+  "endpoints": [
+    "/health",
+    "/state",
+    "/journal",
+    "/verify"
+  ],
+  "host": "127.0.0.1",
+  "port": 8787,
+  "source_package": "out/world.evr",
+  "world_id": "frontier-settlement-demo"
+}

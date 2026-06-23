@@ -1,0 +1,50 @@
+{
+  "canonicalization": {
+    "file_order": "lexicographic-by-path",
+    "manifest_encoding": "canonical-json-utf8-lf",
+    "unknown_fields": "reject"
+  },
+  "format": "world.evr",
+  "genesis": {
+    "genesis_id": "genesis:frontier-settlement-demo",
+    "hash_alg": "sha256",
+    "path": "genesis/genesis.json",
+    "sha256": "8244a01452024af584bdad2ab88ce70e19d1938bf49f3f5b13ae3e8a92061012"
+  },
+  "optional_files": [
+    "restore/checkpoint.json",
+    "restore/journal.json",
+    "proof/certification.json"
+  ],
+  "package_name": "frontier-settlement-demo",
+  "proof": {
+    "certification_path": "proof/certification.json"
+  },
+  "required_files": [
+    "manifest.json",
+    "genesis/genesis.json",
+    "runtime/runtime.json",
+    "world-contract/world-contract.json",
+    "hash-manifest.json",
+    "expected-package-hash.txt"
+  ],
+  "restore": {
+    "checkpoint_path": "restore/checkpoint.json",
+    "journal_path": "restore/journal.json"
+  },
+  "runtime": {
+    "hash_alg": "sha256",
+    "path": "runtime/runtime.json",
+    "runtime_id": "everarcade-world-factory-runtime",
+    "runtime_version": "0.1.0",
+    "sha256": "0c5b9dd95b12b5e7b678562353376ff28b330336a26c2eb7ee985f837818331e"
+  },
+  "spec_version": "V1",
+  "world_contract": {
+    "contract_id": "frontier-settlement-demo-contract",
+    "hash_alg": "sha256",
+    "path": "world-contract/world-contract.json",
+    "sha256": "132e2c2af5069d37f37e8c387747d1ef04e18816669158b4b5203c18689d7765"
+  },
+  "world_id": "frontier-settlement-demo"
+}
