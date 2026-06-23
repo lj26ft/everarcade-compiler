@@ -404,11 +404,51 @@ function smallRuntimeAssumptions() {
 }
 
 function bootstrapWorldState(worldId) {
-  return { world_id: worldId, tick: 0, settlements: [], market: {}, governance: {} };
+  return {
+    world_id: worldId,
+    tick: 0,
+    settlements: [{ id: 'founders-crossing', population: 3, treasury: 100 }],
+    inventory: {
+      alice: { timber: 10, ore: 2, charter: 1 },
+      bruno: { timber: 1, ore: 8, coin: 30 },
+      settlement: { timber: 25, ore: 12, coin: 100 }
+    },
+    market: { trades: [], volume: 0 },
+    governance: { proposals: { 'proposal-001': { title: 'Open the public workshop', yes: 0, no: 0, voters: [] } } }
+  };
 }
 
-function receiptForTick(worldId, tick, previousStateRoot) {
-  const deterministic = { action: 'world.tick', previous_state_root: previousStateRoot, tick, world_id: worldId };
+function plannedWorldAction(tick) {
+  const actions = [
+    { mutation: 'inventory.transfer', from: 'alice', to: 'settlement', item: 'timber', amount: 2 },
+    { mutation: 'market.trade', seller: 'bruno', buyer: 'alice', item: 'ore', amount: 1, price: 6 },
+    { mutation: 'governance.vote', proposal_id: 'proposal-001', voter: 'alice', choice: 'yes' }
+  ];
+  return actions[(tick - 1) % actions.length];
+}
+
+function applyWorldAction(state, action) {
+  if (action.mutation === 'inventory.transfer') {
+    state.inventory[action.from][action.item] -= action.amount;
+    state.inventory[action.to][action.item] = (state.inventory[action.to][action.item] ?? 0) + action.amount;
+  } else if (action.mutation === 'market.trade') {
+    state.inventory[action.seller][action.item] -= action.amount;
+    state.inventory[action.buyer][action.item] = (state.inventory[action.buyer][action.item] ?? 0) + action.amount;
+    state.inventory[action.buyer].coin = (state.inventory[action.buyer].coin ?? 0) - action.price;
+    state.inventory[action.seller].coin = (state.inventory[action.seller].coin ?? 0) + action.price;
+    state.market.trades.push({ tick: state.tick, seller: action.seller, buyer: action.buyer, item: action.item, amount: action.amount, price: action.price });
+    state.market.volume += action.price;
+  } else if (action.mutation === 'governance.vote') {
+    const proposal = state.governance.proposals[action.proposal_id];
+    proposal[action.choice] += 1;
+    proposal.voters.push(action.voter);
+  } else {
+    throw new Error(`Unsupported world action ${action.mutation}`);
+  }
+}
+
+function receiptForTick(worldId, tick, previousStateRoot, action = plannedWorldAction(tick)) {
+  const deterministic = { action: action.mutation, payload: action, previous_state_root: previousStateRoot, tick, world_id: worldId };
   return { tick, receipt_hash: commitment(deterministic), data: deterministic };
 }
 
@@ -480,16 +520,18 @@ function runWorldFactoryRuntime(projectDir) {
   const generatedWorld = loadGeneratedWorld(projectDir);
   if (!fs.existsSync(path.join(runtimeDirFor(projectDir), 'world-state.json'))) bootWorldFactoryRuntime(projectDir);
   const pkg = readRuntimePackage(projectDir);
-  const state = { world_id: pkg.state.world_id, tick: pkg.state.tick, settlements: pkg.state.settlements, market: pkg.state.market, governance: pkg.state.governance };
+  const state = { world_id: pkg.state.world_id, tick: pkg.state.tick, settlements: pkg.state.settlements, inventory: pkg.state.inventory, market: pkg.state.market, governance: pkg.state.governance };
   const journal = pkg.journal;
   const receipts = pkg.receipts;
   for (let i = 0; i < ticks; i += 1) {
     const previousRoots = statusFor(state, receipts, journal, generatedWorld);
     state.tick += 1;
-    const receipt = receiptForTick(state.world_id, state.tick, previousRoots.state_root);
+    const action = plannedWorldAction(state.tick);
+    applyWorldAction(state, action);
+    const receipt = receiptForTick(state.world_id, state.tick, previousRoots.state_root, action);
     receipts.push(receipt);
     const roots = statusFor(state, receipts, journal, generatedWorld);
-    journal.push({ tick: state.tick, action: 'world.tick', receipt_hash: receipt.receipt_hash, world_hash: roots.world_hash });
+    journal.push({ tick: state.tick, action: action.mutation, payload: action, receipt_hash: receipt.receipt_hash, world_hash: roots.world_hash });
   }
   const roots = writeRuntimePackage(projectDir, state, journal, receipts, generatedWorld, 'PENDING');
   console.log(`World Factory Run: PASS (${state.tick} ticks)`);
@@ -505,15 +547,17 @@ function replayWorldFactoryRuntime(projectDir) {
   for (const entry of runtime.journal) {
     const previousRoots = statusFor(replayState, replayReceipts, replayJournal, generatedWorld);
     replayState.tick += 1;
-    const receipt = receiptForTick(replayState.world_id, replayState.tick, previousRoots.state_root);
+    const action = plannedWorldAction(replayState.tick);
+    applyWorldAction(replayState, action);
+    const receipt = receiptForTick(replayState.world_id, replayState.tick, previousRoots.state_root, action);
     const rootsBeforeJournal = statusFor(replayState, replayReceipts.concat([receipt]), replayJournal, generatedWorld);
-    const replayEntry = { tick: replayState.tick, action: 'world.tick', receipt_hash: receipt.receipt_hash, world_hash: rootsBeforeJournal.world_hash };
-    assertFactory(entry.tick === replayEntry.tick && entry.action === replayEntry.action && entry.receipt_hash === replayEntry.receipt_hash && entry.world_hash === replayEntry.world_hash, `Journal mismatch at tick ${entry.tick}`);
+    const replayEntry = { tick: replayState.tick, action: action.mutation, payload: action, receipt_hash: receipt.receipt_hash, world_hash: rootsBeforeJournal.world_hash };
+    assertFactory(canonicalJson(entry) === canonicalJson(replayEntry), `Journal mismatch at tick ${entry.tick}`);
     replayReceipts.push(receipt);
     replayJournal.push(replayEntry);
   }
   const replayRoots = statusFor(replayState, replayReceipts, replayJournal, generatedWorld);
-  const runtimeRoots = statusFor({ world_id: runtime.state.world_id, tick: runtime.state.tick, settlements: runtime.state.settlements, market: runtime.state.market, governance: runtime.state.governance }, runtime.receipts, runtime.journal, generatedWorld);
+  const runtimeRoots = statusFor({ world_id: runtime.state.world_id, tick: runtime.state.tick, settlements: runtime.state.settlements, inventory: runtime.state.inventory, market: runtime.state.market, governance: runtime.state.governance }, runtime.receipts, runtime.journal, generatedWorld);
   const pass = ['state_root', 'receipt_root', 'world_hash', 'continuity_root'].every((key) => replayRoots[key] === runtimeRoots[key]);
   const replay_status = pass ? 'PASS' : 'FAIL';
   writeJson(path.join(runtime.runtimeDir, 'world-factory-runtime-report.json'), { world_id: replayState.world_id, ticks_executed: replayState.tick, ...runtimeRoots, replay_status });
@@ -722,10 +766,12 @@ async function proofWorldFactoryRuntime(projectDir) {
       for (const entry of journal) {
         const previousRoots = statusFor(replayState, replayReceipts, replayJournal, generatedWorld);
         replayState.tick += 1;
-        const receipt = receiptForTick(replayState.world_id, replayState.tick, previousRoots.state_root);
+        const action = plannedWorldAction(replayState.tick);
+        applyWorldAction(replayState, action);
+        const receipt = receiptForTick(replayState.world_id, replayState.tick, previousRoots.state_root, action);
         const rootsBeforeJournal = statusFor(replayState, replayReceipts.concat([receipt]), replayJournal, generatedWorld);
-        const replayEntry = { tick: replayState.tick, action: 'world.tick', receipt_hash: receipt.receipt_hash, world_hash: rootsBeforeJournal.world_hash };
-        if (entry.tick !== replayEntry.tick || entry.action !== replayEntry.action || entry.receipt_hash !== replayEntry.receipt_hash || entry.world_hash !== replayEntry.world_hash) return 'FAIL';
+        const replayEntry = { tick: replayState.tick, action: action.mutation, payload: action, receipt_hash: receipt.receipt_hash, world_hash: rootsBeforeJournal.world_hash };
+        if (canonicalJson(entry) !== canonicalJson(replayEntry)) return 'FAIL';
         replayReceipts.push(receipt);
         replayJournal.push(replayEntry);
       }
@@ -869,10 +915,12 @@ function replayRuntimeArtifacts(runtime, generatedWorld) {
   for (const entry of runtime.journal) {
     const previousRoots = statusFor(replayState, replayReceipts, replayJournal, generatedWorld);
     replayState.tick += 1;
-    const receipt = receiptForTick(replayState.world_id, replayState.tick, previousRoots.state_root);
+    const action = plannedWorldAction(replayState.tick);
+    applyWorldAction(replayState, action);
+    const receipt = receiptForTick(replayState.world_id, replayState.tick, previousRoots.state_root, action);
     const rootsBeforeJournal = statusFor(replayState, replayReceipts.concat([receipt]), replayJournal, generatedWorld);
-    const replayEntry = { tick: replayState.tick, action: 'world.tick', receipt_hash: receipt.receipt_hash, world_hash: rootsBeforeJournal.world_hash };
-    if (entry.tick !== replayEntry.tick || entry.action !== replayEntry.action || entry.receipt_hash !== replayEntry.receipt_hash || entry.world_hash !== replayEntry.world_hash) return { status: 'FAIL', reason: `journal mismatch at tick ${entry.tick}` };
+    const replayEntry = { tick: replayState.tick, action: action.mutation, payload: action, receipt_hash: receipt.receipt_hash, world_hash: rootsBeforeJournal.world_hash };
+    if (canonicalJson(entry) !== canonicalJson(replayEntry)) return { status: 'FAIL', reason: `journal mismatch at tick ${entry.tick}` };
     replayReceipts.push(receipt);
     replayJournal.push(replayEntry);
   }
