@@ -1,0 +1,10 @@
+{
+  "world_id": "frontier-settlement-demo",
+  "host": "http://127.0.0.1:8787",
+  "deployment_status": "RUNNING",
+  "package_verification": "PASS",
+  "replay_verification": "PASS",
+  "remote_verification": "PASS",
+  "attestation_verification": "PASS",
+  "proof_timestamp": "2026-06-23T13:52:38.508Z"
+}

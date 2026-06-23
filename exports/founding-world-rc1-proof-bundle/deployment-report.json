@@ -1,0 +1,11 @@
+{
+  "world_id": "frontier-settlement-demo",
+  "deployment_status": "RUNNING",
+  "package_verification": "PASS",
+  "replay_verification": "PASS",
+  "remote_verification": "PASS",
+  "world_hash": "sha256:3295c73a98bfd21df16f438e2bd2092a99e51970beb64329bc6a439ae1a5e6df",
+  "state_root": "sha256:eba7cec9346203efcf627c987f97df724215c02368ba3991090a342aeb7a601f",
+  "receipt_root": "sha256:cfc14d6ee052e0217f7dc2dcc14d275dc1cd10fb3af3dbeb0e0efc5246a8ac29",
+  "continuity_root": "sha256:d2855c769ce49a084bc3b6e1c7f183ed4d607639472b81102b35bbbce185056d"
+}
