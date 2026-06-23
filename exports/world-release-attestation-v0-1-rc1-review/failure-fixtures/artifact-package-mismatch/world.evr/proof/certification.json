@@ -1,0 +1,12 @@
+{
+  "claims": [
+    "world-factory-mvp",
+    "all-load-bearing-files-hashed"
+  ],
+  "package_hash": "bound-by-expected-package-hash",
+  "profile": "world.evr-package-v1",
+  "runtime_id": "everarcade-world-factory-runtime",
+  "status": "PASS",
+  "verifier": "world-factory-v1",
+  "world_id": "frontier-settlement-demo"
+}

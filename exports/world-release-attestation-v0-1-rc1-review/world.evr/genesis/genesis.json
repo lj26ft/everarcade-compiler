@@ -1,0 +1,6 @@
+{
+  "genesis_id": "genesis:frontier-settlement-demo",
+  "initial_state_root": "sha256:483cc668febda428df132387e1bd77c5c094a49f352b1adbb6233a0670e13b63",
+  "runtime_id": "everarcade-world-factory-runtime",
+  "world_id": "frontier-settlement-demo"
+}

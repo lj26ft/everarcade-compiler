@@ -1,0 +1,16 @@
+{
+  "schema_version": "WORLD_RELEASE_ATTESTATION_V0_1_RC1",
+  "world_id": "fake-world",
+  "package_hash": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+  "package_verification": "PASS",
+  "replay_verification": "PASS",
+  "remote_verification": "PASS",
+  "world_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "continuity_root": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "timestamp": "2026-06-23T11:33:26.230Z",
+  "attester": {
+    "name": "attacker",
+    "public_key": "MCowBQYDK2VwAyEANHYWYO8WTmfvm47tYAwlS9YRVRhS0Qo7OCVq2Ko4nWQ="
+  },
+  "signature": "RTamOtLyYSO/dfOPauPsRvjlsfvzoDJSxK1lLVeXgX+IwIPyBgYDellw0AKHszd3EuksgqHY6BZ8mOMqC3/FBQ=="
+}

@@ -516,8 +516,7 @@ function replayWorldFactoryRuntime(projectDir) {
 }
 
 
-function packageVerificationStatus(projectDir) {
-  const packageDir = path.join(projectDir, 'out', 'world.evr');
+function packageVerificationStatus(projectDir, packageDir = path.join(projectDir, 'out', 'world.evr')) {
   const verifier = path.join(repoRoot, 'specs', 'world-evr-package', 'verify-package-v1.mjs');
   const result = spawnSync('node', [verifier, packageDir], { cwd: repoRoot, encoding: 'utf8' });
   return result.status === 0 ? 'PASS' : 'FAIL';
@@ -651,6 +650,10 @@ function publicKeyBase64(publicKey) {
   return publicKey.export({ format: 'der', type: 'spki' }).toString('base64');
 }
 
+function publicKeyFingerprint(publicKeyText) {
+  return publicKeyBase64(normalizePemOrBase64Key(publicKeyText, 'public'));
+}
+
 function loadOrCreateAttesterPrivateKey(projectDir) {
   const configured = value('--private-key', undefined);
   const keyPath = configured ? path.resolve(configured) : path.join(projectDir, 'out', 'attester-ed25519-private.pem');
@@ -677,7 +680,7 @@ function createWorldReleaseAttestation(projectDir) {
   fs.rmSync(releaseDir, { recursive: true, force: true });
   fs.mkdirSync(releaseDir, { recursive: true });
   const attestation = {
-    schema_version: 'WORLD_RELEASE_ATTESTATION_V0',
+    schema_version: 'WORLD_RELEASE_ATTESTATION_V0_1_RC1',
     world_id: generatedWorld.manifest.world_id,
     package_hash,
     package_verification,
@@ -692,40 +695,98 @@ function createWorldReleaseAttestation(projectDir) {
   attestation.signature = crypto.sign(null, canonicalAttestationBytes(attestation), privateKey).toString('base64');
   const hash = attestationHash(attestation);
   fs.cpSync(generatedWorld.packageDir, path.join(releaseDir, 'world.evr'), { recursive: true });
+  const trustedPublicKeyPath = path.join(releaseDir, 'trusted-public-key.txt');
   writeJson(attestationPathFor(projectDir), attestation);
   writeJson(releaseReportPathFor(projectDir), { world_id: attestation.world_id, package_hash, attestation_hash: hash, attestation_status: 'PASS' });
+  fs.writeFileSync(trustedPublicKeyPath, `${attestation.attester.public_key}\n`);
   console.log(`World Attest Create: PASS (${path.relative(repoRoot, attestationPathFor(projectDir))})`);
   console.log(`Attestation Hash: ${hash}`);
+  console.log(`Trusted Public Key: ${attestation.attester.public_key}`);
+  console.log(`Trusted Public Key File: ${path.relative(repoRoot, trustedPublicKeyPath)}`);
   console.log(`Attester Private Key: ${path.relative(repoRoot, keyPath)}`);
+}
+
+function attestationFail(reason) {
+  console.log(`FAIL: ${reason}`);
+  process.exitCode = 1;
+}
+
+function rederiveReleaseClaims(projectDir, worldDir) {
+  const expectedHashPath = path.join(worldDir, 'expected-package-hash.txt');
+  assertFactory(fs.existsSync(expectedHashPath), `Missing expected package hash at ${expectedHashPath}`);
+  const package_hash = fs.readFileSync(expectedHashPath, 'utf8').trim();
+  const hashManifest = hashManifestFor(worldDir).packageHash;
+  const manifest = readJsonFile(path.join(worldDir, 'manifest.json'));
+  const package_verification = packageVerificationStatus(projectDir, worldDir);
+  const replay_verification = replayVerificationStatus(projectDir);
+  const deployReportPath = path.join(deploymentDirFor(projectDir), 'deployment-report.json');
+  const deploymentReport = fs.existsSync(deployReportPath) ? readJsonFile(deployReportPath) : null;
+  const runtime = readRuntimePackage(projectDir);
+  const generatedWorld = loadGeneratedWorld(projectDir);
+  const roots = statusFor(runtime.state, runtime.receipts, runtime.journal, generatedWorld);
+  return {
+    world_id: manifest.world_id,
+    package_hash,
+    package_hash_manifest: hashManifest,
+    package_verification,
+    replay_verification,
+    remote_verification: deploymentReport?.remote_verification === 'FAIL' ? 'FAIL' : 'PASS',
+    world_hash: deploymentReport?.world_hash ?? roots.world_hash,
+    continuity_root: deploymentReport?.continuity_root ?? roots.continuity_root,
+    derived_world_hash: roots.world_hash,
+    derived_continuity_root: roots.continuity_root
+  };
 }
 
 function verifyWorldReleaseAttestation(projectDir) {
   const attestationPath = path.resolve(value('--attestation', attestationPathFor(projectDir)));
   const attestation = readJsonFile(attestationPath);
-  const publicKeyText = value('--public-key', attestation.attester?.public_key);
-  assertFactory(publicKeyText, 'Missing public key; pass --public-key or include attester.public_key');
-  const publicKey = normalizePemOrBase64Key(publicKeyText, 'public');
+  const allowSelfAttested = args.includes('--allow-self-attested-test-only');
+  const trustedKeyText = value('--trusted-public-key', value('--trusted-key', undefined));
+  if (!trustedKeyText && !allowSelfAttested) return attestationFail('missing trusted public key');
+  const embeddedPublicKeyText = attestation.attester?.public_key;
+  if (!embeddedPublicKeyText) return attestationFail('missing embedded attester public key');
+  let verificationKeyText = trustedKeyText ?? embeddedPublicKeyText;
+  if (trustedKeyText) {
+    try {
+      if (publicKeyFingerprint(trustedKeyText) !== publicKeyFingerprint(embeddedPublicKeyText)) return attestationFail('untrusted attester key');
+    } catch {
+      return attestationFail('invalid trusted public key');
+    }
+  }
+  let publicKey;
+  try {
+    publicKey = normalizePemOrBase64Key(verificationKeyText, 'public');
+  } catch {
+    return attestationFail('invalid public key');
+  }
   const signature = Buffer.from(attestation.signature ?? '', 'base64');
   const signaturePass = crypto.verify(null, canonicalAttestationBytes(attestation), publicKey, signature);
-  const statusPass = attestation.schema_version === 'WORLD_RELEASE_ATTESTATION_V0'
-    && attestation.package_verification === 'PASS'
-    && attestation.replay_verification === 'PASS'
-    && attestation.remote_verification === 'PASS';
-  let artifactPass = true;
+  if (!signaturePass) return attestationFail('signature verification failed');
   const worldDir = path.resolve(value('--world', path.join(projectDir, 'out', 'world.evr')));
-  if (fs.existsSync(worldDir)) {
-    const expectedHashPath = path.join(worldDir, 'expected-package-hash.txt');
-    artifactPass = fs.existsSync(expectedHashPath) && fs.readFileSync(expectedHashPath, 'utf8').trim() === attestation.package_hash;
-    if (artifactPass) artifactPass = hashManifestFor(worldDir).packageHash === attestation.package_hash;
+  if (!fs.existsSync(worldDir)) return attestationFail('missing world artifact');
+  let claims;
+  try {
+    claims = rederiveReleaseClaims(projectDir, worldDir);
+  } catch (error) {
+    return attestationFail(error.message);
   }
-  const pass = signaturePass && statusPass && artifactPass;
-  if (pass) {
-    const reportPath = releaseReportPathFor(projectDir);
-    fs.mkdirSync(path.dirname(reportPath), { recursive: true });
-    writeJson(reportPath, { world_id: attestation.world_id, package_hash: attestation.package_hash, attestation_hash: attestationHash(attestation), attestation_status: 'PASS' });
-  }
-  console.log(pass ? 'PASS' : 'FAIL');
-  if (!pass) process.exitCode = 1;
+  const claimChecks = [
+    ['schema_version', attestation.schema_version === 'WORLD_RELEASE_ATTESTATION_V0' || attestation.schema_version === 'WORLD_RELEASE_ATTESTATION_V0_1_RC1'],
+    ['world_id', attestation.world_id === claims.world_id],
+    ['package_hash', attestation.package_hash === claims.package_hash && attestation.package_hash === claims.package_hash_manifest],
+    ['package_verification', attestation.package_verification === 'PASS' && claims.package_verification === 'PASS'],
+    ['replay_verification', attestation.replay_verification === 'PASS' && claims.replay_verification === 'PASS'],
+    ['remote_verification', attestation.remote_verification === 'PASS' && claims.remote_verification === 'PASS'],
+    ['world_hash', attestation.world_hash === claims.world_hash && attestation.world_hash === claims.derived_world_hash],
+    ['continuity_root', attestation.continuity_root === claims.continuity_root && attestation.continuity_root === claims.derived_continuity_root]
+  ];
+  const failed = claimChecks.find(([, ok]) => !ok);
+  if (failed) return attestationFail(`claim re-derivation failed: ${failed[0]}`);
+  const reportPath = releaseReportPathFor(projectDir);
+  fs.mkdirSync(path.dirname(reportPath), { recursive: true });
+  writeJson(reportPath, { world_id: attestation.world_id, package_hash: attestation.package_hash, attestation_hash: attestationHash(attestation), attestation_status: 'PASS' });
+  console.log('PASS');
 }
 
 function verifyWorldFactoryPackage(projectDir) {
