@@ -2,6 +2,13 @@
 
 EverArcade compiler builds and World Factory outputs are designed to be **recoverable, repeatable, and verifiable offline**.
 
+This document supports the two protected CI gates. See [`OPEN_SOURCE_READINESS.md`](../OPEN_SOURCE_READINESS.md) for the full contributor onboarding model:
+
+| Gate | Local command | Expected |
+|------|---------------|----------|
+| Contributor Gate | `bash scripts/validate_open_source_readiness.sh` | `READY` |
+| World Artifact Gate | `bash scripts/ci/run-deterministic-world-factory.sh` | `PASS` |
+
 ## Canonical vendor
 
 The committed vendor bundle consists of:
@@ -97,6 +104,8 @@ Deterministic gates compare package hash, factory reports, deployment manifest, 
 `.cargo/config.toml` points `crates-io` at `vendor/` with `offline = true`. Do not remove this for contributor or CI builds.
 
 ## Contributor quick gate
+
+Minimum world-factory commands before a PR (full gate: [`OPEN_SOURCE_READINESS.md`](../OPEN_SOURCE_READINESS.md)):
 
 ```bash
 cargo fmt --check

@@ -6,6 +6,23 @@ Thank you for helping make EverArcade understandable and usable by external deve
 
 EverArcade v0.1 is an open-source candidate focused on local deterministic runtime proofs. Do not describe local PASS reports as production, public-testnet, or commercial readiness.
 
+## Protected gates
+
+Every PR must pass both gates documented in [`OPEN_SOURCE_READINESS.md`](OPEN_SOURCE_READINESS.md):
+
+| Gate | Question | Workflow | Local check | Expected |
+|------|----------|----------|-------------|----------|
+| **Contributor Gate** | Can you reproduce EverArcade? | `.github/workflows/onboarding.yml` | `bash scripts/validate_open_source_readiness.sh` | `READY` |
+| **World Artifact Gate** | Can the repo still produce a valid world? | `.github/workflows/deterministic-world-factory.yml` | `bash scripts/ci/run-deterministic-world-factory.sh` | `PASS` |
+
+**Contributor Level 0** (before your first code change):
+
+```bash
+bash scripts/ensure_vendor_offline.sh
+bash scripts/validate_open_source_readiness.sh
+bash scripts/ci/run-deterministic-world-factory.sh
+```
+
 ## Before opening a PR
 
 ```bash
@@ -17,13 +34,13 @@ node creator-sdk/cli/everarcade.mjs world factory verify --project examples/worl
 node creator-sdk/cli/everarcade.mjs world factory replay --project examples/world-factory/frontier-settlement
 ```
 
-Full reproducible gate (includes determinism + release bundle):
+Full World Artifact Gate (determinism + release bundle + attestation):
 
 ```bash
 bash scripts/ci/run-deterministic-world-factory.sh
 ```
 
-See [`docs/reproducible-builds.md`](docs/reproducible-builds.md).
+See [`OPEN_SOURCE_READINESS.md`](OPEN_SOURCE_READINESS.md), [`docs/reproducible-builds.md`](docs/reproducible-builds.md).
 
 ## Canonical contributor gate (run these first)
 
