@@ -1,0 +1,84 @@
+{
+  "snapshot_at": "2026-06-23",
+  "git": {
+    "remote": "https://github.com/lj26ft/everarcade-compiler.git",
+    "branch": "main",
+    "working_tree_clean": true,
+    "recent_commits": [
+      "bbabfc4 Merge PR #447 Operator Identity Registry RC1",
+      "ef046f1 Build Operator Identity Registry RC1",
+      "ef6c39f Merge PR #446 World Factory MVP Phase 4",
+      "4663409 Build World Factory MVP Phase 4",
+      "647095a Merge PR #445 fix critical findings v0.1-rc1",
+      "d7b34e0 Build World Release Attestation V0.1 RC1",
+      "c35940e Generate world.evr v1 compiler export bundle",
+      "443c051 Freeze world.evr package spec v1",
+      "59e807a Move public frontend to everarcade-frontend"
+    ]
+  },
+  "metrics": {
+    "repo_size_gb": 1.1,
+    "rust_files": 9402,
+    "js_ts_files": 163,
+    "shell_scripts": 560,
+    "validate_scripts": 65,
+    "markdown_docs": 474,
+    "report_files": 407,
+    "archive_files": 428,
+    "centralized_test_files": 15,
+    "cargo_workspace_members": 44,
+    "top_level_directories": 80
+  },
+  "top_directories_by_file_count": [
+    {"dir": "vendor", "files": 9831, "note": "INCOMPLETE — gitignored, may not be in clone"},
+    {"dir": "execution-core", "files": 1925},
+    {"dir": "target", "files": 1744, "note": "build output — gitignored"},
+    {"dir": "runtime", "files": 847},
+    {"dir": "everarcade-host", "files": 765},
+    {"dir": "public-surface-export", "files": 609},
+    {"dir": "scripts", "files": 571},
+    {"dir": "docs", "files": 476},
+    {"dir": "archive", "files": 428},
+    {"dir": "reports", "files": 407}
+  ],
+  "environment_warnings": {
+    "vendor_incomplete": false,
+    "vendor_artifact": "dist/vendor.tar.gz",
+    "vendor_restore_script": "scripts/ensure_vendor_offline.sh",
+    "cargo_offline_forced": true,
+    "public_testnet_dir_missing": true,
+    "public_testnet_fixtures_path": "public-surface-export/registry-fixtures/public-testnet/",
+    "github_actions_present": true,
+    "github_workflow": ".github/workflows/onboarding.yml",
+    "issue_templates_present": true,
+    "ripgrep_required_for_oss_script": false,
+    "ripgrep_fallback": "grep via scripts/lib/common.sh",
+    "node_modules_in_tree": false
+  },
+  "maturity_summary": {
+    "production_subsystems": 0,
+    "alpha": ["execution-core", "runtime", "creator-sdk", "world-packages", "rustrigs"],
+    "experimental": ["world-contracts", "evernode-deployment"],
+    "scaffold": ["federation", "renderer", "xrpl", "hooks", "gpu", "developer-portal", "player-gateway", "commercial-revenue"],
+    "planned": ["public-testnet"]
+  },
+  "open_source_classification": "READY",
+  "phase_0_complete": true,
+  "canonical_gate": [
+    "bash scripts/check_prerequisites.sh",
+    "CARGO_BUILD_JOBS=1 bash scripts/validate_developer_onboarding.sh",
+    "bash examples/reference-certified-world-v1/operator/verify.sh examples/reference-certified-world-v1"
+  ],
+  "security_audit": {
+    "date": "2026-06-18",
+    "result": "EVERARCADE V0.1 OPEN SOURCE READY: PASS",
+    "secrets_committed": false
+  },
+  "reference_world": {
+    "path": "examples/reference-certified-world-v1",
+    "verify_command": "bash examples/reference-certified-world-v1/operator/verify.sh examples/reference-certified-world-v1",
+    "expected_output": "REFERENCE CERTIFIED WORLD V1: PASS",
+    "certified_hash": "sha256:ef5409866bb75211145a0da901611621c57237bc79dad0c0c2cdde1dc3873883"
+  },
+  "recommended_next_task": "Contributor Trust Lane — CI + path integrity + canonical 3-command gate"
+}

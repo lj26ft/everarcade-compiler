@@ -33,3 +33,11 @@ This file answers: **What actually works today?**
 | Security/Validation Reports | REFERENCE | Historical evidence is preserved in `archive/`; current claims must be tied to active validation scripts. |
 
 No subsystem is classified as **PRODUCTION** in this open-source readiness milestone.
+
+## Reproducibility and contributor experience (Phase 0)
+
+| Area | Status | Rationale |
+| --- | --- | --- |
+| Offline vendor / build reproducibility | ALPHA | `dist/vendor.tar.gz` restores `vendor/` for offline `cargo metadata` and targeted `cargo check`; `scripts/check_prerequisites.sh` and CI enforce zero network Cargo fetches. Maintainer refresh via `scripts/vendor_deps.sh`. |
+| Contributor onboarding gate | ALPHA | Canonical 3-command gate (`check_prerequisites`, `validate_developer_onboarding`, reference world verify) documented in `CONTRIBUTING.md` and `.github/workflows/onboarding.yml`. |
+| CI enforcement | ALPHA | Ubuntu + macOS onboarding workflow; uploads `reports/` evidence. Scaffold subsystem validators remain out of CI scope. |

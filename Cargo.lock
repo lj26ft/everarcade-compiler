@@ -418,8 +418,24 @@ name = "everarcade-rustrig-combat"
 version = "1.0.0"
 
 [[package]]
+name = "everarcade-rustrig-continuity"
+version = "0.1.0"
+
+[[package]]
+name = "everarcade-rustrig-crafting"
+version = "0.1.0"
+
+[[package]]
+name = "everarcade-rustrig-factions"
+version = "0.1.0"
+
+[[package]]
 name = "everarcade-rustrig-governance"
 version = "1.0.0"
+
+[[package]]
+name = "everarcade-rustrig-identity"
+version = "0.1.0"
 
 [[package]]
 name = "everarcade-rustrig-inventory"
@@ -428,6 +444,30 @@ version = "1.0.0"
 [[package]]
 name = "everarcade-rustrig-market"
 version = "1.0.0"
+
+[[package]]
+name = "everarcade-rustrig-movement"
+version = "0.1.0"
+
+[[package]]
+name = "everarcade-rustrig-operations"
+version = "0.1.0"
+
+[[package]]
+name = "everarcade-rustrig-quests"
+version = "0.1.0"
+
+[[package]]
+name = "everarcade-rustrig-resources"
+version = "0.1.0"
+
+[[package]]
+name = "everarcade-rustrig-structures"
+version = "0.1.0"
+
+[[package]]
+name = "everarcade-rustrig-world"
+version = "0.1.0"
 
 [[package]]
 name = "everarcade-sdk"

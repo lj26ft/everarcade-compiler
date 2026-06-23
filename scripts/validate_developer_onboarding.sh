@@ -2,6 +2,8 @@
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+# shellcheck source=lib/common.sh
+source "$REPO_ROOT/scripts/lib/common.sh"
 cd "$REPO_ROOT"
 
 REPORT="reports/developer_onboarding_validation_report.txt"
@@ -15,6 +17,9 @@ trap 'rm -rf "$TMP"' EXIT
 pass() { printf '%s: PASS\n' "$1" | tee -a "$REPORT"; }
 fail() { printf '%s: FAIL\n' "$1" | tee -a "$REPORT"; exit 1; }
 require_file() { [[ -f "$1" ]] || fail "$2"; }
+
+bash "$REPO_ROOT/scripts/ensure_vendor_offline.sh" >/tmp/everarcade-onboarding-vendor.out 2>&1 || fail "Vendor Offline"
+pass "Vendor Offline"
 
 require_file README.md "Repository Bootstrap"
 require_file docs/onboarding/30-minute-developer-journey.md "Repository Bootstrap"
@@ -39,7 +44,7 @@ require_file "$PROJECT/dist/runtime-package/world.wasm" "Runtime Package"
 pass "Runtime Package"
 
 CARGO_BUILD_JOBS="${CARGO_BUILD_JOBS:-1}" node creator-sdk/cli/everarcade.mjs play-local --project "$PROJECT" --template arena --runtime-root "$RUNTIME_ROOT" >/tmp/everarcade-onboarding-play.out || fail "Playable Local Game"
-rg -q 'Playable Local Game: PASS' /tmp/everarcade-onboarding-play.out || fail "Playable Local Game"
+text_matches 'Playable Local Game: PASS' /tmp/everarcade-onboarding-play.out || fail "Playable Local Game"
 require_file "$RUNTIME_ROOT/sessions/session-0001.json" "Playable Local Game"
 require_file "$RUNTIME_ROOT/gameplay/arena-state.json" "Playable Local Game"
 require_file "$RUNTIME_ROOT/journals/journal.jsonl" "Playable Local Game"

@@ -1,0 +1,105 @@
+name: Onboarding Gate
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+env:
+  CARGO_BUILD_JOBS: 1
+  CARGO_NET_OFFLINE: "true"
+
+jobs:
+  prerequisites:
+    name: Prerequisites (ubuntu)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Restore offline vendor
+        run: bash scripts/ensure_vendor_offline.sh
+
+      - name: Check prerequisites
+        run: bash scripts/check_prerequisites.sh
+
+  ubuntu-onboarding-gate:
+    name: Canonical gate (ubuntu)
+    needs: prerequisites
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Restore offline vendor
+        run: bash scripts/ensure_vendor_offline.sh
+
+      - name: Check prerequisites
+        run: bash scripts/check_prerequisites.sh
+
+      - name: Developer onboarding validation
+        run: CARGO_BUILD_JOBS=1 bash scripts/validate_developer_onboarding.sh
+
+      - name: Reference certified world verification
+        run: bash examples/reference-certified-world-v1/operator/verify.sh examples/reference-certified-world-v1
+
+      - name: Open source readiness validation
+        run: bash scripts/validate_open_source_readiness.sh
+
+      - name: Upload verification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: verification-evidence-ubuntu
+          path: |
+            reports/
+            deployment/reports/vendor_validation_report.md
+          if-no-files-found: warn
+
+  macos-onboarding-gate:
+    name: Canonical gate (macos)
+    needs: prerequisites
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Restore offline vendor
+        run: bash scripts/ensure_vendor_offline.sh
+
+      - name: Check prerequisites
+        run: bash scripts/check_prerequisites.sh
+
+      - name: Developer onboarding validation
+        run: CARGO_BUILD_JOBS=1 bash scripts/validate_developer_onboarding.sh
+
+      - name: Reference certified world verification
+        run: bash examples/reference-certified-world-v1/operator/verify.sh examples/reference-certified-world-v1
+
+      - name: Open source readiness validation
+        run: bash scripts/validate_open_source_readiness.sh
+
+      - name: Upload verification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: verification-evidence-macos
+          path: |
+            reports/
+          if-no-files-found: warn

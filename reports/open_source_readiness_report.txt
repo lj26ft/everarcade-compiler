@@ -21,14 +21,18 @@ Artifact policy: PASS
 Offline build policy: PASS
 Script consolidation audit: PASS
 Documentation consolidation audit: PASS
-Dependency tree: WARNING - node_modules/ exists in this working tree and should not be committed
-Offline vendor: WARNING - vendor snapshot is incomplete; known bincode/vendor issue remains documented
+Dependency tree: PASS
+Prerequisites script: PASS
+Vendor restore script: PASS
+Vendor artifact: PASS
+Vendor artifact checksum: PASS
+Offline vendor: PASS
 
-Classification: CONDITIONAL READY
+Classification: READY
 
 Honest readiness notes
 - Local developer onboarding is the supported v0.1 proof path.
 - Production, public-testnet, commercial, XRPL/Xaman, GPU marketplace, and federation readiness are not claimed.
-- Offline builds remain conditional until the vendor snapshot is complete and verified.
+- Offline vendor is restored from dist/vendor.tar.gz; maintainers regenerate with scripts/vendor_deps.sh.
 
 Open Source Audit: PASS

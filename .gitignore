@@ -23,10 +23,8 @@ ipfs/
 xrpl/
 distributed_receipts/
 
-# Vendor artifacts (generated locally or attached to releases, not source)
+# Vendor tree (restored offline from committed dist/vendor.tar.gz on clean clones)
 vendor/
-dist/vendor.tar.gz
-dist/vendor.tar.gz.sha256
 dist/everarcade-runtime-v0.1.tar.gz
 dist/everarcade-runtime-v0.1.tar.gz.sha256
 everarcade-host/tests/fixtures/counter_world/*.bin
@@ -84,3 +82,7 @@ coverage/
 
 # Generated world packages
 *.evr
+
+# Committed reproducible vendor bundle (Phase 0 — do not ignore)
+!dist/vendor.tar.gz
+!dist/vendor.tar.gz.sha256

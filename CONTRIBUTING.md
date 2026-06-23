@@ -6,31 +6,50 @@ Thank you for helping make EverArcade understandable and usable by external deve
 
 EverArcade v0.1 is an open-source candidate focused on local deterministic runtime proofs. Do not describe local PASS reports as production, public-testnet, or commercial readiness.
 
-## How to build and run the onboarding path
+## Canonical contributor gate (run these first)
+
+Every PR should pass the **3-command canonical gate** after prerequisites:
 
 ```bash
+bash scripts/check_prerequisites.sh
 CARGO_BUILD_JOBS=1 bash scripts/validate_developer_onboarding.sh
+bash examples/reference-certified-world-v1/operator/verify.sh examples/reference-certified-world-v1
 ```
 
-This creates a temporary Arena project, builds it through the Creator SDK, packages it, runs a playable local session, and verifies replay evidence.
-
-## How to test your changes
-
-Run targeted checks that match your change. For developer-experience or documentation work, run:
+Optional but recommended before opening a PR:
 
 ```bash
-git diff --check
 bash scripts/validate_open_source_readiness.sh
-bash scripts/certify_developer_experience.sh
+git diff --check
 ```
 
-For runtime or Creator SDK changes, also run the relevant targeted script, for example:
+### What PASS means
+
+- `WORLD VERIFY: PASS` / onboarding PASS — local Creator SDK + runtime proof succeeded.
+- `REFERENCE CERTIFIED WORLD V1: PASS` — reference world certification checks passed.
+- `Prerequisites: PASS` — offline vendor restored and `everarcade-runtime` checks offline.
+- Reports under `reports/` for scaffold areas (federation, GPU, marketplace, etc.) certify **models**, not production services.
+
+CI runs the same gate on Ubuntu and macOS via `.github/workflows/onboarding.yml` with **no network Cargo fetches**.
+
+## Offline vendor
+
+`vendor/` is restored from the committed `dist/vendor.tar.gz` bundle. You do not need network access after clone. Maintainers regenerate the bundle with `bash scripts/vendor_deps.sh` (network required). See `docs/build/offline-build-policy.md`.
+
+## How to test targeted changes
+
+Match validation to your change. Examples:
 
 ```bash
+# Developer experience / docs
+bash scripts/certify_developer_experience.sh
+
+# Runtime or Creator SDK
 CARGO_BUILD_JOBS=1 bash scripts/validate_playable_local_game.sh
+CARGO_BUILD_JOBS=1 bash scripts/validate_creator_sdk.sh
 ```
 
-Avoid broad workspace rebuilds unless a maintainer explicitly asks for them. Prefer targeted crate tests and use `CARGO_BUILD_JOBS=1` for large validation runs.
+Avoid broad `cargo test --workspace` unless a maintainer explicitly requests it. Use `CARGO_BUILD_JOBS=1` for large validation runs.
 
 ## Coding standards
 
@@ -38,19 +57,17 @@ Avoid broad workspace rebuilds unless a maintainer explicitly asks for them. Pre
 - Make generated report paths explicit.
 - Label scaffold, prototype, and production-candidate areas honestly.
 - Do not add try/catch blocks around imports.
-- Do not commit generated dependency trees, runtime roots, or local build outputs unless they are explicitly approved fixtures.
-- Keep documentation claims aligned with `README.md`, `docs/repository/repository-map.md`, and `docs/runtime-platform/proof-chain.md`.
+- Do not commit `vendor/`, `node_modules/`, runtime roots, or local build outputs unless explicitly approved fixtures.
+- Do commit updated `dist/vendor.tar.gz` + checksum when `Cargo.lock` dependency sets change.
+- Keep documentation claims aligned with `README.md`, `MATURITY.md`, and `docs/runtime-platform/proof-chain.md`.
 
 ## Submitting changes
 
 1. Create a focused branch.
-2. Update or add documentation for behavior changes.
-3. Run targeted validation scripts.
+2. Update documentation for behavior changes.
+3. Run the canonical gate (and targeted scripts as needed).
 4. Ensure `git diff --check` passes.
-5. Submit a pull request with:
-   - summary of changed files;
-   - commands run and results;
-   - any remaining limitations or conditional readiness notes.
+5. Open a pull request using the template — include maturity-impact notes.
 
 ## Security-sensitive changes
 

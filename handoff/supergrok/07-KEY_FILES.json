@@ -1,0 +1,101 @@
+{
+  "description": "Critical paths for SuperGrok lookup — not exhaustive",
+  "entry_points": [
+    {"path": "README.md", "role": "Public repo introduction and quick start"},
+    {"path": "MATURITY.md", "role": "Subsystem maturity truth table — authoritative"},
+    {"path": "REPOSITORY_MAP.md", "role": "Directory ownership and audiences"},
+    {"path": "OPEN_SOURCE_READINESS.md", "role": "Maintainer open-source gap audit"},
+    {"path": "CONTRIBUTING.md", "role": "Contributor workflow and validation"},
+    {"path": "SECURITY.md", "role": "Vulnerability reporting policy"},
+    {"path": "LICENSE", "role": "MIT license"},
+    {"path": "Cargo.toml", "role": "Rust workspace root — 44 members"},
+    {"path": "package.json", "role": "Node workspace root — frontend packages"}
+  ],
+  "architecture_docs": [
+    {"path": "docs/03-system-architecture.md", "role": "Platform authority and data flow"},
+    {"path": "docs/04-runtime-architecture.md", "role": "Runtime appliance design"},
+    {"path": "docs/14-v0.1-architecture-freeze.md", "role": "v0.1 scope freeze — 2026-06-19"},
+    {"path": "docs/runtime-capabilities.md", "role": "Implemented vs partial vs scaffold matrix"},
+    {"path": "docs/12-gap-analysis.md", "role": "Prioritized gaps v0.1/beta/production"},
+    {"path": "docs/first-world.md", "role": "Shortest world creation path"},
+    {"path": "docs/DOCUMENTATION_POLICY.md", "role": "Where docs belong"},
+    {"path": "docs/build/offline-build-policy.md", "role": "Vendor/offline Cargo policy"},
+    {"path": "docs/open-source/v0.1-public-release-readiness.md", "role": "Public release checklist"}
+  ],
+  "proven_path": [
+    {"path": "creator-sdk/cli/everarcade.mjs", "role": "Creator CLI — init/build/package/verify/deploy"},
+    {"path": "creator-sdk/README.md", "role": "SDK scope and non-authority boundary"},
+    {"path": "runtime/everarcade-runtime/src/main.rs", "role": "Runtime binary entry"},
+    {"path": "runtime/everarcade-runtime/src/runtime/runtime_loop.rs", "role": "Boot, tick, template gameplay"},
+    {"path": "runtime/everarcade-runtime/src/runtime/package_loader.rs", "role": "Runtime package validation"},
+    {"path": "runtime/everarcade-runtime/src/runtime/journal.rs", "role": "Hash-linked journal"},
+    {"path": "runtime/everarcade-runtime/src/runtime/checkpoints.rs", "role": "Checkpoint persistence"},
+    {"path": "runtime/everarcade-runtime/src/runtime/replay.rs", "role": "Replay verification"},
+    {"path": "runtime/everarcade-runtime/src/runtime/guest_wasm.rs", "role": "Guest WASM via wasmtime"},
+    {"path": "runtime/everarcade-runtime/src/runtime/operator.rs", "role": "Operator proof commands"},
+    {"path": "examples/reference-certified-world-v1/", "role": "Canonical v0.1 demo world"},
+    {"path": "examples/reference-certified-world-v1/operator/verify.sh", "role": "Reference world verification gate"},
+    {"path": "examples/reference-certified-world-v1/operator/OPERATOR-GUIDE.md", "role": "Operator procedures"}
+  ],
+  "execution_and_host": [
+    {"path": "execution-core/src/lib.rs", "role": "Execution core crate root and ABI"},
+    {"path": "execution-core/src/execute.rs", "role": "execute_vm — note empty state changes"},
+    {"path": "execution-core/src/vm/vm_execution.rs", "role": "Hash-only VM boundary for host"},
+    {"path": "execution-core/src/wasm/runtime.rs", "role": "WASM engine via wasmtime"},
+    {"path": "execution-core/tests/federation_simulation_tests.rs", "role": "Real federation simulation tests"},
+    {"path": "everarcade-host/src/runner.rs", "role": "Host one-shot package execution"},
+    {"path": "everarcade-host/src/package_loader.rs", "role": "Bincode package decode + fixture fallback"},
+    {"path": "crates/canonicalizer-kernel/src/lib.rs", "role": "Certification-grade canonical roots"}
+  ],
+  "specs_and_packages": [
+    {"path": "specs/world-evr-package/WORLD_EVR_PACKAGE_SPEC_V1.md", "role": "world.evr package spec"},
+    {"path": "specs/world-evr-package/CANONICAL_PACKAGE_FORMAT.md", "role": "V1 hash recipe"},
+    {"path": "specs/world-evr-package/WORLD_PACKAGE_CERTIFICATION_FRAMEWORK_V1.md", "role": "Certification classes"},
+    {"path": "docs/world-package-spec-v1.md", "role": "World package guide"},
+    {"path": "specs/world-attestation/WORLD_RELEASE_ATTESTATION_V0.md", "role": "Release attestation spec"}
+  ],
+  "scaffold_domains": [
+    {"path": "federation/multi_lease_model.sh", "role": "Federation deterministic shell model"},
+    {"path": "federation/README.md", "role": "Federation layout — not live BFT"},
+    {"path": "renderer/projection/projection_model.sh", "role": "Renderer projection model"},
+    {"path": "gpu/jobs/gpu_model.sh", "role": "GPU job model"},
+    {"path": "hooks/governance-hook/hook.c", "role": "Xahau hook placeholder (all hooks identical)"},
+    {"path": "player-gateway/", "role": "Record ledger — not live gateway"},
+    {"path": "creator-marketplace/marketplace_model.sh", "role": "Marketplace shell model"},
+    {"path": "commercial-revenue/commercial_revenue_model.sh", "role": "Revenue intent model"},
+    {"path": "public-surface-export/registry-fixtures/public-testnet/", "role": "Testnet fixtures — root dir missing"}
+  ],
+  "validation_scripts": [
+    {"path": "scripts/check_prerequisites.sh", "role": "Toolchain + offline vendor gate (run first)"},
+    {"path": "scripts/ensure_vendor_offline.sh", "role": "Restore vendor/ from dist/vendor.tar.gz"},
+    {"path": "scripts/lib/common.sh", "role": "rg/grep fallback + vendor offline helpers"},
+    {"path": ".github/workflows/onboarding.yml", "role": "CI canonical gate Ubuntu + macOS"},
+    {"path": "scripts/validate_developer_onboarding.sh", "role": "Primary contributor gate"},
+    {"path": "scripts/validate_open_source_readiness.sh", "role": "OSS doc/policy + vendor check"},
+    {"path": "scripts/validate_playable_local_game.sh", "role": "Local game launch validation"},
+    {"path": "scripts/validate_public_testnet.sh", "role": "BROKEN — missing public-testnet/ at root"},
+    {"path": "scripts/vendor_deps.sh", "role": "Restore vendor directory"},
+    {"path": "scripts/validate_repo_reality_audit.sh", "role": "Repo reality audit generator"}
+  ],
+  "audit_reports": [
+    {"path": "reports/open_source_readiness_report.txt", "role": "OSS readiness script output"},
+    {"path": "reports/open-source-readiness/security-audit.txt", "role": "v0.1 security audit PASS"},
+    {"path": "reports/repo_reality_audit_report.txt", "role": "Area classification audit NOT PRODUCTION READY"},
+    {"path": "reports/release-candidate-audit/release-readiness-report.md", "role": "RC checklist"},
+    {"path": "release/manifest/components.tsv", "role": "Component PASS manifest — can mislead"}
+  ],
+  "build_config": [
+    {"path": ".cargo/config.toml", "role": "Offline vendored Cargo — vendor incomplete"},
+    {"path": ".gitignore", "role": "Excludes vendor, target, secrets patterns"},
+    {"path": "src-bin-everarcade/src/commands/mod.rs", "role": "Workspace CLI — many stub handlers"}
+  ],
+  "frontend": [
+    {"path": "frontend/arena-live-client/app.js", "role": "Real HTTP client to local runtime"},
+    {"path": "frontend/player-portal/src/App.tsx", "role": "WebSocket arena feed prototype"},
+    {"path": "public-surface-export/", "role": "Bundle for everarcade-frontend migration"}
+  ],
+  "meta_tooling": [
+    {"path": "compiler/agent/agent_v8.py", "role": "Meta codegen agent — not game compiler"},
+    {"path": "handoff/supergrok/", "role": "This SuperGrok handoff bundle"}
+  ]
+}

@@ -1,3 +1,4 @@
+Vendor Offline: PASS
 Repository Bootstrap: PASS
 Developer Build: PASS
 Creator SDK: PASS

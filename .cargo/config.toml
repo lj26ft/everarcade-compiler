@@ -1,3 +1,7 @@
+# EverArcade locked offline vendor policy (Phase 0).
+# vendor/ is restored from dist/vendor.tar.gz on clean clones via scripts/ensure_vendor_offline.sh
+# Regenerate with: bash scripts/vendor_deps.sh (maintainers, networked environment only)
+
 [source.crates-io]
 replace-with = "vendored-sources"
 

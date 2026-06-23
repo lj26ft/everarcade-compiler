@@ -2,6 +2,8 @@
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+# shellcheck source=lib/common.sh
+source "$REPO_ROOT/scripts/lib/common.sh"
 cd "$REPO_ROOT"
 
 REPORT="reports/open_source_readiness_report.txt"
@@ -12,7 +14,7 @@ pass() { printf '%s: PASS\n' "$1" | tee -a "$REPORT"; }
 warn() { printf '%s: WARNING - %s\n' "$1" "$2" | tee -a "$REPORT"; }
 fail() { printf '%s: FAIL - %s\n' "$1" "$2" | tee -a "$REPORT"; missing=1; }
 require_file() { [[ -f "$1" ]] && pass "$2" || fail "$2" "missing $1"; }
-require_text() { local file="$1" pattern="$2" label="$3"; rg -q "$pattern" "$file" && pass "$label" || fail "$label" "missing expected text in $file"; }
+require_text() { local file="$1" pattern="$2" label="$3"; text_matches "$pattern" "$file" && pass "$label" || fail "$label" "missing expected text in $file"; }
 
 missing=0
 warnings=0
@@ -51,11 +53,15 @@ else
   pass "Dependency tree"
 fi
 
-if [[ ! -d vendor ]] || ! find vendor -maxdepth 1 -type d -name 'bincode*' | rg -q 'bincode'; then
-  warnings=1
-  warn "Offline vendor" "vendor snapshot is incomplete; known bincode/vendor issue remains documented"
-else
+require_file scripts/check_prerequisites.sh "Prerequisites script"
+require_file scripts/ensure_vendor_offline.sh "Vendor restore script"
+require_file dist/vendor.tar.gz "Vendor artifact"
+require_file dist/vendor.tar.gz.sha256 "Vendor artifact checksum"
+
+if vendor_offline_ok "$REPO_ROOT"; then
   pass "Offline vendor"
+else
+  fail "Offline vendor" "run bash scripts/ensure_vendor_offline.sh; offline metadata check failed"
 fi
 
 classification="READY"
@@ -72,7 +78,7 @@ Classification: $classification
 Honest readiness notes
 - Local developer onboarding is the supported v0.1 proof path.
 - Production, public-testnet, commercial, XRPL/Xaman, GPU marketplace, and federation readiness are not claimed.
-- Offline builds remain conditional until the vendor snapshot is complete and verified.
+- Offline vendor is restored from dist/vendor.tar.gz; maintainers regenerate with scripts/vendor_deps.sh.
 
 Open Source Audit: PASS
 EOF_REPORT

@@ -19,10 +19,22 @@ if [[ ! -f "$CHECKSUM" ]]; then
   exit 1
 fi
 
-(
-  cd "$DIST_DIR"
-  sha256sum -c vendor.tar.gz.sha256
-)
+if command -v sha256sum >/dev/null 2>&1; then
+  (
+    cd "$DIST_DIR"
+    sha256sum -c vendor.tar.gz.sha256
+  )
+elif command -v shasum >/dev/null 2>&1; then
+  expected="$(awk '{print $1}' "$CHECKSUM")"
+  actual="$(shasum -a 256 "$ARTIFACT" | awk '{print $1}')"
+  [[ "$expected" == "$actual" ]] || {
+    echo "Checksum mismatch for dist/vendor.tar.gz" >&2
+    exit 1
+  }
+else
+  echo "Need sha256sum or shasum to verify dist/vendor.tar.gz" >&2
+  exit 1
+fi
 
 rm -rf "$VENDOR_DIR"
 tar -xzf "$ARTIFACT" -C "$ROOT_DIR"

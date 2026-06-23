@@ -1,5 +1,15 @@
 # First World Quick Start
 
+## Before you begin
+
+Restore offline dependencies and verify your toolchain:
+
+```bash
+bash scripts/check_prerequisites.sh
+```
+
+This unpacks `dist/vendor.tar.gz` into `vendor/` so Cargo builds work without network access.
+
 Create and verify your first EverArcade World in the shortest path.
 
 ```bash

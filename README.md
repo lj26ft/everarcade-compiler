@@ -26,19 +26,21 @@ You can:
 
 Treat renderer, history, federation, XRPL settlement, Xahau hooks, GPU marketplace, public testnet, and commercial revenue areas as scaffold or experimental unless `MATURITY.md` says otherwise.
 
-## Quick start
+## Day 1 contributor (canonical gate)
 
-Prerequisites:
-
-- Node.js 18+
-- Rust/Cargo
-- Network access until offline vendor artifacts are fully restored
-
-Run the targeted developer onboarding validation:
+Prerequisites: Node.js 18+, Rust/Cargo. **No network required after clone** — dependencies ship in `dist/vendor.tar.gz`.
 
 ```bash
+bash scripts/check_prerequisites.sh
 CARGO_BUILD_JOBS=1 bash scripts/validate_developer_onboarding.sh
+bash examples/reference-certified-world-v1/operator/verify.sh examples/reference-certified-world-v1
 ```
+
+Expected: `Prerequisites: PASS`, onboarding PASS, and `REFERENCE CERTIFIED WORLD V1: PASS`. CI enforces the same gate offline on Ubuntu and macOS.
+
+Offline vendor policy: [`docs/build/offline-build-policy.md`](docs/build/offline-build-policy.md)
+
+## Quick start
 
 Manual First World flow:
 
@@ -91,9 +93,11 @@ Start with [`CONTRIBUTING.md`](CONTRIBUTING.md), then read the contributor guide
 Useful checks:
 
 ```bash
-git diff --check
+bash scripts/check_prerequisites.sh
 CARGO_BUILD_JOBS=1 bash scripts/validate_developer_onboarding.sh
+bash examples/reference-certified-world-v1/operator/verify.sh examples/reference-certified-world-v1
 bash scripts/validate_open_source_readiness.sh
+git diff --check
 ```
 
 Do not claim production readiness from local PASS reports. PASS means the named local proof succeeded under the documented local conditions.

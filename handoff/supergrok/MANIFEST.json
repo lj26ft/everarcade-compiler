@@ -1,0 +1,66 @@
+{
+  "bundle_id": "everarcade-compiler-supergrok-handoff-v1",
+  "generated_at": "2026-06-23",
+  "repo": {
+    "name": "everarcade-compiler",
+    "remote": "https://github.com/lj26ft/everarcade-compiler.git",
+    "branch": "main",
+    "version": "0.1.0",
+    "license": "MIT"
+  },
+  "tagline": "Build Worlds. Not Just Games.",
+  "positioning": "open-source candidate — local deterministic world runtime proofs, NOT production platform",
+  "reading_order": [
+    "handoff/supergrok/README.md",
+    "handoff/supergrok/00-EXECUTIVE_SUMMARY.md",
+    "handoff/supergrok/01-ARCHITECTURE.md",
+    "handoff/supergrok/02-MATURITY_AND_REALITY.md",
+    "handoff/supergrok/03-NAVIGATION_INDEX.md",
+    "handoff/supergrok/04-OPEN_SOURCE_READINESS.md",
+    "handoff/supergrok/05-VALIDATION_COMMANDS.md",
+    "handoff/supergrok/06-GOTCHAS_AND_DUAL_STACKS.md",
+    "handoff/supergrok/07-KEY_FILES.json",
+    "handoff/supergrok/08-REPO_SNAPSHOT.json"
+  ],
+  "canonical_repo_docs": [
+    "README.md",
+    "MATURITY.md",
+    "REPOSITORY_MAP.md",
+    "OPEN_SOURCE_READINESS.md",
+    "CONTRIBUTING.md",
+    "SECURITY.md",
+    "docs/03-system-architecture.md",
+    "docs/04-runtime-architecture.md",
+    "docs/14-v0.1-architecture-freeze.md",
+    "docs/runtime-capabilities.md",
+    "docs/12-gap-analysis.md",
+    "docs/first-world.md",
+    "docs/open-source/v0.1-public-release-readiness.md"
+  ],
+  "proven_local_path": [
+    "creator-sdk/cli/everarcade.mjs",
+    "dist/runtime-package/",
+    "runtime/everarcade-runtime/",
+    "examples/reference-certified-world-v1/"
+  ],
+  "scaffold_domains": [
+    "federation",
+    "renderer",
+    "hooks",
+    "gpu",
+    "creator-marketplace",
+    "commercial-revenue",
+    "player-gateway",
+    "public-testnet",
+    "xrpl",
+    "xaman"
+  ],
+  "classification": {
+    "open_source_readiness": "READY",
+    "phase_0_vendor_ci": "complete",
+    "production": false,
+    "public_testnet": false,
+    "commercial": false
+  },
+  "recommended_next_task": "Phase 1 — public-testnet path integrity + scaffold PASS report disclaimers"
+}
