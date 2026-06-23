@@ -16,7 +16,7 @@
     "restore/journal.json",
     "proof/certification.json"
   ],
-  "package_name": "frontier-settlement-demo",
+  "package_name": "tampered-package",
   "proof": {
     "certification_path": "proof/certification.json"
   },

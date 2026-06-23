@@ -6,11 +6,11 @@
   "replay_verification": "PASS",
   "remote_verification": "PASS",
   "world_hash": "sha256:3295c73a98bfd21df16f438e2bd2092a99e51970beb64329bc6a439ae1a5e6df",
-  "continuity_root": "sha256:bb3390f5015cc70505ef64a4a8bb395f175494df210988109124778d7edb25a1",
-  "timestamp": "2026-06-23T13:20:31.742Z",
+  "continuity_root": "sha256:8ce0853e33053ceff25aac60380adec3e7da9d87e612e1144c517f21d103f972",
+  "timestamp": "1970-01-01T00:00:00.000Z",
   "attester": {
     "name": "offline-attester",
-    "public_key": "MCowBQYDK2VwAyEA1jO0t6Nr5G3dJHnTAsdpLaHKcodRXGwPuADC0JkDpj8="
+    "public_key": "MCowBQYDK2VwAyEAkRhlmDoAtG0Ib0OAIAVYcj8wqjpwri7ZMbxI0J0DlFo="
   },
-  "signature": "MGhM5LMTbiEcu070BcRUZHzwjqjMwl9uP8u+LrGlPEOlgliXwgVP2ffe69dO8S6H72ar+iEp0HXb6GunAFsVCw=="
+  "signature": "OgsXmz8pLlVFVd8rMM3jR24sO5FVRuel6aPfKC5DwZcWlMlFgh5zDdk6cmPZvn2VyCGFuIoQbKwiwF2BELXiBg=="
 }

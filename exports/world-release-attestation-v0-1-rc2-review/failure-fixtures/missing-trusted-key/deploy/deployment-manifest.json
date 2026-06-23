@@ -2,7 +2,7 @@
   "world_id": "frontier-settlement-demo",
   "package_hash": "43d43e80ef09c0851ed1fc3d5294683e4ef241ec820085c65c85539c0ef502b1",
   "world_hash": "sha256:3295c73a98bfd21df16f438e2bd2092a99e51970beb64329bc6a439ae1a5e6df",
-  "continuity_root": "sha256:bb3390f5015cc70505ef64a4a8bb395f175494df210988109124778d7edb25a1",
+  "continuity_root": "sha256:8ce0853e33053ceff25aac60380adec3e7da9d87e612e1144c517f21d103f972",
   "deployment_target": "local",
   "attestation_hash": null,
   "verification_status": "PASS"

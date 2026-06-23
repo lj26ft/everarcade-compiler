@@ -1,9 +1,9 @@
 {
   "world_id": "frontier-settlement-demo",
-  "ticks_executed": 100,
-  "state_root": "sha256:9c1a01f79c885d4a74958f899581031eefa009fc32effc787dd8b20c4f726be8",
-  "receipt_root": "sha256:f07bce421afa4639a3131f285d40a85422fbd50b9250207f5005c0ebeea53de0",
+  "ticks_executed": 3,
+  "state_root": "sha256:f32ceb2fcb149f3ae2a8d1cb778aa5d1880bbc37467e4b2faca41271b3114082",
+  "receipt_root": "sha256:84d80f42c5394d774d7f083f3279d3d95fc1f1a78fc135bdd5e670dd17a982ee",
   "world_hash": "sha256:3295c73a98bfd21df16f438e2bd2092a99e51970beb64329bc6a439ae1a5e6df",
-  "continuity_root": "sha256:bb3390f5015cc70505ef64a4a8bb395f175494df210988109124778d7edb25a1",
+  "continuity_root": "sha256:8ce0853e33053ceff25aac60380adec3e7da9d87e612e1144c517f21d103f972",
   "replay_status": "PASS"
 }
