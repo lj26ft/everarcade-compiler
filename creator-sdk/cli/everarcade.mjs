@@ -371,6 +371,147 @@ function generateWorldFactoryPackage(projectDir) {
   console.log(`Package Hash: ${hm.packageHash}`);
 }
 
+
+function canonicalJson(value) {
+  if (Array.isArray(value)) return `[${value.map(canonicalJson).join(',')}]`;
+  if (value && typeof value === 'object') {
+    return `{${Object.keys(value).sort().map((key) => `${JSON.stringify(key)}:${canonicalJson(value[key])}`).join(',')}}`;
+  }
+  return JSON.stringify(value);
+}
+
+function commitment(value) { return `sha256:${sha256Hex(Buffer.from(canonicalJson(value), 'utf8'))}`; }
+
+function runtimeDirFor(projectDir) { return path.join(projectDir, 'out', 'runtime'); }
+function worldPackageDirFor(projectDir) { return path.join(projectDir, 'out', 'world.evr'); }
+
+function loadGeneratedWorld(projectDir) {
+  const packageDir = worldPackageDirFor(projectDir);
+  assertFactory(fs.existsSync(packageDir), `Missing generated world.evr at ${packageDir}`);
+  const manifest = readJsonFile(path.join(packageDir, 'manifest.json'));
+  const runtime = readJsonFile(path.join(packageDir, manifest.runtime.path));
+  const genesis = readJsonFile(path.join(packageDir, manifest.genesis.path));
+  const contract = readJsonFile(path.join(packageDir, manifest.world_contract.path));
+  return { packageDir, manifest, runtime, genesis, contract };
+}
+
+function smallRuntimeAssumptions() {
+  return {
+    runtime_profile: 'small',
+    world_instances: 1,
+    operators: 1,
+    tick_rate: 'fixed',
+    determinism: 'deterministic-local-execution',
+    persistence: 'local-json-files'
+  };
+}
+
+function bootstrapWorldState(worldId) {
+  return { world_id: worldId, tick: 0, settlements: [], market: {}, governance: {} };
+}
+
+function receiptForTick(worldId, tick, previousStateRoot) {
+  const deterministic = { action: 'world.tick', previous_state_root: previousStateRoot, tick, world_id: worldId };
+  return { tick, receipt_hash: commitment(deterministic), data: deterministic };
+}
+
+function rootsFor(state, receipts, journal, worldHashInput) {
+  const state_root = commitment(state);
+  const receipt_root = commitment(receipts.map((receipt) => ({ tick: receipt.tick, receipt_hash: receipt.receipt_hash, data: receipt.data })));
+  const world_hash = commitment(worldHashInput);
+  const continuity_root = commitment({ state_root, receipt_root, world_hash, journal });
+  return { state_root, receipt_root, world_hash, continuity_root };
+}
+
+function statusFor(state, receipts, journal, generatedWorld) {
+  return rootsFor(state, receipts, journal, {
+    manifest_sha256: sha256Hex(fs.readFileSync(path.join(generatedWorld.packageDir, 'manifest.json'))),
+    contract_hash: generatedWorld.contract.contract_hash,
+    runtime_id: generatedWorld.runtime.runtime_id,
+    world_id: state.world_id
+  });
+}
+
+function readRuntimePackage(projectDir) {
+  const runtimeDir = runtimeDirFor(projectDir);
+  return {
+    runtimeDir,
+    state: readJsonFile(path.join(runtimeDir, 'world-state.json')),
+    journal: readJsonFile(path.join(runtimeDir, 'journal.json')),
+    receipts: readJsonFile(path.join(runtimeDir, 'receipts.json')),
+    status: readJsonFile(path.join(runtimeDir, 'runtime-status.json'))
+  };
+}
+
+function writeRuntimePackage(projectDir, state, journal, receipts, generatedWorld, verification = 'PENDING') {
+  const runtimeDir = runtimeDirFor(projectDir);
+  const roots = statusFor(state, receipts, journal, generatedWorld);
+  writeJson(path.join(runtimeDir, 'world-state.json'), state);
+  writeJson(path.join(runtimeDir, 'journal.json'), journal);
+  writeJson(path.join(runtimeDir, 'receipts.json'), receipts);
+  writeJson(path.join(runtimeDir, 'runtime-status.json'), { status: 'RUNNING', tick: state.tick, verification, ...roots });
+  return roots;
+}
+
+function bootWorldFactoryRuntime(projectDir) {
+  const generatedWorld = loadGeneratedWorld(projectDir);
+  assertFactory(generatedWorld.runtime.runtime_profile === 'small', 'Phase 2 only supports runtime_profile=small');
+  const state = bootstrapWorldState(generatedWorld.manifest.world_id);
+  const journal = [];
+  const receipts = [];
+  writeRuntimePackage(projectDir, state, journal, receipts, generatedWorld);
+  writeJson(path.join(runtimeDirFor(projectDir), 'runtime-profile.json'), smallRuntimeAssumptions());
+  console.log(`World Factory Boot: PASS (${path.relative(repoRoot, runtimeDirFor(projectDir))})`);
+}
+
+function runWorldFactoryRuntime(projectDir) {
+  const ticks = Number.parseInt(value('--ticks', '1'), 10);
+  assertFactory(Number.isInteger(ticks) && ticks >= 0, '--ticks must be a non-negative integer');
+  const generatedWorld = loadGeneratedWorld(projectDir);
+  if (!fs.existsSync(path.join(runtimeDirFor(projectDir), 'world-state.json'))) bootWorldFactoryRuntime(projectDir);
+  const pkg = readRuntimePackage(projectDir);
+  const state = { world_id: pkg.state.world_id, tick: pkg.state.tick, settlements: pkg.state.settlements, market: pkg.state.market, governance: pkg.state.governance };
+  const journal = pkg.journal;
+  const receipts = pkg.receipts;
+  for (let i = 0; i < ticks; i += 1) {
+    const previousRoots = statusFor(state, receipts, journal, generatedWorld);
+    state.tick += 1;
+    const receipt = receiptForTick(state.world_id, state.tick, previousRoots.state_root);
+    receipts.push(receipt);
+    const roots = statusFor(state, receipts, journal, generatedWorld);
+    journal.push({ tick: state.tick, action: 'world.tick', receipt_hash: receipt.receipt_hash, world_hash: roots.world_hash });
+  }
+  const roots = writeRuntimePackage(projectDir, state, journal, receipts, generatedWorld, 'PENDING');
+  console.log(`World Factory Run: PASS (${state.tick} ticks)`);
+  console.log(`State Root: ${roots.state_root}`);
+}
+
+function replayWorldFactoryRuntime(projectDir) {
+  const generatedWorld = loadGeneratedWorld(projectDir);
+  const runtime = readRuntimePackage(projectDir);
+  const replayState = bootstrapWorldState(generatedWorld.manifest.world_id);
+  const replayJournal = [];
+  const replayReceipts = [];
+  for (const entry of runtime.journal) {
+    const previousRoots = statusFor(replayState, replayReceipts, replayJournal, generatedWorld);
+    replayState.tick += 1;
+    const receipt = receiptForTick(replayState.world_id, replayState.tick, previousRoots.state_root);
+    const rootsBeforeJournal = statusFor(replayState, replayReceipts.concat([receipt]), replayJournal, generatedWorld);
+    const replayEntry = { tick: replayState.tick, action: 'world.tick', receipt_hash: receipt.receipt_hash, world_hash: rootsBeforeJournal.world_hash };
+    assertFactory(entry.tick === replayEntry.tick && entry.action === replayEntry.action && entry.receipt_hash === replayEntry.receipt_hash && entry.world_hash === replayEntry.world_hash, `Journal mismatch at tick ${entry.tick}`);
+    replayReceipts.push(receipt);
+    replayJournal.push(replayEntry);
+  }
+  const replayRoots = statusFor(replayState, replayReceipts, replayJournal, generatedWorld);
+  const runtimeRoots = statusFor({ world_id: runtime.state.world_id, tick: runtime.state.tick, settlements: runtime.state.settlements, market: runtime.state.market, governance: runtime.state.governance }, runtime.receipts, runtime.journal, generatedWorld);
+  const pass = ['state_root', 'receipt_root', 'world_hash', 'continuity_root'].every((key) => replayRoots[key] === runtimeRoots[key]);
+  const replay_status = pass ? 'PASS' : 'FAIL';
+  writeJson(path.join(runtime.runtimeDir, 'world-factory-runtime-report.json'), { world_id: replayState.world_id, ticks_executed: replayState.tick, ...runtimeRoots, replay_status });
+  writeJson(path.join(runtime.runtimeDir, 'runtime-status.json'), { status: 'RUNNING', tick: replayState.tick, verification: replay_status, ...runtimeRoots });
+  console.log(replay_status);
+  if (!pass) process.exitCode = 1;
+}
+
 function verifyWorldFactoryPackage(projectDir) {
   const packageDir = path.join(projectDir, 'out', 'world.evr');
   const verifier = path.join(repoRoot, 'specs', 'world-evr-package', 'verify-package-v1.mjs');
@@ -1093,11 +1234,14 @@ function publish(projectDir) {
 }
 
 try {
-  const projectDir = path.resolve(value('--project', process.cwd()));
+  const projectDir = path.resolve(value('--project', command?.startsWith('world:factory:') ? WORLD_FACTORY_PROJECT : process.cwd()));
   if (command === 'world:factory:init') worldFactoryInit();
   else if (command === 'world:factory:validate') validateWorldFactoryProject(projectDir);
   else if (command === 'world:factory:generate') generateWorldFactoryPackage(projectDir);
   else if (command === 'world:factory:verify') verifyWorldFactoryPackage(projectDir);
+  else if (command === 'world:factory:boot') bootWorldFactoryRuntime(projectDir);
+  else if (command === 'world:factory:run') runWorldFactoryRuntime(projectDir);
+  else if (command === 'world:factory:replay') replayWorldFactoryRuntime(projectDir);
   else if (command === 'world:templates') printTemplates();
   else if (command === 'world:rustrigs') printRustRigs();
   else if (command === 'world:init') createWorld();
