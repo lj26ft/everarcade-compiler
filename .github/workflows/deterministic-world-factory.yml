@@ -14,16 +14,18 @@ jobs:
   deterministic-world-factory:
     name: World Factory gate
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - uses: dtolnay/rust-toolchain@stable
         with:
           components: rustfmt
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
-          node-version: "20"
+          node-version: "22"
+          package-manager-cache: false
 
       - name: Restore canonical offline vendor
         run: bash scripts/ensure_vendor_offline.sh
@@ -32,9 +34,7 @@ jobs:
         run: |
           test -f vendor.sha256
           test -f vendor-manifest.json
-          expected="$(tr -d '\n' < vendor.sha256)"
-          actual="$(find vendor -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum | awk '{print $1}')"
-          test "$expected" = "$actual"
+          bash scripts/verify_vendor_tree_hash.sh
 
       - name: Run deterministic world factory CI
         env:
@@ -43,7 +43,7 @@ jobs:
 
       - name: Upload world factory evidence
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: world-factory-evidence
           path: |

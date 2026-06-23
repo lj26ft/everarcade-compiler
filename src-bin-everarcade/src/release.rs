@@ -29,9 +29,21 @@ pub fn build_world_factory_release(project: String) -> Result<PathBuf, String> {
     let _ = fs::remove_dir_all(&staging);
     fs::create_dir_all(&staging).map_err(|e| e.to_string())?;
 
-    let _ = Command::new("cargo")
-        .args(["build", "-p", "everarcade-cli", "--release"])
-        .status();
+    let status = Command::new("cargo")
+        .args([
+            "build",
+            "-p",
+            "everarcade-cli",
+            "--release",
+            "--offline",
+            "--locked",
+        ])
+        .env("CARGO_NET_OFFLINE", "true")
+        .status()
+        .map_err(|e| e.to_string())?;
+    if !status.success() {
+        return Err("release build of everarcade-cli failed (offline/locked)".into());
+    }
 
     let world_workspace = staging.join("_world-build");
     crate::world::dispatch(&sargs_owned(vec![
@@ -443,8 +455,12 @@ fn build_runtime_bundle(dist: &Path, lease: &str) -> Result<(), String> {
     )
 }
 fn write_vendor_archive(path: &Path) -> Result<(), String> {
+    write_vendor_archive_at(Path::new("vendor"), path)
+}
+
+fn write_vendor_archive_at(vendor_root: &Path, path: &Path) -> Result<(), String> {
     let mut rows = Vec::new();
-    collect_files(Path::new("vendor"), Path::new("vendor"), &mut rows).ok();
+    collect_files(vendor_root, vendor_root, &mut rows).ok();
     rows.sort_by(|a, b| a.0.cmp(&b.0));
     let mut b = b"EVERARCADE-VENDOR\n".to_vec();
     for (n, d) in rows {
@@ -715,15 +731,19 @@ mod tests {
     #[test]
     fn vendor_archive_hash_is_stable() {
         let root = tmp("vendor");
-        let old = env::current_dir().unwrap();
-        env::set_current_dir(&root).unwrap();
-        fs::create_dir_all("vendor/bincode").unwrap();
-        fs::write("vendor/bincode/Cargo.toml", "[package]\nname='bincode'\n").unwrap();
-        write_vendor_archive(Path::new("vendor.tar.gz")).unwrap();
-        let a = hash_file("vendor.tar.gz").unwrap();
-        write_vendor_archive(Path::new("vendor2.tar.gz")).unwrap();
-        let b = hash_file("vendor2.tar.gz").unwrap();
-        env::set_current_dir(old).unwrap();
+        let vendor = root.join("vendor");
+        fs::create_dir_all(vendor.join("bincode")).unwrap();
+        fs::write(
+            vendor.join("bincode/Cargo.toml"),
+            "[package]\nname='bincode'\n",
+        )
+        .unwrap();
+        let archive_a = root.join("vendor.tar.gz");
+        let archive_b = root.join("vendor2.tar.gz");
+        write_vendor_archive_at(&vendor, &archive_a).unwrap();
+        let a = hash_file(&archive_a).unwrap();
+        write_vendor_archive_at(&vendor, &archive_b).unwrap();
+        let b = hash_file(&archive_b).unwrap();
         assert_eq!(a, b);
     }
 }

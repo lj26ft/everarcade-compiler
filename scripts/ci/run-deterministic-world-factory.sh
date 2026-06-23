@@ -50,9 +50,10 @@ bash "$ROOT/scripts/ensure_vendor_offline.sh"
 bash "$ROOT/scripts/check_prerequisites.sh"
 
 section "Toolchain gates"
-cargo fmt --check
+cargo fmt --all --check
 CARGO_NET_OFFLINE=true CARGO_BUILD_JOBS="${CARGO_BUILD_JOBS:-1}" cargo build -p everarcade-cli --offline --locked
-CARGO_NET_OFFLINE=true cargo test -p everarcade-cli --offline --locked --quiet
+CARGO_NET_OFFLINE=true CARGO_BUILD_JOBS="${CARGO_BUILD_JOBS:-1}" cargo build -p everarcade-cli --release --offline --locked
+CARGO_NET_OFFLINE=true cargo test -p everarcade-cli --offline --locked --quiet -- --test-threads=1
 node --check creator-sdk/cli/everarcade.mjs
 
 section "World Factory canonical pipeline"

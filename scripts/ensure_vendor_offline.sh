@@ -48,5 +48,11 @@ if ! offline_cargo_check_workspace "$ROOT" /tmp/everarcade-vendor-offline-check.
   exit 1
 fi
 
+if [[ -f "$ROOT/vendor.sha256" ]] && ! bash "$ROOT/scripts/verify_vendor_tree_hash.sh" >/dev/null; then
+  printf 'vendor offline: FAIL - restored tree does not match vendor.sha256\n' >&2
+  bash "$ROOT/scripts/verify_vendor_tree_hash.sh" >&2 || true
+  exit 1
+fi
+
 printf 'vendor offline: PASS (restored)\n'
 exit 0
