@@ -61,17 +61,11 @@ Always cross-check `MATURITY.md`.
 
 ## Trap 6: Vendor / offline Cargo
 
-`.cargo/config.toml`:
-```toml
-[net]
-offline = true
-```
+`.cargo/config.toml` sets `offline = true`. `vendor/` is restored from `dist/vendor.tar.gz` via `scripts/ensure_vendor_offline.sh`.
 
-`vendor/` exists but is **incomplete**. Symptom: workspace resolution fails on `bincode`.
+**CI/play-local trap (fixed Phase 0):** Creator SDK previously copied runtime to `/tmp/everarcade-runtime-launch-workspace` without vendor — caused `no matching package named 'anyhow'`. Runtime commands now use repo-root `cargo run --offline --locked -p everarcade-runtime`.
 
-Workaround: network Cargo outside offline config, or `bash scripts/vendor_deps.sh`.
-
-Do not commit partial vendor patches.
+Maintainer regen: `bash scripts/vendor_deps.sh` (network once).
 
 ---
 

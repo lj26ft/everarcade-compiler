@@ -64,6 +64,7 @@
   },
   "open_source_classification": "READY",
   "phase_0_complete": true,
+  "phase_0_finalization": "play-local uses repo-root offline cargo; ensure_vendor_offline runs workspace cargo check",
   "canonical_gate": [
     "bash scripts/check_prerequisites.sh",
     "CARGO_BUILD_JOBS=1 bash scripts/validate_developer_onboarding.sh",

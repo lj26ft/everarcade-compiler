@@ -85,5 +85,12 @@ cat > deployment/reports/vendor_validation_report.md <<RPT
 - vendor_artifact_sha256: $(awk '{print $1}' dist/vendor.tar.gz.sha256)
 RPT
 
+if ! offline_cargo_check_workspace "$ROOT" /tmp/everarcade-vendor-deps-check.log; then
+  echo "workspace cargo check --offline failed after vendor refresh" >&2
+  tail -20 /tmp/everarcade-vendor-deps-check.log >&2 || true
+  exit 1
+fi
+
 echo "dependency_vendor=ok"
 echo "vendor_artifact=dist/vendor.tar.gz"
+echo "offline_workspace_check=ok"

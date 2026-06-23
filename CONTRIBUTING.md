@@ -36,6 +36,24 @@ CI runs the same gate on Ubuntu and macOS via `.github/workflows/onboarding.yml`
 
 `vendor/` is restored from the committed `dist/vendor.tar.gz` bundle. You do not need network access after clone. Maintainers regenerate the bundle with `bash scripts/vendor_deps.sh` (network required). See `docs/build/offline-build-policy.md`.
 
+### Fixing offline vendor issues (ELI5)
+
+The `vendor/` folder is the full box of dependency bricks. If you see `no matching package named 'anyhow'` (or similar) during `play-local` or `cargo check --offline`:
+
+```bash
+bash scripts/ensure_vendor_offline.sh
+bash scripts/check_prerequisites.sh
+```
+
+If that still fails (maintainers only, network required once):
+
+```bash
+bash scripts/vendor_deps.sh
+git add dist/vendor.tar.gz dist/vendor.tar.gz.sha256 Cargo.lock
+```
+
+Creator SDK runtime commands run `cargo` from the **repository root** so offline vendor policy applies. Temporary `/tmp` cargo workspaces are not used for play-local.
+
 ## How to test targeted changes
 
 Match validation to your change. Examples:

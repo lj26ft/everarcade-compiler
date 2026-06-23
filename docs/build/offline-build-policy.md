@@ -31,13 +31,31 @@ bash examples/reference-certified-world-v1/operator/verify.sh examples/reference
 
 We ship the full box of dependency "bricks" inside the repository so anyone can build the same castle without ordering missing pieces online. That is required for sovereign, verifiable, reproducible foundations.
 
+## Fixing "no matching package named anyhow" (or similar)
+
+This usually means `vendor/` was not restored or Creator SDK tried to build outside the repo workspace.
+
+```bash
+bash scripts/ensure_vendor_offline.sh
+bash scripts/check_prerequisites.sh
+CARGO_BUILD_JOBS=1 bash scripts/validate_developer_onboarding.sh
+```
+
+Creator SDK `play-local` runs `cargo run --offline --locked -p everarcade-runtime` from the repository root.
+
 ## Maintainer regeneration (network required)
 
 Only maintainers refreshing dependencies need network access:
 
 ```bash
-# Unset offline for this command only; script manages .cargo/config.toml
 bash scripts/vendor_deps.sh
+```
+
+Equivalent manual steps:
+
+```bash
+cargo vendor --locked vendor
+CARGO_NET_OFFLINE=true cargo check --offline --locked
 ```
 
 This will:

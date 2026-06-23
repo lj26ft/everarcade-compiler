@@ -7,7 +7,7 @@ source "$ROOT/scripts/lib/common.sh"
 
 cd "$ROOT"
 
-if vendor_offline_ok "$ROOT"; then
+if vendor_offline_ok "$ROOT" && offline_cargo_check_workspace "$ROOT" /tmp/everarcade-vendor-offline-check.log; then
   printf 'vendor offline: PASS (existing tree)\n'
   exit 0
 fi
@@ -24,10 +24,18 @@ fi
 printf 'vendor offline: restoring from dist/vendor.tar.gz\n' >&2
 bash "$ROOT/scripts/restore_vendor_artifact.sh"
 
-if vendor_offline_ok "$ROOT"; then
-  printf 'vendor offline: PASS (restored)\n'
-  exit 0
+if ! vendor_offline_ok "$ROOT"; then
+  printf 'vendor offline: FAIL - restore completed but offline metadata check failed\n' >&2
+  print_vendor_fix_hint
+  exit 1
 fi
 
-printf 'vendor offline: FAIL - restore completed but offline metadata check failed\n' >&2
-exit 1
+if ! offline_cargo_check_workspace "$ROOT" /tmp/everarcade-vendor-offline-check.log; then
+  printf 'vendor offline: FAIL - workspace cargo check --offline failed after restore\n' >&2
+  tail -20 /tmp/everarcade-vendor-offline-check.log >&2 || true
+  print_vendor_fix_hint
+  exit 1
+fi
+
+printf 'vendor offline: PASS (restored)\n'
+exit 0

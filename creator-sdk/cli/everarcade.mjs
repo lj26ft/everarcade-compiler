@@ -1222,29 +1222,39 @@ function projectWorld(projectDir) {
 }
 
 function prepareRuntimeCargoWorkspace() {
-  const workspaceRoot = path.join('/tmp', 'everarcade-runtime-launch-workspace');
-  const runtimeSource = path.join(repoRoot, 'runtime', 'everarcade-runtime');
-  const runtimeTarget = path.join(workspaceRoot, 'everarcade-runtime');
-  fs.mkdirSync(workspaceRoot, { recursive: true });
-  fs.rmSync(runtimeTarget, { recursive: true, force: true });
-  fs.mkdirSync(runtimeTarget, { recursive: true });
-  fs.copyFileSync(path.join(runtimeSource, 'Cargo.toml'), path.join(runtimeTarget, 'Cargo.toml'));
-  fs.cpSync(path.join(runtimeSource, 'src'), path.join(runtimeTarget, 'src'), { recursive: true });
-  fs.writeFileSync(path.join(workspaceRoot, 'Cargo.toml'), '[workspace]\nmembers = ["everarcade-runtime"]\nresolver = "2"\n');
-  return workspaceRoot;
+  // Runtime commands use the repository workspace so offline vendor + .cargo/config.toml apply.
+  return repoRoot;
 }
 
+function runtimeCargoEnv() {
+  return {
+    ...process.env,
+    CARGO_BUILD_JOBS: process.env.CARGO_BUILD_JOBS ?? '1',
+    CARGO_NET_OFFLINE: process.env.CARGO_NET_OFFLINE ?? 'true',
+  };
+}
 
 function runRuntimeCommand(commandName, projectDir, runtimeRoot, packaged) {
   const cargoArgs = [
-    'run', '-q', '-p', 'everarcade-runtime', '--bin', 'runtime', '--',
-    commandName, runtimeRoot, packaged.manifest.world_id, packaged.packageDir
+    'run',
+    '-q',
+    '--offline',
+    '--locked',
+    '-p',
+    'everarcade-runtime',
+    '--bin',
+    'runtime',
+    '--',
+    commandName,
+    runtimeRoot,
+    packaged.manifest.world_id,
+    packaged.packageDir,
   ];
   const cargoWorkspace = prepareRuntimeCargoWorkspace();
   const result = spawnSync('cargo', cargoArgs, {
     cwd: cargoWorkspace,
-    env: { ...process.env, CARGO_BUILD_JOBS: process.env.CARGO_BUILD_JOBS ?? '1' },
-    encoding: 'utf8'
+    env: runtimeCargoEnv(),
+    encoding: 'utf8',
   });
   return { cargoArgs, cargoWorkspace, result };
 }

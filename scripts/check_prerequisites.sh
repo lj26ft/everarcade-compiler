@@ -10,7 +10,6 @@ cd "$ROOT"
 failures=0
 warnings=0
 
-note() { printf '%s\n' "$1"; }
 pass() { printf '%s: PASS\n' "$1"; }
 warn() { printf '%s: WARNING - %s\n' "$1" "$2"; warnings=$((warnings + 1)); }
 fail() { printf '%s: FAIL - %s\n' "$1" "$2" >&2; failures=$((failures + 1)); }
@@ -75,19 +74,34 @@ else
   fail "cargo offline policy" ".cargo/config.toml must set offline = true"
 fi
 
-bash "$ROOT/scripts/ensure_vendor_offline.sh" || fail "vendor offline restore" "run bash scripts/ensure_vendor_offline.sh"
+printf '\nChecking offline vendor restore...\n'
+if ! bash "$ROOT/scripts/ensure_vendor_offline.sh"; then
+  fail "vendor offline restore" "run bash scripts/ensure_vendor_offline.sh"
+fi
 
 if vendor_offline_ok "$ROOT"; then
   pass "cargo metadata offline"
 else
   fail "cargo metadata offline" "CARGO_NET_OFFLINE=true cargo metadata --offline --locked failed"
+  print_vendor_fix_hint
 fi
 
-if CARGO_NET_OFFLINE=true CARGO_BUILD_JOBS=1 cargo check -p everarcade-runtime --offline --locked >/tmp/everarcade-prereq-check.log 2>&1; then
+printf '\nChecking offline Cargo build capability...\n'
+OFFLINE_LOG=/tmp/everarcade-prereq-offline-check.log
+if offline_cargo_check_workspace "$ROOT" "$OFFLINE_LOG"; then
+  pass "cargo check workspace offline"
+else
+  fail "cargo check workspace offline" "see $OFFLINE_LOG"
+  tail -25 "$OFFLINE_LOG" >&2 || true
+  print_vendor_fix_hint
+fi
+
+if CARGO_NET_OFFLINE=true CARGO_BUILD_JOBS=1 cargo check -p everarcade-runtime --offline --locked >/tmp/everarcade-prereq-runtime-check.log 2>&1; then
   pass "cargo check everarcade-runtime offline"
 else
-  fail "cargo check everarcade-runtime offline" "see /tmp/everarcade-prereq-check.log"
-  tail -20 /tmp/everarcade-prereq-check.log >&2 || true
+  fail "cargo check everarcade-runtime offline" "see /tmp/everarcade-prereq-runtime-check.log"
+  tail -20 /tmp/everarcade-prereq-runtime-check.log >&2 || true
+  print_vendor_fix_hint
 fi
 
 printf '\n'

@@ -1,9 +1,22 @@
+
+== Vendor offline ==
 Vendor Offline: PASS
+
+== Repository bootstrap ==
 Repository Bootstrap: PASS
+
+== Creator SDK ==
 Developer Build: PASS
 Creator SDK: PASS
+
+== Runtime package ==
 Runtime Package: PASS
+
+== Runtime local-session (play-local) ==
+Running play-local against repo-root offline vendor...
 Playable Local Game: PASS
+
+== Replay verification ==
 Replay Verification: PASS
 
 Developer Onboarding Validation: PASS

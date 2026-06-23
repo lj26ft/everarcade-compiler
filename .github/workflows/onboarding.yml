@@ -23,7 +23,7 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Restore offline vendor
+      - name: Restore and verify offline vendor
         run: bash scripts/ensure_vendor_offline.sh
 
       - name: Check prerequisites
@@ -42,8 +42,12 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Restore offline vendor
-        run: bash scripts/ensure_vendor_offline.sh
+      - name: Restore and verify offline vendor
+        run: |
+          echo "Verifying offline build capability..."
+          bash scripts/ensure_vendor_offline.sh
+          CARGO_NET_OFFLINE=true cargo check --offline --locked --quiet
+          echo "Offline Vendor: PASS"
 
       - name: Check prerequisites
         run: bash scripts/check_prerequisites.sh
@@ -80,8 +84,12 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Restore offline vendor
-        run: bash scripts/ensure_vendor_offline.sh
+      - name: Restore and verify offline vendor
+        run: |
+          echo "Verifying offline build capability..."
+          bash scripts/ensure_vendor_offline.sh
+          CARGO_NET_OFFLINE=true cargo check --offline --locked --quiet
+          echo "Offline Vendor: PASS"
 
       - name: Check prerequisites
         run: bash scripts/check_prerequisites.sh
