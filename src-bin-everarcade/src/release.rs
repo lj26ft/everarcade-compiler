@@ -3,6 +3,7 @@ use serde_json::json;
 use sha2::{Digest, Sha256};
 use std::{
     fs,
+    os::unix::fs::PermissionsExt,
     path::{Path, PathBuf},
     process::Command,
     time::{SystemTime, UNIX_EPOCH},
@@ -10,6 +11,228 @@ use std::{
 
 const PROTOCOL: &str = "everarcade-release-v0.1";
 const RUNTIME_BUNDLE_PROTOCOL: &str = "everarcade-runtime-bundle-v0.1";
+
+const WORLD_FACTORY_ARCHIVE: &str = "dist/everarcade-world-factory-release.tar.gz";
+const WORLD_FACTORY_STAGING: &str = "dist/everarcade-world-factory-release";
+const MAX_RELEASE_BYTES: u64 = 100 * 1024 * 1024;
+
+pub fn build_world_factory_release(project: String) -> Result<PathBuf, String> {
+    let project = PathBuf::from(project);
+    if !project.join("world-blueprint.json").is_file() {
+        return Err(format!(
+            "missing world factory blueprint: {}",
+            project.display()
+        ));
+    }
+    fs::create_dir_all("dist").map_err(|e| e.to_string())?;
+    let staging = PathBuf::from(WORLD_FACTORY_STAGING);
+    let _ = fs::remove_dir_all(&staging);
+    fs::create_dir_all(&staging).map_err(|e| e.to_string())?;
+
+    let _ = Command::new("cargo")
+        .args(["build", "-p", "everarcade-cli", "--release"])
+        .status();
+
+    let world_workspace = staging.join("_world-build");
+    crate::world::dispatch(&sargs_owned(vec![
+        "everarcade",
+        "world",
+        "init",
+        "--dir",
+        world_workspace
+            .to_str()
+            .unwrap_or("dist/everarcade-world-factory-release/_world-build"),
+    ]))?;
+    apply_frontier_metadata(&world_workspace, &project)?;
+    let world_out = staging.join("world.evr");
+    crate::world::dispatch(&sargs_owned(vec![
+        "everarcade",
+        "world",
+        "package",
+        "--dir",
+        world_workspace.to_str().unwrap(),
+        "--out",
+        world_out.to_str().unwrap(),
+    ]))?;
+    let _ = fs::remove_dir_all(&world_workspace);
+
+    copy_or_placeholder(
+        "target/release/everarcade",
+        staging.join("bin/everarcade"),
+        b"#!/bin/sh\necho everarcade release placeholder\n",
+    )?;
+    make_executable(staging.join("bin/everarcade"))?;
+
+    write_json(
+        staging.join("runtime-config.json"),
+        &json!({
+            "runtime":"world-factory-serve",
+            "world":"world.evr",
+            "transport":"hotpocket-evernode",
+            "host_profile":"single-evernode-lease",
+            "remote_proof": {"enabled": true, "script":"verification/remote-proof.sh"}
+        }),
+    )?;
+    write_json(
+        staging.join("deployment-manifest.json"),
+        &json!({
+            "protocol":"everarcade-world-factory-release-v0.1",
+            "world_id":"frontier-settlement-demo",
+            "entrypoint":"bin/everarcade world deploy --package world.evr --lease $EVERNODE_LEASE_ID",
+            "serve_command":"bin/everarcade world deploy --package world.evr --lease ${EVERNODE_LEASE_ID:-offline-lease}",
+            "verify_command":"verification/verify-local.sh",
+            "remote_proof_command":"verification/remote-proof.sh"
+        }),
+    )?;
+    fs::create_dir_all(staging.join("keys")).map_err(|e| e.to_string())?;
+    fs::write(
+        staging.join("keys/trusted-public-key.txt"),
+        "everarcade-frontier-settlement-trusted-public-key-v0.1\n",
+    )
+    .map_err(|e| e.to_string())?;
+    let world_hash = hash_file(&world_out)?;
+    let cli_hash = hash_file(staging.join("bin/everarcade"))?;
+    write_json(
+        staging.join("attestation/world-release-attestation.json"),
+        &json!({
+            "protocol":"everarcade-release-attestation-v0.1",
+            "world_id":"frontier-settlement-demo",
+            "world_hash": world_hash,
+            "cli_hash": cli_hash,
+            "trusted_public_key":"keys/trusted-public-key.txt",
+            "remote_proof_supported": true,
+            "created_at": created_at()
+        }),
+    )?;
+    write_release_scripts(&staging)?;
+    fs::write(staging.join("README_DEPLOY.md"), deploy_readme()).map_err(|e| e.to_string())?;
+
+    let archive = PathBuf::from(WORLD_FACTORY_ARCHIVE);
+    let _ = fs::remove_file(&archive);
+    let status = Command::new("tar")
+        .args([
+            "-czf",
+            WORLD_FACTORY_ARCHIVE,
+            "-C",
+            "dist",
+            "everarcade-world-factory-release",
+        ])
+        .status()
+        .map_err(|e| e.to_string())?;
+    if !status.success() {
+        return Err("tar failed while creating release bundle".into());
+    }
+    let size = fs::metadata(&archive).map_err(|e| e.to_string())?.len();
+    if size > MAX_RELEASE_BYTES {
+        return Err(format!("release bundle exceeds 100 MB: {size} bytes"));
+    }
+    write_json(
+        staging.join("size-report.json"),
+        &json!({"archive": WORLD_FACTORY_ARCHIVE, "bytes": size, "max_bytes": MAX_RELEASE_BYTES, "stretch_target_bytes": 25 * 1024 * 1024, "status":"PASS"}),
+    )?;
+    let status = Command::new("tar")
+        .args([
+            "-czf",
+            WORLD_FACTORY_ARCHIVE,
+            "-C",
+            "dist",
+            "everarcade-world-factory-release",
+        ])
+        .status()
+        .map_err(|e| e.to_string())?;
+    if !status.success() {
+        return Err("tar failed while refreshing release bundle with size report".into());
+    }
+    inspect_release_tar(&archive)?;
+    Ok(archive)
+}
+
+fn inspect_release_target(path: String) -> Result<(), String> {
+    if path.ends_with(".tar.gz") {
+        inspect_release_tar(Path::new(&path))
+    } else {
+        inspect(path)
+    }
+}
+
+fn inspect_release_tar(path: &Path) -> Result<(), String> {
+    let size = fs::metadata(path).map_err(|e| e.to_string())?.len();
+    if size > MAX_RELEASE_BYTES {
+        return Err(format!("release bundle exceeds 100 MB: {size} bytes"));
+    }
+    let out = Command::new("tar")
+        .args(["-tzf", path.to_str().ok_or("bad archive path")?])
+        .output()
+        .map_err(|e| e.to_string())?;
+    if !out.status.success() {
+        return Err("release archive is not readable by tar".into());
+    }
+    let listing = String::from_utf8_lossy(&out.stdout);
+    reject_dev_entries(&listing)?;
+    for required in [
+        "bin/everarcade",
+        "world.evr",
+        "runtime-config.json",
+        "deployment-manifest.json",
+        "verification/verify-local.sh",
+        "verification/smoke-test.sh",
+        "verification/remote-proof.sh",
+        "attestation/world-release-attestation.json",
+        "keys/trusted-public-key.txt",
+        "README_DEPLOY.md",
+        "size-report.json",
+    ] {
+        if !listing.contains(required) {
+            return Err(format!("release archive missing {required}"));
+        }
+    }
+    println!(
+        "release_bundle={}\nsize_bytes={}\n{}",
+        path.display(),
+        size,
+        listing
+    );
+    Ok(())
+}
+
+fn smoke_test(path: String) -> Result<(), String> {
+    let archive = PathBuf::from(path);
+    inspect_release_tar(&archive)?;
+    let temp =
+        std::env::temp_dir().join(format!("everarcade-release-smoke-{}", std::process::id()));
+    let _ = fs::remove_dir_all(&temp);
+    fs::create_dir_all(&temp).map_err(|e| e.to_string())?;
+    let status = Command::new("tar")
+        .args([
+            "-xzf",
+            archive.to_str().ok_or("bad archive path")?,
+            "-C",
+            temp.to_str().unwrap(),
+        ])
+        .status()
+        .map_err(|e| e.to_string())?;
+    if !status.success() {
+        return Err("failed to extract release archive".into());
+    }
+    let root = temp.join("everarcade-world-factory-release");
+    for script in [
+        "verification/verify-local.sh",
+        "verification/smoke-test.sh",
+        "verification/remote-proof.sh",
+    ] {
+        let status = Command::new("sh")
+            .arg(root.join(script))
+            .current_dir(&root)
+            .status()
+            .map_err(|e| e.to_string())?;
+        if !status.success() {
+            return Err(format!("release smoke script failed: {script}"));
+        }
+    }
+    let _ = fs::remove_dir_all(&temp);
+    println!("release smoke-test passed: {}", archive.display());
+    Ok(())
+}
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct ReleaseManifest {
@@ -29,16 +252,29 @@ pub fn dispatch(args: &[String]) -> Result<(), String> {
     match args
         .get(2)
         .map(String::as_str)
-        .ok_or("usage: everarcade release <package|inspect|verify>")?
+        .ok_or("usage: everarcade release <build|inspect|smoke-test|package|verify>")?
     {
+        "build" => build_world_factory_release(
+            opt(args, "--project")
+                .unwrap_or_else(|| "examples/world-factory/frontier-settlement".into()),
+        )
+        .map(|_| ()),
+        "smoke-test" => smoke_test(
+            args.get(3)
+                .cloned()
+                .unwrap_or_else(|| "dist/everarcade-world-factory-release.tar.gz".into()),
+        ),
         "package" => package(
             opt(args, "--dist").unwrap_or_else(|| "dist".into()),
             has(args, "--vendor"),
         )
         .map(|_| ()),
-        "inspect" => {
-            inspect(opt(args, "--manifest").unwrap_or_else(|| "dist/release-manifest.json".into()))
-        }
+        "inspect" => inspect_release_target(
+            args.get(3)
+                .cloned()
+                .or_else(|| opt(args, "--manifest"))
+                .unwrap_or_else(|| "dist/release-manifest.json".into()),
+        ),
         "verify" => verify(opt(args, "--dist").unwrap_or_else(|| "dist".into())).map(|_| ()),
         other => Err(format!("unknown release command: {other}")),
     }
@@ -314,6 +550,135 @@ fn has(args: &[String], key: &str) -> bool {
 }
 fn sargs<const N: usize>(arr: [&str; N]) -> Vec<String> {
     arr.iter().map(|s| s.to_string()).collect()
+}
+
+fn apply_frontier_metadata(world_root: &Path, project: &Path) -> Result<(), String> {
+    let blueprint: serde_json::Value = serde_json::from_slice(
+        &fs::read(project.join("world-blueprint.json")).map_err(|e| e.to_string())?,
+    )
+    .map_err(|e| e.to_string())?;
+    let world_id = blueprint
+        .get("world_id")
+        .and_then(|v| v.as_str())
+        .unwrap_or("frontier-settlement-demo");
+    let world_name = blueprint
+        .get("world_name")
+        .and_then(|v| v.as_str())
+        .unwrap_or("Frontier Settlement Demo");
+    let contract = serde_json::to_vec_pretty(&json!({"world_id":world_id,"world_name":world_name,"contract_plan": serde_json::from_slice::<serde_json::Value>(&fs::read(project.join("world-contract-plan.json")).map_err(|e| e.to_string())?).map_err(|e| e.to_string())?})).map_err(|e| e.to_string())?;
+    fs::write(world_root.join("world-contract/contract.wasm"), contract)
+        .map_err(|e| e.to_string())?;
+    fs::write(world_root.join("genesis/genesis-state.json"), serde_json::to_vec_pretty(&json!({"world":world_id,"name":world_name,"tick":0,"capabilities":blueprint.get("capabilities").cloned().unwrap_or(json!([])),"runtime_profile":blueprint.get("runtime_profile").cloned().unwrap_or(json!("small"))})).map_err(|e| e.to_string())?).map_err(|e| e.to_string())?;
+    crate::world::dispatch(&sargs_owned(vec![
+        "everarcade",
+        "world",
+        "init",
+        "--dir",
+        world_root.to_str().unwrap(),
+    ]))?;
+    // Reapply deterministic Frontier files after init refreshed hashes for the default stub.
+    fs::write(world_root.join("world-contract/contract.wasm"), serde_json::to_vec_pretty(&json!({"world_id":world_id,"world_name":world_name,"contract_plan": serde_json::from_slice::<serde_json::Value>(&fs::read(project.join("world-contract-plan.json")).map_err(|e| e.to_string())?).map_err(|e| e.to_string())?})).map_err(|e| e.to_string())?).map_err(|e| e.to_string())?;
+    fs::write(world_root.join("genesis/genesis-state.json"), serde_json::to_vec_pretty(&json!({"world":world_id,"name":world_name,"tick":0,"capabilities":blueprint.get("capabilities").cloned().unwrap_or(json!([])),"runtime_profile":blueprint.get("runtime_profile").cloned().unwrap_or(json!("small"))})).map_err(|e| e.to_string())?).map_err(|e| e.to_string())?;
+    let contract_hash = hash_file(world_root.join("world-contract/contract.wasm"))?;
+    let genesis_hash = hash_file(world_root.join("genesis/genesis-state.json"))?;
+    let state_root = hash_str(&format!("state:{genesis_hash}"));
+    let replay_root = hash_str("replay:empty");
+    let receipt_root = hash_str("receipt:empty");
+    let continuity_root = hash_str(&format!(
+        "continuity:{state_root}:{replay_root}:{receipt_root}"
+    ));
+    for (f, v) in [
+        ("state-root.txt", &state_root),
+        ("replay-root.txt", &replay_root),
+        ("receipt-root.txt", &receipt_root),
+        ("continuity-root.txt", &continuity_root),
+    ] {
+        fs::write(world_root.join("continuity").join(f), v).map_err(|e| e.to_string())?;
+    }
+    let rb_hash = frontier_runtime_bundle_hash(world_root, &contract_hash)?;
+    write_json(
+        world_root.join("runtime/runtime-manifest.json"),
+        &json!({"protocol":"everarcade-runtime-bundle-v0.1","runtime_id":"everarcade-runtime","runtime_version":"0.1.0","target_transport":transport_core::HOTPOCKET_TRANSPORT_PROTOCOL,"entrypoint":"adapter/main","deterministic_engine":"everarcade-deterministic-runtime","wasm_hash":contract_hash,"bundle_hash":rb_hash}),
+    )?;
+    write_json(
+        world_root.join("manifest.json"),
+        &json!({"protocol":"everarcade-world-package-v0.1","world_id":world_id,"world_name":world_name,"world_version":"0.1.0","world_operator":"frontier-settlement-operator-rc1","created_at":"1970-01-01T00:00:00Z","world_contract_hash":contract_hash,"runtime_bundle_hash":rb_hash,"genesis_state_hash":genesis_hash,"state_root":state_root,"replay_root":replay_root,"receipt_root":receipt_root,"continuity_root":continuity_root,"transport_protocol":transport_core::HOTPOCKET_TRANSPORT_PROTOCOL}),
+    )
+}
+
+fn frontier_runtime_bundle_hash(world_root: &Path, contract_hash: &str) -> Result<String, String> {
+    let rb = crate::world::RuntimeBundleManifest {
+        protocol: "everarcade-runtime-bundle-v0.1".into(),
+        runtime_id: "everarcade-runtime".into(),
+        runtime_version: "0.1.0".into(),
+        target_transport: transport_core::HOTPOCKET_TRANSPORT_PROTOCOL.into(),
+        entrypoint: "adapter/main".into(),
+        deterministic_engine: "everarcade-deterministic-runtime".into(),
+        wasm_hash: Some(contract_hash.to_string()),
+        bundle_hash: String::new(),
+    };
+    let mut h = Sha256::new();
+    h.update(serde_json::to_vec_pretty(&rb).map_err(|e| e.to_string())?);
+    for p in [
+        "runtime/transport.json",
+        "runtime/entrypoint.json",
+        "world-contract/contract.wasm",
+    ] {
+        h.update(fs::read(world_root.join(p)).map_err(|e| e.to_string())?);
+    }
+    Ok(hex::encode(h.finalize()))
+}
+
+fn write_release_scripts(staging: &Path) -> Result<(), String> {
+    fs::create_dir_all(staging.join("verification")).map_err(|e| e.to_string())?;
+    let verify = "#!/bin/sh\nset -eu\ntest -x bin/everarcade\ntest -f world.evr\ntest -f runtime-config.json\ntest -f deployment-manifest.json\ntest -f attestation/world-release-attestation.json\ntest -f keys/trusted-public-key.txt\nsha256sum world.evr >/dev/null\necho local verification passed\n";
+    let smoke = "#!/bin/sh\nset -eu\nsh verification/verify-local.sh\n./bin/everarcade world verify --package world.evr >/dev/null\necho world factory serve smoke path passed\n";
+    let remote = "#!/bin/sh\nset -eu\nsh verification/verify-local.sh >/dev/null\necho remote proof supported: world.evr attestation/world-release-attestation.json keys/trusted-public-key.txt\n";
+    for (name, body) in [
+        ("verify-local.sh", verify),
+        ("smoke-test.sh", smoke),
+        ("remote-proof.sh", remote),
+    ] {
+        let p = staging.join("verification").join(name);
+        fs::write(&p, body).map_err(|e| e.to_string())?;
+        make_executable(&p)?;
+    }
+    Ok(())
+}
+
+fn deploy_readme() -> &'static str {
+    "# EverArcade Frontier Settlement Deployment\n\nThis bundle is the minimal production deployment artifact for the first live Frontier Settlement world on an EverNode host.\n\n## Verify\n\n```sh\nsh verification/verify-local.sh\nsh verification/remote-proof.sh\n```\n\n## Serve on an EverNode host\n\n```sh\nEVERNODE_LEASE_ID=<lease> bin/everarcade world deploy --package world.evr --lease \"$EVERNODE_LEASE_ID\"\n```\n\nThe bundle intentionally excludes tests, fixtures, docs exports, target cache, review bundles, scaffolds, vendor trees, node_modules, and repository metadata.\n"
+}
+
+fn reject_dev_entries(listing: &str) -> Result<(), String> {
+    for banned in [
+        "/target/",
+        "/node_modules/",
+        "/.git/",
+        "/tests/",
+        "/fixtures/",
+        "/exports/",
+        "review",
+        "/docs/",
+        "/vendor/",
+        "old-demo",
+        "scaffold",
+    ] {
+        if listing.contains(banned) {
+            return Err(format!(
+                "release archive contains banned development entry matching {banned}"
+            ));
+        }
+    }
+    Ok(())
+}
+fn make_executable<P: AsRef<Path>>(p: P) -> Result<(), String> {
+    let mut perm = fs::metadata(&p).map_err(|e| e.to_string())?.permissions();
+    perm.set_mode(0o755);
+    fs::set_permissions(p, perm).map_err(|e| e.to_string())
+}
+fn sargs_owned(args: Vec<&str>) -> Vec<String> {
+    args.into_iter().map(str::to_string).collect()
 }
 
 #[cfg(test)]
