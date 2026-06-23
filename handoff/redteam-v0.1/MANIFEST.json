@@ -1,0 +1,33 @@
+{
+  "bundle_id": "everarcade-compiler-redteam-handoff-v0.1",
+  "generated_at": "2026-06-23",
+  "repo": {
+    "name": "everarcade-compiler",
+    "remote": "https://github.com/lj26ft/everarcade-compiler.git",
+    "branch": "main",
+    "version": "0.1.0"
+  },
+  "purpose": "Redteam review of single-world deterministic path (Phase 1 scope)",
+  "reading_order": [
+    "handoff/redteam-v0.1/README.md",
+    "handoff/redteam-v0.1/00-EXECUTIVE-SUMMARY.md",
+    "handoff/redteam-v0.1/01-SINGLE-WORLD-PATH.md",
+    "handoff/redteam-v0.1/MATURITY-SNAPSHOT.md",
+    "handoff/redteam-v0.1/PHASE1-TASKS.md"
+  ],
+  "authority_companion": "handoff/supergrok/",
+  "phase": {
+    "phase_0": "complete",
+    "phase_1": "active"
+  },
+  "protected_gates": {
+    "contributor": ".github/workflows/onboarding.yml",
+    "world_artifact": ".github/workflows/deterministic-world-factory.yml"
+  },
+  "default_proof_path": [
+    "creator-sdk/cli/everarcade.mjs",
+    "dist/runtime-package/",
+    "runtime/everarcade-runtime/",
+    "examples/reference-certified-world-v1/"
+  ]
+}
