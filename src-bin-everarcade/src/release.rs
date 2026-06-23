@@ -512,6 +512,9 @@ fn hash_file<P: AsRef<Path>>(p: P) -> Result<String, String> {
 fn hash_bytes(b: &[u8]) -> String {
     hex::encode(Sha256::digest(b))
 }
+fn hash_str(s: &str) -> String {
+    hash_bytes(s.as_bytes())
+}
 fn git_commit() -> String {
     Command::new("git")
         .args(["rev-parse", "HEAD"])
