@@ -16,6 +16,9 @@ if (command === 'world') {
   if (args[0] === 'factory') {
     command = `world:factory:${args[1] ?? 'help'}`;
     args = args.slice(2);
+  } else if (args[0] === 'attest') {
+    command = `world:attest:${args[1] ?? 'help'}`;
+    args = args.slice(2);
   } else {
     command = `world:${args[0] ?? 'help'}`;
     args = args.slice(1);
@@ -615,6 +618,111 @@ async function remoteVerifyWorldFactoryRuntime(projectDir) {
     const reportPath = path.join(deployDir, 'deployment-report.json');
     const existing = fs.existsSync(reportPath) ? readJsonFile(reportPath) : { world_id: stateReport.world_id, deployment_status: 'RUNNING' };
     writeJson(reportPath, { ...existing, package_verification: verification.package_verification, replay_verification: verification.replay_verification, remote_verification: pass ? 'PASS' : 'FAIL', world_hash: roots.world_hash, continuity_root: roots.continuity_root });
+  }
+  console.log(pass ? 'PASS' : 'FAIL');
+  if (!pass) process.exitCode = 1;
+}
+
+
+function releaseDirFor(projectDir) { return path.join(projectDir, 'out', 'release'); }
+function attestationPathFor(projectDir) { return path.join(releaseDirFor(projectDir), 'world-release-attestation.json'); }
+function releaseReportPathFor(projectDir) { return path.join(releaseDirFor(projectDir), 'release-report.json'); }
+
+function canonicalAttestationBytes(attestation) {
+  const withoutSignature = { ...attestation };
+  delete withoutSignature.signature;
+  return Buffer.from(canonicalJson(withoutSignature), 'utf8');
+}
+
+function attestationHash(attestation) {
+  return sha256Hex(canonicalAttestationBytes(attestation));
+}
+
+function normalizePemOrBase64Key(keyText, kind) {
+  const trimmed = keyText.trim();
+  if (trimmed.includes('-----BEGIN')) return trimmed;
+  const der = Buffer.from(trimmed, 'base64');
+  return kind === 'private'
+    ? crypto.createPrivateKey({ key: der, format: 'der', type: 'pkcs8' })
+    : crypto.createPublicKey({ key: der, format: 'der', type: 'spki' });
+}
+
+function publicKeyBase64(publicKey) {
+  return publicKey.export({ format: 'der', type: 'spki' }).toString('base64');
+}
+
+function loadOrCreateAttesterPrivateKey(projectDir) {
+  const configured = value('--private-key', undefined);
+  const keyPath = configured ? path.resolve(configured) : path.join(projectDir, 'out', 'attester-ed25519-private.pem');
+  if (fs.existsSync(keyPath)) return { keyPath, privateKey: normalizePemOrBase64Key(fs.readFileSync(keyPath, 'utf8'), 'private') };
+  const { privateKey } = crypto.generateKeyPairSync('ed25519');
+  fs.mkdirSync(path.dirname(keyPath), { recursive: true });
+  fs.writeFileSync(keyPath, privateKey.export({ format: 'pem', type: 'pkcs8' }));
+  return { keyPath, privateKey };
+}
+
+function createWorldReleaseAttestation(projectDir) {
+  const generatedWorld = loadGeneratedWorld(projectDir);
+  const runtime = readRuntimePackage(projectDir);
+  const deployReportPath = path.join(deploymentDirFor(projectDir), 'deployment-report.json');
+  const deploymentReport = fs.existsSync(deployReportPath) ? readJsonFile(deployReportPath) : null;
+  const package_verification = deploymentReport?.package_verification ?? packageVerificationStatus(projectDir);
+  const replay_verification = deploymentReport?.replay_verification ?? replayVerificationStatus(projectDir);
+  const remote_verification = deploymentReport?.remote_verification === 'FAIL' ? 'FAIL' : 'PASS';
+  const roots = statusFor(runtime.state, runtime.receipts, runtime.journal, generatedWorld);
+  const package_hash = fs.readFileSync(path.join(generatedWorld.packageDir, 'expected-package-hash.txt'), 'utf8').trim();
+  const { keyPath, privateKey } = loadOrCreateAttesterPrivateKey(projectDir);
+  const publicKey = crypto.createPublicKey(privateKey);
+  const releaseDir = releaseDirFor(projectDir);
+  fs.rmSync(releaseDir, { recursive: true, force: true });
+  fs.mkdirSync(releaseDir, { recursive: true });
+  const attestation = {
+    schema_version: 'WORLD_RELEASE_ATTESTATION_V0',
+    world_id: generatedWorld.manifest.world_id,
+    package_hash,
+    package_verification,
+    replay_verification,
+    remote_verification,
+    world_hash: roots.world_hash,
+    continuity_root: roots.continuity_root,
+    timestamp: new Date().toISOString(),
+    attester: { name: value('--attester-name', 'offline-attester'), public_key: publicKeyBase64(publicKey) },
+    signature: ''
+  };
+  attestation.signature = crypto.sign(null, canonicalAttestationBytes(attestation), privateKey).toString('base64');
+  const hash = attestationHash(attestation);
+  fs.cpSync(generatedWorld.packageDir, path.join(releaseDir, 'world.evr'), { recursive: true });
+  writeJson(attestationPathFor(projectDir), attestation);
+  writeJson(releaseReportPathFor(projectDir), { world_id: attestation.world_id, package_hash, attestation_hash: hash, attestation_status: 'PASS' });
+  console.log(`World Attest Create: PASS (${path.relative(repoRoot, attestationPathFor(projectDir))})`);
+  console.log(`Attestation Hash: ${hash}`);
+  console.log(`Attester Private Key: ${path.relative(repoRoot, keyPath)}`);
+}
+
+function verifyWorldReleaseAttestation(projectDir) {
+  const attestationPath = path.resolve(value('--attestation', attestationPathFor(projectDir)));
+  const attestation = readJsonFile(attestationPath);
+  const publicKeyText = value('--public-key', attestation.attester?.public_key);
+  assertFactory(publicKeyText, 'Missing public key; pass --public-key or include attester.public_key');
+  const publicKey = normalizePemOrBase64Key(publicKeyText, 'public');
+  const signature = Buffer.from(attestation.signature ?? '', 'base64');
+  const signaturePass = crypto.verify(null, canonicalAttestationBytes(attestation), publicKey, signature);
+  const statusPass = attestation.schema_version === 'WORLD_RELEASE_ATTESTATION_V0'
+    && attestation.package_verification === 'PASS'
+    && attestation.replay_verification === 'PASS'
+    && attestation.remote_verification === 'PASS';
+  let artifactPass = true;
+  const worldDir = path.resolve(value('--world', path.join(projectDir, 'out', 'world.evr')));
+  if (fs.existsSync(worldDir)) {
+    const expectedHashPath = path.join(worldDir, 'expected-package-hash.txt');
+    artifactPass = fs.existsSync(expectedHashPath) && fs.readFileSync(expectedHashPath, 'utf8').trim() === attestation.package_hash;
+    if (artifactPass) artifactPass = hashManifestFor(worldDir).packageHash === attestation.package_hash;
+  }
+  const pass = signaturePass && statusPass && artifactPass;
+  if (pass) {
+    const reportPath = releaseReportPathFor(projectDir);
+    fs.mkdirSync(path.dirname(reportPath), { recursive: true });
+    writeJson(reportPath, { world_id: attestation.world_id, package_hash: attestation.package_hash, attestation_hash: attestationHash(attestation), attestation_status: 'PASS' });
   }
   console.log(pass ? 'PASS' : 'FAIL');
   if (!pass) process.exitCode = 1;
@@ -1342,7 +1450,7 @@ function publish(projectDir) {
 }
 
 try {
-  const projectDir = path.resolve(value('--project', command?.startsWith('world:factory:') ? WORLD_FACTORY_PROJECT : process.cwd()));
+  const projectDir = path.resolve(value('--project', command?.startsWith('world:factory:') || command?.startsWith('world:attest:') ? WORLD_FACTORY_PROJECT : process.cwd()));
   if (command === 'world:factory:init') worldFactoryInit();
   else if (command === 'world:factory:validate') validateWorldFactoryProject(projectDir);
   else if (command === 'world:factory:generate') generateWorldFactoryPackage(projectDir);
@@ -1353,6 +1461,8 @@ try {
   else if (command === 'world:factory:deploy') deployWorldFactoryRuntime(projectDir);
   else if (command === 'world:factory:serve') await serveWorldFactoryRuntime(projectDir);
   else if (command === 'world:factory:remote-verify') await remoteVerifyWorldFactoryRuntime(projectDir);
+  else if (command === 'world:attest:create') createWorldReleaseAttestation(projectDir);
+  else if (command === 'world:attest:verify') verifyWorldReleaseAttestation(projectDir);
   else if (command === 'world:templates') printTemplates();
   else if (command === 'world:rustrigs') printRustRigs();
   else if (command === 'world:init') createWorld();
@@ -1393,7 +1503,7 @@ try {
   else if (command === 'deploy') deploy(projectDir);
   else if (command === 'publish') publish(projectDir);
   else {
-    console.log('everarcade world <init|templates|rustrigs|run|package|verify|deploy|project|search|lookup|contributors|lineage> [--project DIR]\nworld factory <init|validate|generate|verify|boot|run|replay|deploy|serve|remote-verify> [--project DIR]');
+    console.log('everarcade world <init|templates|rustrigs|run|package|verify|deploy|project|search|lookup|contributors|lineage> [--project DIR]\nworld factory <init|validate|generate|verify|boot|run|replay|deploy|serve|remote-verify> [--project DIR]\nworld attest <create|verify> [--project DIR]');
     console.log('legacy: everarcade <new|build|test|package|certify-world|verify-world-certificate|launch-local|execute-local|execute-template|execute-guest|play-local|play-local-multiplayer|play-network-local|play-federated-local|play-multi-lease-local|deploy|publish> [--project DIR]');
     process.exit(command ? 1 : 0);
   }
