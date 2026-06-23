@@ -532,6 +532,56 @@ function replayVerificationStatus(projectDir) {
 }
 
 function deploymentDirFor(projectDir) { return path.join(projectDir, 'out', 'deploy'); }
+function deploymentEvidenceDirFor(projectDir) { return path.join(deploymentDirFor(projectDir), 'evidence'); }
+
+function packageHashForWorldDir(worldDir) { return fs.readFileSync(path.join(worldDir, 'expected-package-hash.txt'), 'utf8').trim(); }
+
+function copyIfExists(source, target) {
+  if (!fs.existsSync(source)) return false;
+  fs.mkdirSync(path.dirname(target), { recursive: true });
+  fs.copyFileSync(source, target);
+  return true;
+}
+
+function writeDeploymentEvidenceBundle(projectDir) {
+  const deployDir = deploymentDirFor(projectDir);
+  const evidenceDir = deploymentEvidenceDirFor(projectDir);
+  fs.mkdirSync(evidenceDir, { recursive: true });
+  for (const name of ['deployment-manifest.json', 'live-deployment-proof.json']) {
+    copyIfExists(path.join(deployDir, name), path.join(evidenceDir, name));
+  }
+  copyIfExists(attestationPathFor(projectDir), path.join(evidenceDir, 'world-release-attestation.json'));
+  copyIfExists(releaseReportPathFor(projectDir), path.join(evidenceDir, 'release-report.json'));
+}
+
+function deploymentTargetFromArgs() { return value('--host', value('--target', 'local')); }
+
+function writeDeploymentManifest(projectDir, deploymentTarget, verificationStatus = 'PASS', rootsOverride = null) {
+  const generatedWorld = loadGeneratedWorld(projectDir);
+  const roots = rootsOverride ?? (() => {
+    const runtime = readRuntimePackage(projectDir);
+    return statusFor(runtime.state, runtime.receipts, runtime.journal, generatedWorld);
+  })();
+  const attestationPath = attestationPathFor(projectDir);
+  const attestation = fs.existsSync(attestationPath) ? readJsonFile(attestationPath) : null;
+  const manifest = {
+    world_id: generatedWorld.manifest.world_id,
+    package_hash: packageHashForWorldDir(generatedWorld.packageDir),
+    world_hash: roots.world_hash,
+    continuity_root: roots.continuity_root,
+    deployment_target: deploymentTarget,
+    attestation_hash: attestation ? attestationHash(attestation) : null,
+    verification_status: verificationStatus
+  };
+  writeJson(path.join(deploymentDirFor(projectDir), 'deployment-manifest.json'), manifest);
+  return manifest;
+}
+
+function syncReleaseArtifactsToDeploy(projectDir) {
+  const deployDir = deploymentDirFor(projectDir);
+  copyIfExists(attestationPathFor(projectDir), path.join(deployDir, 'world-release-attestation.json'));
+  copyIfExists(releaseReportPathFor(projectDir), path.join(deployDir, 'release-report.json'));
+}
 
 function deployWorldFactoryRuntime(projectDir, remoteVerification = 'PENDING') {
   const generatedWorld = loadGeneratedWorld(projectDir);
@@ -543,10 +593,11 @@ function deployWorldFactoryRuntime(projectDir, remoteVerification = 'PENDING') {
   const package_verification = packageVerificationStatus(projectDir);
   const replay_verification = replayVerificationStatus(projectDir);
   const roots = statusFor(runtime.state, runtime.receipts, runtime.journal, generatedWorld);
+  const targetHost = deploymentTargetFromArgs();
   writeJson(path.join(deployDir, 'runtime-config.json'), {
-    endpoint_profile: 'world-factory-phase3-local-http',
+    endpoint_profile: 'world-factory-phase4-live-http',
     endpoints: ['/health', '/state', '/journal', '/verify'],
-    host: '127.0.0.1',
+    host: targetHost === 'local' ? '127.0.0.1' : targetHost,
     port: Number.parseInt(value('--port', '8787'), 10),
     source_package: path.relative(projectDir, generatedWorld.packageDir),
     world_id: generatedWorld.manifest.world_id
@@ -558,9 +609,35 @@ function deployWorldFactoryRuntime(projectDir, remoteVerification = 'PENDING') {
     replay_verification,
     remote_verification: remoteVerification,
     world_hash: roots.world_hash,
+    state_root: roots.state_root,
+    receipt_root: roots.receipt_root,
     continuity_root: roots.continuity_root
   });
+  syncReleaseArtifactsToDeploy(projectDir);
+  writeDeploymentManifest(projectDir, targetHost, package_verification === 'PASS' && replay_verification === 'PASS' ? 'PASS' : 'FAIL');
+  writeDeploymentEvidenceBundle(projectDir);
   console.log(`World Factory Deploy: PASS (${path.relative(repoRoot, deployDir)})`);
+}
+
+function publishWorldFactoryDeployment(projectDir) {
+  const host = value('--host', undefined);
+  assertFactory(host, 'world factory publish requires --host <host>');
+  deployWorldFactoryRuntime(projectDir, 'PENDING');
+  const deployDir = deploymentDirFor(projectDir);
+  const runtimeConfig = readJsonFile(path.join(deployDir, 'runtime-config.json'));
+  const manifest = writeDeploymentManifest(projectDir, host, 'PASS');
+  writeDeploymentEvidenceBundle(projectDir);
+  writeJson(path.join(deployDir, 'upload-instructions.json'), {
+    world_id: manifest.world_id,
+    host,
+    bundle_path: path.relative(repoRoot, deployDir),
+    upload: `rsync -av ${path.relative(repoRoot, deployDir)}/ ${host}:~/everarcade-world-factory/`,
+    run: `cd ~/everarcade-world-factory && everarcade world factory serve --host 0.0.0.0 --port ${runtimeConfig.port}`,
+    verify: `everarcade world factory proof --url http://${host}:${runtimeConfig.port}`,
+    provisioning: 'manual-existing-host'
+  });
+  console.log(`World Factory Publish: PASS (${path.relative(repoRoot, deployDir)})`);
+  console.log(`Verify: everarcade world factory proof --url http://${host}:${runtimeConfig.port}`);
 }
 
 function responseJson(res, data) {
@@ -584,7 +661,7 @@ async function serveWorldFactoryRuntime(projectDir) {
       if (req.url === '/health') return responseJson(res, { status: 'RUNNING' });
       if (req.url === '/state') return responseJson(res, { world_id: runtime.state.world_id, tick: runtime.state.tick, world_hash: roots.world_hash, state_root: roots.state_root, verification: package_verification === 'PASS' && replay_verification === 'PASS' ? 'PASS' : 'FAIL' });
       if (req.url === '/journal') return responseJson(res, runtime.journal);
-      if (req.url === '/verify') return responseJson(res, { package_verification, replay_verification, world_hash: roots.world_hash, continuity_root: roots.continuity_root, state: runtime.state, receipts: runtime.receipts });
+      if (req.url === '/verify') return responseJson(res, { package_verification, replay_verification, state_root: roots.state_root, receipt_root: roots.receipt_root, world_hash: roots.world_hash, continuity_root: roots.continuity_root, state: runtime.state, receipts: runtime.receipts });
       res.writeHead(404); res.end('not found\n');
     } catch (error) {
       res.writeHead(500, { 'content-type': 'text/plain; charset=utf-8' });
@@ -594,32 +671,88 @@ async function serveWorldFactoryRuntime(projectDir) {
   server.listen(port, host, () => console.log(`World Factory Serve: RUNNING (http://${host}:${port})`));
 }
 
-async function remoteVerifyWorldFactoryRuntime(projectDir) {
-  const base = value('--url', 'http://localhost:8787').replace(/\/$/, '');
+async function fetchWorldFactoryProofEndpoints(base) {
+  const root = base.replace(/\/$/, '');
   const fetchJson = async (endpoint) => {
-    const response = await fetch(`${base}${endpoint}`);
+    const response = await fetch(`${root}${endpoint}`);
     if (!response.ok) throw new Error(`GET ${endpoint} failed: ${response.status}`);
     return response.json();
   };
-  const stateReport = await fetchJson('/state');
-  const journal = await fetchJson('/journal');
-  const verification = await fetchJson('/verify');
+  return { health: await fetchJson('/health'), stateReport: await fetchJson('/state'), journal: await fetchJson('/journal'), verification: await fetchJson('/verify') };
+}
+
+function verifyAttestationObject(projectDir, attestation, roots) {
+  if (!attestation) return 'FAIL';
+  try {
+    const publicKey = normalizePemOrBase64Key(attestation.attester?.public_key ?? '', 'public');
+    const signature = Buffer.from(attestation.signature ?? '', 'base64');
+    const signaturePass = crypto.verify(null, canonicalAttestationBytes(attestation), publicKey, signature);
+    const generatedWorld = loadGeneratedWorld(projectDir);
+    return signaturePass
+      && attestation.package_hash === packageHashForWorldDir(generatedWorld.packageDir)
+      && attestation.world_hash === roots.world_hash
+      && attestation.continuity_root === roots.continuity_root
+      && attestation.package_verification === 'PASS'
+      && attestation.replay_verification === 'PASS'
+      && attestation.remote_verification === 'PASS'
+      ? 'PASS' : 'FAIL';
+  } catch {
+    return 'FAIL';
+  }
+}
+
+async function proofWorldFactoryRuntime(projectDir) {
+  const base = value('--url', 'http://localhost:8787');
+  const { health, stateReport, journal, verification } = await fetchWorldFactoryProofEndpoints(base);
   const generatedWorld = loadGeneratedWorld(projectDir);
   const roots = statusFor(verification.state, verification.receipts, journal, generatedWorld);
-  const pass = verification.package_verification === 'PASS'
-    && verification.replay_verification === 'PASS'
-    && stateReport.state_root === roots.state_root
+  const package_verification = packageVerificationStatus(projectDir);
+  const replay_verification = (() => {
+    try {
+      const replayState = bootstrapWorldState(generatedWorld.manifest.world_id);
+      const replayJournal = [];
+      const replayReceipts = [];
+      for (const entry of journal) {
+        const previousRoots = statusFor(replayState, replayReceipts, replayJournal, generatedWorld);
+        replayState.tick += 1;
+        const receipt = receiptForTick(replayState.world_id, replayState.tick, previousRoots.state_root);
+        const rootsBeforeJournal = statusFor(replayState, replayReceipts.concat([receipt]), replayJournal, generatedWorld);
+        const replayEntry = { tick: replayState.tick, action: 'world.tick', receipt_hash: receipt.receipt_hash, world_hash: rootsBeforeJournal.world_hash };
+        if (entry.tick !== replayEntry.tick || entry.action !== replayEntry.action || entry.receipt_hash !== replayEntry.receipt_hash || entry.world_hash !== replayEntry.world_hash) return 'FAIL';
+        replayReceipts.push(receipt);
+        replayJournal.push(replayEntry);
+      }
+      const replayRoots = statusFor(replayState, replayReceipts, replayJournal, generatedWorld);
+      return ['state_root', 'receipt_root', 'world_hash', 'continuity_root'].every((key) => replayRoots[key] === roots[key]) ? 'PASS' : 'FAIL';
+    } catch { return 'FAIL'; }
+  })();
+  const remoteStatus = stateReport.state_root === roots.state_root
     && stateReport.world_hash === roots.world_hash
+    && verification.state_root === roots.state_root
+    && verification.receipt_root === roots.receipt_root
     && verification.world_hash === roots.world_hash
-    && verification.continuity_root === roots.continuity_root;
+    && verification.continuity_root === roots.continuity_root
+    ? 'PASS' : 'FAIL';
+  const attestationFile = path.join(deploymentDirFor(projectDir), 'world-release-attestation.json');
+  const fallbackAttestation = attestationPathFor(projectDir);
+  const attestation = fs.existsSync(attestationFile) ? readJsonFile(attestationFile) : (fs.existsSync(fallbackAttestation) ? readJsonFile(fallbackAttestation) : null);
+  const attestation_verification = verifyAttestationObject(projectDir, attestation, roots);
+  const deployment_status = health && stateReport.world_id === generatedWorld.manifest.world_id ? 'RUNNING' : 'UNKNOWN';
+  const pass = deployment_status === 'RUNNING' && package_verification === 'PASS' && replay_verification === 'PASS' && remoteStatus === 'PASS' && attestation_verification === 'PASS';
+  const proof = { world_id: generatedWorld.manifest.world_id, host: base, deployment_status, package_verification, replay_verification, remote_verification: remoteStatus, attestation_verification, proof_timestamp: new Date().toISOString() };
   const deployDir = deploymentDirFor(projectDir);
-  if (fs.existsSync(deployDir)) {
-    const reportPath = path.join(deployDir, 'deployment-report.json');
-    const existing = fs.existsSync(reportPath) ? readJsonFile(reportPath) : { world_id: stateReport.world_id, deployment_status: 'RUNNING' };
-    writeJson(reportPath, { ...existing, package_verification: verification.package_verification, replay_verification: verification.replay_verification, remote_verification: pass ? 'PASS' : 'FAIL', world_hash: roots.world_hash, continuity_root: roots.continuity_root });
-  }
+  fs.mkdirSync(deployDir, { recursive: true });
+  writeJson(path.join(deployDir, 'live-deployment-proof.json'), proof);
+  writeJson(path.join(deployDir, 'deployment-report.json'), { world_id: proof.world_id, deployment_status, package_verification, replay_verification, remote_verification: remoteStatus, world_hash: roots.world_hash, state_root: roots.state_root, receipt_root: roots.receipt_root, continuity_root: roots.continuity_root });
+  writeDeploymentManifest(projectDir, base, pass ? 'PASS' : 'FAIL', roots);
+  syncReleaseArtifactsToDeploy(projectDir);
+  writeDeploymentEvidenceBundle(projectDir);
   console.log(pass ? 'PASS' : 'FAIL');
   if (!pass) process.exitCode = 1;
+}
+
+async function remoteVerifyWorldFactoryRuntime(projectDir) {
+  await proofWorldFactoryRuntime(projectDir);
 }
 
 
@@ -1520,6 +1653,8 @@ try {
   else if (command === 'world:factory:run') runWorldFactoryRuntime(projectDir);
   else if (command === 'world:factory:replay') replayWorldFactoryRuntime(projectDir);
   else if (command === 'world:factory:deploy') deployWorldFactoryRuntime(projectDir);
+  else if (command === 'world:factory:publish') publishWorldFactoryDeployment(projectDir);
+  else if (command === 'world:factory:proof') await proofWorldFactoryRuntime(projectDir);
   else if (command === 'world:factory:serve') await serveWorldFactoryRuntime(projectDir);
   else if (command === 'world:factory:remote-verify') await remoteVerifyWorldFactoryRuntime(projectDir);
   else if (command === 'world:attest:create') createWorldReleaseAttestation(projectDir);
@@ -1564,7 +1699,7 @@ try {
   else if (command === 'deploy') deploy(projectDir);
   else if (command === 'publish') publish(projectDir);
   else {
-    console.log('everarcade world <init|templates|rustrigs|run|package|verify|deploy|project|search|lookup|contributors|lineage> [--project DIR]\nworld factory <init|validate|generate|verify|boot|run|replay|deploy|serve|remote-verify> [--project DIR]\nworld attest <create|verify> [--project DIR]');
+    console.log('everarcade world <init|templates|rustrigs|run|package|verify|deploy|project|search|lookup|contributors|lineage> [--project DIR]\nworld factory <init|validate|generate|verify|boot|run|replay|deploy|publish|serve|remote-verify|proof> [--project DIR]\nworld attest <create|verify> [--project DIR]');
     console.log('legacy: everarcade <new|build|test|package|certify-world|verify-world-certificate|launch-local|execute-local|execute-template|execute-guest|play-local|play-local-multiplayer|play-network-local|play-federated-local|play-multi-lease-local|deploy|publish> [--project DIR]');
     process.exit(command ? 1 : 0);
   }
