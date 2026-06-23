@@ -1,6 +1,6 @@
 # World Release Attestation V0.1 RC2
 
-`WORLD_RELEASE_ATTESTATION_V0.1_RC2` is not frozen until independent review passes.
+`WORLD_RELEASE_ATTESTATION_V0.1_RC2` is not frozen until independent review passes. The promoted RC2 review bundle was regenerated before freeze verification because the prior exported runtime/deployment artifacts were stale and used the older `world.tick` replay evidence shape; the current verifier deterministically replays `inventory.transfer`, `market.trade`, and `governance.vote` entries from the bundled runtime journal.
 
 ## V0.1 RC1 Result
 
@@ -18,6 +18,7 @@ RC2 makes runtime-root verification reproducible from the review artifacts. The 
 state_root = sha256(canonical(runtime_state))
 receipt_root = sha256(canonical(receipts.map({ tick, receipt_hash, data })))
 world_hash = sha256(canonical({ manifest_sha256, contract_hash, runtime_id, world_id }))
+```
 
 `manifest_sha256` source and prefix convention:
 
@@ -26,6 +27,7 @@ world_hash = sha256(canonical({ manifest_sha256, contract_hash, runtime_id, worl
 - Encoding convention: all hash inputs in this recipe are raw lowercase 64-character hexadecimal strings with no `sha256:` prefix.
 - If an upstream manifest or report stores a value with a `sha256:` prefix, verification MUST strip the prefix before canonicalizing inputs; generated V0.1 RC2 attestations MUST emit raw lowercase hex in the recipe fields.
 
+```text
 continuity_root = sha256(canonical({ state_root, receipt_root, world_hash, journal }))
 ```
 

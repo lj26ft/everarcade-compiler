@@ -5,12 +5,12 @@
   "package_verification": "PASS",
   "replay_verification": "PASS",
   "remote_verification": "PASS",
-  "world_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
-  "continuity_root": "sha256:bb3390f5015cc70505ef64a4a8bb395f175494df210988109124778d7edb25a1",
-  "timestamp": "2026-06-23T13:20:31.742Z",
+  "world_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+  "continuity_root": "sha256:8ce0853e33053ceff25aac60380adec3e7da9d87e612e1144c517f21d103f972",
+  "timestamp": "1970-01-01T00:00:00.000Z",
   "attester": {
     "name": "offline-attester",
-    "public_key": "MCowBQYDK2VwAyEA1jO0t6Nr5G3dJHnTAsdpLaHKcodRXGwPuADC0JkDpj8="
+    "public_key": "MCowBQYDK2VwAyEAkRhlmDoAtG0Ib0OAIAVYcj8wqjpwri7ZMbxI0J0DlFo="
   },
-  "signature": "msGTaQMp2rMyJ/TUprKqBRU4SnPAafJh2x6sSNeZ8ChoJxIdfXip3kZxQfVFHWCcqLY8OpHqhRaqhJr8Vh9vDg=="
+  "signature": "OgsXmz8pLlVFVd8rMM3jR24sO5FVRuel6aPfKC5DwZcWlMlFgh5zDdk6cmPZvn2VyCGFuIoQbKwiwF2BELXiBg=="
 }

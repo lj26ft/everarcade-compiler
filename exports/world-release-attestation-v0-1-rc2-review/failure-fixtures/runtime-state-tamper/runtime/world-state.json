@@ -1,7 +1,54 @@
 {
   "world_id": "frontier-settlement-demo",
-  "tick": 101,
-  "settlements": [],
-  "market": {},
-  "governance": {}
+  "tick": 999,
+  "settlements": [
+    {
+      "id": "founders-crossing",
+      "population": 3,
+      "treasury": 100
+    }
+  ],
+  "inventory": {
+    "alice": {
+      "timber": 8,
+      "ore": 3,
+      "charter": 1,
+      "coin": -6
+    },
+    "bruno": {
+      "timber": 1,
+      "ore": 7,
+      "coin": 36
+    },
+    "settlement": {
+      "timber": 27,
+      "ore": 12,
+      "coin": 100
+    }
+  },
+  "market": {
+    "trades": [
+      {
+        "tick": 2,
+        "seller": "bruno",
+        "buyer": "alice",
+        "item": "ore",
+        "amount": 1,
+        "price": 6
+      }
+    ],
+    "volume": 6
+  },
+  "governance": {
+    "proposals": {
+      "proposal-001": {
+        "title": "Open the public workshop",
+        "yes": 1,
+        "no": 0,
+        "voters": [
+          "alice"
+        ]
+      }
+    }
+  }
 }
