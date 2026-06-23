@@ -1,0 +1,11 @@
+{
+  "command": "world-package",
+  "success": true,
+  "package_hash": "700f7dd976b1d76ba265bbd3704476a132f48667525edafe7c6014e26122cc5d",
+  "bundle_hash": "76b0ba5fa9ae1aa7d1dfa96311b7408c57c069a6126e721b55231c31e12a04ee",
+  "world_id": "world-example",
+  "world_version": "0.1.0",
+  "lease_id": null,
+  "continuity_root": "cf359b15f4a37f8f8f3ab8f3624a44fdeebf035ad358a186c66e488e11f9de2b",
+  "status": "world.evr created deterministically"
+}
