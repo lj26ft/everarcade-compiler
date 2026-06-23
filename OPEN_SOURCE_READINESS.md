@@ -267,3 +267,13 @@ EverArcade v0.1 is an open-source **candidate** focused on local deterministic r
 2. Settlement and marketplace directories may imply live production capabilities.
 3. Federation and renderer docs may be mistaken for canonical runtime behavior.
 4. Vendor artifact drift may break offline builds — regenerate with `bash scripts/vendor_deps.sh` and commit updated `dist/vendor.tar.gz` + `vendor.sha256`.
+## Open Source Candidate RC1 clarification
+
+The RC1 review separates two paths that were previously easy to conflate:
+
+| Path | Produces | Does not produce |
+|------|----------|------------------|
+| Contributor Gate | pinned toolchain check, restored vendor tree, local runtime package checks, onboarding/readiness reports | certified `world.evr`, release attestation, deployment bundle |
+| World Artifact Gate | Frontier Settlement `world.evr`, package verification, replay verification, attestation verification, deployment/release bundle | a generalized production/public-testnet guarantee |
+
+Current reproducibility guarantee: EverArcade is reproducible for the pinned Rust version in `rust-toolchain.toml`, pinned Node version in `.nvmrc`, committed vendor bundle, and isolated CI gate commands. The project does not claim arbitrary-toolchain or arbitrary-machine determinism beyond those pins.

@@ -18,6 +18,14 @@ RC2 makes runtime-root verification reproducible from the review artifacts. The 
 state_root = sha256(canonical(runtime_state))
 receipt_root = sha256(canonical(receipts.map({ tick, receipt_hash, data })))
 world_hash = sha256(canonical({ manifest_sha256, contract_hash, runtime_id, world_id }))
+
+`manifest_sha256` source and prefix convention:
+
+- Source artifact: the exact bytes of `world.evr/manifest.json` from the World EVR Package V1 directory being attested.
+- Digest algorithm: SHA-256 over those bytes, with no newline normalization or JSON reserialization.
+- Encoding convention: all hash inputs in this recipe are raw lowercase 64-character hexadecimal strings with no `sha256:` prefix.
+- If an upstream manifest or report stores a value with a `sha256:` prefix, verification MUST strip the prefix before canonicalizing inputs; generated V0.1 RC2 attestations MUST emit raw lowercase hex in the recipe fields.
+
 continuity_root = sha256(canonical({ state_root, receipt_root, world_hash, journal }))
 ```
 
