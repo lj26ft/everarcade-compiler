@@ -1,0 +1,8 @@
+{
+  "runtime_profile": "small",
+  "world_instances": 1,
+  "operators": 1,
+  "tick_rate": "fixed",
+  "determinism": "deterministic-local-execution",
+  "persistence": "local-json-files"
+}

@@ -1,0 +1,6 @@
+{
+  "determinism_profile": "tier2-cold-verifier",
+  "runtime_id": "everarcade-world-factory-runtime",
+  "runtime_version": "0.1.0",
+  "runtime_profile": "small"
+}

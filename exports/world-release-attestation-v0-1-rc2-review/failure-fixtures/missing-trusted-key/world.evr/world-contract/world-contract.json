@@ -1,0 +1,30 @@
+{
+  "abi_version": "0.1.0",
+  "contract_hash": "sha256:4ef9e2054b43231952033e9f5d9db2c574a9aa3e5e74cd9a2c220e32efc5335f",
+  "contract_id": "frontier-settlement-demo-contract",
+  "planned_mutations": [
+    "inventory.transfer",
+    "market.trade",
+    "governance.vote"
+  ],
+  "safety_invariants": {
+    "inventory.transfer": [
+      "ownership",
+      "no-overdraw",
+      "conservation",
+      "atomicity"
+    ],
+    "market.trade": [
+      "ownership",
+      "no-double-spend",
+      "value-conservation",
+      "atomicity"
+    ],
+    "governance.vote": [
+      "eligibility",
+      "one-vote-per-member",
+      "tally-integrity"
+    ]
+  },
+  "world_id": "frontier-settlement-demo"
+}

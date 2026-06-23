@@ -389,13 +389,7 @@ function runtimeDirFor(projectDir) { return path.join(projectDir, 'out', 'runtim
 function worldPackageDirFor(projectDir) { return path.join(projectDir, 'out', 'world.evr'); }
 
 function loadGeneratedWorld(projectDir) {
-  const packageDir = worldPackageDirFor(projectDir);
-  assertFactory(fs.existsSync(packageDir), `Missing generated world.evr at ${packageDir}`);
-  const manifest = readJsonFile(path.join(packageDir, 'manifest.json'));
-  const runtime = readJsonFile(path.join(packageDir, manifest.runtime.path));
-  const genesis = readJsonFile(path.join(packageDir, manifest.genesis.path));
-  const contract = readJsonFile(path.join(packageDir, manifest.world_contract.path));
-  return { packageDir, manifest, runtime, genesis, contract };
+  return loadWorldPackageDir(worldPackageDirFor(projectDir));
 }
 
 function smallRuntimeAssumptions() {
@@ -426,13 +420,26 @@ function rootsFor(state, receipts, journal, worldHashInput) {
   return { state_root, receipt_root, world_hash, continuity_root };
 }
 
-function statusFor(state, receipts, journal, generatedWorld) {
-  return rootsFor(state, receipts, journal, {
+function worldHashInputFor(state, generatedWorld) {
+  return {
     manifest_sha256: sha256Hex(fs.readFileSync(path.join(generatedWorld.packageDir, 'manifest.json'))),
     contract_hash: generatedWorld.contract.contract_hash,
     runtime_id: generatedWorld.runtime.runtime_id,
     world_id: state.world_id
-  });
+  };
+}
+
+function statusFor(state, receipts, journal, generatedWorld) {
+  return rootsFor(state, receipts, journal, worldHashInputFor(state, generatedWorld));
+}
+
+function loadWorldPackageDir(packageDir) {
+  assertFactory(fs.existsSync(packageDir), `Missing world.evr at ${packageDir}`);
+  const manifest = readJsonFile(path.join(packageDir, 'manifest.json'));
+  const runtime = readJsonFile(path.join(packageDir, manifest.runtime.path));
+  const genesis = readJsonFile(path.join(packageDir, manifest.genesis.path));
+  const contract = readJsonFile(path.join(packageDir, manifest.world_contract.path));
+  return { packageDir, manifest, runtime, genesis, contract };
 }
 
 function readRuntimePackage(projectDir) {
@@ -813,7 +820,7 @@ function createWorldReleaseAttestation(projectDir) {
   fs.rmSync(releaseDir, { recursive: true, force: true });
   fs.mkdirSync(releaseDir, { recursive: true });
   const attestation = {
-    schema_version: 'WORLD_RELEASE_ATTESTATION_V0_1_RC1',
+    schema_version: 'WORLD_RELEASE_ATTESTATION_V0_1_RC2',
     world_id: generatedWorld.manifest.world_id,
     package_hash,
     package_verification,
@@ -844,6 +851,48 @@ function attestationFail(reason) {
   process.exitCode = 1;
 }
 
+function readRuntimeArtifacts(runtimeDir) {
+  return {
+    runtimeDir,
+    state: readJsonFile(path.join(runtimeDir, 'world-state.json')),
+    journal: readJsonFile(path.join(runtimeDir, 'journal.json')),
+    receipts: readJsonFile(path.join(runtimeDir, 'receipts.json')),
+    report: fs.existsSync(path.join(runtimeDir, 'world-factory-runtime-report.json')) ? readJsonFile(path.join(runtimeDir, 'world-factory-runtime-report.json')) : null,
+    status: fs.existsSync(path.join(runtimeDir, 'runtime-status.json')) ? readJsonFile(path.join(runtimeDir, 'runtime-status.json')) : null
+  };
+}
+
+function replayRuntimeArtifacts(runtime, generatedWorld) {
+  const replayState = bootstrapWorldState(generatedWorld.manifest.world_id);
+  const replayJournal = [];
+  const replayReceipts = [];
+  for (const entry of runtime.journal) {
+    const previousRoots = statusFor(replayState, replayReceipts, replayJournal, generatedWorld);
+    replayState.tick += 1;
+    const receipt = receiptForTick(replayState.world_id, replayState.tick, previousRoots.state_root);
+    const rootsBeforeJournal = statusFor(replayState, replayReceipts.concat([receipt]), replayJournal, generatedWorld);
+    const replayEntry = { tick: replayState.tick, action: 'world.tick', receipt_hash: receipt.receipt_hash, world_hash: rootsBeforeJournal.world_hash };
+    if (entry.tick !== replayEntry.tick || entry.action !== replayEntry.action || entry.receipt_hash !== replayEntry.receipt_hash || entry.world_hash !== replayEntry.world_hash) return { status: 'FAIL', reason: `journal mismatch at tick ${entry.tick}` };
+    replayReceipts.push(receipt);
+    replayJournal.push(replayEntry);
+  }
+  const expectedState = replayState;
+  const expectedReceipts = replayReceipts;
+  const expectedJournal = replayJournal;
+  if (canonicalJson(runtime.state) !== canonicalJson(expectedState)) return { status: 'FAIL', reason: 'runtime state does not match replayed state' };
+  if (canonicalJson(runtime.receipts) !== canonicalJson(expectedReceipts)) return { status: 'FAIL', reason: 'runtime receipts do not match replayed receipts' };
+  if (canonicalJson(runtime.journal) !== canonicalJson(expectedJournal)) return { status: 'FAIL', reason: 'runtime journal does not match replayed journal' };
+  const roots = statusFor(runtime.state, runtime.receipts, runtime.journal, generatedWorld);
+  const replayRoots = statusFor(replayState, replayReceipts, replayJournal, generatedWorld);
+  const rootsPass = ['state_root', 'receipt_root', 'world_hash', 'continuity_root'].every((key) => roots[key] === replayRoots[key]);
+  return rootsPass ? { status: 'PASS', roots } : { status: 'FAIL', reason: 'runtime roots do not match replayed roots', roots };
+}
+
+function deployReportForPath(deployDir) {
+  const reportPath = path.join(deployDir, 'deployment-report.json');
+  return fs.existsSync(reportPath) ? readJsonFile(reportPath) : null;
+}
+
 function rederiveReleaseClaims(projectDir, worldDir) {
   const expectedHashPath = path.join(worldDir, 'expected-package-hash.txt');
   assertFactory(fs.existsSync(expectedHashPath), `Missing expected package hash at ${expectedHashPath}`);
@@ -851,23 +900,35 @@ function rederiveReleaseClaims(projectDir, worldDir) {
   const hashManifest = hashManifestFor(worldDir).packageHash;
   const manifest = readJsonFile(path.join(worldDir, 'manifest.json'));
   const package_verification = packageVerificationStatus(projectDir, worldDir);
-  const replay_verification = replayVerificationStatus(projectDir);
-  const deployReportPath = path.join(deploymentDirFor(projectDir), 'deployment-report.json');
-  const deploymentReport = fs.existsSync(deployReportPath) ? readJsonFile(deployReportPath) : null;
-  const runtime = readRuntimePackage(projectDir);
-  const generatedWorld = loadGeneratedWorld(projectDir);
-  const roots = statusFor(runtime.state, runtime.receipts, runtime.journal, generatedWorld);
+  const runtimeDir = path.resolve(value('--runtime', runtimeDirFor(projectDir)));
+  const deployDir = path.resolve(value('--deploy', deploymentDirFor(projectDir)));
+  const runtime = readRuntimeArtifacts(runtimeDir);
+  const generatedWorld = loadWorldPackageDir(worldDir);
+  const replay = replayRuntimeArtifacts(runtime, generatedWorld);
+  const roots = replay.roots ?? statusFor(runtime.state, runtime.receipts, runtime.journal, generatedWorld);
+  const deploymentReport = deployReportForPath(deployDir);
+  const remote_verification = deploymentReport
+    && deploymentReport.world_id === manifest.world_id
+    && deploymentReport.deployment_status === 'RUNNING'
+    && deploymentReport.package_verification === package_verification
+    && deploymentReport.replay_verification === replay.status
+    && deploymentReport.world_hash === roots.world_hash
+    && deploymentReport.state_root === roots.state_root
+    && deploymentReport.receipt_root === roots.receipt_root
+    && deploymentReport.continuity_root === roots.continuity_root
+    ? 'PASS' : 'FAIL';
   return {
     world_id: manifest.world_id,
     package_hash,
     package_hash_manifest: hashManifest,
     package_verification,
-    replay_verification,
-    remote_verification: deploymentReport?.remote_verification === 'FAIL' ? 'FAIL' : 'PASS',
-    world_hash: deploymentReport?.world_hash ?? roots.world_hash,
-    continuity_root: deploymentReport?.continuity_root ?? roots.continuity_root,
-    derived_world_hash: roots.world_hash,
-    derived_continuity_root: roots.continuity_root
+    replay_verification: replay.status,
+    replay_failure: replay.reason,
+    remote_verification,
+    world_hash: roots.world_hash,
+    continuity_root: roots.continuity_root,
+    state_root: roots.state_root,
+    receipt_root: roots.receipt_root
   };
 }
 
@@ -905,14 +966,14 @@ function verifyWorldReleaseAttestation(projectDir) {
     return attestationFail(error.message);
   }
   const claimChecks = [
-    ['schema_version', attestation.schema_version === 'WORLD_RELEASE_ATTESTATION_V0' || attestation.schema_version === 'WORLD_RELEASE_ATTESTATION_V0_1_RC1'],
+    ['schema_version', attestation.schema_version === 'WORLD_RELEASE_ATTESTATION_V0' || attestation.schema_version === 'WORLD_RELEASE_ATTESTATION_V0_1_RC1' || attestation.schema_version === 'WORLD_RELEASE_ATTESTATION_V0_1_RC2'],
     ['world_id', attestation.world_id === claims.world_id],
     ['package_hash', attestation.package_hash === claims.package_hash && attestation.package_hash === claims.package_hash_manifest],
     ['package_verification', attestation.package_verification === 'PASS' && claims.package_verification === 'PASS'],
     ['replay_verification', attestation.replay_verification === 'PASS' && claims.replay_verification === 'PASS'],
     ['remote_verification', attestation.remote_verification === 'PASS' && claims.remote_verification === 'PASS'],
-    ['world_hash', attestation.world_hash === claims.world_hash && attestation.world_hash === claims.derived_world_hash],
-    ['continuity_root', attestation.continuity_root === claims.continuity_root && attestation.continuity_root === claims.derived_continuity_root]
+    ['world_hash', attestation.world_hash === claims.world_hash],
+    ['continuity_root', attestation.continuity_root === claims.continuity_root]
   ];
   const failed = claimChecks.find(([, ok]) => !ok);
   if (failed) return attestationFail(`claim re-derivation failed: ${failed[0]}`);

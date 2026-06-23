@@ -1,0 +1,8 @@
+{
+  "checkpoint_root": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+  "root_package": "frontier-settlement-demo",
+  "roots": {
+    "continuity_root": "sha256:00844d980697296d6c99dc9c1f8450ca93dce06e94a85477ecbea28f78d231bf"
+  },
+  "world_id": "frontier-settlement-demo"
+}
