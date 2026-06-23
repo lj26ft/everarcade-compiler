@@ -2,6 +2,8 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+# shellcheck source=lib/common.sh
+source "$ROOT/scripts/lib/common.sh"
 cd "$ROOT"
 
 if [[ ! -f vendor.sha256 ]]; then
@@ -20,7 +22,7 @@ if [[ ${#expected} -ne 64 ]]; then
   exit 1
 fi
 
-actual="$(find vendor -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum | awk '{print $1}')"
+actual="$(vendor_tree_sha256 "$ROOT")"
 
 if [[ "$expected" != "$actual" ]]; then
   echo "vendor tree hash: FAIL - tree hash mismatch" >&2

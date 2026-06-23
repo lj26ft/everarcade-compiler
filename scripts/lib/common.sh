@@ -38,6 +38,20 @@ vendor_offline_ok() {
   vendor_tree_present "$root" && vendor_metadata_offline_ok "$root"
 }
 
+# Locale-independent vendor tree hash (LC_ALL=C + sorted per-file digests).
+vendor_tree_sha256() {
+  local root="${1:-.}"
+  (
+    cd "$root"
+    LC_ALL=C find vendor -type f -print0 \
+      | LC_ALL=C sort -z \
+      | xargs -0 sha256sum \
+      | LC_ALL=C sort \
+      | sha256sum \
+      | awk '{print $1}'
+  )
+}
+
 print_vendor_fix_hint() {
   cat >&2 <<'HINT'
 Offline Cargo failed. Common fixes:

@@ -9,6 +9,7 @@ on:
 env:
   CARGO_BUILD_JOBS: 1
   CARGO_NET_OFFLINE: "true"
+  LC_ALL: C
 
 jobs:
   deterministic-world-factory:
@@ -16,13 +17,13 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - uses: dtolnay/rust-toolchain@stable
         with:
           components: rustfmt
 
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "22"
           package-manager-cache: false
@@ -43,7 +44,7 @@ jobs:
 
       - name: Upload world factory evidence
         if: always()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: world-factory-evidence
           path: |

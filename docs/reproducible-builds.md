@@ -28,7 +28,10 @@ git add dist/vendor.tar.gz dist/vendor.tar.gz.sha256 vendor.sha256 vendor-manife
 
 ### Verify vendor
 
+Tree hash uses `LC_ALL=C` byte-lexicographic ordering so Linux/macOS/CI runners agree:
+
 ```bash
+bash scripts/verify_vendor_tree_hash.sh
 bash scripts/check_prerequisites.sh
 CARGO_NET_OFFLINE=true cargo metadata --offline --locked --format-version 1 >/dev/null
 CARGO_NET_OFFLINE=true cargo check --offline --locked -p everarcade-cli

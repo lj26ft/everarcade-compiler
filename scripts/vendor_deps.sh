@@ -73,7 +73,7 @@ tar -czf dist/vendor.tar.gz vendor
   sha256sum vendor.tar.gz > vendor.tar.gz.sha256
 )
 
-vendor_hash="$(find vendor -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum | awk '{print $1}')"
+vendor_hash="$(vendor_tree_sha256 "$ROOT")"
 vendor_crate_count="$(find vendor -maxdepth 1 -mindepth 1 -type d | wc -l | tr -d ' ')"
 cargo_lock_hash="$(sha256sum Cargo.lock | awk '{print $1}')"
 artifact_hash="$(awk '{print $1}' dist/vendor.tar.gz.sha256)"

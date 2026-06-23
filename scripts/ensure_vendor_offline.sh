@@ -10,8 +10,8 @@ cd "$ROOT"
 verify_vendor_manifest() {
   [[ -f "$ROOT/vendor.sha256" && -f "$ROOT/vendor-manifest.json" ]] || return 0
   local expected actual
-  expected="$(tr -d '\n' < "$ROOT/vendor.sha256")"
-  actual="$(find "$ROOT/vendor" -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum | awk '{print $1}')"
+  expected="$(tr -d '\r\n' < "$ROOT/vendor.sha256")"
+  actual="$(vendor_tree_sha256 "$ROOT")"
   [[ "$expected" == "$actual" ]]
 }
 

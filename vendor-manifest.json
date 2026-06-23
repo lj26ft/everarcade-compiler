@@ -1,11 +1,11 @@
 {
   "schema": "everarcade-vendor-manifest-v1",
-  "generated_at": "2026-06-23T15:25:51Z",
+  "generated_at": "2026-06-23T16:36:00Z",
   "toolchain": {
     "cargo": "cargo 1.93.1 (083ac5135 2025-12-15)"
   },
   "cargo_lock_sha256": "5cd495da25ec0b84d179f3cec1b2ff3180abf914dbfa27c88dbc081b7aecba36",
-  "vendor_tree_sha256": "97c31e4e520ed411662c84b10551c00fd0e879f67116fed6f0cf0256ce000a34",
+  "vendor_tree_sha256": "1b482d6ec8fc6e97c82ad067454386defb5279288a209246361a96aea65e1c74",
   "vendor_crate_count": 148,
   "vendor_directory": "vendor",
   "artifact_path": "dist/vendor.tar.gz",
