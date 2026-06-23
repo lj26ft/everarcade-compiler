@@ -113,3 +113,9 @@ reports/developer_onboarding_validation_report.txt
 ```
 
 The report must show PASS for repository bootstrap, developer build, Creator SDK, runtime package, playable local game, and replay verification.
+
+## Gate boundary for first-time contributors
+
+Start with `bash scripts/check_prerequisites.sh` to confirm the pinned Rust and Node versions. The onboarding journey exercises the Contributor Gate: it restores the local environment and validates runtime/package execution. It does not certify the release `world.evr`.
+
+To certify the canonical Frontier Settlement world artifact, run the World Artifact Gate separately with `bash scripts/ci/run-deterministic-world-factory.sh` from the repository root.

@@ -126,3 +126,10 @@ Avoid broad `cargo test --workspace` unless a maintainer explicitly requests it.
 ## Security-sensitive changes
 
 Do not include secrets, credentials, wallet keys, or private operator configuration. If you find a vulnerability, follow `SECURITY.md` rather than opening a public exploit report.
+## Gate artifact boundaries
+
+The **Contributor Gate** proves a first-time contributor can restore the canonical vendor bundle, validate the pinned toolchain, and run the local development/onboarding proof path. It produces a runnable local development environment, runtime package checks, and readiness reports. It does **not** produce or certify `world.evr`.
+
+The **World Artifact Gate** is the only protected gate that produces the canonical Frontier Settlement `world.evr`, verifies it, replays it, creates the deployment bundle, and verifies the release attestation. Use this gate when the artifact under review is `world.evr`, an attestation, or a release bundle.
+
+Determinism claims are limited to the pinned Rust toolchain in `rust-toolchain.toml`, the pinned Node runtime in `.nvmrc`, the committed vendor bundle, and isolated CI/local gate runs. Cross-machine reproducibility outside those pins remains a future hardening goal.

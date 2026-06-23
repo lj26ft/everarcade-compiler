@@ -53,3 +53,10 @@ These directories are primarily reference or scaffold material today.
 ## Documentation ownership
 
 Use `docs/DOCUMENTATION_POLICY.md` for where new docs belong. Subsystem README files should point to canonical docs instead of becoming independent portals.
+
+## Reproducibility gate map
+
+- `scripts/check_prerequisites.sh`, `rust-toolchain.toml`, `.nvmrc` — fail-closed prerequisite and toolchain pins used before contributor gate execution.
+- `.github/workflows/onboarding.yml` — Contributor Gate. Restores vendor dependencies, validates prerequisites, and proves the local runtime/onboarding path. It does not certify `world.evr`.
+- `.github/workflows/deterministic-world-factory.yml` — World Artifact Gate. Produces and verifies Frontier Settlement `world.evr`, replay evidence, attestation evidence, and the release bundle.
+- `open-source-candidate/` and `OPEN_SOURCE_CANDIDATE_RC1_REVIEW_BUNDLE/` — self-contained RC1 reviewer instructions and expected outputs for reproducing both gates without private repository context.
