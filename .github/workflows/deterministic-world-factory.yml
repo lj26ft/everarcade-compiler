@@ -1,0 +1,53 @@
+name: Deterministic World Factory
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+env:
+  CARGO_BUILD_JOBS: 1
+  CARGO_NET_OFFLINE: "true"
+
+jobs:
+  deterministic-world-factory:
+    name: World Factory gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Restore canonical offline vendor
+        run: bash scripts/ensure_vendor_offline.sh
+
+      - name: Verify vendor integrity metadata
+        run: |
+          test -f vendor.sha256
+          test -f vendor-manifest.json
+          expected="$(tr -d '\n' < vendor.sha256)"
+          actual="$(find vendor -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum | awk '{print $1}')"
+          test "$expected" = "$actual"
+
+      - name: Run deterministic world factory CI
+        env:
+          EVERARCADE_DETERMINISTIC_ATTEST: "1"
+        run: bash scripts/ci/run-deterministic-world-factory.sh
+
+      - name: Upload world factory evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: world-factory-evidence
+          path: |
+            examples/world-factory/frontier-settlement/out/
+            dist/everarcade-world-factory-release.tar.gz
+            reports/
+          if-no-files-found: warn

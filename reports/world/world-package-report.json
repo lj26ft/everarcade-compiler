@@ -1,11 +1,11 @@
 {
   "command": "world-package",
   "success": true,
-  "package_hash": "d5a207da4fd481307917c87c48df8eff63a4ca85373fe8c08ed78e954f2b2be5",
-  "bundle_hash": "76b0ba5fa9ae1aa7d1dfa96311b7408c57c069a6126e721b55231c31e12a04ee",
-  "world_id": "world-example",
+  "package_hash": "79069262c6847fc76b7c987291ebd35ef1fa1a6579df1e939c0e91250a0e1f0b",
+  "bundle_hash": "b0dd6111d69bb09d664a0bf03bebb5857cff3ae985c083800856b68b7c5efb0f",
+  "world_id": "frontier-settlement-demo",
   "world_version": "0.1.0",
   "lease_id": null,
-  "continuity_root": "cf359b15f4a37f8f8f3ab8f3624a44fdeebf035ad358a186c66e488e11f9de2b",
+  "continuity_root": "6aa855ef93fdd46be405a89e09109fcc954f778b295e64556a26fe07f8068429",
   "status": "world.evr created deterministically"
 }

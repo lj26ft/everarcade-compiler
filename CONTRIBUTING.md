@@ -6,9 +6,28 @@ Thank you for helping make EverArcade understandable and usable by external deve
 
 EverArcade v0.1 is an open-source candidate focused on local deterministic runtime proofs. Do not describe local PASS reports as production, public-testnet, or commercial readiness.
 
+## Before opening a PR
+
+```bash
+bash scripts/ensure_vendor_offline.sh
+cargo fmt --check
+cargo build -p everarcade-cli
+node creator-sdk/cli/everarcade.mjs world factory generate --project examples/world-factory/frontier-settlement
+node creator-sdk/cli/everarcade.mjs world factory verify --project examples/world-factory/frontier-settlement
+node creator-sdk/cli/everarcade.mjs world factory replay --project examples/world-factory/frontier-settlement
+```
+
+Full reproducible gate (includes determinism + release bundle):
+
+```bash
+bash scripts/ci/run-deterministic-world-factory.sh
+```
+
+See [`docs/reproducible-builds.md`](docs/reproducible-builds.md).
+
 ## Canonical contributor gate (run these first)
 
-Every PR should pass the **3-command canonical gate** after prerequisites:
+Every PR should pass the **3-command onboarding gate** after prerequisites:
 
 ```bash
 bash scripts/check_prerequisites.sh

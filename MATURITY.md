@@ -42,3 +42,5 @@ No subsystem is classified as **PRODUCTION** in this open-source readiness miles
 | Contributor onboarding gate | ALPHA | Canonical 3-command gate (`check_prerequisites`, `validate_developer_onboarding`, reference world verify) documented in `CONTRIBUTING.md` and `.github/workflows/onboarding.yml`. |
 | CI enforcement | ALPHA | Ubuntu + macOS onboarding workflow with early `cargo check --offline`; uploads `reports/` evidence. Scaffold subsystem validators remain out of CI scope. |
 | Creator SDK runtime launch | ALPHA | `play-local` uses repo-root offline cargo workspace (not `/tmp`); fails with actionable vendor hints when offline resolution breaks. |
+| World Factory reproducibility | ALPHA | `scripts/ci/run-deterministic-world-factory.sh` + `.github/workflows/deterministic-world-factory.yml` enforce offline build, world.evr generation, replay, attestation, and release bundle gates. |
+| Vendor integrity metadata | ALPHA | `vendor-manifest.json`, `vendor.sha256`, and `dist/vendor.tar.gz` provide canonical offline restore with tree-hash verification. |

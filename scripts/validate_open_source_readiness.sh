@@ -57,6 +57,10 @@ require_file scripts/check_prerequisites.sh "Prerequisites script"
 require_file scripts/ensure_vendor_offline.sh "Vendor restore script"
 require_file dist/vendor.tar.gz "Vendor artifact"
 require_file dist/vendor.tar.gz.sha256 "Vendor artifact checksum"
+require_file vendor.sha256 "Vendor tree hash"
+require_file vendor-manifest.json "Vendor manifest"
+require_file docs/reproducible-builds.md "Reproducible builds docs"
+require_file scripts/ci/run-deterministic-world-factory.sh "Deterministic world factory CI"
 
 if vendor_offline_ok "$REPO_ROOT"; then
   pass "Offline vendor"

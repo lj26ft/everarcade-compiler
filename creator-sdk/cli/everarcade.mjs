@@ -874,7 +874,7 @@ function createWorldReleaseAttestation(projectDir) {
     remote_verification,
     world_hash: roots.world_hash,
     continuity_root: roots.continuity_root,
-    timestamp: new Date().toISOString(),
+    timestamp: process.env.EVERARCADE_DETERMINISTIC_ATTEST === '1' ? '1970-01-01T00:00:00.000Z' : new Date().toISOString(),
     attester: { name: value('--attester-name', 'offline-attester'), public_key: publicKeyBase64(publicKey) },
     signature: ''
   };
@@ -1232,6 +1232,19 @@ function runtimeCargoEnv() {
     CARGO_BUILD_JOBS: process.env.CARGO_BUILD_JOBS ?? '1',
     CARGO_NET_OFFLINE: process.env.CARGO_NET_OFFLINE ?? 'true',
   };
+}
+
+function runCargoEverarcade(cliArgs) {
+  const result = spawnSync(
+    'cargo',
+    ['run', '-q', '--offline', '--locked', '-p', 'everarcade-cli', '--bin', 'everarcade', '--', ...cliArgs],
+    { cwd: repoRoot, env: runtimeCargoEnv(), encoding: 'utf8' }
+  );
+  if (result.stdout) process.stdout.write(result.stdout);
+  if (result.stderr) process.stderr.write(result.stderr);
+  if (result.status !== 0) {
+    throw new Error(`everarcade ${cliArgs.join(' ')} failed: ${(result.stderr || result.stdout || '').trim()}`);
+  }
 }
 
 function runRuntimeCommand(commandName, projectDir, runtimeRoot, packaged) {
@@ -1763,8 +1776,22 @@ function publish(projectDir) {
 }
 
 try {
-  const projectDir = path.resolve(value('--project', command?.startsWith('world:factory:') || command?.startsWith('world:attest:') ? WORLD_FACTORY_PROJECT : process.cwd()));
-  if (command === 'world:factory:init') worldFactoryInit();
+  const projectDir = path.resolve(value('--project', command?.startsWith('world:factory:') || command?.startsWith('world:attest:') || command === 'release' ? WORLD_FACTORY_PROJECT : process.cwd()));
+  if (command === 'release') {
+    const sub = args[0];
+    if (!sub) throw new Error('usage: everarcade release <build|inspect|smoke-test>');
+    if (sub === 'build') {
+      runCargoEverarcade(['release', 'build', '--project', projectDir]);
+    } else if (sub === 'inspect') {
+      const target = args[1] ?? 'dist/everarcade-world-factory-release.tar.gz';
+      runCargoEverarcade(['release', 'inspect', target]);
+    } else if (sub === 'smoke-test') {
+      const target = args[1] ?? 'dist/everarcade-world-factory-release.tar.gz';
+      runCargoEverarcade(['release', 'smoke-test', target]);
+    } else {
+      throw new Error(`unknown release command: ${sub}`);
+    }
+  } else if (command === 'world:factory:init') worldFactoryInit();
   else if (command === 'world:factory:validate') validateWorldFactoryProject(projectDir);
   else if (command === 'world:factory:generate') generateWorldFactoryPackage(projectDir);
   else if (command === 'world:factory:verify') verifyWorldFactoryPackage(projectDir);

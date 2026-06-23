@@ -74,6 +74,36 @@ tar -czf dist/vendor.tar.gz vendor
 )
 
 vendor_hash="$(find vendor -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum | awk '{print $1}')"
+vendor_crate_count="$(find vendor -maxdepth 1 -mindepth 1 -type d | wc -l | tr -d ' ')"
+cargo_lock_hash="$(sha256sum Cargo.lock | awk '{print $1}')"
+artifact_hash="$(awk '{print $1}' dist/vendor.tar.gz.sha256)"
+cargo_version="$(cargo --version 2>/dev/null || echo 'unknown')"
+generated_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
+printf '%s\n' "$vendor_hash" > vendor.sha256
+
+cat > vendor-manifest.json <<JSON
+{
+  "schema": "everarcade-vendor-manifest-v1",
+  "generated_at": "${generated_at}",
+  "toolchain": {
+    "cargo": "${cargo_version}"
+  },
+  "cargo_lock_sha256": "${cargo_lock_hash}",
+  "vendor_tree_sha256": "${vendor_hash}",
+  "vendor_crate_count": ${vendor_crate_count},
+  "vendor_directory": "vendor",
+  "artifact_path": "dist/vendor.tar.gz",
+  "artifact_sha256": "${artifact_hash}",
+  "restore_command": "bash scripts/ensure_vendor_offline.sh",
+  "regenerate_command": "bash scripts/vendor_deps.sh",
+  "verify_commands": [
+    "CARGO_NET_OFFLINE=true cargo metadata --offline --locked --format-version 1",
+    "CARGO_NET_OFFLINE=true cargo check --offline --locked -p everarcade-cli"
+  ]
+}
+JSON
+
 cat > deployment/reports/vendor_validation_report.md <<RPT
 # Vendor Validation Report
 - cargo_metadata_offline: ok
@@ -93,4 +123,6 @@ fi
 
 echo "dependency_vendor=ok"
 echo "vendor_artifact=dist/vendor.tar.gz"
+echo "vendor_manifest=vendor-manifest.json"
+echo "vendor_sha256=vendor.sha256"
 echo "offline_workspace_check=ok"

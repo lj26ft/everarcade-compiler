@@ -26,6 +26,10 @@ Prerequisites script: PASS
 Vendor restore script: PASS
 Vendor artifact: PASS
 Vendor artifact checksum: PASS
+Vendor tree hash: PASS
+Vendor manifest: PASS
+Reproducible builds docs: PASS
+Deterministic world factory CI: PASS
 Offline vendor: PASS
 
 Classification: READY

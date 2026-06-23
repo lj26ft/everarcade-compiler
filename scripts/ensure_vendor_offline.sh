@@ -7,9 +7,20 @@ source "$ROOT/scripts/lib/common.sh"
 
 cd "$ROOT"
 
+verify_vendor_manifest() {
+  [[ -f "$ROOT/vendor.sha256" && -f "$ROOT/vendor-manifest.json" ]] || return 0
+  local expected actual
+  expected="$(tr -d '\n' < "$ROOT/vendor.sha256")"
+  actual="$(find "$ROOT/vendor" -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum | awk '{print $1}')"
+  [[ "$expected" == "$actual" ]]
+}
+
 if vendor_offline_ok "$ROOT" && offline_cargo_check_workspace "$ROOT" /tmp/everarcade-vendor-offline-check.log; then
-  printf 'vendor offline: PASS (existing tree)\n'
-  exit 0
+  if verify_vendor_manifest; then
+    printf 'vendor offline: PASS (existing tree)\n'
+    exit 0
+  fi
+  printf 'vendor offline: tree hash mismatch; restoring from dist/vendor.tar.gz\n' >&2
 fi
 
 ARTIFACT="$ROOT/dist/vendor.tar.gz"

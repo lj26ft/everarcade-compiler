@@ -1,0 +1,19 @@
+{
+  "schema": "everarcade-vendor-manifest-v1",
+  "generated_at": "2026-06-23T15:25:51Z",
+  "toolchain": {
+    "cargo": "cargo 1.93.1 (083ac5135 2025-12-15)"
+  },
+  "cargo_lock_sha256": "5cd495da25ec0b84d179f3cec1b2ff3180abf914dbfa27c88dbc081b7aecba36",
+  "vendor_tree_sha256": "97c31e4e520ed411662c84b10551c00fd0e879f67116fed6f0cf0256ce000a34",
+  "vendor_crate_count": 148,
+  "vendor_directory": "vendor",
+  "artifact_path": "dist/vendor.tar.gz",
+  "artifact_sha256": "283fe6eb99e8cd406f0cbf4b0e3345d818bbd1608c8e256e6f3f809c2191760f",
+  "restore_command": "bash scripts/ensure_vendor_offline.sh",
+  "regenerate_command": "bash scripts/vendor_deps.sh",
+  "verify_commands": [
+    "CARGO_NET_OFFLINE=true cargo metadata --offline --locked --format-version 1",
+    "CARGO_NET_OFFLINE=true cargo check --offline --locked -p everarcade-cli"
+  ]
+}

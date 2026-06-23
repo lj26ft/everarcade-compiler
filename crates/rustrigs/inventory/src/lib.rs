@@ -2,7 +2,13 @@ use std::collections::{BTreeMap, BTreeSet};
 
 pub const RUSTRIG_ID: &str = "inventory.transfer";
 pub const RUSTRIG_VERSION: &str = "1.0.0";
-pub const CANDIDATE_MUTATIONS: &[&str] = &["inventory.pickup", "inventory.drop", "inventory.equip", "inventory.unequip", "inventory.consume"];
+pub const CANDIDATE_MUTATIONS: &[&str] = &[
+    "inventory.pickup",
+    "inventory.drop",
+    "inventory.equip",
+    "inventory.unequip",
+    "inventory.consume",
+];
 pub const CERTIFICATION_STATUS: &str = "RUSTRIG INVENTORY TRANSFER CERTIFICATION: PASS";
 
 #[derive(Clone, Debug, PartialEq, Eq)]

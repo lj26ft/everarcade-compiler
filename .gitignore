@@ -83,6 +83,11 @@ coverage/
 # Generated world packages
 *.evr
 
-# Committed reproducible vendor bundle (Phase 0 — do not ignore)
+# Generated World Factory release staging (CI produces dist/everarcade-world-factory-release.tar.gz)
+dist/everarcade-world-factory-release/
+
+# Committed reproducible vendor bundle (do not ignore)
 !dist/vendor.tar.gz
 !dist/vendor.tar.gz.sha256
+!vendor.sha256
+!vendor-manifest.json

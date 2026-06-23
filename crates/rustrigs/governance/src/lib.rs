@@ -2,7 +2,13 @@ use std::collections::{BTreeMap, BTreeSet};
 
 pub const RUSTRIG_ID: &str = "governance.vote";
 pub const RUSTRIG_VERSION: &str = "1.0.0";
-pub const CANDIDATE_MUTATIONS: &[&str] = &["governance.create_proposal", "governance.finalize_proposal", "governance.cancel_proposal", "governance.delegate_vote", "governance.amend_policy"];
+pub const CANDIDATE_MUTATIONS: &[&str] = &[
+    "governance.create_proposal",
+    "governance.finalize_proposal",
+    "governance.cancel_proposal",
+    "governance.delegate_vote",
+    "governance.amend_policy",
+];
 pub const CERTIFICATION_STATUS: &str = "RUSTRIG GOVERNANCE VOTE CERTIFICATION: PASS";
 
 #[derive(Clone, Debug, PartialEq, Eq)]
