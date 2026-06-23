@@ -1,0 +1,17 @@
+{
+  "schema_version": "OPERATOR_REGISTRY_RC1",
+  "registry_hash": "53c24db4d27386d85a5ab29c2176afe2dd1527e20851eaadc3766aeb16b1b599",
+  "operators": [
+    {
+      "schema_version": "OPERATOR_IDENTITY_RC1",
+      "operator_id": "operator.frontier.settlement",
+      "display_name": "Frontier Settlement Operator",
+      "role": "world_operator",
+      "public_key": "ed25519:frontier-settlement-operator-rc1",
+      "status": "REVOKED",
+      "created_at": "2026-06-23T00:00:00Z",
+      "updated_at": "2026-06-23T00:00:00Z",
+      "previous_keys": []
+    }
+  ]
+}

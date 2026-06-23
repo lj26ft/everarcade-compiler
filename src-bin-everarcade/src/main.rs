@@ -2,6 +2,7 @@ mod arena_vanguard;
 mod commands;
 mod config;
 mod lease;
+mod operator_identity;
 mod product;
 mod release;
 mod runtime_snapshot;

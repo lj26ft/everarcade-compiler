@@ -1,0 +1,28 @@
+{
+  "schema_version": "OPERATOR_REGISTRY_RC1",
+  "registry_hash": "39bb21db8a5336657d1811e84a0022713f4d20d4de0f57d5a76b39999938c1c0",
+  "operators": [
+    {
+      "schema_version": "OPERATOR_IDENTITY_RC1",
+      "operator_id": "operator.frontier.settlement",
+      "display_name": "Frontier Settlement Operator",
+      "role": "world_operator",
+      "public_key": "ed25519:frontier-settlement-operator-rc1",
+      "status": "ACTIVE",
+      "created_at": "2026-06-23T00:00:00Z",
+      "updated_at": "2026-06-23T00:00:00Z",
+      "previous_keys": []
+    },
+    {
+      "schema_version": "OPERATOR_IDENTITY_RC1",
+      "operator_id": "operator.frontier.settlement",
+      "display_name": "Duplicate",
+      "role": "world_operator",
+      "public_key": "ed25519:duplicate",
+      "status": "ACTIVE",
+      "created_at": "2026-06-23T00:00:00Z",
+      "updated_at": "2026-06-23T00:00:00Z",
+      "previous_keys": []
+    }
+  ]
+}
