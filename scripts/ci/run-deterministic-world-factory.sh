@@ -40,7 +40,7 @@ run_factory_pipeline() {
   "${CLI[@]}" world factory deploy --project "$project"
   "${CLI[@]}" world attest create --project "$project"
   local key
-  key="$(tr -d '\n' < "$project/out/release/trusted-public-key.txt")"
+  key="$(awk '/^```text$/{block++; next} block==1 && /^[A-Za-z0-9+\/=]+$/{print; exit}' "$ROOT/TRUST_ROOT.md")"
   "${CLI[@]}" world attest verify --project "$project" --trusted-public-key "$key"
   node "$ROOT/specs/world-evr-package/verify-package-v1.mjs" "$project/out/world.evr"
 }

@@ -15,5 +15,5 @@ Verify with:
 ```bash
 node creator-sdk/cli/everarcade.mjs world factory verify
 node creator-sdk/cli/everarcade.mjs world factory replay
-node creator-sdk/cli/everarcade.mjs world attest verify --trusted-public-key "$(cat examples/world-factory/frontier-settlement/out/release/trusted-public-key.txt)"
+node creator-sdk/cli/everarcade.mjs world attest verify --trusted-public-key "$(awk '/^```text$/{block++; next} block==1 && /^[A-Za-z0-9+\/=]+$/{print; exit}' TRUST_ROOT.md)"
 ```

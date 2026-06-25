@@ -180,7 +180,7 @@ node creator-sdk/cli/everarcade.mjs world factory deploy
 node creator-sdk/cli/everarcade.mjs world attest create
 
 node creator-sdk/cli/everarcade.mjs world attest verify \
-  --trusted-public-key "$(cat examples/world-factory/frontier-settlement/out/release/trusted-public-key.txt)"
+  --trusted-public-key "$(awk '/^```text$/{block++; next} block==1 && /^[A-Za-z0-9+\/=]+$/{print; exit}' TRUST_ROOT.md)"
 
 node creator-sdk/cli/everarcade.mjs release build \
   --project examples/world-factory/frontier-settlement
