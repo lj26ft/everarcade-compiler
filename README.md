@@ -47,7 +47,7 @@ Use this single path to reproduce the authoritative RC2 review target from a fre
 ```bash
 git clone git@github.com:EverArcade/everarcade-compiler.git
 cd everarcade-compiler
-git checkout fe51c1ce5be6df888dfaae203d5632580a045f2e
+git checkout 53a17567e826c5d4f9b083e490cf1568bfe7534e
 
 scripts/ci/check-rc2-commit-pins.sh
 

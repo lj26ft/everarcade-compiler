@@ -15,13 +15,14 @@ This bundle is a self-contained reviewer map for reproducing and verifying Open 
 - `expected-outputs/` — expected command outcomes.
 
 
-## Authoritative RC2 Pin
+## Authoritative RC2 Pins
 
-The RC2 review bundle and runnable gate target both refer to compiler commit:
+RC2 distinguishes the original artifact/export commit from the runnable reviewer-entry commit:
 
-`fe51c1ce5be6df888dfaae203d5632580a045f2e`
+- RC2 artifact/export commit: `fe51c1ce5be6df888dfaae203d5632580a045f2e`
+- RC2 reviewer-entry commit: `53a17567e826c5d4f9b083e490cf1568bfe7534e`
 
-Reviewers should check out this exact commit before running the gate or must-fail fixtures. Any other commit is outside the RC2 review target.
+Reviewers should check out the reviewer-entry commit before running the gate or must-fail fixtures. The artifact/export commit remains the historical RC2 artifact reference, but it predates the reviewer wrapper scripts.
 
 ## RC2 Independent Reviewer Path
 
@@ -30,7 +31,7 @@ Use this single path to reproduce the authoritative RC2 review target from a fre
 ```bash
 git clone git@github.com:EverArcade/everarcade-compiler.git
 cd everarcade-compiler
-git checkout fe51c1ce5be6df888dfaae203d5632580a045f2e
+git checkout 53a17567e826c5d4f9b083e490cf1568bfe7534e
 
 scripts/ci/check-rc2-commit-pins.sh
 

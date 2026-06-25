@@ -1,6 +1,6 @@
 # RC2 Reviewer Checklist
 
-- [ ] Start from a fresh clone at pinned commit `fe51c1ce5be6df888dfaae203d5632580a045f2e`.
+- [ ] Start from a fresh clone at RC2 reviewer-entry commit `53a17567e826c5d4f9b083e490cf1568bfe7534e`.
 - [ ] Read `TRUST_ROOT.md` and copy the trusted key only from that document or an independently published equivalent.
 - [ ] Restore vendor dependencies with `bash scripts/ensure_vendor_offline.sh`.
 - [ ] Verify toolchain prerequisites with `bash scripts/check_prerequisites.sh`.
