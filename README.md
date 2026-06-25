@@ -40,6 +40,35 @@ Expected: `Prerequisites: PASS`, onboarding PASS, and `REFERENCE CERTIFIED WORLD
 
 Offline vendor policy: [`docs/build/offline-build-policy.md`](docs/build/offline-build-policy.md)
 
+## RC2 Independent Reviewer Path
+
+Use this single path to reproduce the authoritative RC2 review target from a fresh clone:
+
+```bash
+git clone git@github.com:EverArcade/everarcade-compiler.git
+cd everarcade-compiler
+git checkout fe51c1ce5be6df888dfaae203d5632580a045f2e
+
+scripts/ci/check-rc2-commit-pins.sh
+
+# Run the normal RC2 gate.
+CARGO_BUILD_JOBS=1 scripts/ci/rc2-gate.sh
+
+# Run must-fail fixture: self-attested fork must fail.
+scripts/ci/rc2-fixture-self-attested-fork-must-fail.sh
+
+# Run must-fail fixture: tampered payload must fail.
+scripts/ci/rc2-fixture-tampered-payload-must-fail.sh
+```
+
+Expected result:
+
+- The normal RC2 gate passes.
+- The commit-pin consistency check passes.
+- The self-attested-fork fixture fails verification.
+- The tampered-payload fixture fails verification.
+- If either must-fail fixture passes, RC2 is not valid.
+
 ## Quick start
 
 Manual First World flow:
