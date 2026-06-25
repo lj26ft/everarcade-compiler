@@ -23,22 +23,31 @@ The RC2 review bundle and runnable gate target both refer to compiler commit:
 
 Reviewers should check out this exact commit before running the gate or must-fail fixtures. Any other commit is outside the RC2 review target.
 
-## Fresh Reviewer Workflow
+## RC2 Independent Reviewer Path
+
+Use this single path to reproduce the authoritative RC2 review target from a fresh clone:
 
 ```bash
-git clone <repository-url> everarcade-compiler
+git clone git@github.com:EverArcade/everarcade-compiler.git
 cd everarcade-compiler
 git checkout fe51c1ce5be6df888dfaae203d5632580a045f2e
-bash scripts/ensure_vendor_offline.sh
-bash scripts/check_prerequisites.sh
-bash scripts/validate_open_source_readiness.sh
-EVERARCADE_DETERMINISTIC_ATTEST=1 CARGO_BUILD_JOBS=1 bash scripts/ci/run-deterministic-world-factory.sh
-TRUSTED_PUBLIC_KEY="$(cat fixtures/trust-root/test-attester-public-key.txt)"
-node creator-sdk/cli/everarcade.mjs world attest verify \
-  --project examples/world-factory/frontier-settlement \
-  --trusted-public-key "$TRUSTED_PUBLIC_KEY"
-node specs/world-evr-package/verify-package-v1.mjs \
-  examples/world-factory/frontier-settlement/out/world.evr
+
+scripts/ci/check-rc2-commit-pins.sh
+
+# Run the normal RC2 gate.
+CARGO_BUILD_JOBS=1 scripts/ci/rc2-gate.sh
+
+# Run must-fail fixture: self-attested fork must fail.
+scripts/ci/rc2-fixture-self-attested-fork-must-fail.sh
+
+# Run must-fail fixture: tampered payload must fail.
+scripts/ci/rc2-fixture-tampered-payload-must-fail.sh
 ```
 
-Then execute both must-fail fixture procedures. Each negative fixture must fail before RC2 can pass review.
+Expected result:
+
+- The normal RC2 gate passes.
+- The commit-pin consistency check passes.
+- The self-attested-fork fixture fails verification.
+- The tampered-payload fixture fails verification.
+- If either must-fail fixture passes, RC2 is not valid.
