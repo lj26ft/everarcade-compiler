@@ -4,7 +4,7 @@ This bundle is a self-contained reviewer map for reproducing and verifying Open 
 
 ## Contents
 
-- `TRUST_ROOT.md` — committed review trust root and pinned key.
+- `TRUST_ROOT.md` — committed review trust root and pinned key. CI/review tests use the matching TEST-ONLY fixture in `fixtures/trust-root/`.
 - `PAYLOAD_BINDING.md` — explicit transitive hash binding from `world.evr` to payload files.
 - `REVIEW_TRUST_CHAIN.md` — trust begins at the official trust root and flows through attestation, artifact, payload, replay, and runtime.
 - `GATE_PROOFS.md` — what each gate proves and does not prove.
@@ -24,7 +24,7 @@ bash scripts/ensure_vendor_offline.sh
 bash scripts/check_prerequisites.sh
 bash scripts/validate_open_source_readiness.sh
 EVERARCADE_DETERMINISTIC_ATTEST=1 CARGO_BUILD_JOBS=1 bash scripts/ci/run-deterministic-world-factory.sh
-TRUSTED_PUBLIC_KEY="$(awk '/^```text$/{block++; next} block==1 && /^[A-Za-z0-9+\/=]+$/{print; exit}' TRUST_ROOT.md)"
+TRUSTED_PUBLIC_KEY="$(cat fixtures/trust-root/test-attester-public-key.txt)"
 node creator-sdk/cli/everarcade.mjs world attest verify \
   --project examples/world-factory/frontier-settlement \
   --trusted-public-key "$TRUSTED_PUBLIC_KEY"

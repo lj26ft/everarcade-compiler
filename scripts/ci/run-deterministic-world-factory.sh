@@ -38,9 +38,9 @@ run_factory_pipeline() {
   "${CLI[@]}" world factory run --project "$project" --ticks "$ticks"
   "${CLI[@]}" world factory replay --project "$project"
   "${CLI[@]}" world factory deploy --project "$project"
-  "${CLI[@]}" world attest create --project "$project"
+  "${CLI[@]}" world attest create --project "$project" --attester-private-key "$ROOT/fixtures/trust-root/test-attester-private-key.pem"
   local key
-  key="$(awk '/^```text$/{block++; next} block==1 && /^[A-Za-z0-9+\/=]+$/{print; exit}' "$ROOT/TRUST_ROOT.md")"
+  key="$(tr -d '\n' < "$ROOT/fixtures/trust-root/test-attester-public-key.txt")"
   "${CLI[@]}" world attest verify --project "$project" --trusted-public-key "$key"
   node "$ROOT/specs/world-evr-package/verify-package-v1.mjs" "$project/out/world.evr"
 }

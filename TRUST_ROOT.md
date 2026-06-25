@@ -4,16 +4,16 @@ Trust-root version: `everarcade-review-root-v1`
 
 Pinned repository commit: `b6d553d5632a88b95352d6c98d15503b27d4df0f`
 
-Official EverArcade review key (Ed25519 SubjectPublicKeyInfo, base64):
+Official EverArcade OSC review key (Ed25519 SubjectPublicKeyInfo, base64):
 
 ```text
-MCowBQYDK2VwAyEAkRhlmDoAtG0Ib0OAIAVYcj8wqjpwri7ZMbxI0J0DlFo=
+MCowBQYDK2VwAyEADvivFlH4llB2VHSZyKghEuygKr8qzGDnuzLxCLczZkg=
 ```
 
 Fingerprint (SHA-256 over the exact base64 text above, no trailing newline):
 
 ```text
-1aa333e0a05deda04030f2ebda1c60023160f940208e51688eec2a73dc918de4
+0989ae6991c6dc124ca674d5e6f19da4ee70299342ae3784abf7d529fe0a5db2
 ```
 
 ## Trust Boundary
