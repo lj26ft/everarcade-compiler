@@ -14,12 +14,21 @@ This bundle is a self-contained reviewer map for reproducing and verifying Open 
 - `reference-world/must-fail/` — expected negative behavior.
 - `expected-outputs/` — expected command outcomes.
 
+
+## Authoritative RC2 Pin
+
+The RC2 review bundle and runnable gate target both refer to compiler commit:
+
+`fe51c1ce5be6df888dfaae203d5632580a045f2e`
+
+Reviewers should check out this exact commit before running the gate or must-fail fixtures. Any other commit is outside the RC2 review target.
+
 ## Fresh Reviewer Workflow
 
 ```bash
 git clone <repository-url> everarcade-compiler
 cd everarcade-compiler
-git checkout b6d553d5632a88b95352d6c98d15503b27d4df0f
+git checkout fe51c1ce5be6df888dfaae203d5632580a045f2e
 bash scripts/ensure_vendor_offline.sh
 bash scripts/check_prerequisites.sh
 bash scripts/validate_open_source_readiness.sh
