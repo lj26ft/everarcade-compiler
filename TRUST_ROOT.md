@@ -2,7 +2,9 @@
 
 Trust-root version: `everarcade-review-root-v1`
 
-Pinned repository commit: `fe51c1ce5be6df888dfaae203d5632580a045f2e`
+RC2 artifact/export commit: `fe51c1ce5be6df888dfaae203d5632580a045f2e`
+
+RC2 reviewer-entry commit: `53a17567e826c5d4f9b083e490cf1568bfe7534e`
 
 Official EverArcade OSC review key (Ed25519 SubjectPublicKeyInfo, base64):
 
