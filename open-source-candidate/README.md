@@ -13,7 +13,7 @@ bash scripts/validate_open_source_readiness.sh
 EVERARCADE_DETERMINISTIC_ATTEST=1 bash scripts/ci/run-deterministic-world-factory.sh
 node creator-sdk/cli/everarcade.mjs world attest verify \
   --project examples/world-factory/frontier-settlement \
-  --trusted-public-key "$(cat examples/world-factory/frontier-settlement/out/release/trusted-public-key.txt)"
+  --trusted-public-key "$(awk '/^```text$/{block++; next} block==1 && /^[A-Za-z0-9+\/=]+$/{print; exit}' TRUST_ROOT.md)"
 ```
 
 Expected terminal results: `Prerequisites: PASS`, `READY`, `Deterministic World Factory CI: PASS`, and attestation verification `PASS`.

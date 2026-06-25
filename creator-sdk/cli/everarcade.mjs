@@ -841,7 +841,7 @@ function publicKeyFingerprint(publicKeyText) {
 }
 
 function loadOrCreateAttesterPrivateKey(projectDir) {
-  const configured = value('--private-key', undefined);
+  const configured = value('--attester-private-key', value('--private-key', undefined));
   const keyPath = configured ? path.resolve(configured) : path.join(projectDir, 'out', 'attester-ed25519-private.pem');
   if (fs.existsSync(keyPath)) return { keyPath, privateKey: normalizePemOrBase64Key(fs.readFileSync(keyPath, 'utf8'), 'private') };
   const { privateKey } = crypto.generateKeyPairSync('ed25519');

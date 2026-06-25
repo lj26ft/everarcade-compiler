@@ -23,7 +23,7 @@ node creator-sdk/cli/everarcade.mjs world factory deploy --host https://founding
 node creator-sdk/cli/everarcade.mjs world attest create --attester-name frontier-settlement-operator-rc1
 node creator-sdk/cli/everarcade.mjs world factory serve --host 127.0.0.1 --port 8787
 node creator-sdk/cli/everarcade.mjs world factory proof --url http://127.0.0.1:8787
-node creator-sdk/cli/everarcade.mjs world attest verify --trusted-public-key "$(cat examples/world-factory/frontier-settlement/out/release/trusted-public-key.txt)"
+node creator-sdk/cli/everarcade.mjs world attest verify --trusted-public-key "$(awk '/^```text$/{block++; next} block==1 && /^[A-Za-z0-9+\/=]+$/{print; exit}' TRUST_ROOT.md)"
 ```
 
 ## Verification checklist
