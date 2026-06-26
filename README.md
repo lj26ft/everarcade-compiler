@@ -69,6 +69,13 @@ Expected result:
 - The tampered-payload fixture fails verification.
 - If either must-fail fixture passes, RC2 is not valid.
 
+## Independent Verification
+
+The RC2 release has been independently reproduced and reviewed.
+
+See:
+[VERIFICATION.md](VERIFICATION.md)
+
 ## Quick start
 
 Manual First World flow:
