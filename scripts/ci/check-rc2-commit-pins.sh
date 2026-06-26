@@ -20,8 +20,11 @@ INSPECT_PATHS=(
 
 if command -v rg >/dev/null 2>&1; then
   SEARCH_TOOL="rg"
-else
+elif command -v grep >/dev/null 2>&1; then
   SEARCH_TOOL="grep"
+else
+  printf 'ERROR: Neither rg nor grep is available for RC2 commit-pin validation.\n' >&2
+  exit 1
 fi
 
 search_ran=0
@@ -34,9 +37,33 @@ for path in "${INSPECT_PATHS[@]}"; do
   fi
 
   if [[ -d "$path" ]]; then
-    count=$(find "$path" -type f | wc -l | tr -d '[:space:]')
+    if [[ ! -r "$path" ]]; then
+      printf 'ERROR: Expected RC2 commit-pin inspection directory is not readable: %s\n' "$path" >&2
+      exit 1
+    fi
+    path_files=$(mktemp)
+    if ! find "$path" -type f -print >"$path_files"; then
+      printf 'ERROR: Failed to inspect expected RC2 commit-pin directory: %s\n' "$path" >&2
+      rm -f "$path_files"
+      exit 1
+    fi
+
+    count=0
+    while IFS= read -r inspected_path; do
+      if [[ ! -r "$inspected_path" ]]; then
+        printf 'ERROR: Expected RC2 commit-pin inspection file is not readable: %s\n' "$inspected_path" >&2
+        rm -f "$path_files"
+        exit 1
+      fi
+      count=$((count + 1))
+    done <"$path_files"
+    rm -f "$path_files"
     inspected_files=$((inspected_files + count))
   elif [[ -f "$path" ]]; then
+    if [[ ! -r "$path" ]]; then
+      printf 'ERROR: Expected RC2 commit-pin inspection file is not readable: %s\n' "$path" >&2
+      exit 1
+    fi
     inspected_files=$((inspected_files + 1))
   else
     printf 'ERROR: Expected RC2 commit-pin inspection path is not a file or directory: %s\n' "$path" >&2
