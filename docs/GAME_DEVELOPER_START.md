@@ -2,7 +2,7 @@
 
 ## Fresh VM Flow
 ```bash
-git clone git@github.com:lj26ft/everarcade-compiler.git
+git clone https://github.com/lj26ft/everarcade-compiler.git
 cd everarcade-compiler
 ./scripts/everarcade_start.sh
 cargo run -p everarcade-cli -- start-game 2d-arena

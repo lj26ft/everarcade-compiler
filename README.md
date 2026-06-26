@@ -45,7 +45,7 @@ Offline vendor policy: [`docs/build/offline-build-policy.md`](docs/build/offline
 Use this single path to reproduce the authoritative RC2 review target from a fresh clone:
 
 ```bash
-git clone git@github.com:EverArcade/everarcade-compiler.git
+git clone https://github.com/lj26ft/everarcade-compiler.git
 cd everarcade-compiler
 git checkout 53a17567e826c5d4f9b083e490cf1568bfe7534e
 
