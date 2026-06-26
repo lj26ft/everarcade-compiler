@@ -95,11 +95,14 @@ Start with [`docs/first-world.md`](docs/first-world.md) and the generated projec
 
 ## Where are the docs?
 
+- Architecture overview: [`ARCHITECTURE.md`](ARCHITECTURE.md)
 - Compiler documentation root: [`docs/index.md`](docs/index.md)
 - Public websites, `docs.everarcade.games`, `vision.everarcade.games`, and the world portal live in `everarcade-frontend`. See [`docs/public-frontend-surface.md`](docs/public-frontend-surface.md).
 - Documentation policy: [`docs/DOCUMENTATION_POLICY.md`](docs/DOCUMENTATION_POLICY.md)
 - Maturity classifications: [`MATURITY.md`](MATURITY.md)
 - Repository map: [`REPOSITORY_MAP.md`](REPOSITORY_MAP.md)
+- Source/artifact and reproducibility policy: [`REPOSITORY_POLICY.md`](REPOSITORY_POLICY.md)
+- Script manifest: [`scripts/MANIFEST.md`](scripts/MANIFEST.md)
 - Contributor guide: [`docs/contributor-guide/index.md`](docs/contributor-guide/index.md)
 - Open-source readiness audit: [`OPEN_SOURCE_READINESS.md`](OPEN_SOURCE_READINESS.md)
 - v0.1 public release readiness: [`docs/open-source/v0.1-public-release-readiness.md`](docs/open-source/v0.1-public-release-readiness.md)
