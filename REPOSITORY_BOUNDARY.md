@@ -15,6 +15,10 @@ It does **not** include EverArcade's future commercial registry service, hosted 
 - RC1/RC2 independent review history and public release notes.
 - Neutral local scaffolds used to exercise deterministic verification paths.
 
+Independent reproducibility review documentation is available in:
+
+- VERIFICATION.md
+
 ## Out of scope
 
 Economic and treasury systems are outside the scope of this open-source reference implementation.
