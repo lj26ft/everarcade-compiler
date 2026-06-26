@@ -5,8 +5,10 @@ This map explains major subsystems, ownership boundaries, dependency relationshi
 ## Canonical entry points
 
 - `README.md` — short public introduction and start path.
+- `ARCHITECTURE.md` — system-level architecture from developer through player.
 - `docs/` — canonical documentation source.
 - `MATURITY.md` — subsystem maturity and current reality check.
+- `REPOSITORY_POLICY.md` — source vs artifact and reproducibility policy.
 - `archive/` — historical milestone, validation, certification, handoff, and development artifacts.
 
 ## Core runtime and execution
@@ -25,7 +27,7 @@ Dependency direction: world packages and contracts depend on ABI/contract defini
 
 ## Operations and deployment
 
-- `scripts/` — validation, certification, packaging, install, and operator utility scripts. Audience: contributors and operators.
+- `scripts/` — validation, certification, packaging, install, and operator utility scripts. Start with `scripts/MANIFEST.md`. Audience: contributors and operators.
 - `deploy/`, `deployment/`, `evernode/`, `public-testnet/` — deployment layouts, Evernode boundaries, and public-network scaffolds. Audience: operators; see `MATURITY.md` before use.
 - `archive/` — moved historical reports and prior validation records. Audience: maintainers and auditors.
 

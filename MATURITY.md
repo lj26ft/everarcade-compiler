@@ -44,3 +44,7 @@ No subsystem is classified as **PRODUCTION** in this open-source readiness miles
 | Creator SDK runtime launch | ALPHA | `play-local` uses repo-root offline cargo workspace (not `/tmp`); fails with actionable vendor hints when offline resolution breaks. |
 | World Factory reproducibility | ALPHA | `scripts/ci/run-deterministic-world-factory.sh` + `.github/workflows/deterministic-world-factory.yml` enforce offline build, world.evr generation, replay, attestation, and release bundle gates. |
 | Vendor integrity metadata | ALPHA | `vendor-manifest.json`, `vendor.sha256`, and `dist/vendor.tar.gz` provide canonical offline restore with tree-hash verification. |
+
+## Navigation for first-time contributors
+
+Read this file alongside `README.md`, `ARCHITECTURE.md`, `REPOSITORY_MAP.md`, and `REPOSITORY_POLICY.md`. Those files explain what EverArcade is, how the repository is organized, where documentation and examples live, and which generated artifacts belong in releases instead of source control. Use `scripts/MANIFEST.md` before choosing validation or operator scripts.

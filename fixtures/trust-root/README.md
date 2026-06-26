@@ -2,6 +2,10 @@
 
 TEST ONLY. NOT PRODUCTION. NOT EVERARCADE MAINNET TRUST ROOT.
 
+Public test key.
+Never used for production.
+Safe to publish.
+
 These files provide the deterministic attester keypair used by local CI and
 Open Source Candidate review gates. They exist so the World Factory Gate can
 create an attestation with a committed, out-of-band test key and then verify

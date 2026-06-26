@@ -1,6 +1,6 @@
 # Contributing to EverArcade
 
-Thank you for helping make EverArcade understandable and usable by external developers.
+Thank you for helping make EverArcade understandable and usable by external developers. Start with `README.md`, use `REPOSITORY_MAP.md` to find subsystems, read `ARCHITECTURE.md` for the system flow, and check `MATURITY.md` before making capability claims.
 
 ## Support boundary
 
@@ -89,6 +89,14 @@ git add dist/vendor.tar.gz dist/vendor.tar.gz.sha256 Cargo.lock
 ```
 
 Creator SDK runtime commands run `cargo` from the **repository root** so offline vendor policy applies. Temporary `/tmp` cargo workspaces are not used for play-local.
+
+## Repository navigation
+
+- `ARCHITECTURE.md` explains the Developer → World Factory → `world.evr` → Verification → Registry → Vault → Operator → Player flow.
+- `REPOSITORY_MAP.md` maps directories to audiences and maturity boundaries.
+- `REPOSITORY_POLICY.md` explains what belongs in git versus GitHub Releases.
+- `scripts/MANIFEST.md` explains every script before you run or modify it.
+- Examples live under `examples/`, `creator-examples/`, and template paths referenced from the Creator SDK docs.
 
 ## How to test targeted changes
 
