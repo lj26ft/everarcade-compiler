@@ -1,3 +1,7 @@
+> **Repository boundary:** Economic and treasury systems are outside the scope of this open-source reference implementation.
+>
+> Implementations may attach non-authoritative economic metadata, but live payments, custody, accounting, treasury services, and commercial settlement are not implemented here.
+>
 # World Operator Runtime and Treasury Execution Layer
 
 This specification defines how a world acts as a self-sustaining economic institution. The treasury belongs to the world identity and is replayed as world history; it does not belong to any temporary operator, host, council, or marketplace.

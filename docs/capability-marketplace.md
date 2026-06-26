@@ -1,3 +1,7 @@
+> **Repository boundary:** Marketplace systems are outside the scope of this repository.
+>
+> This repo may include deterministic package or capability metadata examples, but commercial marketplace operation, royalties, settlement, reputation, provider rewards, and hosted marketplace services are not implemented here.
+>
 # Capability Marketplace
 
 The Capability Marketplace is where worlds discover reusable capabilities: gameplay systems, governance modules, operator tools, proof helpers, and treasury integrations.

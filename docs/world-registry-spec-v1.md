@@ -1,3 +1,7 @@
+> **Repository boundary:** Registry material in this repository is limited to neutral world identity, metadata, and local validation examples.
+>
+> Hosted discovery, ranking, reputation, curation, and commercial registry operation are outside the scope of this open-source reference implementation.
+>
 # World Registry Specification v1
 
 Certification output: `WORLD REGISTRY SPECIFICATION V1: PASS`

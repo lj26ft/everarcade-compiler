@@ -1,3 +1,7 @@
+> **Repository boundary:** This repository includes local verification and certification primitives.
+>
+> Hosted verification services, public badge programs, reviewer marketplaces, application workflows, and paid certification products are outside the scope of this open-source reference implementation.
+>
 # World Package Certification Framework v1
 
 ## Status
