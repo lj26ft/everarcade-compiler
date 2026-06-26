@@ -102,6 +102,7 @@ Start with [`docs/first-world.md`](docs/first-world.md) and the generated projec
 - Maturity classifications: [`MATURITY.md`](MATURITY.md)
 - Repository map: [`REPOSITORY_MAP.md`](REPOSITORY_MAP.md)
 - Source/artifact and reproducibility policy: [`REPOSITORY_POLICY.md`](REPOSITORY_POLICY.md)
+- Public repository boundary: [`REPOSITORY_BOUNDARY.md`](REPOSITORY_BOUNDARY.md)
 - Script manifest: [`scripts/MANIFEST.md`](scripts/MANIFEST.md)
 - Contributor guide: [`docs/contributor-guide/index.md`](docs/contributor-guide/index.md)
 - Open-source readiness audit: [`OPEN_SOURCE_READINESS.md`](OPEN_SOURCE_READINESS.md)

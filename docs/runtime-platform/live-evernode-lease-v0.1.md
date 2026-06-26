@@ -1,3 +1,7 @@
+> **Repository boundary:** Hosted operator infrastructure is outside the scope of this open-source reference implementation.
+>
+> Any operator-related files in this repo are local/reference scaffolds and are not a production hosted platform, SLA service, or commercial operator network.
+>
 # Live Evernode Lease Deployment v0.1
 
 ## Purpose

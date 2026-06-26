@@ -1,3 +1,7 @@
+> **Repository boundary:** This repository does not implement custody, wallet management, live settlement, or legal ownership certification.
+>
+> XRPL/Xahau material is limited to deterministic anchoring, boundary modeling, or local test scaffolds unless explicitly stated otherwise.
+>
 # Vault Ownership Certification v0.1
 
 ## Purpose

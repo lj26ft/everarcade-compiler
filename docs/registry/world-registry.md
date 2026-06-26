@@ -1,3 +1,7 @@
+> **Repository boundary:** Registry material in this repository is limited to neutral world identity, metadata, and local validation examples.
+>
+> Hosted discovery, ranking, reputation, curation, and commercial registry operation are outside the scope of this open-source reference implementation.
+>
 # World Registry & Discovery Network
 
 The World Registry is the canonical, machine-readable discovery index for EverArcade worlds. It combines world identity, portable metadata, auditable trust signals, governance visibility, contributor discovery, reputation, activity, lineage, capabilities, and health into a replayable registry record.
