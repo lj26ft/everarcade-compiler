@@ -1,6 +1,36 @@
 # EverArcade
 
+[![Documentation](https://img.shields.io/badge/docs-docs.everarcade.games-blue)](https://docs.everarcade.games)
+[![Website](https://img.shields.io/badge/website-everarcade.games-brightgreen)](https://everarcade.games)
+[![Release](https://img.shields.io/badge/releases-GitHub-orange)](https://github.com/lj26ft/everarcade-compiler/releases)
+[![Verification](https://img.shields.io/badge/verification-VERIFICATION.md-purple)](VERIFICATION.md)
+
 **Build Worlds. Not Just Games.**
+
+## 🚀 Start Here
+
+New to EverArcade?
+
+➡️ Read: [`START_HERE.md`](START_HERE.md)
+
+📚 Documentation: <https://docs.everarcade.games>
+
+🌐 Website: <https://everarcade.games>
+
+📦 Latest Release: <https://github.com/lj26ft/everarcade-compiler/releases>
+
+## Quick Navigation
+
+| I want to... | Go here |
+|--------------|----------|
+| Understand world.evr | [`START_HERE.md`](START_HERE.md) |
+| Read the docs | <https://docs.everarcade.games> |
+| Install locally | [`QUICKSTART.md`](QUICKSTART.md) |
+| Verify a release | [`VERIFICATION.md`](VERIFICATION.md) |
+| Read the architecture | [`ARCHITECTURE.md`](ARCHITECTURE.md) |
+| Run examples | [`examples/`](examples/) |
+| Contribute | [`CONTRIBUTING.md`](CONTRIBUTING.md) |
+| Explore specifications | [`docs/`](docs/) |
 
 EverArcade is an open-source deterministic game-runtime and creator-tooling repository. It focuses on packaging worlds, running them locally, recording execution evidence, and replay-verifying deterministic outcomes.
 
@@ -100,8 +130,21 @@ WORLD VERIFY: PASS
 
 Start with [`docs/first-world.md`](docs/first-world.md) and the generated project map in [`docs/creator-sdk/world-project-map.md`](docs/creator-sdk/world-project-map.md).
 
+## Documentation
+
+📚 Docs: <https://docs.everarcade.games>
+
+🌐 Website: <https://everarcade.games>
+
+📦 Releases: <https://github.com/lj26ft/everarcade-compiler/releases>
+
+🔍 Independent Verification: [`VERIFICATION.md`](VERIFICATION.md)
+
 ## Where are the docs?
 
+- Documentation directory: [`DOCS.md`](DOCS.md)
+- First-time visitor guide: [`START_HERE.md`](START_HERE.md)
+- Minimal local path: [`QUICKSTART.md`](QUICKSTART.md)
 - Architecture overview: [`ARCHITECTURE.md`](ARCHITECTURE.md)
 - Compiler documentation root: [`docs/index.md`](docs/index.md)
 - Public websites, `docs.everarcade.games`, `vision.everarcade.games`, and the world portal live in `everarcade-frontend`. See [`docs/public-frontend-surface.md`](docs/public-frontend-surface.md).
