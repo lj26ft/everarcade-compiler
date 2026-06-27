@@ -4,7 +4,10 @@ This map explains major subsystems, ownership boundaries, dependency relationshi
 
 ## Canonical entry points
 
-- `README.md` — short public introduction and start path.
+- `README.md` — public navigation hub and shortest entry path.
+- `START_HERE.md` — first-time visitor onboarding guide for what to read and run first.
+- `DOCS.md` — compact documentation directory for GitHub search and browsing.
+- `QUICKSTART.md` — minimal clone, prerequisite, run, and verify path.
 - `ARCHITECTURE.md` — system-level architecture from developer through player.
 - `docs/` — canonical documentation source.
 - `MATURITY.md` — subsystem maturity and current reality check.
