@@ -98,3 +98,7 @@ dist/everarcade-world-factory-release/
 
 # Continuum Boundary Benchmark Phase II local artifacts
 .everarcade-continuum-phase-ii-review/
+
+# Local review-bundle archives
+/review-bundles/commitment-v1-review.zip
+/review-bundles/commitment-v1-review.tar.gz

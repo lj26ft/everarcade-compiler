@@ -50,3 +50,15 @@ Questions:
 - Are synthetic assumptions reasonable?
 - What should be validated first on hardware?
 - What likely becomes the next bottleneck?
+
+
+### Phase II Continuum Benchmarking
+
+Questions:
+
+- Do the hardware-capacity probes expose the right real hardware limits for the commitment architecture?
+- Are CPU saturation, memory saturation, and disk I/O saturation measured at useful boundaries for follow-up testing?
+- Is replay interval cost captured clearly enough to evaluate restore and catch-up expectations?
+- Are determinism repeatability checks sufficient to support replay claims?
+- Does GPU exploration correctly avoid unsupported acceleration claims while identifying future GPU work?
+- Do catastrophe/adversarial probes cover the failure behaviors Dane / KVT should inspect first?
