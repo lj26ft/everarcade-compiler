@@ -1,0 +1,25 @@
+{
+  "schema": "everarcade.determinism.inputs.v1",
+  "inputs": [
+    {
+      "tick": 1,
+      "actor": "alice",
+      "action": "move",
+      "dx": 1,
+      "dy": 0
+    },
+    {
+      "tick": 2,
+      "actor": "bob",
+      "action": "move",
+      "dx": -1,
+      "dy": 0
+    },
+    {
+      "tick": 3,
+      "actor": "alice",
+      "action": "score",
+      "points": 7
+    }
+  ]
+}
