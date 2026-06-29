@@ -51,7 +51,17 @@ For each proof:
 ## 6. Compare Outputs
 
 All regenerated roots, peaks, leaf hashes, proofs, and negative-case rejections should match the bundled conformance vectors. Any divergence should be treated as either an implementation bug, a vector bug, or an ambiguity in the specification requiring review.
-## 7. Regenerate Local Archives
+## 7. Inspect Phase II Continuum Benchmarking
+
+Phase II Continuum benchmark reports are bundled under:
+
+```sh
+find review-bundles/commitment-v1-review/reports/phase-ii -type f | sort
+```
+
+Review these reports for coverage of real hardware limits, CPU saturation, memory saturation, disk I/O saturation, replay interval cost, determinism repeatability, GPU exploration, and catastrophe/adversarial behavior. Raw local artifacts are not committed; reruns should write raw outputs under `.everarcade-continuum-phase-ii-review/artifacts/`.
+
+## 8. Regenerate Local Archives
 
 Distribution archives are not committed to the repository. After verifying the bundle contents, regenerate local archive artifacts with:
 

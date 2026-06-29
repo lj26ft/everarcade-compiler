@@ -1,12 +1,12 @@
 {
   "bundle_version": "1",
-  "created_at": "2026-06-29T11:50:54Z",
-  "created_from_commit": "d48696a3d3e4f7a5ddf7447d6e0db017784713a2",
+  "created_at": "2026-06-29T12:33:36Z",
+  "created_from_commit": "e26abdb5214df040fa78c1dbc9780264d0332c3a",
   "files": [
     {
       "path": "PACKAGE_BUNDLE.sh",
-      "sha256": "ba3cafd537688a8f56853ec568cd0d3263f3eeff1bf358534df0740ab639d478",
-      "size_bytes": 768
+      "sha256": "1ac3e4774b5e4abe9352833c928e32e84ae526719fda9aa787b956d85ff67566",
+      "size_bytes": 1036
     },
     {
       "path": "README.md",
@@ -15,18 +15,18 @@
     },
     {
       "path": "REVIEW_REQUEST.md",
-      "sha256": "07957230670dfb5200944003d1a26b37c01169181b7b8547d4c691f218adf29a",
-      "size_bytes": 930
+      "sha256": "1092487474961d0cb595f459436c050d2897395f0176ec268edb0095a7fc6edb",
+      "size_bytes": 1580
     },
     {
       "path": "SUMMARY.md",
-      "sha256": "d32e395fc2b1ee2379aa8fa8358a00f27f386c0785cce3009c73e4e5002fe2a9",
-      "size_bytes": 1265
+      "sha256": "70f2da1376e2375d9d8c51cf53d91378e32bf01b62e28ce582ea03ba18c6d07c",
+      "size_bytes": 1855
     },
     {
       "path": "VERIFY_BUNDLE.md",
-      "sha256": "01c77d5be56495454802248648692123f4ca06aac35f8e5b0ce2a3d80b49aad9",
-      "size_bytes": 2584
+      "sha256": "afd31002f205f4b15d36d35f89a1b7d06a367e6e501931c27a308b945de83362",
+      "size_bytes": 3121
     },
     {
       "path": "benchmarks/aeon_report.md",
@@ -67,6 +67,36 @@
       "path": "reports/REVIEW_NOTES.md",
       "sha256": "abc8f54d4aeecbc4e92e5db51270485710f0a15bc70c2f44ba8672eee7a501df",
       "size_bytes": 116
+    },
+    {
+      "path": "reports/phase-ii/bottleneck_report.md",
+      "sha256": "d397a6048fc4052bcd97c715a7500ba875fd91a2feb6e77636b7942602c8c1f6",
+      "size_bytes": 1142
+    },
+    {
+      "path": "reports/phase-ii/catastrophe_report.md",
+      "sha256": "fd20541786facb7d07d42a04928a9b65c4a00dc92798836f52f82f8051b518bb",
+      "size_bytes": 1087
+    },
+    {
+      "path": "reports/phase-ii/determinism_report.md",
+      "sha256": "14823518221b1900dcd8d5fb8876fc8a7356c50a7f4c66c9bb4f4f475de76406",
+      "size_bytes": 1078
+    },
+    {
+      "path": "reports/phase-ii/gpu_report.md",
+      "sha256": "c3fbd9dce5c2542163927af21bba812a7c2469535da2e6b81cd9c268f614a7df",
+      "size_bytes": 1118
+    },
+    {
+      "path": "reports/phase-ii/hardware_capacity_report.md",
+      "sha256": "87189ae9978352c3cdb0e8d26b46d2cc7e4959c5dbb48833ebb2ba4cd20bbb3e",
+      "size_bytes": 1146
+    },
+    {
+      "path": "reports/phase-ii/replay_interval_report.md",
+      "sha256": "f410547a4b2cf67d4837f45502bc560b4c00a3992d671f0f0ee5efb3dfeb8a69",
+      "size_bytes": 1055
     },
     {
       "path": "specs/CHECKPOINT_V1.md",

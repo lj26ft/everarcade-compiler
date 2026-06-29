@@ -29,3 +29,19 @@
 
 - Benchmark report inventory is present under `benchmarks/`.
 - Reports that were not available at the repository root during packaging are marked in-place as missing evidence and should be regenerated or supplied before relying on benchmark conclusions.
+
+
+## Phase II Continuum Benchmarking
+
+Phase II Continuum benchmark reports are included under `reports/phase-ii/` for independent inspection with the V1 commitment materials. The reports summarize local probes for:
+
+- real hardware limits
+- CPU saturation
+- memory saturation
+- disk I/O saturation
+- replay interval cost
+- determinism repeatability
+- GPU exploration
+- catastrophe/adversarial behavior
+
+Raw benchmark artifacts remain local under `.everarcade-continuum-phase-ii-review/artifacts/` and are intentionally excluded from committed review-bundle contents and generated archives.
