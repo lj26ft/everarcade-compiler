@@ -95,3 +95,6 @@ dist/everarcade-world-factory-release/
 !dist/vendor.tar.gz.sha256
 !vendor.sha256
 !vendor-manifest.json
+
+# Continuum Boundary Benchmark Phase II local artifacts
+.everarcade-continuum-phase-ii-review/
