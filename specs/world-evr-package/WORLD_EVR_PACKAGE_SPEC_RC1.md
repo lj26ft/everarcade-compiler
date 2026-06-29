@@ -24,7 +24,7 @@ The canonical artifact name is:
 world.evr
 ```
 
-`world.evr` is a deterministic archive. Implementations may choose the physical container encoding, but the logical paths and hashes defined by this specification are canonical. The package hash is computed over the canonical package tree, excluding the mutable field that stores the package hash itself.
+`world.evr` is a deterministic archive. Implementations may choose the physical container encoding, but the logical paths and hashes defined by this specification are canonical. The package hash is computed over the canonical package tree, excluding the mutable field that stores the package hash itself. Every `world.evr` package manifest MUST declare `verification_class = "DETERMINISTIC"` unless a future profile explicitly defines a narrower package envelope. Package-local proof and root records MUST follow the repository verification taxonomy in [`VERIFICATION_CLASSES.md`](../../VERIFICATION_CLASSES.md).
 
 ## Package Structure
 
@@ -140,6 +140,7 @@ Required fields:
 | `world_name` | string | Human-readable world name. |
 | `world_version` | semver string | Version of the packaged world. |
 | `schema_version` | string | World Package schema version; `1` for this specification. |
+| `verification_class` | enum string | Verification class for the package envelope; MUST be `DETERMINISTIC` for this specification. |
 | `created_by` | string | Tool, account, organization, or authority that built the package. |
 | `created_at` | RFC 3339 timestamp | Canonical package creation time. |
 | `contract_version` | semver string | Version of the included world contract. |
@@ -153,6 +154,7 @@ world_id = "everarcade.reference.world"
 world_name = "EverArcade Reference World"
 world_version = "1.0.0"
 schema_version = "1"
+verification_class = "DETERMINISTIC"
 created_by = "everarcade-cli"
 created_at = "2026-06-18T00:00:00Z"
 contract_version = "1.0.0"
@@ -232,7 +234,7 @@ Proofs bind the package to certification evidence. Proof reports may be text, JS
 
 ### WP-001: Package Determinism
 
-A canonical package build from identical inputs MUST produce identical logical content and the same `package_hash`.
+A canonical package build from identical inputs MUST produce identical logical content and the same `package_hash`. Integrity does not imply truth: package hashes and signatures prove reproducibility and byte integrity, but external truth claims require an explicit `OBJECTIVE` classification and public inputs that force the claimed value.
 
 ### WP-002: Manifest Integrity
 
@@ -321,7 +323,7 @@ A reference package skeleton is provided at `examples/reference-world-package/`.
 A package conforms to World Package Specification v1 when it:
 
 1. contains every required section;
-2. includes a valid `WorldManifest`;
+2. includes a valid `WorldManifest` with `verification_class = "DETERMINISTIC"`;
 3. includes a valid `world-contract/world-contract.toml`;
 4. includes certified RustRig manifests for all contract references;
 5. includes genesis state, receipts, continuity state, and roots;

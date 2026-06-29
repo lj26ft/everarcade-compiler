@@ -27,6 +27,8 @@ This page is a short directory for people searching GitHub for EverArcade docume
 ## Verification and releases
 
 - Independent verification: [`VERIFICATION.md`](VERIFICATION.md)
+- Verification class taxonomy: [`VERIFICATION_CLASSES.md`](VERIFICATION_CLASSES.md)
+- Public determinism fixtures: [`fixtures/determinism/`](fixtures/determinism/)
 - GitHub releases: <https://github.com/lj26ft/everarcade-compiler/releases>
 - Open-source readiness audit: [`OPEN_SOURCE_READINESS.md`](OPEN_SOURCE_READINESS.md)
 - v0.1 public release readiness: [`docs/open-source/v0.1-public-release-readiness.md`](docs/open-source/v0.1-public-release-readiness.md)
