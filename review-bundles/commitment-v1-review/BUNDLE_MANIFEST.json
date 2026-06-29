@@ -1,0 +1,108 @@
+{
+  "bundle_version": "1",
+  "created_at": "2026-06-29T11:50:54Z",
+  "created_from_commit": "d48696a3d3e4f7a5ddf7447d6e0db017784713a2",
+  "files": [
+    {
+      "path": "PACKAGE_BUNDLE.sh",
+      "sha256": "ba3cafd537688a8f56853ec568cd0d3263f3eeff1bf358534df0740ab639d478",
+      "size_bytes": 768
+    },
+    {
+      "path": "README.md",
+      "sha256": "fabc8ffe0b8f15b682be0857941ee6838aec11d8d09b5c523956b9baa0f78caa",
+      "size_bytes": 856
+    },
+    {
+      "path": "REVIEW_REQUEST.md",
+      "sha256": "07957230670dfb5200944003d1a26b37c01169181b7b8547d4c691f218adf29a",
+      "size_bytes": 930
+    },
+    {
+      "path": "SUMMARY.md",
+      "sha256": "d32e395fc2b1ee2379aa8fa8358a00f27f386c0785cce3009c73e4e5002fe2a9",
+      "size_bytes": 1265
+    },
+    {
+      "path": "VERIFY_BUNDLE.md",
+      "sha256": "01c77d5be56495454802248648692123f4ca06aac35f8e5b0ce2a3d80b49aad9",
+      "size_bytes": 2584
+    },
+    {
+      "path": "benchmarks/aeon_report.md",
+      "sha256": "fbe3650316ae206b4b712d684a86185996c3b4aa8893d6e81afccc290b037f3a",
+      "size_bytes": 332
+    },
+    {
+      "path": "benchmarks/continuum_benchmark_report.md",
+      "sha256": "ec10c51ab07863a64194308d79b24b0075a143dc7ab9f2d21a1cbe5c9ac2eb4f",
+      "size_bytes": 347
+    },
+    {
+      "path": "benchmarks/epoch_report.md",
+      "sha256": "16d8b746e483a615caad05e17f42459a3c74291a306c6e1500e25a85689f1636",
+      "size_bytes": 333
+    },
+    {
+      "path": "benchmarks/replay_report.md",
+      "sha256": "f5e53ebc17bdf209d304a1aa7c37c1fef5cf75831556add31909b7c34b93bd21",
+      "size_bytes": 334
+    },
+    {
+      "path": "benchmarks/storage_report.md",
+      "sha256": "41d25f08d8ca60bc68b7c87f6a686b09bf26d12547bb8c6f77a5d1adcf313ed4",
+      "size_bytes": 335
+    },
+    {
+      "path": "benchmarks/world_capacity_report.md",
+      "sha256": "3fdb748d4c60f6f044a9a3d131250474eacd2ff47ea9a1214f5ac11ececd2c3f",
+      "size_bytes": 342
+    },
+    {
+      "path": "reference/receipt_mmr_v1/receipt_mmr_v1.py",
+      "sha256": "9d1c23103ddebaaca710ed7add1b9350296862592e8b31570576a3d8a7c0d878",
+      "size_bytes": 6058
+    },
+    {
+      "path": "reports/REVIEW_NOTES.md",
+      "sha256": "abc8f54d4aeecbc4e92e5db51270485710f0a15bc70c2f44ba8672eee7a501df",
+      "size_bytes": 116
+    },
+    {
+      "path": "specs/CHECKPOINT_V1.md",
+      "sha256": "ea73a7e71a6dff974b3756de58620016211e1899fe4de6ee1cd193ecfc566b4a",
+      "size_bytes": 1554
+    },
+    {
+      "path": "specs/COMMITMENT_ARCHITECTURE_V1.md",
+      "sha256": "0cf1e5597ebaa879e1b1d17d2d5b3022f7bad9df6a7941a9a5684fb8c6f3ab61",
+      "size_bytes": 3714
+    },
+    {
+      "path": "specs/PROOF_FORMAT_V1.md",
+      "sha256": "e8654f1392daae3680c1b9e20029ec879be4cbfe333de852439cb2e114fae3de",
+      "size_bytes": 2302
+    },
+    {
+      "path": "specs/RECEIPT_MMR_V1.md",
+      "sha256": "caa88ae5b2018d6bf943f1639ec8b84577cdaf03305ff809c0d3ca22e82c8153",
+      "size_bytes": 3236
+    },
+    {
+      "path": "test-vectors/receipt-mmr-v1.json",
+      "sha256": "bd8b7e16eb858838ac927a724c2de0112e3bfd51b0f141c6ab5bc29e29c439f0",
+      "size_bytes": 639198
+    },
+    {
+      "path": "trust-model/ATTACK_SURFACES.md",
+      "sha256": "c5019e29d87cd08efd0c1bedaf928020b556de544706d70c4b1922c6053b7aac",
+      "size_bytes": 563
+    },
+    {
+      "path": "trust-model/TRUST_ASSUMPTIONS.md",
+      "sha256": "73d7481232a1cab7d4ba1e24f9cb1a05f9958cbd16a44d09ea2c0c0ac53421de",
+      "size_bytes": 443
+    }
+  ],
+  "protocol": "world.evr.commitment.v1"
+}
