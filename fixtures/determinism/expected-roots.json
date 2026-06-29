@@ -1,0 +1,27 @@
+{
+  "schema": "everarcade.determinism.expected-roots.v1",
+  "canonicalization": "sorted-key JSON UTF-8 with domain tag, NUL separator, SHA-256",
+  "state_root": "d61d07c40e33d6378729e9e5889045de997a484ebd882ccb5f86ef4fd44ccc87",
+  "receipt_root": "5078a4030cb405b5a70e9605952d614b97b61ce3c455b33c87b5bdb888201c92",
+  "continuity_root": "0b23e15fac98c7d73e6e30c021e410336936eeef18e2128b36504298f8657129",
+  "world_hash": "2d1430d5758b6163e8b82261cbe94539bd52d790974e9f310e501cad5f2ff509",
+  "checkpoint_hash": "5f17db5f5622f9a3830a4b66ffa8539756db9b7fd99633d9bd2bd8aa897d532a",
+  "debug": {
+    "receipt_hashes": [
+      "98387d55a80cafdc0d663987f4de3ddd2bda559e6bd95cc6490e76aac1e565d6",
+      "5468269833722cba2666104477343c46cb25a9c831286b6fd5f5285488029f8e",
+      "eb8a991118b87caa1adf62c28f64a07ea4a6901bc9366892735d1885e5b62d2e"
+    ],
+    "replay_root": "d8bd290afdecae7563b6f79a3abbd7f9dbb7454b3955ba813592615a259757de",
+    "continuity_input": {
+      "schema_version": 1,
+      "world_id": "determinism-fixture-v1",
+      "epoch": 0,
+      "previous_state_root": "e64407dda4eba756bdf466719c4ccaf039c87983fea852bba0a83c4513b90e0e",
+      "receipt_root": "5078a4030cb405b5a70e9605952d614b97b61ce3c455b33c87b5bdb888201c92",
+      "replay_root": "d8bd290afdecae7563b6f79a3abbd7f9dbb7454b3955ba813592615a259757de",
+      "migration_root": null,
+      "terminal_tick": 3
+    }
+  }
+}

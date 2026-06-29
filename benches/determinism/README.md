@@ -24,3 +24,7 @@ For the same world, inputs, receipts, and checkpoints, every run must reproduce 
 ## Failure policy
 
 Any root mismatch is a protocol failure until explained. Preserve the local raw inputs and outputs under `.everarcade-continuum-phase-ii-review/artifacts/determinism/`, but commit only the summarized finding in `reports/determinism_report.md`.
+
+## Current claim language
+
+Determinism observed on current hardware; cross-hardware proof pending. Deterministic roots are the mechanism for verifying bounded slices once cross-hardware reproduction is established.
