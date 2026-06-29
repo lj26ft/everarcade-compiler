@@ -1,0 +1,1 @@
+{"fixture_id":"everarcade.determinism.basic-counter.v1","initial_state":{"counter":0,"log":[]},"state_model":"counter-v1","steps":[{"action":"add","tick":1,"value":3},{"action":"mul","tick":2,"value":7},{"action":"xor","tick":3,"value":5},{"action":"add","tick":4,"value":11},{"action":"mod","tick":5,"value":19}],"verification_class":"DETERMINISTIC"}
