@@ -1,0 +1,14 @@
+{
+  "runtime_version": "everarcade-runtime-v1",
+  "abi_version": "everarcade-abi-v1",
+  "tick": {
+    "mode": "fixed",
+    "hz": 20
+  },
+  "memory_limits": {
+    "max_bytes": 67108864
+  },
+  "fuel_limits": {
+    "max_fuel_per_tick": 1000000
+  }
+}

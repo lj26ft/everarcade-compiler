@@ -1,0 +1,10 @@
+{
+  "genres": [
+    "example"
+  ],
+  "tags": [
+    "core-v1",
+    "extended-v1"
+  ],
+  "description": "Extended metadata may change without invalidating Core replay proofs."
+}

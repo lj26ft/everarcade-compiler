@@ -1,0 +1,10 @@
+{
+  "assets": [
+    {
+      "asset_id": "title-card",
+      "version": "1.0.0",
+      "content_hash": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+      "uri": "ipfs://example-title-card"
+    }
+  ]
+}

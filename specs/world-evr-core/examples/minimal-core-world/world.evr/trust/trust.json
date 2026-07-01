@@ -1,0 +1,8 @@
+{
+  "attestations": [],
+  "certification_providers": [],
+  "review_history": [],
+  "known_assumptions": [
+    "example package uses placeholder hashes"
+  ]
+}
