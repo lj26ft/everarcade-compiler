@@ -1,0 +1,10 @@
+{
+  "audit_date": "2026-07-01",
+  "repo": "everarcade-compiler",
+  "audit_version": "1.0",
+  "generated_artifacts": "markdown-and-json-only",
+  "binary_artifacts": false,
+  "build_artifacts": false,
+  "large_artifacts": false,
+  "safe_for_pr": true
+}
