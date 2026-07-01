@@ -1,0 +1,11 @@
+{
+  "modules": [
+    {
+      "module_id": "noop-world-contract",
+      "version": "1.0.0",
+      "kind": "wasm",
+      "path": "modules/noop-world-contract.wasm",
+      "sha256": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "projections": [
+    {
+      "projection_id": "browser-reference",
+      "version": "1.0.0",
+      "runtime_requirements": [
+        "webgl2"
+      ],
+      "hash": "sha256:8888888888888888888888888888888888888888888888888888888888888888"
+    }
+  ]
+}

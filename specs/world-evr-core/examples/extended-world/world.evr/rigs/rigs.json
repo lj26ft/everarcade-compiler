@@ -1,0 +1,13 @@
+{
+  "rigs": [
+    {
+      "rig_id": "core-noop-rig",
+      "version": "1.0.0",
+      "package_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "invariant_version": "v1",
+      "certification": {
+        "status": "example"
+      }
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "core_spec": "WORLD_EVR_CORE_SPEC_V1",
+  "world_id": "world:example:minimal-core",
+  "world_name": "Minimal Core World",
+  "version": "1.0.0",
+  "package_version": "world.evr.core.v1",
+  "authors": [
+    "EverArcade Core"
+  ],
+  "license": "Apache-2.0 OR MIT",
+  "description": "Core-only example world."
+}

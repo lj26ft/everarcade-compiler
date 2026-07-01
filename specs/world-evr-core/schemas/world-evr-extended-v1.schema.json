@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://everarcade.example/specs/world-evr-extended-v1.schema.json",
+  "title": "WORLD_EVR_EXTENDED_SPEC_V1 descriptor bundle",
+  "type": "object",
+  "properties": {
+    "assets": { "type": "object" },
+    "projections": { "type": "object" },
+    "ai": { "type": "object" },
+    "metadata": { "type": "object" }
+  },
+  "additionalProperties": true
+}
