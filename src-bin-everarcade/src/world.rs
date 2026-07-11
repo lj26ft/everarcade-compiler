@@ -53,9 +53,14 @@ struct Report<'a> {
 
 pub fn dispatch(args: &[String]) -> Result<(), String> {
     let action = args.get(2).map(String::as_str).ok_or(
-        "usage: everarcade world <init|package|inspect|verify|deploy|restore|migrate|replay>",
+        "usage: everarcade world <create|init|package|inspect|verify|conformance|deploy|restore|migrate|replay|diff>",
     )?;
     match action {
+        "create" => create(
+            opt(args, "--config").unwrap_or_else(|| "world-request.json".into()),
+            opt(args, "--dir").unwrap_or_else(|| "world".into()),
+            opt(args, "--out"),
+        ),
         "init" => init(opt(args, "--dir").unwrap_or_else(|| "world".into())),
         "package" => package(
             opt(args, "--dir").unwrap_or_else(|| "world".into()),
@@ -66,6 +71,11 @@ pub fn dispatch(args: &[String]) -> Result<(), String> {
         "verify" => {
             verify_cmd(opt(args, "--package").unwrap_or_else(|| "world.evr".into())).map(|_| ())
         }
+        "conformance" => conformance(opt(args, "--package").unwrap_or_else(|| "world.evr".into())),
+        "diff" => diff(
+            opt(args, "--left").unwrap_or_else(|| "world-a.evr".into()),
+            opt(args, "--right").unwrap_or_else(|| "world-b.evr".into()),
+        ),
         "deploy" => deploy(
             opt(args, "--package").unwrap_or_else(|| "world.evr".into()),
             opt(args, "--lease").unwrap_or_else(|| "offline-lease".into()),
@@ -79,6 +89,169 @@ pub fn dispatch(args: &[String]) -> Result<(), String> {
         "replay" => replay(opt(args, "--package").unwrap_or_else(|| "world.evr".into())),
         _ => Err(format!("unknown world command: {action}")),
     }
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+struct WorldCreateRequest {
+    world_profile: String,
+    genre_profile: String,
+    biome_profile: String,
+    projection_profile: String,
+    proof_profile: String,
+    #[serde(default = "default_world_name")]
+    world_name: String,
+}
+fn default_world_name() -> String {
+    "EverArcade Catacombs: The Endless Gate".into()
+}
+
+fn create(config: String, dir: String, out: Option<String>) -> Result<(), String> {
+    let request: WorldCreateRequest =
+        serde_json::from_slice(&fs::read(&config).map_err(|e| e.to_string())?)
+            .map_err(|e| format!("invalid world configuration: {e}"))?;
+    let root = PathBuf::from(dir);
+    if root.exists() {
+        fs::remove_dir_all(&root).map_err(|e| e.to_string())?;
+    }
+    init(root.to_string_lossy().to_string())?;
+    apply_profiles(&root, &request)?;
+    if let Some(out) = out {
+        package(root.to_string_lossy().to_string(), out)?;
+    }
+    println!("world created from profiles: {}", root.display());
+    Ok(())
+}
+
+fn apply_profiles(root: &Path, r: &WorldCreateRequest) -> Result<(), String> {
+    for d in [
+        "manifest",
+        "runtime",
+        "world",
+        "rules",
+        "primitives",
+        "content",
+        "proof",
+        "trust",
+        "signatures",
+        "assets",
+        "projections",
+        "metadata",
+    ] {
+        fs::create_dir_all(root.join(d)).map_err(|e| e.to_string())?;
+        fs::write(
+            root.join(d).join(".keep"),
+            b"canonical world.evr directory\n",
+        )
+        .map_err(|e| e.to_string())?;
+    }
+    let world_id = format!(
+        "world-{}",
+        r.world_name
+            .to_lowercase()
+            .chars()
+            .map(|c| if c.is_ascii_alphanumeric() { c } else { '-' })
+            .collect::<String>()
+            .trim_matches('-')
+    );
+    let profiles = json!({
+        "world_profile": r.world_profile, "genre_profile": r.genre_profile, "biome_profile": r.biome_profile,
+        "projection_profile": r.projection_profile, "proof_profile": r.proof_profile,
+        "resolved_profiles": [r.world_profile, r.genre_profile, r.biome_profile, r.projection_profile, r.proof_profile]
+    });
+    write_json(root.join("metadata/profile-resolution.json"), &profiles)?;
+    write_json(
+        root.join("primitives/ptw-composition.json"),
+        &json!({"primitives":["WorldTime","Terrain","Regions","Biomes","Resources","Regeneration","Movement","Combat","Inventory","Crafting","Loot","AIIntents","Quests","GovernanceMetadata","EconomyMetadata","ProjectionMetadata","ProofMetadata"]}),
+    )?;
+    write_json(
+        root.join("rules/rules.json"),
+        &json!({"genre_profile":r.genre_profile,"movement":"grid-deterministic","combat":"rules-derived","loot":"seedless-table-order"}),
+    )?;
+    write_json(
+        root.join("world/world.json"),
+        &json!({"world_id":world_id,"name":r.world_name,"biome_profile":r.biome_profile}),
+    )?;
+    write_json(
+        root.join("projections/projection.json"),
+        &json!({"projection_profile":r.projection_profile,"client":"web-reference","authoritative":false}),
+    )?;
+    write_json(
+        root.join("proof/proof.json"),
+        &json!({"proof_profile":r.proof_profile,"replay_verification":"deterministic-local"}),
+    )?;
+    write_json(
+        root.join("trust/trust.json"),
+        &json!({"signatures_required":false,"hosted_registry_required":false}),
+    )?;
+    write_json(
+        root.join("signatures/signatures.json"),
+        &json!({"signatures":[],"reason":"unsigned reference package"}),
+    )?;
+    write_json(
+        root.join("metadata/migration.json"),
+        &json!({"package_version":"world.evr-package-v1","migration_from":null,"migration_to":[]}),
+    )?;
+    write_json(
+        root.join("manifest/package-metadata.json"),
+        &json!({"canonical_generator":"everarcade-compiler","deterministic":true,"commercial_platform_logic":false,"profiles":profiles}),
+    )?;
+    fs::write(
+        root.join("world-contract/contract.wasm"),
+        format!("everarcade canonical world contract {world_id}\n"),
+    )
+    .map_err(|e| e.to_string())?;
+    write_json(
+        root.join("genesis/genesis-state.json"),
+        &json!({"world":world_id,"name":r.world_name,"tick":0,"profiles":profiles,"entities":[]}),
+    )?;
+    rebuild_manifest(root, &world_id, &r.world_name)
+}
+
+fn rebuild_manifest(root: &Path, world_id: &str, world_name: &str) -> Result<(), String> {
+    let genesis_hash = hash_file(root.join("genesis/genesis-state.json"))?;
+    fs::write(root.join("genesis/genesis-root.txt"), &genesis_hash).map_err(|e| e.to_string())?;
+    let contract_hash = hash_file(root.join("world-contract/contract.wasm"))?;
+    let state_root = hash_str(&format!("state:{genesis_hash}"));
+    let replay_root = hash_str("replay:empty");
+    let receipt_root = hash_str("receipt:empty");
+    let continuity_root = hash_str(&format!(
+        "continuity:{state_root}:{replay_root}:{receipt_root}"
+    ));
+    for (f, v) in [
+        ("state-root.txt", &state_root),
+        ("replay-root.txt", &replay_root),
+        ("receipt-root.txt", &receipt_root),
+        ("continuity-root.txt", &continuity_root),
+    ] {
+        fs::write(root.join("continuity").join(f), v).map_err(|e| e.to_string())?;
+    }
+    let mut rb: RuntimeBundleManifest = serde_json::from_slice(
+        &fs::read(root.join("runtime/runtime-manifest.json")).map_err(|e| e.to_string())?,
+    )
+    .map_err(|e| e.to_string())?;
+    rb.wasm_hash = Some(contract_hash.clone());
+    rb.bundle_hash = String::new();
+    rb.bundle_hash = runtime_bundle_hash(root, &rb)?;
+    write_json(root.join("runtime/runtime-manifest.json"), &rb)?;
+    write_json(
+        root.join("manifest.json"),
+        &WorldManifest {
+            protocol: PROTOCOL.into(),
+            world_id: world_id.into(),
+            world_name: world_name.into(),
+            world_version: "1.0.0".into(),
+            world_operator: "open-reference-generator".into(),
+            created_at: "1970-01-01T00:00:00Z".into(),
+            world_contract_hash: contract_hash,
+            runtime_bundle_hash: rb.bundle_hash,
+            genesis_state_hash: genesis_hash,
+            state_root,
+            replay_root,
+            receipt_root,
+            continuity_root,
+            transport_protocol: transport_core::HOTPOCKET_TRANSPORT_PROTOCOL.into(),
+        },
+    )
 }
 
 fn init(dir: String) -> Result<(), String> {
@@ -252,6 +425,54 @@ fn inspect(pkg: String) -> Result<(), String> {
     println!("world_id={}\nversion={}\noperator={}\ncontract_hash={}\nruntime_hash={}\nstate_root={}\nreplay_root={}\nreceipt_root={}\ncontinuity_root={}\ntransport={}",m.world_id,m.world_version,m.world_operator,m.world_contract_hash,m.runtime_bundle_hash,m.state_root,m.replay_root,m.receipt_root,m.continuity_root,m.transport_protocol);
     Ok(())
 }
+fn conformance(pkg: String) -> Result<(), String> {
+    let (m, entries) = read_package(Path::new(&pkg))?;
+    verify_entries(&m, &entries)?;
+    for dir in [
+        "manifest/",
+        "runtime/",
+        "world/",
+        "rules/",
+        "primitives/",
+        "content/",
+        "proof/",
+        "trust/",
+        "signatures/",
+        "assets/",
+        "projections/",
+        "metadata/",
+    ] {
+        if !entries.keys().any(|k| k.starts_with(dir)) {
+            return Err(format!("missing canonical directory: {dir}"));
+        }
+    }
+    if !entries.contains_key("metadata/profile-resolution.json") {
+        return Err("missing profile resolution metadata".into());
+    }
+    if !entries.contains_key("metadata/migration.json") {
+        return Err("missing migration metadata".into());
+    }
+    println!(
+        "conformance passed world_id={} profile_metadata=present",
+        m.world_id
+    );
+    Ok(())
+}
+fn diff(left: String, right: String) -> Result<(), String> {
+    let (lm, le) = read_package(Path::new(&left))?;
+    let (rm, re) = read_package(Path::new(&right))?;
+    let lh = hex::encode(Sha256::digest(fs::read(&left).map_err(|e| e.to_string())?));
+    let rh = hex::encode(Sha256::digest(fs::read(&right).map_err(|e| e.to_string())?));
+    println!(
+        "left_world={} right_world={} package_hash_equal={} file_count_delta={}",
+        lm.world_id,
+        rm.world_id,
+        lh == rh,
+        le.len() as isize - re.len() as isize
+    );
+    Ok(())
+}
+
 fn deploy(pkg: String, lease: String) -> Result<(), String> {
     let m = verify_cmd(pkg)?;
     fs::create_dir_all("reports/bundle").map_err(|e| e.to_string())?;
@@ -592,6 +813,33 @@ mod tests {
         assert_eq!(first, second);
         let manifest = verify_cmd(dir.join("a.evr").to_string_lossy().to_string()).unwrap();
         assert_eq!(manifest.world_id, "world-example");
+    }
+
+    #[test]
+    fn profile_create_generates_conformant_world_package() {
+        let dir = temp("profile-create");
+        let config = dir.join("world-request.json");
+        write_json(
+            &config,
+            &json!({
+                "world_profile":"ptw-full-v1",
+                "genre_profile":"arpg-v1",
+                "biome_profile":"catacombs-v1",
+                "projection_profile":"arpg-web-v1",
+                "proof_profile":"live-replay-ceremony-v1",
+                "world_name":"EverArcade Catacombs: The Endless Gate"
+            }),
+        )
+        .unwrap();
+        let root = dir.join("catacombs");
+        let pkg = dir.join("catacombs.evr");
+        create(
+            config.to_string_lossy().to_string(),
+            root.to_string_lossy().to_string(),
+            Some(pkg.to_string_lossy().to_string()),
+        )
+        .unwrap();
+        conformance(pkg.to_string_lossy().to_string()).unwrap();
     }
 
     #[test]
