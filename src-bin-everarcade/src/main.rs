@@ -16,7 +16,15 @@ fn main() {
     }
 }
 fn run() -> Result<(), String> {
-    let args: Vec<String> = env::args().collect();
+    let mut args: Vec<String> = env::args().collect();
+    let invoked_as_world_evr = args
+        .get(0)
+        .and_then(|p| std::path::Path::new(p).file_stem())
+        .and_then(|s| s.to_str())
+        == Some("world-evr");
+    if invoked_as_world_evr {
+        args.insert(1, "world".to_string());
+    }
     if matches!(
         args.get(1).map(String::as_str),
         Some("help" | "--help" | "-h") | None
