@@ -184,6 +184,10 @@ fn apply_profiles(root: &Path, assembled: &assembly::AssembledWorld) -> Result<(
     )?;
     write_json(root.join("metadata/runtime-ir.json"), &assembled.ir)?;
     write_json(
+        root.join("metadata/runtime-ir-validation.json"),
+        &assembled.ir.validation,
+    )?;
+    write_json(
         root.join("metadata/typed-contributions.json"),
         &assembled.contributions,
     )?;

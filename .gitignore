@@ -102,3 +102,6 @@ dist/everarcade-world-factory-release/
 # Local review-bundle archives
 /review-bundles/commitment-v1-review.zip
 /review-bundles/commitment-v1-review.tar.gz
+
+# Nested runtime/gpu-marketplace is a standalone crate; its Cargo.lock is generated locally.
+/runtime/gpu-marketplace/Cargo.lock
