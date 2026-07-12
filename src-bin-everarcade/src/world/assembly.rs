@@ -10,6 +10,9 @@ pub const PROFILE_SCHEMA_VERSION: &str = "everarcade.profile.v1";
 pub const PROFILE_GRAPH_SCHEMA_VERSION: &str = "everarcade.resolved-profile-graph.v1";
 pub const PROFILE_GRAPH_HASH_DOMAIN: &str = "everarcade.profile-graph.v1";
 pub const COMPILER_CAPABILITIES_SCHEMA_VERSION: &str = "everarcade.compiler-capabilities.v1";
+pub const CONTRIBUTION_SCHEMA_VERSION: &str = "everarcade.contribution.v1";
+pub const CONTRIBUTION_GRAPH_SCHEMA_VERSION: &str = "everarcade.contribution-graph.v1";
+pub const MERGED_CONTRIBUTIONS_SCHEMA_VERSION: &str = "everarcade.merged-contributions.v1";
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct CanonicalWorldRequest {
@@ -119,6 +122,15 @@ pub enum AssemblyStage {
     ValidateProfileCapabilities,
     ValidateProfileNamespaces,
     PrepareContributionLoading,
+    LoadTypedContributions,
+    BuildContributionGraph,
+    ValidateContributionOperations,
+    MergeUniqueDeclarations,
+    MergeKeyedUnions,
+    ApplyBoundedAggregations,
+    ResolveOrderedCompositions,
+    ApplyAuthorizedOverrides,
+    FinalizeMergedContributions,
     TypedContributionLoading,
     DeterministicContributionMerge,
     SymbolAndReferenceResolution,
@@ -141,17 +153,26 @@ impl AssemblyStage {
             Self::ValidateProfileCapabilities => "stage_03_validate_profile_capabilities",
             Self::ValidateProfileNamespaces => "stage_04_validate_profile_namespaces",
             Self::PrepareContributionLoading => "stage_05_prepare_contribution_loading",
-            Self::TypedContributionLoading => "stage_06_typed_contribution_loading",
-            Self::DeterministicContributionMerge => "stage_07_deterministic_contribution_merge",
-            Self::SymbolAndReferenceResolution => "stage_08_symbol_and_reference_resolution",
-            Self::RuntimeIrConstruction => "stage_09_runtime_ir_construction",
-            Self::StaticValidation => "stage_10_static_validation",
-            Self::InvariantAndBoundAnalysis => "stage_11_invariant_and_bound_analysis",
-            Self::CapabilityCompatibility => "stage_12_capability_compatibility",
-            Self::CanonicalLowering => "stage_13_canonical_lowering",
-            Self::PackageEmission => "stage_14_package_emission",
-            Self::HashAndProofManifestGeneration => "stage_15_hash_and_proof_manifest_generation",
-            Self::ConformanceSelfVerification => "stage_16_conformance_self_verification",
+            Self::LoadTypedContributions => "stage_06_load_typed_contributions",
+            Self::BuildContributionGraph => "stage_07_build_contribution_graph",
+            Self::ValidateContributionOperations => "stage_08_validate_contribution_operations",
+            Self::MergeUniqueDeclarations => "stage_09_merge_unique_declarations",
+            Self::MergeKeyedUnions => "stage_10_merge_keyed_unions",
+            Self::ApplyBoundedAggregations => "stage_11_apply_bounded_aggregations",
+            Self::ResolveOrderedCompositions => "stage_12_resolve_ordered_compositions",
+            Self::ApplyAuthorizedOverrides => "stage_13_apply_authorized_overrides",
+            Self::FinalizeMergedContributions => "stage_14_finalize_merged_contributions",
+            Self::TypedContributionLoading => "stage_15_typed_contribution_loading",
+            Self::DeterministicContributionMerge => "stage_16_deterministic_contribution_merge",
+            Self::SymbolAndReferenceResolution => "stage_17_symbol_and_reference_resolution",
+            Self::RuntimeIrConstruction => "stage_18_runtime_ir_construction",
+            Self::StaticValidation => "stage_19_static_validation",
+            Self::InvariantAndBoundAnalysis => "stage_20_invariant_and_bound_analysis",
+            Self::CapabilityCompatibility => "stage_21_capability_compatibility",
+            Self::CanonicalLowering => "stage_22_canonical_lowering",
+            Self::PackageEmission => "stage_23_package_emission",
+            Self::HashAndProofManifestGeneration => "stage_24_hash_and_proof_manifest_generation",
+            Self::ConformanceSelfVerification => "stage_25_conformance_self_verification",
         }
     }
 }
@@ -237,8 +258,11 @@ pub enum ContributionNamespace {
     Topology,
     Regions,
     SpawnPoints,
-    Archetypes,
+    EntityArchetypes,
+    ItemArchetypes,
+    EncounterArchetypes,
     Entities,
+    WorldVariables,
     Primitives,
     Actions,
     Transitions,
@@ -260,8 +284,11 @@ impl ContributionNamespace {
             Self::Topology => "topology",
             Self::Regions => "regions",
             Self::SpawnPoints => "spawn_points",
-            Self::Archetypes => "archetypes",
+            Self::EntityArchetypes => "entity_archetypes",
+            Self::ItemArchetypes => "item_archetypes",
+            Self::EncounterArchetypes => "encounter_archetypes",
             Self::Entities => "entities",
+            Self::WorldVariables => "world_variables",
             Self::Primitives => "primitives",
             Self::Actions => "actions",
             Self::Transitions => "transitions",
@@ -634,6 +661,222 @@ pub fn builtin_profile_catalog() -> ProfileCatalog {
     c
 }
 
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
+#[serde(rename_all = "snake_case")]
+pub enum ContributionOperation {
+    Declare,
+    Aggregate,
+    Compose,
+    Override,
+}
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
+#[serde(rename_all = "snake_case")]
+pub enum MergeClass {
+    UniqueDeclaration,
+    KeyedUnion,
+    BoundedAggregation,
+    OrderedComposition,
+}
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
+#[serde(rename_all = "snake_case")]
+pub enum OverridePolicy {
+    Forbidden,
+    SameProviderOnly,
+    DeclaredExtensionPoint,
+    RequestOverrideAllowed,
+    OperatorPolicyRequired,
+    ExactTargetHashRequired,
+}
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+pub struct OverrideTargetV1 {
+    pub target_contribution_id: String,
+    pub target_declaration_key: String,
+    pub expected_target_content_hash: String,
+    pub policy_id: String,
+    pub reason: String,
+}
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+pub struct OrderingMetadataV1 {
+    pub order_key: String,
+    #[serde(default)]
+    pub after: Vec<String>,
+    #[serde(default)]
+    pub before: Vec<String>,
+}
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+pub struct ContributionIdentityV1 {
+    pub contribution_id: String,
+    pub namespace: ContributionNamespace,
+    pub declaration_key: String,
+    pub schema_version: String,
+    pub source_profile_id: String,
+    pub source_profile_version: String,
+    pub source_profile_content_hash: String,
+    pub contribution_content_hash: String,
+}
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+pub struct SourceProvenanceV1 {
+    pub profile_identity: String,
+    pub profile_version: String,
+    pub profile_content_hash: String,
+    pub profile_source_kind: String,
+    pub dependency_path: Vec<String>,
+    pub namespace: ContributionNamespace,
+    pub contribution_id: String,
+    pub contribution_content_hash: String,
+    pub requested_root_profile: String,
+}
+macro_rules! payload {
+    ($n:ident) => {
+        #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+        pub struct $n {
+            pub authoritative: bool,
+            pub value: Value,
+        }
+    };
+}
+payload!(RuntimeContributionPayload);
+payload!(LimitsContributionPayload);
+payload!(TopologyContributionPayload);
+payload!(RegionContributionPayload);
+payload!(SpawnPointContributionPayload);
+payload!(EntityArchetypeContributionPayload);
+payload!(ItemArchetypeContributionPayload);
+payload!(EncounterArchetypeContributionPayload);
+payload!(EntityContributionPayload);
+payload!(WorldVariableContributionPayload);
+payload!(PrimitiveContributionPayload);
+payload!(ActionContributionPayload);
+payload!(TransitionContributionPayload);
+payload!(InvariantContributionPayload);
+payload!(EncounterContributionPayload);
+payload!(ProgressionContributionPayload);
+payload!(ContentContributionPayload);
+payload!(ProjectionContributionPayload);
+payload!(ProofContributionPayload);
+payload!(EconomyContributionPayload);
+payload!(AiContributionPayload);
+payload!(AccessContributionPayload);
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(tag = "namespace", content = "payload", rename_all = "snake_case")]
+pub enum ContributionPayloadV1 {
+    Runtime(RuntimeContributionPayload),
+    Limits(LimitsContributionPayload),
+    Topology(TopologyContributionPayload),
+    Regions(RegionContributionPayload),
+    SpawnPoints(SpawnPointContributionPayload),
+    EntityArchetypes(EntityArchetypeContributionPayload),
+    ItemArchetypes(ItemArchetypeContributionPayload),
+    EncounterArchetypes(EncounterArchetypeContributionPayload),
+    Entities(EntityContributionPayload),
+    WorldVariables(WorldVariableContributionPayload),
+    Primitives(PrimitiveContributionPayload),
+    Actions(ActionContributionPayload),
+    Transitions(TransitionContributionPayload),
+    Invariants(InvariantContributionPayload),
+    Encounters(EncounterContributionPayload),
+    Progression(ProgressionContributionPayload),
+    Content(ContentContributionPayload),
+    Projection(ProjectionContributionPayload),
+    Proof(ProofContributionPayload),
+    Economy(EconomyContributionPayload),
+    Ai(AiContributionPayload),
+    Access(AccessContributionPayload),
+}
+impl ContributionPayloadV1 {
+    fn value(&self) -> &Value {
+        match self {
+            Self::Runtime(x) => &x.value,
+            Self::Limits(x) => &x.value,
+            Self::Topology(x) => &x.value,
+            Self::Regions(x) => &x.value,
+            Self::SpawnPoints(x) => &x.value,
+            Self::EntityArchetypes(x) => &x.value,
+            Self::ItemArchetypes(x) => &x.value,
+            Self::EncounterArchetypes(x) => &x.value,
+            Self::Entities(x) => &x.value,
+            Self::WorldVariables(x) => &x.value,
+            Self::Primitives(x) => &x.value,
+            Self::Actions(x) => &x.value,
+            Self::Transitions(x) => &x.value,
+            Self::Invariants(x) => &x.value,
+            Self::Encounters(x) => &x.value,
+            Self::Progression(x) => &x.value,
+            Self::Content(x) => &x.value,
+            Self::Projection(x) => &x.value,
+            Self::Proof(x) => &x.value,
+            Self::Economy(x) => &x.value,
+            Self::Ai(x) => &x.value,
+            Self::Access(x) => &x.value,
+        }
+    }
+}
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+pub struct ProfileContributionV1 {
+    pub identity: ContributionIdentityV1,
+    pub operation: ContributionOperation,
+    pub merge_class: MergeClass,
+    pub override_policy: OverridePolicy,
+    #[serde(default)]
+    pub override_target: Option<OverrideTargetV1>,
+    #[serde(default)]
+    pub ordering: Option<OrderingMetadataV1>,
+    pub payload: ContributionPayloadV1,
+    pub provenance: SourceProvenanceV1,
+}
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+pub struct ContributionGraphV1 {
+    pub schema_version: String,
+    pub resolved_profile_nodes: Vec<ResolvedProfileNodeV1>,
+    pub contribution_nodes: Vec<ProfileContributionV1>,
+    pub profile_to_contribution_edges: Vec<(String, String)>,
+    pub contribution_dependency_edges: Vec<(String, String)>,
+    pub ordering_constraints: Vec<(String, String)>,
+    pub override_relationships: Vec<(String, String)>,
+    pub provenance: BTreeMap<String, SourceProvenanceV1>,
+    pub contribution_graph_hash: String,
+}
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+pub struct MergeDecisionV1 {
+    pub namespace: ContributionNamespace,
+    pub declaration_key: String,
+    pub contribution_ids: Vec<String>,
+    pub decision: String,
+}
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Default)]
+pub struct MergedContributionSetV1 {
+    pub schema_version: String,
+    pub runtime: BTreeMap<String, Value>,
+    pub limits: BTreeMap<String, Value>,
+    pub topology: BTreeMap<String, Value>,
+    pub regions: BTreeMap<String, Value>,
+    pub spawn_points: BTreeMap<String, Value>,
+    pub entity_archetypes: BTreeMap<String, Value>,
+    pub item_archetypes: BTreeMap<String, Value>,
+    pub encounter_archetypes: BTreeMap<String, Value>,
+    pub entities: BTreeMap<String, Value>,
+    pub world_variables: BTreeMap<String, Value>,
+    pub primitives: BTreeMap<String, Value>,
+    pub actions: BTreeMap<String, Value>,
+    pub transitions: BTreeMap<String, Value>,
+    pub invariants: BTreeMap<String, Value>,
+    pub encounters: BTreeMap<String, Value>,
+    pub progression: BTreeMap<String, Value>,
+    pub content: BTreeMap<String, Value>,
+    pub projection: BTreeMap<String, Value>,
+    pub proof: BTreeMap<String, Value>,
+    pub economy: BTreeMap<String, Value>,
+    pub ai: BTreeMap<String, Value>,
+    pub access: BTreeMap<String, Value>,
+    pub applied_overrides: Vec<MergeDecisionV1>,
+    pub deduplicated_identical_contributions: Vec<MergeDecisionV1>,
+    pub aggregation_decisions: Vec<MergeDecisionV1>,
+    pub ordering_decisions: Vec<MergeDecisionV1>,
+    pub provenance_index: BTreeMap<String, Vec<SourceProvenanceV1>>,
+    pub diagnostics: Vec<AssemblyDiagnostic>,
+    pub merged_contribution_hash: String,
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct ContributionProvenance {
     pub source_profile: String,
@@ -651,8 +894,11 @@ pub struct TypedContributionsV1 {
     pub topology: Vec<TypedContribution<Value>>,
     pub regions: Vec<TypedContribution<Value>>,
     pub spawn_points: Vec<TypedContribution<Value>>,
-    pub archetypes: Vec<TypedContribution<Value>>,
+    pub entity_archetypes: Vec<TypedContribution<Value>>,
+    pub item_archetypes: Vec<TypedContribution<Value>>,
+    pub encounter_archetypes: Vec<TypedContribution<Value>>,
     pub entities: Vec<TypedContribution<Value>>,
+    pub world_variables: Vec<TypedContribution<Value>>,
     pub primitives: Vec<TypedContribution<Value>>,
     pub actions: Vec<TypedContribution<Value>>,
     pub transitions: Vec<TypedContribution<Value>>,
@@ -687,6 +933,8 @@ pub struct PtwRuntimeIrV1 {
     pub regions: BTreeMap<String, Value>,
     pub spawn_points: BTreeMap<String, Value>,
     pub resolved_profile_graph: ResolvedProfileGraphV1,
+    pub contribution_graph: ContributionGraphV1,
+    pub merged_contributions: MergedContributionSetV1,
     pub archetypes: BTreeMap<String, Value>,
     pub initial_entities: BTreeMap<String, Value>,
     pub world_variables: BTreeMap<String, Value>,
@@ -717,6 +965,11 @@ pub struct AssemblyManifestV1 {
     pub dependency_graph: Vec<ResolvedProfileEdgeV1>,
     pub stable_resolution_order: Vec<String>,
     pub profile_graph_hash: String,
+    pub contribution_graph_hash: String,
+    pub merged_contribution_hash: String,
+    pub contribution_graph_schema_version: String,
+    pub merged_contributions_schema_version: String,
+    pub merge_diagnostics: Vec<AssemblyDiagnostic>,
     pub required_capabilities: Vec<String>,
     pub capability_validation_result: ValidationResultV1,
     pub conflict_validation_result: ValidationResultV1,
@@ -731,15 +984,469 @@ pub struct AssemblyManifestV1 {
 pub struct AssembledWorld {
     pub request: CanonicalWorldRequest,
     pub contributions: TypedContributionsV1,
+    pub contribution_graph: ContributionGraphV1,
+    pub merged_contributions: MergedContributionSetV1,
     pub ir: PtwRuntimeIrV1,
     pub diagnostics: Vec<AssemblyDiagnostic>,
     pub manifest: AssemblyManifestV1,
 }
 
+fn ns_of_payload(p: &ContributionPayloadV1) -> ContributionNamespace {
+    match p {
+        ContributionPayloadV1::Runtime(_) => ContributionNamespace::Runtime,
+        ContributionPayloadV1::Limits(_) => ContributionNamespace::Limits,
+        ContributionPayloadV1::Topology(_) => ContributionNamespace::Topology,
+        ContributionPayloadV1::Regions(_) => ContributionNamespace::Regions,
+        ContributionPayloadV1::SpawnPoints(_) => ContributionNamespace::SpawnPoints,
+        ContributionPayloadV1::EntityArchetypes(_) => ContributionNamespace::EntityArchetypes,
+        ContributionPayloadV1::ItemArchetypes(_) => ContributionNamespace::ItemArchetypes,
+        ContributionPayloadV1::EncounterArchetypes(_) => ContributionNamespace::EncounterArchetypes,
+        ContributionPayloadV1::Entities(_) => ContributionNamespace::Entities,
+        ContributionPayloadV1::WorldVariables(_) => ContributionNamespace::WorldVariables,
+        ContributionPayloadV1::Primitives(_) => ContributionNamespace::Primitives,
+        ContributionPayloadV1::Actions(_) => ContributionNamespace::Actions,
+        ContributionPayloadV1::Transitions(_) => ContributionNamespace::Transitions,
+        ContributionPayloadV1::Invariants(_) => ContributionNamespace::Invariants,
+        ContributionPayloadV1::Encounters(_) => ContributionNamespace::Encounters,
+        ContributionPayloadV1::Progression(_) => ContributionNamespace::Progression,
+        ContributionPayloadV1::Content(_) => ContributionNamespace::Content,
+        ContributionPayloadV1::Projection(_) => ContributionNamespace::Projection,
+        ContributionPayloadV1::Proof(_) => ContributionNamespace::Proof,
+        ContributionPayloadV1::Economy(_) => ContributionNamespace::Economy,
+        ContributionPayloadV1::Ai(_) => ContributionNamespace::Ai,
+        ContributionPayloadV1::Access(_) => ContributionNamespace::Access,
+    }
+}
+fn make_contribution(
+    n: &ResolvedProfileNodeV1,
+    ns: ContributionNamespace,
+    key: &str,
+    op: ContributionOperation,
+    class: MergeClass,
+    policy: OverridePolicy,
+    value: Value,
+    ordering: Option<OrderingMetadataV1>,
+    target: Option<OverrideTargetV1>,
+) -> ProfileContributionV1 {
+    let payload = match ns {
+        ContributionNamespace::Runtime => {
+            ContributionPayloadV1::Runtime(RuntimeContributionPayload {
+                authoritative: true,
+                value,
+            })
+        }
+        ContributionNamespace::Limits => ContributionPayloadV1::Limits(LimitsContributionPayload {
+            authoritative: true,
+            value,
+        }),
+        ContributionNamespace::Topology => {
+            ContributionPayloadV1::Topology(TopologyContributionPayload {
+                authoritative: true,
+                value,
+            })
+        }
+        ContributionNamespace::Regions => {
+            ContributionPayloadV1::Regions(RegionContributionPayload {
+                authoritative: true,
+                value,
+            })
+        }
+        ContributionNamespace::SpawnPoints => {
+            ContributionPayloadV1::SpawnPoints(SpawnPointContributionPayload {
+                authoritative: true,
+                value,
+            })
+        }
+        ContributionNamespace::Primitives => {
+            ContributionPayloadV1::Primitives(PrimitiveContributionPayload {
+                authoritative: true,
+                value,
+            })
+        }
+        ContributionNamespace::Actions => {
+            ContributionPayloadV1::Actions(ActionContributionPayload {
+                authoritative: true,
+                value,
+            })
+        }
+        ContributionNamespace::Proof => ContributionPayloadV1::Proof(ProofContributionPayload {
+            authoritative: true,
+            value,
+        }),
+        _ => ContributionPayloadV1::Content(ContentContributionPayload {
+            authoritative: false,
+            value,
+        }),
+    };
+    let h = hash_json(&payload);
+    let cid = format!("{}:{}:{}:{}", n.identity, ns.as_str(), key, h);
+    let id = ContributionIdentityV1 {
+        contribution_id: cid.clone(),
+        namespace: ns.clone(),
+        declaration_key: key.into(),
+        schema_version: CONTRIBUTION_SCHEMA_VERSION.into(),
+        source_profile_id: format!("{}.{}.{}", n.provider, n.category.as_str(), n.name),
+        source_profile_version: n.version.clone(),
+        source_profile_content_hash: n.content_hash.clone(),
+        contribution_content_hash: h.clone(),
+    };
+    let prov = SourceProvenanceV1 {
+        profile_identity: n.identity.clone(),
+        profile_version: n.version.clone(),
+        profile_content_hash: n.content_hash.clone(),
+        profile_source_kind: n.source.source_type.clone(),
+        dependency_path: vec![n.identity.clone()],
+        namespace: ns,
+        contribution_id: cid,
+        contribution_content_hash: h,
+        requested_root_profile: String::new(),
+    };
+    ProfileContributionV1 {
+        identity: id,
+        operation: op,
+        merge_class: class,
+        override_policy: policy,
+        override_target: target,
+        ordering,
+        payload,
+        provenance: prov,
+    }
+}
+pub fn load_typed_contributions(g: &ResolvedProfileGraphV1) -> Vec<ProfileContributionV1> {
+    let mut out = Vec::new();
+    for n in &g.resolved_profile_nodes {
+        match n.name.as_str() {
+            "base-world-v1" => {
+                out.push(make_contribution(
+                    n,
+                    ContributionNamespace::Runtime,
+                    "runtime-contract",
+                    ContributionOperation::Declare,
+                    MergeClass::UniqueDeclaration,
+                    OverridePolicy::Forbidden,
+                    json!({"contract":"ptw","numeric_model":"u64","tick_model":"deterministic"}),
+                    None,
+                    None,
+                ));
+                out.push(make_contribution(
+                    n,
+                    ContributionNamespace::Limits,
+                    "max_players",
+                    ContributionOperation::Aggregate,
+                    MergeClass::BoundedAggregation,
+                    OverridePolicy::Forbidden,
+                    json!({"rule":"strictest_maximum","value":64}),
+                    None,
+                    None,
+                ));
+            }
+            "movement-enabled-v1" => {
+                out.push(make_contribution(
+                    n,
+                    ContributionNamespace::Primitives,
+                    "movement",
+                    ContributionOperation::Declare,
+                    MergeClass::KeyedUnion,
+                    OverridePolicy::Forbidden,
+                    json!({"primitive":"movement","mode":"grid"}),
+                    None,
+                    None,
+                ));
+                out.push(make_contribution(
+                    n,
+                    ContributionNamespace::Actions,
+                    "entity_move",
+                    ContributionOperation::Declare,
+                    MergeClass::KeyedUnion,
+                    OverridePolicy::SameProviderOnly,
+                    json!({"action":"entity_move","cost":1}),
+                    None,
+                    None,
+                ));
+                out.push(make_contribution(
+                    n,
+                    ContributionNamespace::Transitions,
+                    "move-precondition:has_actor",
+                    ContributionOperation::Compose,
+                    MergeClass::OrderedComposition,
+                    OverridePolicy::Forbidden,
+                    json!({"precondition":"has_actor"}),
+                    Some(OrderingMetadataV1 {
+                        order_key: "010-has-actor".into(),
+                        after: vec![],
+                        before: vec![],
+                    }),
+                    None,
+                ));
+            }
+            "simple-topology-v1" => {
+                out.push(make_contribution(
+                    n,
+                    ContributionNamespace::Regions,
+                    "origin",
+                    ContributionOperation::Declare,
+                    MergeClass::KeyedUnion,
+                    OverridePolicy::Forbidden,
+                    json!({"region":"origin"}),
+                    None,
+                    None,
+                ));
+                out.push(make_contribution(
+                    n,
+                    ContributionNamespace::SpawnPoints,
+                    "default",
+                    ContributionOperation::Declare,
+                    MergeClass::KeyedUnion,
+                    OverridePolicy::Forbidden,
+                    json!({"spawn":"default","region":"origin"}),
+                    None,
+                    None,
+                ));
+            }
+            "replay-proof-v1" => out.push(make_contribution(
+                n,
+                ContributionNamespace::Proof,
+                "replay",
+                ContributionOperation::Declare,
+                MergeClass::KeyedUnion,
+                OverridePolicy::Forbidden,
+                json!({"proof":"replay"}),
+                None,
+                None,
+            )),
+            _ => {}
+        }
+    }
+    out.sort_by_key(|c| {
+        (
+            c.identity.namespace.clone(),
+            c.identity.declaration_key.clone(),
+            c.identity.contribution_id.clone(),
+        )
+    });
+    out
+}
+pub fn build_contribution_graph(
+    g: &ResolvedProfileGraphV1,
+    mut c: Vec<ProfileContributionV1>,
+) -> ContributionGraphV1 {
+    c.sort_by_key(|x| {
+        (
+            x.identity.namespace.clone(),
+            x.identity.declaration_key.clone(),
+            x.identity.contribution_id.clone(),
+        )
+    });
+    let p2c = c
+        .iter()
+        .map(|x| {
+            (
+                x.provenance.profile_identity.clone(),
+                x.identity.contribution_id.clone(),
+            )
+        })
+        .collect();
+    let ord = c
+        .iter()
+        .filter_map(|x| {
+            x.ordering
+                .as_ref()
+                .map(|o| (x.identity.contribution_id.clone(), o.order_key.clone()))
+        })
+        .collect();
+    let ov = c
+        .iter()
+        .filter_map(|x| {
+            x.override_target.as_ref().map(|o| {
+                (
+                    x.identity.contribution_id.clone(),
+                    o.target_contribution_id.clone(),
+                )
+            })
+        })
+        .collect();
+    let prov = c
+        .iter()
+        .map(|x| (x.identity.contribution_id.clone(), x.provenance.clone()))
+        .collect();
+    let mut cg = ContributionGraphV1 {
+        schema_version: CONTRIBUTION_GRAPH_SCHEMA_VERSION.into(),
+        resolved_profile_nodes: g.resolved_profile_nodes.clone(),
+        contribution_nodes: c,
+        profile_to_contribution_edges: p2c,
+        contribution_dependency_edges: vec![],
+        ordering_constraints: ord,
+        override_relationships: ov,
+        provenance: prov,
+        contribution_graph_hash: String::new(),
+    };
+    cg.contribution_graph_hash = hash_json(
+        &json!({"domain":CONTRIBUTION_GRAPH_SCHEMA_VERSION,"nodes":cg.contribution_nodes,"p2c":cg.profile_to_contribution_edges,"dep":cg.contribution_dependency_edges,"order":cg.ordering_constraints,"overrides":cg.override_relationships}),
+    );
+    cg
+}
+fn map_for<'a>(
+    m: &'a mut MergedContributionSetV1,
+    ns: &ContributionNamespace,
+) -> &'a mut BTreeMap<String, Value> {
+    match ns {
+        ContributionNamespace::Runtime => &mut m.runtime,
+        ContributionNamespace::Limits => &mut m.limits,
+        ContributionNamespace::Topology => &mut m.topology,
+        ContributionNamespace::Regions => &mut m.regions,
+        ContributionNamespace::SpawnPoints => &mut m.spawn_points,
+        ContributionNamespace::EntityArchetypes => &mut m.entity_archetypes,
+        ContributionNamespace::ItemArchetypes => &mut m.item_archetypes,
+        ContributionNamespace::EncounterArchetypes => &mut m.encounter_archetypes,
+        ContributionNamespace::Entities => &mut m.entities,
+        ContributionNamespace::WorldVariables => &mut m.world_variables,
+        ContributionNamespace::Primitives => &mut m.primitives,
+        ContributionNamespace::Actions => &mut m.actions,
+        ContributionNamespace::Transitions => &mut m.transitions,
+        ContributionNamespace::Invariants => &mut m.invariants,
+        ContributionNamespace::Encounters => &mut m.encounters,
+        ContributionNamespace::Progression => &mut m.progression,
+        ContributionNamespace::Content => &mut m.content,
+        ContributionNamespace::Projection => &mut m.projection,
+        ContributionNamespace::Proof => &mut m.proof,
+        ContributionNamespace::Economy => &mut m.economy,
+        ContributionNamespace::Ai => &mut m.ai,
+        ContributionNamespace::Access => &mut m.access,
+    }
+}
+pub fn merge_contribution_graph(cg: &ContributionGraphV1) -> MergedContributionSetV1 {
+    let mut m = MergedContributionSetV1 {
+        schema_version: MERGED_CONTRIBUTIONS_SCHEMA_VERSION.into(),
+        ..Default::default()
+    };
+    for c in &cg.contribution_nodes {
+        let ns = ns_of_payload(&c.payload);
+        if ns != c.identity.namespace {
+            m.diagnostics.push(contrib_diag(
+                "ASSEMBLY_CONTRIBUTION_NAMESPACE_MISMATCH",
+                AssemblyStage::ValidateContributionOperations,
+                &c,
+            ));
+            continue;
+        }
+        if c.identity.schema_version != CONTRIBUTION_SCHEMA_VERSION {
+            m.diagnostics.push(contrib_diag(
+                "ASSEMBLY_CONTRIBUTION_SCHEMA_UNSUPPORTED",
+                AssemblyStage::ValidateContributionOperations,
+                &c,
+            ));
+            continue;
+        }
+        if c.operation == ContributionOperation::Override {
+            continue;
+        }
+        let key = c.identity.declaration_key.clone();
+        let existing = map_for(&mut m, &ns).get(&key).cloned();
+        match (c.merge_class.clone(), existing) {
+            (MergeClass::BoundedAggregation, Some(old)) => {
+                let nv = c.payload.value()["value"].as_u64().unwrap_or(u64::MAX);
+                let ov = old["value"].as_u64().unwrap_or(u64::MAX);
+                let chosen = if nv < ov {
+                    c.payload.value().clone()
+                } else {
+                    old
+                };
+                map_for(&mut m, &ns).insert(key.clone(), chosen);
+                m.aggregation_decisions.push(MergeDecisionV1 {
+                    namespace: ns,
+                    declaration_key: key,
+                    contribution_ids: vec![c.identity.contribution_id.clone()],
+                    decision: "strictest_maximum".into(),
+                });
+            }
+            (_, Some(old)) if old == *c.payload.value() => m
+                .deduplicated_identical_contributions
+                .push(MergeDecisionV1 {
+                    namespace: ns,
+                    declaration_key: key,
+                    contribution_ids: vec![c.identity.contribution_id.clone()],
+                    decision: "byte_identical_duplicate_deduplicated".into(),
+                }),
+            (_, Some(_)) => m.diagnostics.push(contrib_diag(
+                if c.merge_class == MergeClass::UniqueDeclaration {
+                    "ASSEMBLY_UNIQUE_DECLARATION_CONFLICT"
+                } else {
+                    "ASSEMBLY_CONTRIBUTION_CONFLICT"
+                },
+                AssemblyStage::MergeKeyedUnions,
+                c,
+            )),
+            (_, None) => {
+                map_for(&mut m, &ns).insert(key, c.payload.value().clone());
+            }
+        }
+        m.provenance_index
+            .entry(format!(
+                "{}:{}",
+                c.identity.namespace.as_str(),
+                c.identity.declaration_key
+            ))
+            .or_default()
+            .push(c.provenance.clone());
+    }
+    let mut h = m.clone();
+    h.merged_contribution_hash = String::new();
+    h.diagnostics = sorted_diagnostics(h.diagnostics);
+    m.diagnostics = h.diagnostics.clone();
+    m.merged_contribution_hash =
+        hash_json(&json!({"domain":MERGED_CONTRIBUTIONS_SCHEMA_VERSION,"merged":h}));
+    m
+}
+fn contrib_diag(code: &str, stage: AssemblyStage, c: &ProfileContributionV1) -> AssemblyDiagnostic {
+    AssemblyDiagnostic{code:code.into(),severity:DiagnosticSeverity::Error,stage,namespace:c.identity.namespace.as_str().into(),source:c.provenance.profile_identity.clone(),affected_id:c.identity.declaration_key.clone(),message:format!("{} for contribution {} in namespace {} declaration {}",code,c.identity.contribution_id,c.identity.namespace.as_str(),c.identity.declaration_key),suggested_remediation:"Use explicit compatible declarations, deterministic ordering metadata, or an authorized override target.".into()}
+}
+
 pub fn assemble_world(request: CanonicalWorldRequest) -> Result<AssembledWorld, String> {
     let catalog = builtin_profile_catalog();
     let graph = resolve_profile_graph(request.profiles.values().cloned().collect(), &catalog);
-    let contributions = TypedContributionsV1::default();
+    let loaded_contributions = load_typed_contributions(&graph);
+    let contribution_graph = build_contribution_graph(&graph, loaded_contributions);
+    let merged_contributions = merge_contribution_graph(&contribution_graph);
+    let mut contributions = TypedContributionsV1::default();
+    for c in &contribution_graph.contribution_nodes {
+        let tc = TypedContribution {
+            provenance: ContributionProvenance {
+                source_profile: c.provenance.profile_identity.clone(),
+                source_version: c.provenance.profile_version.clone(),
+                source_content_hash: c.provenance.profile_content_hash.clone(),
+                contribution_id: c.identity.contribution_id.clone(),
+                priority_policy: format!("{:?}", c.merge_class),
+                override_policy: format!("{:?}", c.override_policy),
+            },
+            value: c.payload.value().clone(),
+        };
+        match c.identity.namespace {
+            ContributionNamespace::Runtime => contributions.runtime.push(tc),
+            ContributionNamespace::Limits => contributions.limits.push(tc),
+            ContributionNamespace::Topology => contributions.topology.push(tc),
+            ContributionNamespace::Regions => contributions.regions.push(tc),
+            ContributionNamespace::SpawnPoints => contributions.spawn_points.push(tc),
+            ContributionNamespace::EntityArchetypes => contributions.entity_archetypes.push(tc),
+            ContributionNamespace::ItemArchetypes => contributions.item_archetypes.push(tc),
+            ContributionNamespace::EncounterArchetypes => {
+                contributions.encounter_archetypes.push(tc)
+            }
+            ContributionNamespace::Entities => contributions.entities.push(tc),
+            ContributionNamespace::WorldVariables => contributions.world_variables.push(tc),
+            ContributionNamespace::Primitives => contributions.primitives.push(tc),
+            ContributionNamespace::Actions => contributions.actions.push(tc),
+            ContributionNamespace::Transitions => contributions.transitions.push(tc),
+            ContributionNamespace::Invariants => contributions.invariants.push(tc),
+            ContributionNamespace::Encounters => contributions.encounters.push(tc),
+            ContributionNamespace::Progression => contributions.progression.push(tc),
+            ContributionNamespace::Content => contributions.content.push(tc),
+            ContributionNamespace::Projection => contributions.projection.push(tc),
+            ContributionNamespace::Proof => contributions.proof.push(tc),
+            ContributionNamespace::Economy => contributions.economy.push(tc),
+            ContributionNamespace::Ai => contributions.ai.push(tc),
+            ContributionNamespace::Access => contributions.access.push(tc),
+        }
+    }
     let resolved_profiles = graph
         .resolved_profile_nodes
         .iter()
@@ -758,6 +1465,8 @@ pub fn assemble_world(request: CanonicalWorldRequest) -> Result<AssembledWorld, 
         regions: BTreeMap::new(),
         spawn_points: BTreeMap::new(),
         resolved_profile_graph: graph.clone(),
+        contribution_graph: contribution_graph.clone(),
+        merged_contributions: merged_contributions.clone(),
         archetypes: BTreeMap::new(),
         initial_entities: BTreeMap::new(),
         world_variables: BTreeMap::new(),
@@ -774,18 +1483,7 @@ pub fn assemble_world(request: CanonicalWorldRequest) -> Result<AssembledWorld, 
         proof_constraints: request.proof_policy.clone(),
     };
     let mut diagnostics = graph.diagnostics.clone();
-    diagnostics.push(AssemblyDiagnostic {
-        code: "ASSEMBLY_PROFILE_CONTRIBUTION_LOADING_DEFERRED".into(),
-        severity: DiagnosticSeverity::Info,
-        stage: AssemblyStage::PrepareContributionLoading,
-        namespace: "contributions".into(),
-        source: "runtime-assembly-profile-resolution".into(),
-        affected_id: request.world_id.clone(),
-        message: "Profile graph resolved; typed contribution merging is deferred to Phase C."
-            .into(),
-        suggested_remediation:
-            "Load declared profile contribution namespaces in the Phase C merge engine.".into(),
-    });
+    diagnostics.extend(merged_contributions.diagnostics.clone());
     let diagnostics = sorted_diagnostics(diagnostics);
     let profile_content_hashes = graph
         .resolved_profile_nodes
@@ -808,6 +1506,11 @@ pub fn assemble_world(request: CanonicalWorldRequest) -> Result<AssembledWorld, 
         dependency_graph: graph.dependency_edges.clone(),
         stable_resolution_order: graph.stable_topological_order.clone(),
         profile_graph_hash: graph.graph_hash.clone(),
+        contribution_graph_hash: contribution_graph.contribution_graph_hash.clone(),
+        merged_contribution_hash: merged_contributions.merged_contribution_hash.clone(),
+        contribution_graph_schema_version: CONTRIBUTION_GRAPH_SCHEMA_VERSION.into(),
+        merged_contributions_schema_version: MERGED_CONTRIBUTIONS_SCHEMA_VERSION.into(),
+        merge_diagnostics: merged_contributions.diagnostics.clone(),
         required_capabilities: graph.required_capabilities.clone(),
         capability_validation_result: graph.capability_check.clone(),
         conflict_validation_result: graph.conflict_check.clone(),
@@ -820,6 +1523,8 @@ pub fn assemble_world(request: CanonicalWorldRequest) -> Result<AssembledWorld, 
     Ok(AssembledWorld {
         request,
         contributions,
+        contribution_graph,
+        merged_contributions,
         ir,
         diagnostics,
         manifest,
@@ -1257,6 +1962,15 @@ fn assembly_stages() -> Vec<AssemblyStage> {
         AssemblyStage::ValidateProfileCapabilities,
         AssemblyStage::ValidateProfileNamespaces,
         AssemblyStage::PrepareContributionLoading,
+        AssemblyStage::LoadTypedContributions,
+        AssemblyStage::BuildContributionGraph,
+        AssemblyStage::ValidateContributionOperations,
+        AssemblyStage::MergeUniqueDeclarations,
+        AssemblyStage::MergeKeyedUnions,
+        AssemblyStage::ApplyBoundedAggregations,
+        AssemblyStage::ResolveOrderedCompositions,
+        AssemblyStage::ApplyAuthorizedOverrides,
+        AssemblyStage::FinalizeMergedContributions,
         AssemblyStage::TypedContributionLoading,
         AssemblyStage::DeterministicContributionMerge,
         AssemblyStage::SymbolAndReferenceResolution,
@@ -1332,7 +2046,7 @@ mod tests {
         let assembled = assemble_world(request).unwrap();
         assert_eq!(assembled.ir.contract_version, PTW_RUNTIME_CONTRACT_VERSION);
         assert!(assembled.contributions.actions.is_empty());
-        assert_eq!(assembled.manifest.stages.len(), 17);
+        assert_eq!(assembled.manifest.stages.len(), 26);
         assert_eq!(
             assembled.ir.resolved_profile_graph.schema_version,
             PROFILE_GRAPH_SCHEMA_VERSION
@@ -1452,6 +2166,81 @@ mod tests {
             .diagnostics
             .iter()
             .any(|d| d.code == "ASSEMBLY_PROFILE_DEPENDENCY_MISSING"));
+    }
+
+    #[test]
+    fn contribution_loading_builds_graph_and_hashes_deterministically() {
+        let catalog = builtin_profile_catalog();
+        let graph = resolve_profile_graph(
+            vec!["everarcade.topology.simple-topology-v1@1.0.0".into()],
+            &catalog,
+        );
+        let g1 = build_contribution_graph(&graph, load_typed_contributions(&graph));
+        let g2 = build_contribution_graph(&graph, load_typed_contributions(&graph));
+        assert_eq!(g1.contribution_graph_hash, g2.contribution_graph_hash);
+        assert!(g1
+            .contribution_nodes
+            .iter()
+            .any(|c| c.identity.namespace == ContributionNamespace::Regions));
+        assert!(g1
+            .provenance
+            .values()
+            .all(|p| !p.profile_identity.is_empty() && !p.contribution_content_hash.is_empty()));
+    }
+
+    #[test]
+    fn merge_keyed_union_deduplicates_and_conflicts() {
+        let catalog = builtin_profile_catalog();
+        let graph = resolve_profile_graph(
+            vec!["everarcade.runtime.movement-enabled-v1@1.0.0".into()],
+            &catalog,
+        );
+        let mut nodes = load_typed_contributions(&graph);
+        let first_action = nodes
+            .iter()
+            .find(|c| c.identity.namespace == ContributionNamespace::Actions)
+            .unwrap()
+            .clone();
+        nodes.push(first_action.clone());
+        let mut conflicting = first_action;
+        conflicting.identity.contribution_id.push_str(":conflict");
+        if let ContributionPayloadV1::Actions(p) = &mut conflicting.payload {
+            p.value = json!({"action":"entity_move","cost":2});
+        }
+        nodes.push(conflicting);
+        let merged = merge_contribution_graph(&build_contribution_graph(&graph, nodes));
+        assert!(merged
+            .deduplicated_identical_contributions
+            .iter()
+            .any(|d| d.decision == "byte_identical_duplicate_deduplicated"));
+        assert!(merged
+            .diagnostics
+            .iter()
+            .any(|d| d.code == "ASSEMBLY_CONTRIBUTION_CONFLICT"));
+    }
+
+    #[test]
+    fn bounded_aggregation_uses_strictest_maximum_order_independently() {
+        let catalog = builtin_profile_catalog();
+        let graph = resolve_profile_graph(
+            vec!["everarcade.world.base-world-v1@1.0.0".into()],
+            &catalog,
+        );
+        let mut nodes = load_typed_contributions(&graph);
+        let base = nodes
+            .iter()
+            .find(|c| c.identity.namespace == ContributionNamespace::Limits)
+            .unwrap()
+            .clone();
+        let mut stricter = base.clone();
+        stricter.identity.contribution_id.push_str(":strict");
+        if let ContributionPayloadV1::Limits(p) = &mut stricter.payload {
+            p.value = json!({"rule":"strictest_maximum","value":32});
+        }
+        nodes.push(stricter);
+        let merged = merge_contribution_graph(&build_contribution_graph(&graph, nodes));
+        assert_eq!(merged.limits["max_players"]["value"], json!(32));
+        assert!(merged.merged_contribution_hash.starts_with("sha256:"));
     }
 
     #[test]
