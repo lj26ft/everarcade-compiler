@@ -7,7 +7,7 @@ The compiler intentionally does not implement billing, marketplace operation, id
 ## Pipeline
 
 ```text
-World Configuration -> Profile Resolution -> Primitive Composition -> Rule Composition -> Projection Metadata -> Economy Metadata -> Proof Metadata -> Canonical Encoding -> world.evr Package -> Conformance -> Verification
+Canonical request -> profile graph -> contribution loading -> contribution graph -> merge -> Runtime IR -> Canonical Encoding -> world.evr Package -> Conformance -> Verification
 ```
 
 ## Reference CLI
@@ -33,3 +33,8 @@ EverArcade Operator -> EverArcade Platform -> everarcade-compiler -> world.evr -
 ```
 
 The platform may call `compile`, `verify`, `loadProfiles`, `generatePackage`, and `validateConformance` equivalents, but the compiler remains infrastructure-independent.
+
+
+## Runtime Assembly Engine profile resolution
+
+Phase B adds a deterministic `everarcade.profile.v1` catalog and resolver. The compiler now resolves exact requested profiles, dependencies, optional-dependency decisions, conflicts, compiler capabilities, contribution namespaces, source provenance, and the `everarcade.profile-graph.v1` graph hash before contribution loading. Contribution graph construction and merge remain deferred to Phase C. See [`runtime-assembly-profile-resolution-v1.md`](runtime-assembly-profile-resolution-v1.md).

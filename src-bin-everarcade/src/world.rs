@@ -137,7 +137,10 @@ fn apply_profiles(root: &Path, assembled: &assembly::AssembledWorld) -> Result<(
     let world_id = r.world_id.clone();
     let profiles = json!({
         "schema_version": r.schema_version,
-        "resolved_profiles": r.profiles,
+        "resolved_profiles": assembled.ir.resolved_profiles,
+        "requested_profiles": r.profiles,
+        "profile_graph_hash": assembled.ir.resolved_profile_graph.graph_hash,
+        "stable_resolution_order": assembled.ir.resolved_profile_graph.stable_topological_order,
         "module_references": r.module_references,
         "assembly_contract_version": assembly::ASSEMBLY_CONTRACT_VERSION,
         "runtime_contract_version": assembly::PTW_RUNTIME_CONTRACT_VERSION
