@@ -38,3 +38,10 @@ The platform may call `compile`, `verify`, `loadProfiles`, `generatePackage`, an
 ## Runtime Assembly Engine profile resolution
 
 Phase B adds a deterministic `everarcade.profile.v1` catalog and resolver. The compiler now resolves exact requested profiles, dependencies, optional-dependency decisions, conflicts, compiler capabilities, contribution namespaces, source provenance, and the `everarcade.profile-graph.v1` graph hash before contribution loading. Contribution graph construction and merge remain deferred to Phase C. See [`runtime-assembly-profile-resolution-v1.md`](runtime-assembly-profile-resolution-v1.md).
+
+
+## Runtime assembly pipeline
+
+```text
+request → profile graph → contribution graph → deterministic merge → reference resolution → Runtime IR
+```

@@ -188,6 +188,22 @@ fn apply_profiles(root: &Path, assembled: &assembly::AssembledWorld) -> Result<(
         &assembled.contributions,
     )?;
     write_json(
+        root.join("metadata/contribution-graph.json"),
+        &assembled.contribution_graph,
+    )?;
+    write_json(
+        root.join("metadata/merged-contributions.json"),
+        &assembled.merged_contributions,
+    )?;
+    write_json(
+        root.join("metadata/contribution-provenance.json"),
+        &assembled.contribution_graph.provenance,
+    )?;
+    write_json(
+        root.join("metadata/merge-diagnostics.json"),
+        &assembled.merged_contributions.diagnostics,
+    )?;
+    write_json(
         root.join("metadata/assembly-diagnostics.json"),
         &assembled.diagnostics,
     )?;
