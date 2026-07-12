@@ -204,6 +204,22 @@ fn apply_profiles(root: &Path, assembled: &assembly::AssembledWorld) -> Result<(
         &assembled.merged_contributions.diagnostics,
     )?;
     write_json(
+        root.join("metadata/symbol-table.json"),
+        &assembled.resolved_declarations.symbol_tables,
+    )?;
+    write_json(
+        root.join("metadata/reference-graph.json"),
+        &assembled.resolved_declarations.reference_graph,
+    )?;
+    write_json(
+        root.join("metadata/resolved-declarations.json"),
+        &assembled.resolved_declarations,
+    )?;
+    write_json(
+        root.join("metadata/reference-diagnostics.json"),
+        &assembled.resolved_declarations.diagnostics,
+    )?;
+    write_json(
         root.join("metadata/assembly-diagnostics.json"),
         &assembled.diagnostics,
     )?;

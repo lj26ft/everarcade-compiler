@@ -45,3 +45,8 @@ Phase B adds a deterministic `everarcade.profile.v1` catalog and resolver. The c
 ```text
 request → profile graph → contribution graph → deterministic merge → reference resolution → Runtime IR
 ```
+
+
+## Runtime Assembly Engine symbol/reference resolution
+
+The Runtime Assembly Engine pipeline is: request → profile graph → contribution graph → deterministic merge → symbol/reference resolution → Runtime IR. Phase D emits `everarcade.symbol-table.v1`, `everarcade.reference-graph.v1`, and `everarcade.resolved-declarations.v1` evidence before Runtime IR population.

@@ -13,6 +13,9 @@ pub const COMPILER_CAPABILITIES_SCHEMA_VERSION: &str = "everarcade.compiler-capa
 pub const CONTRIBUTION_SCHEMA_VERSION: &str = "everarcade.contribution.v1";
 pub const CONTRIBUTION_GRAPH_SCHEMA_VERSION: &str = "everarcade.contribution-graph.v1";
 pub const MERGED_CONTRIBUTIONS_SCHEMA_VERSION: &str = "everarcade.merged-contributions.v1";
+pub const SYMBOL_TABLE_SCHEMA_VERSION: &str = "everarcade.symbol-table.v1";
+pub const REFERENCE_GRAPH_SCHEMA_VERSION: &str = "everarcade.reference-graph.v1";
+pub const RESOLVED_DECLARATIONS_SCHEMA_VERSION: &str = "everarcade.resolved-declarations.v1";
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct CanonicalWorldRequest {
@@ -133,7 +136,16 @@ pub enum AssemblyStage {
     FinalizeMergedContributions,
     TypedContributionLoading,
     DeterministicContributionMerge,
-    SymbolAndReferenceResolution,
+    CollectSymbols,
+    ValidateSymbolUniqueness,
+    CollectReferences,
+    ResolveRequiredReferences,
+    ResolveOptionalReferences,
+    ValidateReferenceNamespaces,
+    ValidateReferenceVersions,
+    ValidateReferenceCycles,
+    ValidateReferenceReachability,
+    FinalizeResolvedDeclarations,
     RuntimeIrConstruction,
     StaticValidation,
     InvariantAndBoundAnalysis,
@@ -164,15 +176,24 @@ impl AssemblyStage {
             Self::FinalizeMergedContributions => "stage_14_finalize_merged_contributions",
             Self::TypedContributionLoading => "stage_15_typed_contribution_loading",
             Self::DeterministicContributionMerge => "stage_16_deterministic_contribution_merge",
-            Self::SymbolAndReferenceResolution => "stage_17_symbol_and_reference_resolution",
-            Self::RuntimeIrConstruction => "stage_18_runtime_ir_construction",
-            Self::StaticValidation => "stage_19_static_validation",
-            Self::InvariantAndBoundAnalysis => "stage_20_invariant_and_bound_analysis",
-            Self::CapabilityCompatibility => "stage_21_capability_compatibility",
-            Self::CanonicalLowering => "stage_22_canonical_lowering",
-            Self::PackageEmission => "stage_23_package_emission",
-            Self::HashAndProofManifestGeneration => "stage_24_hash_and_proof_manifest_generation",
-            Self::ConformanceSelfVerification => "stage_25_conformance_self_verification",
+            Self::CollectSymbols => "stage_17_collect_symbols",
+            Self::ValidateSymbolUniqueness => "stage_18_validate_symbol_uniqueness",
+            Self::CollectReferences => "stage_19_collect_references",
+            Self::ResolveRequiredReferences => "stage_20_resolve_required_references",
+            Self::ResolveOptionalReferences => "stage_21_resolve_optional_references",
+            Self::ValidateReferenceNamespaces => "stage_22_validate_reference_namespaces",
+            Self::ValidateReferenceVersions => "stage_23_validate_reference_versions",
+            Self::ValidateReferenceCycles => "stage_24_validate_reference_cycles",
+            Self::ValidateReferenceReachability => "stage_25_validate_reference_reachability",
+            Self::FinalizeResolvedDeclarations => "stage_26_finalize_resolved_declarations",
+            Self::RuntimeIrConstruction => "stage_27_runtime_ir_construction",
+            Self::StaticValidation => "stage_28_static_validation",
+            Self::InvariantAndBoundAnalysis => "stage_29_invariant_and_bound_analysis",
+            Self::CapabilityCompatibility => "stage_30_capability_compatibility",
+            Self::CanonicalLowering => "stage_31_canonical_lowering",
+            Self::PackageEmission => "stage_32_package_emission",
+            Self::HashAndProofManifestGeneration => "stage_33_hash_and_proof_manifest_generation",
+            Self::ConformanceSelfVerification => "stage_34_conformance_self_verification",
         }
     }
 }
@@ -877,6 +898,153 @@ pub struct MergedContributionSetV1 {
     pub merged_contribution_hash: String,
 }
 
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
+#[serde(rename_all = "snake_case")]
+pub enum SymbolNamespace {
+    Runtime,
+    Region,
+    Zone,
+    Passage,
+    SpawnPoint,
+    TransitionPoint,
+    InteractionPoint,
+    Entity,
+    EntityArchetype,
+    ItemArchetype,
+    EncounterArchetype,
+    Item,
+    Primitive,
+    Action,
+    Transition,
+    Invariant,
+    Encounter,
+    ProgressionRule,
+    WorldVariable,
+    Capability,
+    ReceiptType,
+    ProofPolicy,
+}
+impl SymbolNamespace {
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Runtime => "runtime",
+            Self::Region => "region",
+            Self::Zone => "zone",
+            Self::Passage => "passage",
+            Self::SpawnPoint => "spawn_point",
+            Self::TransitionPoint => "transition_point",
+            Self::InteractionPoint => "interaction_point",
+            Self::Entity => "entity",
+            Self::EntityArchetype => "entity_archetype",
+            Self::ItemArchetype => "item_archetype",
+            Self::EncounterArchetype => "encounter_archetype",
+            Self::Item => "item",
+            Self::Primitive => "primitive",
+            Self::Action => "action",
+            Self::Transition => "transition",
+            Self::Invariant => "invariant",
+            Self::Encounter => "encounter",
+            Self::ProgressionRule => "progression_rule",
+            Self::WorldVariable => "world_variable",
+            Self::Capability => "capability",
+            Self::ReceiptType => "receipt_type",
+            Self::ProofPolicy => "proof_policy",
+        }
+    }
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
+pub struct SymbolIdentity {
+    pub namespace: SymbolNamespace,
+    pub local_id: String,
+    pub schema_version: String,
+    pub declaration_content_hash: String,
+    pub source_contribution_id: String,
+    pub source_profile_id: String,
+}
+impl SymbolIdentity {
+    pub fn canonical(&self) -> String {
+        format!("{}:{}", self.namespace.as_str(), self.local_id)
+    }
+}
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
+pub struct SymbolProvenance {
+    pub merged_declaration: String,
+    pub source_contribution_id: String,
+    pub source_profile_id: String,
+    pub profile_content_hash: String,
+    pub dependency_path: Vec<String>,
+}
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
+pub struct SymbolDefinition {
+    pub identity: SymbolIdentity,
+    pub enabled: bool,
+    pub deprecated: bool,
+    pub aliases: Vec<String>,
+    pub provenance: SymbolProvenance,
+}
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
+pub struct ReferenceIdentity {
+    pub reference_id: String,
+    pub source_symbol: String,
+    pub field_path: String,
+    pub expected_namespace: SymbolNamespace,
+    pub referenced_id: String,
+    pub required: bool,
+    pub expected_schema_version: Option<String>,
+    pub expected_major_version: Option<u64>,
+}
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
+pub struct ReferenceTarget {
+    pub canonical_symbol: String,
+    pub selected_schema_version: String,
+    pub declaration_content_hash: String,
+}
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
+#[serde(rename_all = "snake_case")]
+pub enum ResolutionStatus {
+    Resolved,
+    OptionalUnresolved,
+    NotFound,
+    Ambiguous,
+    NamespaceMismatch,
+    VersionMismatch,
+    TargetDisabled,
+    DependencyCycle,
+    Unreachable,
+}
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
+pub struct ReferenceEdge {
+    pub reference: ReferenceIdentity,
+    pub status: ResolutionStatus,
+    pub target: Option<ReferenceTarget>,
+    pub candidate_targets: Vec<String>,
+    pub provenance: SymbolProvenance,
+    pub dependency_depth: u32,
+    pub compatibility: String,
+}
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+pub struct ReferenceGraphV1 {
+    pub schema_version: String,
+    pub symbol_nodes: Vec<SymbolDefinition>,
+    pub reference_edges: Vec<ReferenceEdge>,
+    pub graph_hash: String,
+}
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+pub struct ResolvedDeclarationSetV1 {
+    pub schema_version: String,
+    pub symbol_table_schema_version: String,
+    pub symbol_tables: BTreeMap<String, Vec<SymbolDefinition>>,
+    pub resolved_references: Vec<ReferenceEdge>,
+    pub generated_ids: Vec<String>,
+    pub reference_graph: ReferenceGraphV1,
+    pub reference_graph_hash: String,
+    pub unresolved_optional_references: Vec<ReferenceEdge>,
+    pub compatibility_decisions: Vec<String>,
+    pub provenance_index: BTreeMap<String, SymbolProvenance>,
+    pub diagnostics: Vec<AssemblyDiagnostic>,
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct ContributionProvenance {
     pub source_profile: String,
@@ -935,6 +1103,7 @@ pub struct PtwRuntimeIrV1 {
     pub resolved_profile_graph: ResolvedProfileGraphV1,
     pub contribution_graph: ContributionGraphV1,
     pub merged_contributions: MergedContributionSetV1,
+    pub resolved_declarations: ResolvedDeclarationSetV1,
     pub archetypes: BTreeMap<String, Value>,
     pub initial_entities: BTreeMap<String, Value>,
     pub world_variables: BTreeMap<String, Value>,
@@ -969,6 +1138,20 @@ pub struct AssemblyManifestV1 {
     pub merged_contribution_hash: String,
     pub contribution_graph_schema_version: String,
     pub merged_contributions_schema_version: String,
+    pub symbol_table_schema_version: String,
+    pub symbol_counts_by_namespace: BTreeMap<String, usize>,
+    pub reference_graph_schema_version: String,
+    pub reference_count: usize,
+    pub resolved_required_references: usize,
+    pub unresolved_optional_references: usize,
+    pub generated_id_count: usize,
+    pub reference_graph_hash: String,
+    pub duplicate_check_result: ValidationResultV1,
+    pub namespace_check_result: ValidationResultV1,
+    pub compatibility_check_result: ValidationResultV1,
+    pub cycle_check_result: ValidationResultV1,
+    pub reachability_check_result: ValidationResultV1,
+    pub reference_diagnostics: Vec<AssemblyDiagnostic>,
     pub merge_diagnostics: Vec<AssemblyDiagnostic>,
     pub required_capabilities: Vec<String>,
     pub capability_validation_result: ValidationResultV1,
@@ -986,6 +1169,7 @@ pub struct AssembledWorld {
     pub contributions: TypedContributionsV1,
     pub contribution_graph: ContributionGraphV1,
     pub merged_contributions: MergedContributionSetV1,
+    pub resolved_declarations: ResolvedDeclarationSetV1,
     pub ir: PtwRuntimeIrV1,
     pub diagnostics: Vec<AssemblyDiagnostic>,
     pub manifest: AssemblyManifestV1,
@@ -1401,12 +1585,378 @@ fn contrib_diag(code: &str, stage: AssemblyStage, c: &ProfileContributionV1) -> 
     AssemblyDiagnostic{code:code.into(),severity:DiagnosticSeverity::Error,stage,namespace:c.identity.namespace.as_str().into(),source:c.provenance.profile_identity.clone(),affected_id:c.identity.declaration_key.clone(),message:format!("{} for contribution {} in namespace {} declaration {}",code,c.identity.contribution_id,c.identity.namespace.as_str(),c.identity.declaration_key),suggested_remediation:"Use explicit compatible declarations, deterministic ordering metadata, or an authorized override target.".into()}
 }
 
+fn valid_symbol_id(id: &str) -> bool {
+    !id.is_empty()
+        && id.chars().all(|c| {
+            c.is_ascii_lowercase()
+                || c.is_ascii_digit()
+                || c == '-'
+                || c == '_'
+                || c == '.'
+                || c == ':'
+        })
+}
+fn first_str<'a>(v: &'a Value, keys: &[&str]) -> Option<&'a str> {
+    keys.iter().find_map(|k| v.get(*k).and_then(Value::as_str))
+}
+fn symbol_map<'a>(
+    m: &'a MergedContributionSetV1,
+) -> Vec<(SymbolNamespace, &'a BTreeMap<String, Value>)> {
+    vec![
+        (SymbolNamespace::Runtime, &m.runtime),
+        (SymbolNamespace::Region, &m.regions),
+        (SymbolNamespace::SpawnPoint, &m.spawn_points),
+        (SymbolNamespace::EntityArchetype, &m.entity_archetypes),
+        (SymbolNamespace::ItemArchetype, &m.item_archetypes),
+        (SymbolNamespace::EncounterArchetype, &m.encounter_archetypes),
+        (SymbolNamespace::Entity, &m.entities),
+        (SymbolNamespace::WorldVariable, &m.world_variables),
+        (SymbolNamespace::Primitive, &m.primitives),
+        (SymbolNamespace::Action, &m.actions),
+        (SymbolNamespace::Transition, &m.transitions),
+        (SymbolNamespace::Invariant, &m.invariants),
+        (SymbolNamespace::Encounter, &m.encounters),
+        (SymbolNamespace::ProgressionRule, &m.progression),
+        (SymbolNamespace::ProofPolicy, &m.proof),
+    ]
+}
+fn prov_for(m: &MergedContributionSetV1, ns: &SymbolNamespace, key: &str) -> SymbolProvenance {
+    let mk = format!("{}:{}", ns.as_str(), key);
+    let p = m.provenance_index.get(&mk).and_then(|v| v.first());
+    SymbolProvenance {
+        merged_declaration: mk,
+        source_contribution_id: p.map(|x| x.contribution_id.clone()).unwrap_or_default(),
+        source_profile_id: p.map(|x| x.profile_identity.clone()).unwrap_or_default(),
+        profile_content_hash: p
+            .map(|x| x.profile_content_hash.clone())
+            .unwrap_or_default(),
+        dependency_path: p.map(|x| x.dependency_path.clone()).unwrap_or_default(),
+    }
+}
+fn ref_keys(v: &Value) -> Vec<(&'static str, SymbolNamespace, bool)> {
+    let mut r = vec![
+        ("region", SymbolNamespace::Region, true),
+        ("spawn_point", SymbolNamespace::SpawnPoint, false),
+        ("spawn", SymbolNamespace::SpawnPoint, false),
+        ("archetype", SymbolNamespace::EntityArchetype, true),
+        ("owner", SymbolNamespace::Entity, false),
+        ("entity", SymbolNamespace::Entity, false),
+        ("primitive", SymbolNamespace::Primitive, true),
+        ("handler", SymbolNamespace::Primitive, true),
+        ("action", SymbolNamespace::Action, true),
+        ("transition", SymbolNamespace::Transition, false),
+        ("destination", SymbolNamespace::Region, true),
+        ("to", SymbolNamespace::Region, true),
+        ("from", SymbolNamespace::Region, true),
+        ("source", SymbolNamespace::Region, true),
+        ("invariant", SymbolNamespace::Invariant, true),
+        ("encounter", SymbolNamespace::Encounter, false),
+        ("progression_rule", SymbolNamespace::ProgressionRule, false),
+        ("world_variable", SymbolNamespace::WorldVariable, true),
+        ("receipt_type", SymbolNamespace::ReceiptType, false),
+        ("capability", SymbolNamespace::Capability, false),
+    ];
+    if v.get("optional").and_then(Value::as_bool) == Some(true) {
+        for x in &mut r {
+            x.2 = false;
+        }
+    }
+    r
+}
+pub fn resolve_declarations(
+    m: &MergedContributionSetV1,
+    world_id: &str,
+) -> ResolvedDeclarationSetV1 {
+    let mut diagnostics = Vec::new();
+    let mut symbols = Vec::new();
+    let mut by_canon: BTreeMap<String, SymbolDefinition> = BTreeMap::new();
+    for (ns, map) in symbol_map(m) {
+        for (key, val) in map {
+            let local = first_str(val, &[ns.as_str(), "id", "key", "name"])
+                .unwrap_or(key)
+                .to_string();
+            let prov = prov_for(m, &ns, key);
+            let h = hash_json(val);
+            if !valid_symbol_id(&local) {
+                diagnostics.push(AssemblyDiagnostic{code:"ASSEMBLY_SYMBOL_ID_INVALID".into(),severity:DiagnosticSeverity::Error,stage:AssemblyStage::CollectSymbols,namespace:ns.as_str().into(),source:prov.source_profile_id.clone(),affected_id:local.clone(),message:"symbol id is not canonical".into(),suggested_remediation:"Use lowercase canonical ids containing only ascii letters, digits, dash, underscore, dot, or colon.".into()});
+            }
+            let def = SymbolDefinition {
+                identity: SymbolIdentity {
+                    namespace: ns.clone(),
+                    local_id: local.clone(),
+                    schema_version: val
+                        .get("schema_version")
+                        .and_then(Value::as_str)
+                        .unwrap_or("v1")
+                        .into(),
+                    declaration_content_hash: h,
+                    source_contribution_id: prov.source_contribution_id.clone(),
+                    source_profile_id: prov.source_profile_id.clone(),
+                },
+                enabled: val.get("enabled").and_then(Value::as_bool).unwrap_or(true),
+                deprecated: val
+                    .get("deprecated")
+                    .and_then(Value::as_bool)
+                    .unwrap_or(false),
+                aliases: val
+                    .get("aliases")
+                    .and_then(Value::as_array)
+                    .map(|a| {
+                        a.iter()
+                            .filter_map(Value::as_str)
+                            .map(str::to_string)
+                            .collect()
+                    })
+                    .unwrap_or_default(),
+                provenance: prov.clone(),
+            };
+            let c = def.identity.canonical();
+            if let Some(old) = by_canon.get(&c) {
+                if old.identity.declaration_content_hash != def.identity.declaration_content_hash {
+                    diagnostics.push(AssemblyDiagnostic {
+                        code: "ASSEMBLY_SYMBOL_DUPLICATE".into(),
+                        severity: DiagnosticSeverity::Error,
+                        stage: AssemblyStage::ValidateSymbolUniqueness,
+                        namespace: ns.as_str().into(),
+                        source: def.provenance.source_profile_id.clone(),
+                        affected_id: c.clone(),
+                        message: format!(
+                            "duplicate symbol also defined by {}",
+                            old.provenance.source_profile_id
+                        ),
+                        suggested_remediation:
+                            "Rename one declaration or remove the conflicting generated id.".into(),
+                    });
+                }
+            } else {
+                by_canon.insert(c, def.clone());
+                symbols.push(def);
+            }
+        }
+    }
+    symbols.sort_by_key(|d| d.identity.canonical());
+    let mut edges = Vec::new();
+    let mut gen_ids = BTreeSet::new();
+    for def in &symbols {
+        if def.identity.local_id.starts_with("generated") {
+            let gid = format!(
+                "generated:{}:{}:{}:{}:{}",
+                world_id,
+                def.identity.namespace.as_str(),
+                def.identity.source_profile_id,
+                def.identity.source_contribution_id,
+                def.identity.local_id
+            );
+            if !gen_ids.insert(gid.clone()) {
+                diagnostics.push(AssemblyDiagnostic {
+                    code: "ASSEMBLY_GENERATED_ID_COLLISION".into(),
+                    severity: DiagnosticSeverity::Error,
+                    stage: AssemblyStage::ValidateSymbolUniqueness,
+                    namespace: def.identity.namespace.as_str().into(),
+                    source: def.provenance.source_profile_id.clone(),
+                    affected_id: gid,
+                    message: "deterministic generated id collision".into(),
+                    suggested_remediation: "Change the declaration key or source contribution."
+                        .into(),
+                });
+            }
+        }
+    }
+    for def in &symbols {
+        let val_opt = symbol_map(m)
+            .into_iter()
+            .find(|(n, _)| *n == def.identity.namespace)
+            .and_then(|(_, mp)| {
+                mp.get(
+                    &def.provenance
+                        .merged_declaration
+                        .split(':')
+                        .skip(1)
+                        .collect::<Vec<_>>()
+                        .join(":"),
+                )
+            });
+        if let Some(val) = val_opt {
+            for (field, ens, required) in ref_keys(val) {
+                if field == def.identity.namespace.as_str() {
+                    continue;
+                }
+                if let Some(rid) = val.get(field).and_then(Value::as_str) {
+                    if rid == def.identity.local_id && matches!(ens, SymbolNamespace::Entity) {
+                        diagnostics.push(AssemblyDiagnostic {
+                            code: "ASSEMBLY_REFERENCE_OWNERSHIP_CYCLE".into(),
+                            severity: DiagnosticSeverity::Error,
+                            stage: AssemblyStage::ValidateReferenceCycles,
+                            namespace: ens.as_str().into(),
+                            source: def.provenance.source_profile_id.clone(),
+                            affected_id: rid.into(),
+                            message: "entity ownership cycle detected".into(),
+                            suggested_remediation: "Break parent ownership cycles.".into(),
+                        });
+                    }
+                    let refid = format!(
+                        "{}:{}->{}:{}",
+                        def.identity.canonical(),
+                        field,
+                        ens.as_str(),
+                        rid
+                    );
+                    let canon = format!("{}:{}", ens.as_str(), rid);
+                    let target = by_canon.get(&canon);
+                    let (status, tgt, cands, compat) = match target {
+                        None if required => {
+                            (ResolutionStatus::NotFound, None, vec![], "missing".into())
+                        }
+                        None => (
+                            ResolutionStatus::OptionalUnresolved,
+                            None,
+                            vec![],
+                            "optional_absent".into(),
+                        ),
+                        Some(t) if !t.enabled => (
+                            ResolutionStatus::TargetDisabled,
+                            None,
+                            vec![canon.clone()],
+                            "target_disabled".into(),
+                        ),
+                        Some(t)
+                            if val
+                                .get(format!("{}_schema_version", field))
+                                .and_then(Value::as_str)
+                                .map(|e| e != t.identity.schema_version)
+                                .unwrap_or(false) =>
+                        {
+                            (
+                                ResolutionStatus::VersionMismatch,
+                                None,
+                                vec![canon.clone()],
+                                "version_mismatch".into(),
+                            )
+                        }
+                        Some(t) => (
+                            ResolutionStatus::Resolved,
+                            Some(ReferenceTarget {
+                                canonical_symbol: t.identity.canonical(),
+                                selected_schema_version: t.identity.schema_version.clone(),
+                                declaration_content_hash: t
+                                    .identity
+                                    .declaration_content_hash
+                                    .clone(),
+                            }),
+                            vec![canon.clone()],
+                            "compatible".into(),
+                        ),
+                    };
+                    if matches!(status, ResolutionStatus::NotFound) {
+                        diagnostics.push(AssemblyDiagnostic {
+                            code: "ASSEMBLY_REQUIRED_REFERENCE_MISSING".into(),
+                            severity: DiagnosticSeverity::Error,
+                            stage: AssemblyStage::ResolveRequiredReferences,
+                            namespace: ens.as_str().into(),
+                            source: def.provenance.source_profile_id.clone(),
+                            affected_id: rid.into(),
+                            message: "required reference was not found".into(),
+                            suggested_remediation:
+                                "Declare the referenced target in the expected namespace.".into(),
+                        });
+                    }
+                    if matches!(status, ResolutionStatus::VersionMismatch) {
+                        diagnostics.push(AssemblyDiagnostic {
+                            code: "ASSEMBLY_REFERENCE_VERSION_MISMATCH".into(),
+                            severity: DiagnosticSeverity::Error,
+                            stage: AssemblyStage::ValidateReferenceVersions,
+                            namespace: ens.as_str().into(),
+                            source: def.provenance.source_profile_id.clone(),
+                            affected_id: rid.into(),
+                            message: "reference version constraint is incompatible".into(),
+                            suggested_remediation:
+                                "Align schema versions between source and target declarations."
+                                    .into(),
+                        });
+                    }
+                    edges.push(ReferenceEdge {
+                        reference: ReferenceIdentity {
+                            reference_id: refid,
+                            source_symbol: def.identity.canonical(),
+                            field_path: field.into(),
+                            expected_namespace: ens,
+                            referenced_id: rid.into(),
+                            required,
+                            expected_schema_version: val
+                                .get(format!("{}_schema_version", field))
+                                .and_then(Value::as_str)
+                                .map(str::to_string),
+                            expected_major_version: None,
+                        },
+                        status,
+                        target: tgt,
+                        candidate_targets: cands,
+                        provenance: def.provenance.clone(),
+                        dependency_depth: 1,
+                        compatibility: compat,
+                    });
+                }
+            }
+        }
+    }
+    edges.sort_by_key(|e| e.reference.reference_id.clone());
+    diagnostics = sorted_diagnostics(diagnostics);
+    let mut graph = ReferenceGraphV1 {
+        schema_version: REFERENCE_GRAPH_SCHEMA_VERSION.into(),
+        symbol_nodes: symbols.clone(),
+        reference_edges: edges.clone(),
+        graph_hash: String::new(),
+    };
+    graph.graph_hash = hash_json(
+        &json!({"domain":REFERENCE_GRAPH_SCHEMA_VERSION,"symbols":graph.symbol_nodes,"edges":graph.reference_edges}),
+    );
+    let mut tables: BTreeMap<String, Vec<SymbolDefinition>> = BTreeMap::new();
+    for d in symbols {
+        tables
+            .entry(d.identity.namespace.as_str().into())
+            .or_default()
+            .push(d.clone());
+    }
+    let resolved = edges
+        .iter()
+        .filter(|e| matches!(e.status, ResolutionStatus::Resolved))
+        .cloned()
+        .collect();
+    let unresolved = edges
+        .iter()
+        .filter(|e| matches!(e.status, ResolutionStatus::OptionalUnresolved))
+        .cloned()
+        .collect();
+    let prov = tables
+        .values()
+        .flatten()
+        .map(|d| (d.identity.canonical(), d.provenance.clone()))
+        .collect();
+    ResolvedDeclarationSetV1 {
+        schema_version: RESOLVED_DECLARATIONS_SCHEMA_VERSION.into(),
+        symbol_table_schema_version: SYMBOL_TABLE_SCHEMA_VERSION.into(),
+        symbol_tables: tables,
+        resolved_references: resolved,
+        generated_ids: gen_ids.into_iter().collect(),
+        reference_graph_hash: graph.graph_hash.clone(),
+        reference_graph: graph,
+        unresolved_optional_references: unresolved,
+        compatibility_decisions: edges
+            .iter()
+            .map(|e| format!("{}={}", e.reference.reference_id, e.compatibility))
+            .collect(),
+        provenance_index: prov,
+        diagnostics,
+    }
+}
+
 pub fn assemble_world(request: CanonicalWorldRequest) -> Result<AssembledWorld, String> {
     let catalog = builtin_profile_catalog();
     let graph = resolve_profile_graph(request.profiles.values().cloned().collect(), &catalog);
     let loaded_contributions = load_typed_contributions(&graph);
     let contribution_graph = build_contribution_graph(&graph, loaded_contributions);
     let merged_contributions = merge_contribution_graph(&contribution_graph);
+    let resolved_declarations = resolve_declarations(&merged_contributions, &request.world_id);
     let mut contributions = TypedContributionsV1::default();
     for c in &contribution_graph.contribution_nodes {
         let tc = TypedContribution {
@@ -1467,6 +2017,7 @@ pub fn assemble_world(request: CanonicalWorldRequest) -> Result<AssembledWorld, 
         resolved_profile_graph: graph.clone(),
         contribution_graph: contribution_graph.clone(),
         merged_contributions: merged_contributions.clone(),
+        resolved_declarations: resolved_declarations.clone(),
         archetypes: BTreeMap::new(),
         initial_entities: BTreeMap::new(),
         world_variables: BTreeMap::new(),
@@ -1484,6 +2035,7 @@ pub fn assemble_world(request: CanonicalWorldRequest) -> Result<AssembledWorld, 
     };
     let mut diagnostics = graph.diagnostics.clone();
     diagnostics.extend(merged_contributions.diagnostics.clone());
+    diagnostics.extend(resolved_declarations.diagnostics.clone());
     let diagnostics = sorted_diagnostics(diagnostics);
     let profile_content_hashes = graph
         .resolved_profile_nodes
@@ -1510,6 +2062,57 @@ pub fn assemble_world(request: CanonicalWorldRequest) -> Result<AssembledWorld, 
         merged_contribution_hash: merged_contributions.merged_contribution_hash.clone(),
         contribution_graph_schema_version: CONTRIBUTION_GRAPH_SCHEMA_VERSION.into(),
         merged_contributions_schema_version: MERGED_CONTRIBUTIONS_SCHEMA_VERSION.into(),
+        symbol_table_schema_version: SYMBOL_TABLE_SCHEMA_VERSION.into(),
+        symbol_counts_by_namespace: resolved_declarations
+            .symbol_tables
+            .iter()
+            .map(|(k, v)| (k.clone(), v.len()))
+            .collect(),
+        reference_graph_schema_version: REFERENCE_GRAPH_SCHEMA_VERSION.into(),
+        reference_count: resolved_declarations.reference_graph.reference_edges.len(),
+        resolved_required_references: resolved_declarations
+            .reference_graph
+            .reference_edges
+            .iter()
+            .filter(|e| e.reference.required && matches!(e.status, ResolutionStatus::Resolved))
+            .count(),
+        unresolved_optional_references: resolved_declarations.unresolved_optional_references.len(),
+        generated_id_count: resolved_declarations.generated_ids.len(),
+        reference_graph_hash: resolved_declarations.reference_graph_hash.clone(),
+        duplicate_check_result: validation_status(
+            &resolved_declarations.diagnostics,
+            &[
+                "ASSEMBLY_SYMBOL_DUPLICATE",
+                "ASSEMBLY_GENERATED_ID_COLLISION",
+            ],
+        ),
+        namespace_check_result: validation_status(
+            &resolved_declarations.diagnostics,
+            &[
+                "ASSEMBLY_REFERENCE_NAMESPACE_MISMATCH",
+                "ASSEMBLY_SYMBOL_NAMESPACE_CONFLICT",
+            ],
+        ),
+        compatibility_check_result: validation_status(
+            &resolved_declarations.diagnostics,
+            &[
+                "ASSEMBLY_REFERENCE_VERSION_MISMATCH",
+                "ASSEMBLY_REFERENCE_TARGET_DISABLED",
+            ],
+        ),
+        cycle_check_result: validation_status(
+            &resolved_declarations.diagnostics,
+            &[
+                "ASSEMBLY_REFERENCE_ALIAS_CYCLE",
+                "ASSEMBLY_REFERENCE_OWNERSHIP_CYCLE",
+                "ASSEMBLY_REFERENCE_DEPENDENCY_CYCLE",
+            ],
+        ),
+        reachability_check_result: validation_status(
+            &resolved_declarations.diagnostics,
+            &["ASSEMBLY_REFERENCE_UNREACHABLE"],
+        ),
+        reference_diagnostics: resolved_declarations.diagnostics.clone(),
         merge_diagnostics: merged_contributions.diagnostics.clone(),
         required_capabilities: graph.required_capabilities.clone(),
         capability_validation_result: graph.capability_check.clone(),
@@ -1518,13 +2121,14 @@ pub fn assemble_world(request: CanonicalWorldRequest) -> Result<AssembledWorld, 
         resolution_diagnostics: graph.diagnostics.clone(),
         diagnostics: diagnostics.clone(),
         conformance_status: "profile-resolution-self-verified".into(),
-        proof_readiness_status: "profile-graph-resolved-contributions-deferred".into(),
+        proof_readiness_status: "resolved-declarations-ready-runtime-ir-deferred".into(),
     };
     Ok(AssembledWorld {
         request,
         contributions,
         contribution_graph,
         merged_contributions,
+        resolved_declarations,
         ir,
         diagnostics,
         manifest,
@@ -1973,7 +2577,16 @@ fn assembly_stages() -> Vec<AssemblyStage> {
         AssemblyStage::FinalizeMergedContributions,
         AssemblyStage::TypedContributionLoading,
         AssemblyStage::DeterministicContributionMerge,
-        AssemblyStage::SymbolAndReferenceResolution,
+        AssemblyStage::CollectSymbols,
+        AssemblyStage::ValidateSymbolUniqueness,
+        AssemblyStage::CollectReferences,
+        AssemblyStage::ResolveRequiredReferences,
+        AssemblyStage::ResolveOptionalReferences,
+        AssemblyStage::ValidateReferenceNamespaces,
+        AssemblyStage::ValidateReferenceVersions,
+        AssemblyStage::ValidateReferenceCycles,
+        AssemblyStage::ValidateReferenceReachability,
+        AssemblyStage::FinalizeResolvedDeclarations,
         AssemblyStage::RuntimeIrConstruction,
         AssemblyStage::StaticValidation,
         AssemblyStage::InvariantAndBoundAnalysis,
@@ -1983,6 +2596,14 @@ fn assembly_stages() -> Vec<AssemblyStage> {
         AssemblyStage::HashAndProofManifestGeneration,
         AssemblyStage::ConformanceSelfVerification,
     ]
+}
+
+fn validation_status(d: &[AssemblyDiagnostic], codes: &[&str]) -> ValidationResultV1 {
+    let failed = d.iter().any(|x| codes.contains(&x.code.as_str()));
+    ValidationResultV1 {
+        status: if failed { "failed" } else { "passed" }.into(),
+        checked: codes.iter().map(|s| s.to_string()).collect(),
+    }
 }
 
 fn sorted_diagnostics(mut diagnostics: Vec<AssemblyDiagnostic>) -> Vec<AssemblyDiagnostic> {
@@ -2046,7 +2667,7 @@ mod tests {
         let assembled = assemble_world(request).unwrap();
         assert_eq!(assembled.ir.contract_version, PTW_RUNTIME_CONTRACT_VERSION);
         assert!(assembled.contributions.actions.is_empty());
-        assert_eq!(assembled.manifest.stages.len(), 26);
+        assert_eq!(assembled.manifest.stages.len(), 35);
         assert_eq!(
             assembled.ir.resolved_profile_graph.schema_version,
             PROFILE_GRAPH_SCHEMA_VERSION
@@ -2267,5 +2888,92 @@ mod tests {
             &catalog,
         );
         assert_ne!(base.graph_hash, changed.graph_hash);
+    }
+
+    #[test]
+    fn symbol_tables_collect_namespaces_and_resolve_references() {
+        let mut m = MergedContributionSetV1 {
+            schema_version: MERGED_CONTRIBUTIONS_SCHEMA_VERSION.into(),
+            ..Default::default()
+        };
+        m.regions
+            .insert("origin".into(), json!({"region":"origin"}));
+        m.entity_archetypes
+            .insert("hero".into(), json!({"id":"hero"}));
+        m.entities.insert(
+            "player".into(),
+            json!({"id":"player","region":"origin","archetype":"hero"}),
+        );
+        let r = resolve_declarations(&m, "world-test");
+        assert_eq!(r.schema_version, RESOLVED_DECLARATIONS_SCHEMA_VERSION);
+        assert!(r.symbol_tables.contains_key("region"));
+        assert!(r.symbol_tables.contains_key("entity"));
+        assert_eq!(r.resolved_references.len(), 2);
+        assert!(r.diagnostics.is_empty(), "{:?}", r.diagnostics);
+        assert!(r.reference_graph_hash.starts_with("sha256:"));
+    }
+
+    #[test]
+    fn reference_missing_and_version_mismatch_are_diagnostic() {
+        let mut m = MergedContributionSetV1 {
+            schema_version: MERGED_CONTRIBUTIONS_SCHEMA_VERSION.into(),
+            ..Default::default()
+        };
+        m.primitives.insert(
+            "move".into(),
+            json!({"id":"move","schema_version":"primitive.v1"}),
+        );
+        m.actions.insert("go".into(), json!({"id":"go","primitive":"move","primitive_schema_version":"primitive.v2","region":"missing"}));
+        let r = resolve_declarations(&m, "world-test");
+        assert!(r
+            .diagnostics
+            .iter()
+            .any(|d| d.code == "ASSEMBLY_REFERENCE_VERSION_MISMATCH"));
+        assert!(r
+            .diagnostics
+            .iter()
+            .any(|d| d.code == "ASSEMBLY_REQUIRED_REFERENCE_MISSING"));
+    }
+
+    #[test]
+    fn optional_missing_reference_is_recorded_deterministically() {
+        let mut m = MergedContributionSetV1 {
+            schema_version: MERGED_CONTRIBUTIONS_SCHEMA_VERSION.into(),
+            ..Default::default()
+        };
+        m.entities.insert(
+            "ghost".into(),
+            json!({"id":"ghost","optional":true,"owner":"absent"}),
+        );
+        let a = resolve_declarations(&m, "world-test");
+        let b = resolve_declarations(&m, "world-test");
+        assert_eq!(
+            serde_json::to_vec(&a).unwrap(),
+            serde_json::to_vec(&b).unwrap()
+        );
+        assert_eq!(a.unresolved_optional_references.len(), 1);
+    }
+
+    #[test]
+    fn ownership_cycle_is_rejected_but_topology_loop_passes() {
+        let mut m = MergedContributionSetV1 {
+            schema_version: MERGED_CONTRIBUTIONS_SCHEMA_VERSION.into(),
+            ..Default::default()
+        };
+        m.regions.insert("a".into(), json!({"region":"a","to":"b"}));
+        m.regions.insert("b".into(), json!({"region":"b","to":"a"}));
+        m.entities.insert(
+            "self-owned".into(),
+            json!({"id":"self-owned","owner":"self-owned"}),
+        );
+        let r = resolve_declarations(&m, "world-test");
+        assert!(r
+            .diagnostics
+            .iter()
+            .any(|d| d.code == "ASSEMBLY_REFERENCE_OWNERSHIP_CYCLE"));
+        assert!(r
+            .resolved_references
+            .iter()
+            .any(|e| e.reference.source_symbol == "region:a" && e.reference.referenced_id == "b"));
     }
 }
