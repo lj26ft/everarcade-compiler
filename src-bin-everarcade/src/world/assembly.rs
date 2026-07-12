@@ -16,6 +16,8 @@ pub const MERGED_CONTRIBUTIONS_SCHEMA_VERSION: &str = "everarcade.merged-contrib
 pub const SYMBOL_TABLE_SCHEMA_VERSION: &str = "everarcade.symbol-table.v1";
 pub const REFERENCE_GRAPH_SCHEMA_VERSION: &str = "everarcade.reference-graph.v1";
 pub const RESOLVED_DECLARATIONS_SCHEMA_VERSION: &str = "everarcade.resolved-declarations.v1";
+pub const RUNTIME_IR_SCHEMA_VERSION: &str = "everarcade.ptw-runtime-ir.v1";
+pub const RUNTIME_IR_HASH_DOMAIN: &str = "everarcade.runtime-ir.v1";
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct CanonicalWorldRequest {
@@ -679,6 +681,58 @@ pub fn builtin_profile_catalog() -> ProfileCatalog {
         ))
     });
     c.register(opt);
+    c.register(prof(
+        ProfileCategory::World,
+        "ptw-full-v1",
+        vec!["ptw.runtime.v1"],
+        vec![ContributionNamespace::Runtime],
+        vec![],
+    ));
+    c.register(prof(
+        ProfileCategory::Genre,
+        "arpg-v1",
+        vec!["ptw.primitive.movement.v1", "ptw.action.entity_move.v1"],
+        vec![
+            ContributionNamespace::Primitives,
+            ContributionNamespace::Actions,
+        ],
+        vec![dep(ref_for(
+            "everarcade",
+            ProfileCategory::World,
+            "ptw-full-v1",
+            "1.0.0",
+        ))],
+    ));
+    c.register(prof(
+        ProfileCategory::Biome,
+        "catacombs-v1",
+        vec!["ptw.runtime.v1"],
+        vec![
+            ContributionNamespace::Topology,
+            ContributionNamespace::Regions,
+            ContributionNamespace::SpawnPoints,
+        ],
+        vec![dep(ref_for(
+            "everarcade",
+            ProfileCategory::Genre,
+            "arpg-v1",
+            "1.0.0",
+        ))],
+    ));
+    c.register(prof(
+        ProfileCategory::Projection,
+        "arpg-web-v1",
+        vec![],
+        vec![ContributionNamespace::Projection],
+        vec![],
+    ));
+    c.register(prof(
+        ProfileCategory::Proof,
+        "live-replay-ceremony-v1",
+        vec!["ptw.proof.replay.v1"],
+        vec![ContributionNamespace::Proof],
+        vec![],
+    ));
     c
 }
 
@@ -1089,6 +1143,8 @@ pub struct TypedContribution<T> {
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct PtwRuntimeIrV1 {
+    pub schema_version: String,
+    pub runtime_ir_hash: String,
     pub contract_version: String,
     pub assembly_contract_version: String,
     pub world_id: String,
@@ -1096,17 +1152,32 @@ pub struct PtwRuntimeIrV1 {
     pub resolved_profiles: BTreeMap<String, String>,
     pub module_references: BTreeMap<String, String>,
     pub capability_requirements: Vec<String>,
+    pub compiler_capability_requirements: Vec<String>,
+    pub runtime_capability_requirements: Vec<String>,
     pub limits: BTreeMap<String, u64>,
+    pub limit_provenance: BTreeMap<String, Vec<SourceProvenanceV1>>,
+    pub numeric_model: BTreeMap<String, Value>,
+    pub coordinate_model: BTreeMap<String, Value>,
+    pub tick_model: BTreeMap<String, Value>,
+    pub deterministic_id_policy: BTreeMap<String, Value>,
     pub topology_graph: BTreeMap<String, Value>,
     pub regions: BTreeMap<String, Value>,
+    pub zones: BTreeMap<String, Value>,
+    pub passages: BTreeMap<String, Value>,
     pub spawn_points: BTreeMap<String, Value>,
+    pub transition_points: BTreeMap<String, Value>,
+    pub interaction_points: BTreeMap<String, Value>,
     pub resolved_profile_graph: ResolvedProfileGraphV1,
     pub contribution_graph: ContributionGraphV1,
     pub merged_contributions: MergedContributionSetV1,
     pub resolved_declarations: ResolvedDeclarationSetV1,
     pub archetypes: BTreeMap<String, Value>,
+    pub entity_archetypes: BTreeMap<String, Value>,
+    pub item_archetypes: BTreeMap<String, Value>,
+    pub encounter_archetypes: BTreeMap<String, Value>,
     pub initial_entities: BTreeMap<String, Value>,
     pub world_variables: BTreeMap<String, Value>,
+    pub player_state_template: BTreeMap<String, Value>,
     pub primitive_configurations: BTreeMap<String, Value>,
     pub actions: BTreeMap<String, Value>,
     pub transition_bindings: BTreeMap<String, Value>,
@@ -1118,6 +1189,35 @@ pub struct PtwRuntimeIrV1 {
     pub journal_policy: BTreeMap<String, Value>,
     pub root_policy: BTreeMap<String, Value>,
     pub proof_constraints: BTreeMap<String, Value>,
+    pub state_domains: Vec<String>,
+    pub proof_readiness: BTreeMap<String, Value>,
+    pub validation: RuntimeIrValidationSummaryV1,
+    pub universal_defaults: BTreeMap<String, Value>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+pub struct RuntimeIrValidationSummaryV1 {
+    #[serde(rename = "schemaValid")]
+    pub schema_valid: bool,
+    #[serde(rename = "referencesResolved")]
+    pub references_resolved: bool,
+    #[serde(rename = "limitsValid")]
+    pub limits_valid: bool,
+    #[serde(rename = "numericModelValid")]
+    pub numeric_model_valid: bool,
+    #[serde(rename = "primitivesValid")]
+    pub primitives_valid: bool,
+    #[serde(rename = "actionsValid")]
+    pub actions_valid: bool,
+    #[serde(rename = "invariantsValid")]
+    pub invariants_valid: bool,
+    #[serde(rename = "topologyValid")]
+    pub topology_valid: bool,
+    #[serde(rename = "initialStateValid")]
+    pub initial_state_valid: bool,
+    #[serde(rename = "proofReady")]
+    pub proof_ready: bool,
+    pub diagnostics: Vec<AssemblyDiagnostic>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
@@ -1146,6 +1246,10 @@ pub struct AssemblyManifestV1 {
     pub unresolved_optional_references: usize,
     pub generated_id_count: usize,
     pub reference_graph_hash: String,
+    pub runtime_ir_schema_version: String,
+    pub runtime_ir_hash: String,
+    pub runtime_ir_validation: RuntimeIrValidationSummaryV1,
+    pub runtime_ir_counts: BTreeMap<String, usize>,
     pub duplicate_check_result: ValidationResultV1,
     pub namespace_check_result: ValidationResultV1,
     pub compatibility_check_result: ValidationResultV1,
@@ -1173,6 +1277,399 @@ pub struct AssembledWorld {
     pub ir: PtwRuntimeIrV1,
     pub diagnostics: Vec<AssemblyDiagnostic>,
     pub manifest: AssemblyManifestV1,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+pub struct CompilerCapabilitiesV1 {
+    pub schema_version: String,
+    pub supported_capabilities: Vec<String>,
+    pub maximum_limit_value: u64,
+}
+
+impl Default for CompilerCapabilitiesV1 {
+    fn default() -> Self {
+        Self {
+            schema_version: COMPILER_CAPABILITIES_SCHEMA_VERSION.into(),
+            supported_capabilities: vec![
+                "ptw.runtime.v1".into(),
+                "ptw.primitive.movement.v1".into(),
+                "ptw.action.entity_move.v1".into(),
+                "ptw.proof.replay.v1".into(),
+            ],
+            maximum_limit_value: 1_000_000,
+        }
+    }
+}
+
+const REQUIRED_LIMITS: &[&str] = &[
+    "max_players",
+    "max_entities",
+    "max_active_encounters",
+    "max_inventory_entries",
+    "max_item_stack",
+    "max_health",
+    "max_damage",
+    "max_movement_delta",
+    "max_spawned_entities_per_tick",
+    "max_actions_per_tick",
+    "max_action_payload_size",
+    "max_world_variables",
+    "max_topology_nodes",
+    "max_transition_preconditions",
+    "max_invariant_checks",
+    "max_progression_tier",
+];
+
+pub fn build_runtime_ir(
+    request: &CanonicalWorldRequest,
+    profiles: &ResolvedProfileGraphV1,
+    merged: &MergedContributionSetV1,
+    resolved: &ResolvedDeclarationSetV1,
+    capabilities: &CompilerCapabilitiesV1,
+) -> Result<PtwRuntimeIrV1, Vec<AssemblyDiagnostic>> {
+    let mut diagnostics = Vec::new();
+    let mut limits = BTreeMap::new();
+    let mut limit_provenance = BTreeMap::new();
+    for key in REQUIRED_LIMITS {
+        match merged
+            .limits
+            .get(*key)
+            .and_then(|v| v.get("value"))
+            .and_then(Value::as_u64)
+        {
+            Some(v) if v > 0 && v <= capabilities.maximum_limit_value => {
+                limits.insert((*key).to_string(), v);
+                limit_provenance.insert(
+                    (*key).to_string(),
+                    merged
+                        .provenance_index
+                        .get(&format!("limits:{key}"))
+                        .cloned()
+                        .unwrap_or_default(),
+                );
+            }
+            Some(_) => diagnostics.push(runtime_diag("ASSEMBLY_LIMIT_INVALID", "limits", key)),
+            None => diagnostics.push(runtime_diag("ASSEMBLY_LIMIT_MISSING", "limits", key)),
+        }
+    }
+    let runtime = merged.runtime.get("runtime-contract");
+    let get_obj = |name: &str| -> BTreeMap<String, Value> {
+        runtime
+            .and_then(|v| v.get(name))
+            .and_then(Value::as_object)
+            .map(|m| m.iter().map(|(k, v)| (k.clone(), v.clone())).collect())
+            .unwrap_or_default()
+    };
+    let numeric_model = get_obj("numeric_model");
+    let coordinate_model = get_obj("coordinate_model");
+    let tick_model = get_obj("tick_model");
+    let deterministic_id_policy = get_obj("deterministic_id_policy");
+    for (field, map) in [
+        (
+            "runtime contract version",
+            runtime.map(|_| true).unwrap_or(false),
+        ),
+        ("numeric_model", !numeric_model.is_empty()),
+        ("coordinate_model", !coordinate_model.is_empty()),
+        ("tick_model", !tick_model.is_empty()),
+        (
+            "deterministic_id_policy",
+            !deterministic_id_policy.is_empty(),
+        ),
+    ] {
+        if !map {
+            diagnostics.push(runtime_diag(
+                "ASSEMBLY_RUNTIME_FIELD_MISSING",
+                "runtime",
+                field,
+            ));
+        }
+    }
+    if numeric_model.get("kind").and_then(Value::as_str) == Some("float") {
+        diagnostics.push(runtime_diag(
+            "ASSEMBLY_NUMERIC_MODEL_UNSUPPORTED",
+            "runtime",
+            "numeric_model",
+        ));
+    }
+    let checkpoint_policy = value_map(merged.proof.get("checkpoint_policy"));
+    let journal_policy = value_map(merged.proof.get("journal_policy"));
+    let root_policy = value_map(merged.proof.get("root_policy"));
+    for (name, map) in [
+        ("checkpoint_policy", &checkpoint_policy),
+        ("journal_policy", &journal_policy),
+        ("root_policy", &root_policy),
+    ] {
+        if map.is_empty() {
+            diagnostics.push(runtime_diag(
+                "ASSEMBLY_RUNTIME_FIELD_MISSING",
+                "proof",
+                name,
+            ));
+        }
+    }
+    if merged.regions.is_empty() && !merged.topology.contains_key("neutral") {
+        diagnostics.push(runtime_diag(
+            "ASSEMBLY_TOPOLOGY_INVALID",
+            "regions",
+            "declared_region_or_neutral_topology",
+        ));
+    }
+    if merged.spawn_points.is_empty()
+        && runtime
+            .and_then(|v| v.get("non_player_world"))
+            .and_then(Value::as_bool)
+            != Some(true)
+    {
+        diagnostics.push(runtime_diag(
+            "ASSEMBLY_RUNTIME_FIELD_MISSING",
+            "spawn_points",
+            "player_spawn_or_non_player_world_policy",
+        ));
+    }
+    if merged.primitives.is_empty() {
+        diagnostics.push(runtime_diag(
+            "ASSEMBLY_RUNTIME_FIELD_MISSING",
+            "primitives",
+            "primitive set",
+        ));
+    }
+    if merged.actions.is_empty() {
+        diagnostics.push(runtime_diag(
+            "ASSEMBLY_RUNTIME_FIELD_MISSING",
+            "actions",
+            "action set",
+        ));
+    }
+    if merged.invariants.is_empty() {
+        diagnostics.push(runtime_diag(
+            "ASSEMBLY_RUNTIME_FIELD_MISSING",
+            "invariants",
+            "invariant set",
+        ));
+    }
+    let primitive_configurations = explicit_primitives(&merged.primitives);
+    for (id, p) in &primitive_configurations {
+        if p.get("enabled").and_then(Value::as_bool) == Some(true)
+            && p.get("handler")
+                .and_then(Value::as_str)
+                .unwrap_or("")
+                .is_empty()
+        {
+            diagnostics.push(runtime_diag(
+                "ASSEMBLY_PRIMITIVE_HANDLER_MISSING",
+                "primitives",
+                id,
+            ));
+        }
+    }
+    for (id, action) in &merged.actions {
+        if action
+            .get("max_payload_size")
+            .and_then(Value::as_u64)
+            .unwrap_or(0)
+            == 0
+        {
+            diagnostics.push(runtime_diag(
+                "ASSEMBLY_ACTION_PAYLOAD_UNBOUNDED",
+                "actions",
+                id,
+            ));
+        }
+        let prim = action
+            .get("primitive")
+            .or_else(|| action.get("primitive_dependency"))
+            .and_then(Value::as_str)
+            .unwrap_or("");
+        if !prim.is_empty()
+            && primitive_configurations
+                .get(prim)
+                .and_then(|p| p.get("enabled"))
+                .and_then(Value::as_bool)
+                != Some(true)
+        {
+            diagnostics.push(runtime_diag(
+                "ASSEMBLY_ACTION_PRIMITIVE_DISABLED",
+                "actions",
+                id,
+            ));
+        }
+    }
+    diagnostics.extend(merged.diagnostics.clone());
+    diagnostics.extend(resolved.diagnostics.clone());
+    diagnostics = sorted_diagnostics(diagnostics);
+    if diagnostics
+        .iter()
+        .any(|d| d.severity == DiagnosticSeverity::Error)
+    {
+        return Err(diagnostics);
+    }
+    let resolved_profiles = profiles
+        .resolved_profile_nodes
+        .iter()
+        .map(|n| (n.category.as_str().to_string(), n.identity.clone()))
+        .collect();
+    let validation = RuntimeIrValidationSummaryV1 {
+        schema_valid: true,
+        references_resolved: true,
+        limits_valid: true,
+        numeric_model_valid: true,
+        primitives_valid: true,
+        actions_valid: true,
+        invariants_valid: true,
+        topology_valid: true,
+        initial_state_valid: true,
+        proof_ready: true,
+        diagnostics: vec![],
+    };
+    let proof_readiness = BTreeMap::from([
+        ("bounded_transition_status".into(), json!("bounded")),
+        (
+            "numeric_model_compatibility".into(),
+            json!("bounded-integers"),
+        ),
+        (
+            "maximum_touched_entities_per_action".into(),
+            json!(limits["max_spawned_entities_per_tick"] + 1),
+        ),
+        (
+            "maximum_invariant_checks".into(),
+            json!(limits["max_invariant_checks"]),
+        ),
+        ("receipt_schema_coverage".into(), json!("declared")),
+        (
+            "checkpoint_support".into(),
+            json!(!checkpoint_policy.is_empty()),
+        ),
+        ("journal_support".into(), json!(!journal_policy.is_empty())),
+        ("root_support".into(), json!(!root_policy.is_empty())),
+        (
+            "future_zk_witness_compatibility_status".into(),
+            json!("structurally_ready"),
+        ),
+    ]);
+    let mut ir = PtwRuntimeIrV1 {
+        schema_version: RUNTIME_IR_SCHEMA_VERSION.into(),
+        runtime_ir_hash: String::new(),
+        contract_version: PTW_RUNTIME_CONTRACT_VERSION.into(),
+        assembly_contract_version: ASSEMBLY_CONTRACT_VERSION.into(),
+        world_id: request.world_id.clone(),
+        world_name: request.world_name.clone(),
+        resolved_profiles,
+        module_references: request.module_references.clone(),
+        capability_requirements: profiles.required_capabilities.clone(),
+        compiler_capability_requirements: capabilities.supported_capabilities.clone(),
+        runtime_capability_requirements: profiles.required_capabilities.clone(),
+        limits,
+        limit_provenance,
+        numeric_model,
+        coordinate_model,
+        tick_model,
+        deterministic_id_policy,
+        topology_graph: merged.topology.clone(),
+        regions: merged.regions.clone(),
+        zones: BTreeMap::new(),
+        passages: BTreeMap::new(),
+        spawn_points: merged.spawn_points.clone(),
+        transition_points: BTreeMap::new(),
+        interaction_points: BTreeMap::new(),
+        resolved_profile_graph: profiles.clone(),
+        contribution_graph: ContributionGraphV1 {
+            schema_version: String::new(),
+            resolved_profile_nodes: vec![],
+            contribution_nodes: vec![],
+            profile_to_contribution_edges: vec![],
+            contribution_dependency_edges: vec![],
+            ordering_constraints: vec![],
+            override_relationships: vec![],
+            provenance: BTreeMap::new(),
+            contribution_graph_hash: String::new(),
+        },
+        merged_contributions: merged.clone(),
+        resolved_declarations: resolved.clone(),
+        archetypes: merged.entity_archetypes.clone(),
+        entity_archetypes: merged.entity_archetypes.clone(),
+        item_archetypes: merged.item_archetypes.clone(),
+        encounter_archetypes: merged.encounter_archetypes.clone(),
+        initial_entities: merged.entities.clone(),
+        world_variables: merged.world_variables.clone(),
+        player_state_template: value_map(runtime.and_then(|v| v.get("player_state_template"))),
+        primitive_configurations,
+        actions: merged.actions.clone(),
+        transition_bindings: merged.transitions.clone(),
+        invariants: merged.invariants.clone(),
+        encounters: merged.encounters.clone(),
+        progression: merged.progression.clone(),
+        authoritative_content: merged.content.clone(),
+        checkpoint_policy,
+        journal_policy,
+        root_policy,
+        proof_constraints: merged.proof.clone(),
+        state_domains: vec![
+            "players".into(),
+            "entities".into(),
+            "inventory".into(),
+            "topology_state".into(),
+            "encounters".into(),
+            "progression".into(),
+            "world_variables".into(),
+            "economy".into(),
+            "governance".into(),
+        ],
+        proof_readiness,
+        validation,
+        universal_defaults: BTreeMap::from([
+            ("initial_tick".into(), json!(0)),
+            ("optional_collections".into(), json!("empty_when_absent")),
+            ("disabled_optional_primitives".into(), json!("explicit")),
+        ]),
+    };
+    let mut h = ir.clone();
+    h.runtime_ir_hash.clear();
+    h.contribution_graph = ContributionGraphV1 {
+        schema_version: String::new(),
+        resolved_profile_nodes: vec![],
+        contribution_nodes: vec![],
+        profile_to_contribution_edges: vec![],
+        contribution_dependency_edges: vec![],
+        ordering_constraints: vec![],
+        override_relationships: vec![],
+        provenance: BTreeMap::new(),
+        contribution_graph_hash: profiles.graph_hash.clone(),
+    };
+    ir.runtime_ir_hash = hash_json(&json!({"domain": RUNTIME_IR_HASH_DOMAIN, "ir": h}));
+    Ok(ir)
+}
+
+fn value_map(v: Option<&Value>) -> BTreeMap<String, Value> {
+    v.and_then(Value::as_object)
+        .map(|m| m.iter().map(|(k, v)| (k.clone(), v.clone())).collect())
+        .unwrap_or_default()
+}
+
+fn explicit_primitives(src: &BTreeMap<String, Value>) -> BTreeMap<String, Value> {
+    let mut out = BTreeMap::new();
+    for name in [
+        "identity",
+        "movement",
+        "health",
+        "combat",
+        "inventory",
+        "items",
+        "spawning",
+        "encounters",
+        "progression",
+        "interactions",
+    ] {
+        let enabled = src.get(name).cloned().unwrap_or_else(|| json!({}));
+        let is_enabled = !enabled.as_object().map(|o| o.is_empty()).unwrap_or(false);
+        out.insert(name.into(), json!({"id":name,"enabled":is_enabled,"primitive_version":"primitive.v1","configuration":enabled,"limits":[],"required_capabilities":[],"handler": if is_enabled {format!("ptw.{name}.v1")} else {String::new()}}));
+    }
+    out
+}
+
+fn runtime_diag(code: &str, namespace: &str, affected: &str) -> AssemblyDiagnostic {
+    AssemblyDiagnostic { code: code.into(), severity: DiagnosticSeverity::Error, stage: AssemblyStage::RuntimeIrConstruction, namespace: namespace.into(), source: "runtime-ir-builder".into(), affected_id: affected.into(), message: format!("{code}: {affected}"), suggested_remediation: "Declare the required authoritative Runtime IR field with bounded deterministic semantics.".into() }
 }
 
 fn ns_of_payload(p: &ContributionPayloadV1) -> ContributionNamespace {
@@ -1253,6 +1750,42 @@ fn make_contribution(
                 value,
             })
         }
+        ContributionNamespace::Transitions => {
+            ContributionPayloadV1::Transitions(TransitionContributionPayload {
+                authoritative: true,
+                value,
+            })
+        }
+        ContributionNamespace::Invariants => {
+            ContributionPayloadV1::Invariants(InvariantContributionPayload {
+                authoritative: true,
+                value,
+            })
+        }
+        ContributionNamespace::Entities => {
+            ContributionPayloadV1::Entities(EntityContributionPayload {
+                authoritative: true,
+                value,
+            })
+        }
+        ContributionNamespace::EntityArchetypes => {
+            ContributionPayloadV1::EntityArchetypes(EntityArchetypeContributionPayload {
+                authoritative: true,
+                value,
+            })
+        }
+        ContributionNamespace::ItemArchetypes => {
+            ContributionPayloadV1::ItemArchetypes(ItemArchetypeContributionPayload {
+                authoritative: true,
+                value,
+            })
+        }
+        ContributionNamespace::EncounterArchetypes => {
+            ContributionPayloadV1::EncounterArchetypes(EncounterArchetypeContributionPayload {
+                authoritative: true,
+                value,
+            })
+        }
         ContributionNamespace::Proof => ContributionPayloadV1::Proof(ProofContributionPayload {
             authoritative: true,
             value,
@@ -1300,7 +1833,7 @@ pub fn load_typed_contributions(g: &ResolvedProfileGraphV1) -> Vec<ProfileContri
     let mut out = Vec::new();
     for n in &g.resolved_profile_nodes {
         match n.name.as_str() {
-            "base-world-v1" => {
+            "base-world-v1" | "ptw-full-v1" => {
                 out.push(make_contribution(
                     n,
                     ContributionNamespace::Runtime,
@@ -1308,7 +1841,15 @@ pub fn load_typed_contributions(g: &ResolvedProfileGraphV1) -> Vec<ProfileContri
                     ContributionOperation::Declare,
                     MergeClass::UniqueDeclaration,
                     OverridePolicy::Forbidden,
-                    json!({"contract":"ptw","numeric_model":"u64","tick_model":"deterministic"}),
+                    json!({
+                        "contract":"ptw",
+                        "runtime_contract_version": PTW_RUNTIME_CONTRACT_VERSION,
+                        "numeric_model":{"kind":"bounded_integer","integer_bits":64,"overflow":"reject","saturation":false,"rounding":"none"},
+                        "coordinate_model":{"kind":"grid_i32","dimensions":2,"origin":"region"},
+                        "tick_model":{"kind":"deterministic","initial_tick":0,"step":"u64"},
+                        "deterministic_id_policy":{"kind":"canonical-string","generated_prefix":"gen:"},
+                        "player_state_template":{"health":100,"inventory":[]}
+                    }),
                     None,
                     None,
                 ));
@@ -1323,8 +1864,78 @@ pub fn load_typed_contributions(g: &ResolvedProfileGraphV1) -> Vec<ProfileContri
                     None,
                     None,
                 ));
+                for (k, v) in [
+                    ("max_entities", 1024),
+                    ("max_active_encounters", 16),
+                    ("max_inventory_entries", 32),
+                    ("max_item_stack", 99),
+                    ("max_health", 1000),
+                    ("max_damage", 250),
+                    ("max_movement_delta", 1),
+                    ("max_spawned_entities_per_tick", 8),
+                    ("max_actions_per_tick", 128),
+                    ("max_action_payload_size", 4096),
+                    ("max_world_variables", 128),
+                    ("max_topology_nodes", 256),
+                    ("max_transition_preconditions", 16),
+                    ("max_invariant_checks", 64),
+                    ("max_progression_tier", 32),
+                ] {
+                    out.push(make_contribution(
+                        n,
+                        ContributionNamespace::Limits,
+                        k,
+                        ContributionOperation::Aggregate,
+                        MergeClass::BoundedAggregation,
+                        OverridePolicy::Forbidden,
+                        json!({"rule":"strictest_maximum","value":v}),
+                        None,
+                        None,
+                    ));
+                }
+                for (k, v) in [
+                    (
+                        "checkpoint_policy",
+                        json!({"mode":"periodic","interval_ticks":100}),
+                    ),
+                    (
+                        "journal_policy",
+                        json!({"mode":"append_only","receipt_coverage":"all_actions"}),
+                    ),
+                    (
+                        "root_policy",
+                        json!({"mode":"combined_merkle_root","state_domains":["players","entities","inventory","topology_state","encounters","progression","world_variables"]}),
+                    ),
+                ] {
+                    out.push(make_contribution(
+                        n,
+                        ContributionNamespace::Proof,
+                        k,
+                        ContributionOperation::Declare,
+                        MergeClass::KeyedUnion,
+                        OverridePolicy::Forbidden,
+                        v,
+                        None,
+                        None,
+                    ));
+                }
+                for k in [
+                    "unique_entity_ids",
+                    "valid_ownership",
+                    "topology_bounded_positions",
+                    "health_bounds",
+                    "inventory_capacity",
+                    "nonnegative_quantities",
+                    "valid_archetype_references",
+                    "spawn_caps",
+                    "progression_bounds",
+                    "valid_encounter_transitions",
+                    "declared_action_only_mutation",
+                ] {
+                    out.push(make_contribution(n, ContributionNamespace::Invariants, k, ContributionOperation::Declare, MergeClass::KeyedUnion, OverridePolicy::Forbidden, json!({"id":k,"version":"invariant.v1","evaluation_policy":"per_tick","touched_state_domains":["entities"],"required_capability":"ptw.runtime.v1"}), None, None));
+                }
             }
-            "movement-enabled-v1" => {
+            "movement-enabled-v1" | "arpg-v1" => {
                 out.push(make_contribution(
                     n,
                     ContributionNamespace::Primitives,
@@ -1332,7 +1943,7 @@ pub fn load_typed_contributions(g: &ResolvedProfileGraphV1) -> Vec<ProfileContri
                     ContributionOperation::Declare,
                     MergeClass::KeyedUnion,
                     OverridePolicy::Forbidden,
-                    json!({"primitive":"movement","mode":"grid"}),
+                    json!({"primitive":"movement","mode":"grid","enabled":true,"handler_identifier":"ptw.movement.v1"}),
                     None,
                     None,
                 ));
@@ -1343,7 +1954,7 @@ pub fn load_typed_contributions(g: &ResolvedProfileGraphV1) -> Vec<ProfileContri
                     ContributionOperation::Declare,
                     MergeClass::KeyedUnion,
                     OverridePolicy::SameProviderOnly,
-                    json!({"action":"entity_move","cost":1}),
+                    json!({"action":"entity_move","primitive":"movement","cost":1,"schema_version":"action.v1","max_payload_size":128,"receipt_type":"movement_receipt","preconditions":["has_actor"],"touched_state_domains":["entities","topology_state"],"handler_identifier":"ptw.movement.v1"}),
                     None,
                     None,
                 ));
@@ -1363,7 +1974,7 @@ pub fn load_typed_contributions(g: &ResolvedProfileGraphV1) -> Vec<ProfileContri
                     None,
                 ));
             }
-            "simple-topology-v1" => {
+            "simple-topology-v1" | "catacombs-v1" => {
                 out.push(make_contribution(
                     n,
                     ContributionNamespace::Regions,
@@ -1387,7 +1998,7 @@ pub fn load_typed_contributions(g: &ResolvedProfileGraphV1) -> Vec<ProfileContri
                     None,
                 ));
             }
-            "replay-proof-v1" => out.push(make_contribution(
+            "replay-proof-v1" | "live-replay-ceremony-v1" => out.push(make_contribution(
                 n,
                 ContributionNamespace::Proof,
                 "replay",
@@ -1997,41 +2608,28 @@ pub fn assemble_world(request: CanonicalWorldRequest) -> Result<AssembledWorld, 
             ContributionNamespace::Access => contributions.access.push(tc),
         }
     }
-    let resolved_profiles = graph
-        .resolved_profile_nodes
-        .iter()
-        .map(|n| (n.category.as_str().to_string(), n.identity.clone()))
-        .collect();
-    let ir = PtwRuntimeIrV1 {
-        contract_version: PTW_RUNTIME_CONTRACT_VERSION.into(),
-        assembly_contract_version: ASSEMBLY_CONTRACT_VERSION.into(),
-        world_id: request.world_id.clone(),
-        world_name: request.world_name.clone(),
-        resolved_profiles,
-        module_references: request.module_references.clone(),
-        capability_requirements: graph.required_capabilities.clone(),
-        limits: BTreeMap::new(),
-        topology_graph: BTreeMap::new(),
-        regions: BTreeMap::new(),
-        spawn_points: BTreeMap::new(),
-        resolved_profile_graph: graph.clone(),
-        contribution_graph: contribution_graph.clone(),
-        merged_contributions: merged_contributions.clone(),
-        resolved_declarations: resolved_declarations.clone(),
-        archetypes: BTreeMap::new(),
-        initial_entities: BTreeMap::new(),
-        world_variables: BTreeMap::new(),
-        primitive_configurations: BTreeMap::new(),
-        actions: BTreeMap::new(),
-        transition_bindings: BTreeMap::new(),
-        invariants: BTreeMap::new(),
-        encounters: BTreeMap::new(),
-        progression: BTreeMap::new(),
-        authoritative_content: BTreeMap::new(),
-        checkpoint_policy: BTreeMap::new(),
-        journal_policy: BTreeMap::new(),
-        root_policy: BTreeMap::new(),
-        proof_constraints: request.proof_policy.clone(),
+    let ir = match build_runtime_ir(
+        &request,
+        &graph,
+        &merged_contributions,
+        &resolved_declarations,
+        &CompilerCapabilitiesV1::default(),
+    ) {
+        Ok(mut ir) => {
+            ir.contribution_graph = contribution_graph.clone();
+            let mut h = ir.clone();
+            h.runtime_ir_hash.clear();
+            h.contribution_graph.contribution_nodes.clear();
+            h.contribution_graph.provenance.clear();
+            ir.runtime_ir_hash = hash_json(&json!({"domain": RUNTIME_IR_HASH_DOMAIN, "ir": h}));
+            ir
+        }
+        Err(d) => {
+            return Err(format!(
+                "runtime IR construction failed: {}",
+                serde_json::to_string(&d).unwrap_or_default()
+            ))
+        }
     };
     let mut diagnostics = graph.diagnostics.clone();
     diagnostics.extend(merged_contributions.diagnostics.clone());
@@ -2079,6 +2677,18 @@ pub fn assemble_world(request: CanonicalWorldRequest) -> Result<AssembledWorld, 
         unresolved_optional_references: resolved_declarations.unresolved_optional_references.len(),
         generated_id_count: resolved_declarations.generated_ids.len(),
         reference_graph_hash: resolved_declarations.reference_graph_hash.clone(),
+        runtime_ir_schema_version: ir.schema_version.clone(),
+        runtime_ir_hash: ir.runtime_ir_hash.clone(),
+        runtime_ir_validation: ir.validation.clone(),
+        runtime_ir_counts: BTreeMap::from([
+            ("regions".into(), ir.regions.len()),
+            ("spawn_points".into(), ir.spawn_points.len()),
+            ("entity_archetypes".into(), ir.entity_archetypes.len()),
+            ("initial_entities".into(), ir.initial_entities.len()),
+            ("primitives".into(), ir.primitive_configurations.len()),
+            ("actions".into(), ir.actions.len()),
+            ("invariants".into(), ir.invariants.len()),
+        ]),
         duplicate_check_result: validation_status(
             &resolved_declarations.diagnostics,
             &[
@@ -2490,7 +3100,15 @@ fn legacy_ref(s: &str) -> Option<ProfileReference> {
         "everarcade",
         if name.contains("topology") {
             ProfileCategory::Topology
+        } else if name == "arpg-v1" || name.contains("genre") {
+            ProfileCategory::Genre
+        } else if name == "catacombs-v1" || name.contains("biome") {
+            ProfileCategory::Biome
+        } else if name == "arpg-web-v1" || name.contains("web") {
+            ProfileCategory::Projection
         } else if name.contains("proof") {
+            ProfileCategory::Proof
+        } else if name == "live-replay-ceremony-v1" {
             ProfileCategory::Proof
         } else {
             ProfileCategory::World
@@ -2660,13 +3278,14 @@ mod tests {
             "schema_version":"everarcade.world-create-request.v1",
             "world_id":"world_demo",
             "world_name":"Demo World",
-            "profiles":{"world":"ptw-full-v1","genre":"social-v1"}
+            "profiles":{"topology":"simple-topology-v1","proof":"replay-proof-v1"}
         }"#,
         )
         .unwrap();
         let assembled = assemble_world(request).unwrap();
         assert_eq!(assembled.ir.contract_version, PTW_RUNTIME_CONTRACT_VERSION);
-        assert!(assembled.contributions.actions.is_empty());
+        assert!(!assembled.contributions.actions.is_empty());
+        assert!(assembled.ir.runtime_ir_hash.starts_with("sha256:"));
         assert_eq!(assembled.manifest.stages.len(), 35);
         assert_eq!(
             assembled.ir.resolved_profile_graph.schema_version,
@@ -2850,7 +3469,10 @@ mod tests {
         let mut nodes = load_typed_contributions(&graph);
         let base = nodes
             .iter()
-            .find(|c| c.identity.namespace == ContributionNamespace::Limits)
+            .find(|c| {
+                c.identity.namespace == ContributionNamespace::Limits
+                    && c.identity.declaration_key == "max_players"
+            })
             .unwrap()
             .clone();
         let mut stricter = base.clone();
