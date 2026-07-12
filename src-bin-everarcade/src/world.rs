@@ -1,4 +1,6 @@
 use serde::{Deserialize, Serialize};
+
+mod assembly;
 use serde_json::json;
 use sha2::{Digest, Sha256};
 use std::{
@@ -91,30 +93,17 @@ pub fn dispatch(args: &[String]) -> Result<(), String> {
     }
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
-struct WorldCreateRequest {
-    world_profile: String,
-    genre_profile: String,
-    biome_profile: String,
-    projection_profile: String,
-    proof_profile: String,
-    #[serde(default = "default_world_name")]
-    world_name: String,
-}
-fn default_world_name() -> String {
-    "EverArcade Catacombs: The Endless Gate".into()
-}
-
 fn create(config: String, dir: String, out: Option<String>) -> Result<(), String> {
-    let request: WorldCreateRequest =
-        serde_json::from_slice(&fs::read(&config).map_err(|e| e.to_string())?)
-            .map_err(|e| format!("invalid world configuration: {e}"))?;
+    let request = assembly::CanonicalWorldRequest::from_request_bytes(
+        &fs::read(&config).map_err(|e| e.to_string())?,
+    )?;
     let root = PathBuf::from(dir);
     if root.exists() {
         fs::remove_dir_all(&root).map_err(|e| e.to_string())?;
     }
     init(root.to_string_lossy().to_string())?;
-    apply_profiles(&root, &request)?;
+    let assembled = assembly::assemble_world(request)?;
+    apply_profiles(&root, &assembled)?;
     if let Some(out) = out {
         package(root.to_string_lossy().to_string(), out)?;
     }
@@ -122,7 +111,8 @@ fn create(config: String, dir: String, out: Option<String>) -> Result<(), String
     Ok(())
 }
 
-fn apply_profiles(root: &Path, r: &WorldCreateRequest) -> Result<(), String> {
+fn apply_profiles(root: &Path, assembled: &assembly::AssembledWorld) -> Result<(), String> {
+    let r = &assembled.request;
     for d in [
         "manifest",
         "runtime",
@@ -144,19 +134,13 @@ fn apply_profiles(root: &Path, r: &WorldCreateRequest) -> Result<(), String> {
         )
         .map_err(|e| e.to_string())?;
     }
-    let world_id = format!(
-        "world-{}",
-        r.world_name
-            .to_lowercase()
-            .chars()
-            .map(|c| if c.is_ascii_alphanumeric() { c } else { '-' })
-            .collect::<String>()
-            .trim_matches('-')
-    );
+    let world_id = r.world_id.clone();
     let profiles = json!({
-        "world_profile": r.world_profile, "genre_profile": r.genre_profile, "biome_profile": r.biome_profile,
-        "projection_profile": r.projection_profile, "proof_profile": r.proof_profile,
-        "resolved_profiles": [r.world_profile, r.genre_profile, r.biome_profile, r.projection_profile, r.proof_profile]
+        "schema_version": r.schema_version,
+        "resolved_profiles": r.profiles,
+        "module_references": r.module_references,
+        "assembly_contract_version": assembly::ASSEMBLY_CONTRACT_VERSION,
+        "runtime_contract_version": assembly::PTW_RUNTIME_CONTRACT_VERSION
     });
     write_json(root.join("metadata/profile-resolution.json"), &profiles)?;
     write_json(
@@ -165,19 +149,19 @@ fn apply_profiles(root: &Path, r: &WorldCreateRequest) -> Result<(), String> {
     )?;
     write_json(
         root.join("rules/rules.json"),
-        &json!({"genre_profile":r.genre_profile,"movement":"grid-deterministic","combat":"rules-derived","loot":"seedless-table-order"}),
+        &json!({"genre_profile":r.profiles.get("genre").cloned().unwrap_or_default(),"movement":"grid-deterministic","combat":"rules-derived","loot":"seedless-table-order"}),
     )?;
     write_json(
         root.join("world/world.json"),
-        &json!({"world_id":world_id,"name":r.world_name,"biome_profile":r.biome_profile}),
+        &json!({"world_id":world_id,"name":r.world_name,"biome_profile":r.profiles.get("biome").cloned().unwrap_or_default()}),
     )?;
     write_json(
         root.join("projections/projection.json"),
-        &json!({"projection_profile":r.projection_profile,"client":"web-reference","authoritative":false}),
+        &json!({"projection_profile":r.profiles.get("projection").cloned().unwrap_or_default(),"client":"web-reference","authoritative":false}),
     )?;
     write_json(
         root.join("proof/proof.json"),
-        &json!({"proof_profile":r.proof_profile,"replay_verification":"deterministic-local"}),
+        &json!({"proof_profile":r.profiles.get("proof").cloned().unwrap_or_default(),"replay_verification":"deterministic-local"}),
     )?;
     write_json(
         root.join("trust/trust.json"),
@@ -194,6 +178,19 @@ fn apply_profiles(root: &Path, r: &WorldCreateRequest) -> Result<(), String> {
     write_json(
         root.join("manifest/package-metadata.json"),
         &json!({"canonical_generator":"everarcade-compiler","deterministic":true,"commercial_platform_logic":false,"profiles":profiles}),
+    )?;
+    write_json(root.join("metadata/runtime-ir.json"), &assembled.ir)?;
+    write_json(
+        root.join("metadata/typed-contributions.json"),
+        &assembled.contributions,
+    )?;
+    write_json(
+        root.join("metadata/assembly-diagnostics.json"),
+        &assembled.diagnostics,
+    )?;
+    write_json(
+        root.join("proof/assembly-manifest.json"),
+        &assembled.manifest,
     )?;
     fs::write(
         root.join("world-contract/contract.wasm"),
