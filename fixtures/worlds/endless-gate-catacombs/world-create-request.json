@@ -1,0 +1,39 @@
+{
+  "schema_version": "everarcade.world-create-request.v1",
+  "world_id": "everarcade-catacombs-endless-gate",
+  "world_name": "EverArcade Catacombs: The Endless Gate",
+  "profiles": {
+    "world": "everarcade.world.ptw-full@1.0.0",
+    "genre": "everarcade.genre.arpg-baseline@1.0.0",
+    "topology": "everarcade.topology.catacombs-baseline@1.0.0",
+    "biome": "everarcade.biome.catacombs@1.0.0",
+    "encounter": "everarcade.encounter.catacombs-baseline@1.0.0",
+    "proof": "everarcade.proof.live-replay-ceremony@1.0.0",
+    "projection": "everarcade.projection.arpg-web@1.0.0",
+    "economy": "everarcade.economy.founding-world-sandbox@1.0.0"
+  },
+  "module_references": {},
+  "runtime_overrides": {
+    "deterministic_seed_material": "everarcade-catacombs-endless-gate:v1"
+  },
+  "content_overrides": {},
+  "projection_declarations": {
+    "projection_reference": "everarcade.projection.arpg-web@1.0.0"
+  },
+  "proof_policy": {
+    "policy_reference": "everarcade.proof.live-replay-ceremony@1.0.0",
+    "checkpoint": "periodic",
+    "journal": "append_only",
+    "receipt_coverage": "all_declared_actions"
+  },
+  "economy_metadata": {
+    "economy_reference": "everarcade.economy.founding-world-sandbox@1.0.0"
+  },
+  "generation_provenance": {
+    "canonical_derivation_input": "EverArcade Catacombs: The Endless Gate|baseline-v1"
+  },
+  "compiler_policy": {
+    "require_declarative_profiles": true,
+    "allow_production_fallback": false
+  }
+}

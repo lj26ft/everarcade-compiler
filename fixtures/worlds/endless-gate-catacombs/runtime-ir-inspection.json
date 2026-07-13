@@ -1,0 +1,38 @@
+{
+  "world_id": "everarcade-catacombs-endless-gate",
+  "world_name": "EverArcade Catacombs: The Endless Gate",
+  "profile_graph_hash": "sha256:8ad60ec72f49888657f4838169b5eda037f193a8bc3b4cd6800b762c15e346a9",
+  "contribution_graph_hash": "sha256:01571d294db951d00234d96b69bb90cee13fd1afd67d9aa91188e85b272a772a",
+  "merged_contribution_hash": "sha256:10043220f9d24e56d156955b62dcd2d908bcee4c5cf0a92351a9f2c1f72ad714",
+  "reference_graph_hash": "sha256:c62dc045ab6c82a8e799d542d22fd1606092ffc6a873bfc822ccb52ae56848ae",
+  "runtime_ir_hash": "sha256:a600cbbc5780c8e044167247ae3456eea22e54470721929d19fc0949ae47d693",
+  "enabled_primitives": ["combat", "encounters", "health", "identity", "interactions", "inventory", "items", "movement", "progression", "spawning"],
+  "enabled_actions": ["combat.attack", "entity.move", "interaction.activate", "item.pickup", "item.use", "player.join", "world.respawn"],
+  "counts": {
+    "entity_archetypes": 5,
+    "item_archetypes": 1,
+    "initial_entities": 4,
+    "regions": 3,
+    "spawn_points": 5,
+    "primitives": 10,
+    "actions": 7,
+    "invariants": 10
+  },
+  "effective_limits": {
+    "max_players": 2,
+    "max_entities": 32,
+    "max_topology_nodes": 64,
+    "max_action_payload_size": 1024,
+    "max_actions_per_tick": 16,
+    "max_movement_delta": 1,
+    "max_inventory_entries": 8,
+    "max_health": 100,
+    "max_damage": 25,
+    "max_item_stack": 3,
+    "max_active_encounters": 2,
+    "max_spawned_entities_per_tick": 1,
+    "max_invariant_checks": 32,
+    "max_progression_tier": 3
+  },
+  "proof_readiness": "proof_ready"
+}
