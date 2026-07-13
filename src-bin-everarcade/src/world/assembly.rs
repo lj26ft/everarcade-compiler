@@ -767,6 +767,34 @@ pub fn builtin_profile_catalog() -> ProfileCatalog {
     ));
     c.register(prof(
         ProfileCategory::Genre,
+        "social-exploration-baseline",
+        vec![
+            "ptw.primitive.identity.v1",
+            "ptw.primitive.movement.v1",
+            "ptw.primitive.inventory.v1",
+            "ptw.primitive.items.v1",
+            "ptw.primitive.interactions.v1",
+            "ptw.action.player_join.v1",
+            "ptw.action.entity_move.v1",
+            "ptw.action.interaction_activate.v1",
+            "ptw.action.item_pickup.v1",
+            "ptw.action.item_use.v1",
+        ],
+        vec![
+            ContributionNamespace::Primitives,
+            ContributionNamespace::Actions,
+            ContributionNamespace::Transitions,
+            ContributionNamespace::Invariants,
+        ],
+        vec![dep(ref_for(
+            "everarcade",
+            ProfileCategory::World,
+            "ptw-full",
+            "1.0.0",
+        ))],
+    ));
+    c.register(prof(
+        ProfileCategory::Genre,
         "arpg-baseline",
         vec![
             "ptw.primitive.identity.v1",
@@ -847,6 +875,64 @@ pub fn builtin_profile_catalog() -> ProfileCatalog {
             "catacombs",
             "1.0.0",
         ))],
+    ));
+    c.register(prof(
+        ProfileCategory::Topology,
+        "simple-village",
+        vec!["ptw.runtime.v1"],
+        vec![
+            ContributionNamespace::Topology,
+            ContributionNamespace::Regions,
+            ContributionNamespace::SpawnPoints,
+            ContributionNamespace::Content,
+        ],
+        vec![dep(ref_for(
+            "everarcade",
+            ProfileCategory::Genre,
+            "social-exploration-baseline",
+            "1.0.0",
+        ))],
+    ));
+    c.register(prof(
+        ProfileCategory::Biome,
+        "temperate-village",
+        vec!["ptw.runtime.v1"],
+        vec![
+            ContributionNamespace::Content,
+            ContributionNamespace::Projection,
+        ],
+        vec![dep(ref_for(
+            "everarcade",
+            ProfileCategory::Topology,
+            "simple-village",
+            "1.0.0",
+        ))],
+    ));
+    c.register(prof(
+        ProfileCategory::Encounter,
+        "none",
+        vec!["ptw.runtime.v1"],
+        vec![
+            ContributionNamespace::EntityArchetypes,
+            ContributionNamespace::ItemArchetypes,
+            ContributionNamespace::Entities,
+            ContributionNamespace::WorldVariables,
+            ContributionNamespace::Actions,
+            ContributionNamespace::Transitions,
+        ],
+        vec![dep(ref_for(
+            "everarcade",
+            ProfileCategory::Biome,
+            "temperate-village",
+            "1.0.0",
+        ))],
+    ));
+    c.register(prof(
+        ProfileCategory::Projection,
+        "village-web",
+        vec![],
+        vec![ContributionNamespace::Projection],
+        vec![],
     ));
     c.register(prof(
         ProfileCategory::Proof,
@@ -1502,6 +1588,24 @@ pub fn build_runtime_ir(
             None => diagnostics.push(runtime_diag("ASSEMBLY_LIMIT_MISSING", "limits", key)),
         }
     }
+    for (key, value) in &merged.limits {
+        if limits.contains_key(key) {
+            continue;
+        }
+        if let Some(v) = value.get("value").and_then(Value::as_u64) {
+            if v > 0 && v <= capabilities.maximum_limit_value {
+                limits.insert(key.clone(), v);
+                limit_provenance.insert(
+                    key.clone(),
+                    merged
+                        .provenance_index
+                        .get(&format!("limits:{key}"))
+                        .cloned()
+                        .unwrap_or_default(),
+                );
+            }
+        }
+    }
     let runtime = merged.runtime.get("runtime-contract");
     let get_obj = |name: &str| -> BTreeMap<String, Value> {
         runtime
@@ -1818,7 +1922,10 @@ fn explicit_primitives(src: &BTreeMap<String, Value>) -> BTreeMap<String, Value>
         "interactions",
     ] {
         let enabled = src.get(name).cloned().unwrap_or_else(|| json!({}));
-        let is_enabled = !enabled.as_object().map(|o| o.is_empty()).unwrap_or(false);
+        let is_enabled = enabled
+            .get("enabled")
+            .and_then(Value::as_bool)
+            .unwrap_or_else(|| !enabled.as_object().map(|o| o.is_empty()).unwrap_or(false));
         out.insert(name.into(), json!({"id":name,"enabled":is_enabled,"primitive_version":"primitive.v1","configuration":enabled,"limits":[],"required_capabilities":[],"handler": if is_enabled {format!("ptw.{name}.v1")} else {String::new()}}));
     }
     out
@@ -2143,6 +2250,213 @@ fn arpg_baseline_contributions(n: &ResolvedProfileNodeV1) -> Vec<ProfileContribu
     out
 }
 
+fn social_exploration_baseline_contributions(
+    n: &ResolvedProfileNodeV1,
+) -> Vec<ProfileContributionV1> {
+    let mut out = Vec::new();
+    for (id, enabled) in [
+        ("identity", true),
+        ("movement", true),
+        ("health", false),
+        ("combat", false),
+        ("inventory", true),
+        ("items", true),
+        ("interactions", true),
+        ("spawning", false),
+        ("encounters", false),
+        ("progression", false),
+    ] {
+        out.push(make_contribution(n, ContributionNamespace::Primitives, id, ContributionOperation::Declare, MergeClass::KeyedUnion, OverridePolicy::Forbidden, json!({"id":id,"primitive":id,"enabled":enabled,"handler_identifier": if enabled {format!("ptw.{id}.v1")} else {String::new()},"disabled_reason": if enabled {Value::Null} else {json!("not_required_for_noncombat_social_exploration_baseline")},"limits":"declared"}), None, None));
+    }
+    for (id, prim, receipt) in [
+        ("player.join", "identity", "player_join_receipt"),
+        ("entity.move", "movement", "movement_receipt"),
+        (
+            "interaction.activate",
+            "interactions",
+            "interaction_receipt",
+        ),
+        ("item.pickup", "items", "item_receipt"),
+        ("item.use", "items", "item_use_receipt"),
+    ] {
+        out.push(make_contribution(n, ContributionNamespace::Actions, id, ContributionOperation::Declare, MergeClass::KeyedUnion, OverridePolicy::Forbidden, json!({"id":id,"action":id,"primitive":prim,"transition":format!("{id}.transition"),"schema_version":"action.v1","max_payload_size":128,"receipt_type":receipt,"preconditions":["bounded_payload","declared_actor"],"touched_state_domains":["players","entities","inventory","world_variables"],"handler_identifier":format!("ptw.{prim}.v1")}), None, None));
+        out.push(make_contribution(n, ContributionNamespace::Transitions, &format!("{id}.transition"), ContributionOperation::Declare, MergeClass::KeyedUnion, OverridePolicy::Forbidden, json!({"id":format!("{id}.transition"),"action":id,"primitive":prim,"version":"transition.v1","deterministic":true,"bounded":true,"receipt_type":receipt}), None, None));
+    }
+    for (k, v) in [
+        ("max_interaction_targets", 8),
+        ("max_resource_node_count", 4),
+    ] {
+        out.push(make_contribution(
+            n,
+            ContributionNamespace::Limits,
+            k,
+            ContributionOperation::Aggregate,
+            MergeClass::BoundedAggregation,
+            OverridePolicy::Forbidden,
+            json!({"rule":"strictest_maximum","value":v}),
+            None,
+            None,
+        ));
+    }
+    for k in [
+        "unique_entity_ids",
+        "valid_archetype_references",
+        "valid_ownership",
+        "topology_bounded_positions",
+        "inventory_capacity",
+        "nonnegative_item_quantities",
+        "declared_action_only_mutation",
+        "resource_bounds",
+        "valid_interaction_transitions",
+    ] {
+        out.push(make_contribution(n, ContributionNamespace::Invariants, k, ContributionOperation::Declare, MergeClass::KeyedUnion, OverridePolicy::Forbidden, json!({"id":k,"invariant":k,"version":"invariant.v1","evaluation_policy":"per_tick","touched_state_domains":["players","entities","inventory","topology_state","world_variables"],"required_capability":"ptw.runtime.v1"}), None, None));
+    }
+    out
+}
+
+fn village_topology_contributions(n: &ResolvedProfileNodeV1) -> Vec<ProfileContributionV1> {
+    let mut out = Vec::new();
+    out.push(make_contribution(n, ContributionNamespace::Topology, "village-map", ContributionOperation::Declare, MergeClass::KeyedUnion, OverridePolicy::Forbidden, json!({"id":"village-map","bounds":{"min_x":0,"min_y":0,"max_x":14,"max_y":10},"blocked_positions":[[3,3],[3,4],[9,2],[10,2]],"passages":[{"from":"village-square","to":"market-lane"},{"from":"village-square","to":"meeting-hall"},{"from":"market-lane","to":"workshop-yard"},{"from":"village-square","to":"village-gate"}]}), None, None));
+    for (id, name) in [
+        ("village-square", "Village Square"),
+        ("market-lane", "Market Lane"),
+        ("workshop-yard", "Workshop Yard"),
+        ("meeting-hall", "Meeting Hall"),
+        ("village-gate", "Village Gate"),
+    ] {
+        out.push(make_contribution(
+            n,
+            ContributionNamespace::Regions,
+            id,
+            ContributionOperation::Declare,
+            MergeClass::KeyedUnion,
+            OverridePolicy::Forbidden,
+            json!({"id":id,"region":id,"display_name":name,"topology":"village-map"}),
+            None,
+            None,
+        ));
+    }
+    for (id, region, x, y, kind) in [
+        ("player-entry", "village-square", 2, 2, "player"),
+        ("market-stall", "market-lane", 6, 4, "interaction"),
+        ("workbench-pad", "workshop-yard", 10, 6, "interaction"),
+        ("notice-post", "village-square", 4, 2, "interaction"),
+        ("hall-door", "meeting-hall", 7, 8, "transition"),
+        ("gate-arch", "village-gate", 13, 5, "transition"),
+        ("herb-patch", "workshop-yard", 11, 7, "resource"),
+    ] {
+        out.push(make_contribution(
+            n,
+            ContributionNamespace::SpawnPoints,
+            id,
+            ContributionOperation::Declare,
+            MergeClass::KeyedUnion,
+            OverridePolicy::Forbidden,
+            json!({"id":id,"spawn":id,"region":region,"position":{"x":x,"y":y},"kind":kind}),
+            None,
+            None,
+        ));
+    }
+    out
+}
+
+fn village_encounter_none_contributions(n: &ResolvedProfileNodeV1) -> Vec<ProfileContributionV1> {
+    let mut out = Vec::new();
+    for (id, kind) in [
+        ("player", "player"),
+        ("villager", "npc"),
+        ("merchant", "npc"),
+        ("workbench", "interactable"),
+        ("notice-board", "interactable"),
+        ("storage-chest", "container"),
+        ("village-gate", "interactable"),
+        ("resource-node", "resource"),
+    ] {
+        out.push(make_contribution(n, ContributionNamespace::EntityArchetypes, id, ContributionOperation::Declare, MergeClass::KeyedUnion, OverridePolicy::Forbidden, json!({"id":id,"archetype":id,"entity_kind":kind,"components":["identity","position","interaction","inventory"],"default_authoritative_state":{"status":"active","interaction_state":"ready"},"primitive_requirements":["identity","movement","interactions"],"interaction_capabilities":["interaction.activate"],"limits":{"max_interaction_targets":8},"capability_requirements":["ptw.runtime.v1"]}), None, None));
+    }
+    out.push(make_contribution(n, ContributionNamespace::ItemArchetypes, "village-herb", ContributionOperation::Declare, MergeClass::KeyedUnion, OverridePolicy::Forbidden, json!({"id":"village-herb","item_archetype":"village-herb","pickup_eligible":true,"stack_rule":"stackable","inventory_compatible":true,"max_stack":10}), None, None));
+    for (id, arch, region, spawn, x, y) in [
+        (
+            "merchant-entity",
+            "merchant",
+            "market-lane",
+            "market-stall",
+            6,
+            4,
+        ),
+        (
+            "workbench-entity",
+            "workbench",
+            "workshop-yard",
+            "workbench-pad",
+            10,
+            6,
+        ),
+        (
+            "notice-board-entity",
+            "notice-board",
+            "village-square",
+            "notice-post",
+            4,
+            2,
+        ),
+        (
+            "storage-chest-entity",
+            "storage-chest",
+            "meeting-hall",
+            "hall-door",
+            7,
+            8,
+        ),
+        (
+            "village-gate-entity",
+            "village-gate",
+            "village-gate",
+            "gate-arch",
+            13,
+            5,
+        ),
+        (
+            "herb-node-entity",
+            "resource-node",
+            "workshop-yard",
+            "herb-patch",
+            11,
+            7,
+        ),
+    ] {
+        out.push(make_contribution(n, ContributionNamespace::Entities, id, ContributionOperation::Declare, MergeClass::KeyedUnion, OverridePolicy::Forbidden, json!({"id":id,"entity":id,"archetype":arch,"region":region,"spawn_point":spawn,"position":{"x":x,"y":y},"ownership":"world","status":"active","component_values":{"interaction_state":"ready","resource_quantity": if arch=="resource-node" {5} else {0}}}), None, None));
+    }
+    for (id, initial) in [
+        ("notice.read_count", 0),
+        ("herbs.remaining", 5),
+        ("gate.activated", 0),
+    ] {
+        out.push(make_contribution(
+            n,
+            ContributionNamespace::WorldVariables,
+            id,
+            ContributionOperation::Declare,
+            MergeClass::KeyedUnion,
+            OverridePolicy::Forbidden,
+            json!({"id":id,"world_variable":id,"type":"u64","initial":initial}),
+            None,
+            None,
+        ));
+    }
+    for (id, entity) in [
+        ("workbench.activate.transition", "workbench-entity"),
+        ("notice.read.transition", "notice-board-entity"),
+        ("merchant.interact.transition", "merchant-entity"),
+        ("chest.open.transition", "storage-chest-entity"),
+        ("village-gate.activate.transition", "village-gate-entity"),
+        ("resource.gather.transition", "herb-node-entity"),
+    ] {
+        out.push(make_contribution(n, ContributionNamespace::Transitions, id, ContributionOperation::Declare, MergeClass::KeyedUnion, OverridePolicy::Forbidden, json!({"id":id,"action":"interaction.activate","entity":entity,"receipt_type":"interaction_receipt","deterministic":true,"bounded":true}), None, None));
+    }
+    out
+}
+
 fn catacombs_topology_contributions(n: &ResolvedProfileNodeV1) -> Vec<ProfileContributionV1> {
     let mut out = Vec::new();
     out.push(make_contribution(n, ContributionNamespace::Topology, "endless-gate-map", ContributionOperation::Declare, MergeClass::KeyedUnion, OverridePolicy::Forbidden, json!({"id":"endless-gate-map","bounds":{"min_x":0,"min_y":0,"max_x":9,"max_y":7},"blocked_positions":[[4,1],[4,2],[4,3]],"passages":[{"from":"entry-hall","to":"gate-chamber"},{"from":"gate-chamber","to":"relic-vault"}]}), None, None));
@@ -2428,16 +2742,29 @@ pub fn load_typed_contributions(g: &ResolvedProfileGraphV1) -> Vec<ProfileContri
             "arpg-baseline" => {
                 for c in arpg_baseline_contributions(n) { out.push(c); }
             }
+            "social-exploration-baseline" => {
+                for c in social_exploration_baseline_contributions(n) { out.push(c); }
+            }
             "catacombs-baseline" if n.category == ProfileCategory::Topology => {
                 for c in catacombs_topology_contributions(n) { out.push(c); }
             }
+            "simple-village" => {
+                for c in village_topology_contributions(n) { out.push(c); }
+            }
             "catacombs-baseline" if n.category == ProfileCategory::Encounter => {
                 for c in catacombs_encounter_contributions(n) { out.push(c); }
+            }
+            "none" if n.category == ProfileCategory::Encounter => {
+                for c in village_encounter_none_contributions(n) { out.push(c); }
             }
             "catacombs" => {
                 out.push(make_contribution(n, ContributionNamespace::Projection, "catacombs-projection", ContributionOperation::Declare, MergeClass::KeyedUnion, OverridePolicy::Forbidden, json!({"id":"catacombs-projection","authoritative":false,"visual_labels":{"gate":"Ancient Gate","keeper":"Keeper"},"camera":"topdown-orthographic","renderer":"arpg-web-reference"}), None, None));
                 out.push(make_contribution(n, ContributionNamespace::Content, "catacombs-authoritative-notes", ContributionOperation::Declare, MergeClass::KeyedUnion, OverridePolicy::Forbidden, json!({"id":"catacombs-authoritative-notes","status":"baseline-authoritative-data","projection_fields_excluded_from_runtime_hash":true}), None, None));
             }
+            "temperate-village" => {
+                out.push(make_contribution(n, ContributionNamespace::Content, "village-authoritative-notes", ContributionOperation::Declare, MergeClass::KeyedUnion, OverridePolicy::Forbidden, json!({"id":"village-authoritative-notes","status":"noncombat-reference-authoritative-data","projection_fields_excluded_from_runtime_hash":true}), None, None));
+            }
+            "village-web" => out.push(make_contribution(n, ContributionNamespace::Projection, "village-web-reference", ContributionOperation::Declare, MergeClass::KeyedUnion, OverridePolicy::Forbidden, json!({"id":"village-web-reference","authoritative":false,"renderer":"village-web-reference","camera":"topdown-orthographic","visual_labels":{"notice":"Notice Board","workbench":"Workbench"},"interaction_icons":{"read":"icon.notice","craft":"icon.workbench","gather":"icon.herb"},"asset_profile":"reference-placeholders"}), None, None)),
             "live-replay-ceremony" => {
                 out.push(make_contribution(n, ContributionNamespace::Proof, "replay", ContributionOperation::Declare, MergeClass::KeyedUnion, OverridePolicy::Forbidden, json!({"proof":"replay","checkpoint":"supported","journal_export":"supported","independent_replay":"supported","state_root":"supported","receipt_root":"supported","continuity_root":"supported","public_cross_machine_proof":"not_claimed"}), None, None));
             }
@@ -4069,6 +4396,115 @@ mod tests {
         }"#,
         )
         .unwrap()
+    }
+
+    fn simple_village_request() -> CanonicalWorldRequest {
+        CanonicalWorldRequest::from_request_bytes(
+            br#"{
+            "schema_version":"everarcade.world-create-request.v1",
+            "world_id":"everarcade-simple-village",
+            "world_name":"Simple Village",
+            "profiles":{
+              "world":"everarcade.world.ptw-full@1.0.0",
+              "genre":"everarcade.genre.social-exploration-baseline@1.0.0",
+              "topology":"everarcade.topology.simple-village@1.0.0",
+              "biome":"everarcade.biome.temperate-village@1.0.0",
+              "encounter":"everarcade.encounter.none@1.0.0",
+              "proof":"everarcade.proof.live-replay-ceremony@1.0.0",
+              "projection":"everarcade.projection.village-web@1.0.0",
+              "economy":"everarcade.economy.founding-world-sandbox@1.0.0"
+            }
+        }"#,
+        )
+        .unwrap()
+    }
+
+    #[test]
+    fn simple_village_reference_world_assembles_from_declarative_profiles() {
+        let assembled = assemble_world(simple_village_request()).unwrap();
+        assert_eq!(assembled.ir.world_name, "Simple Village");
+        assert_eq!(assembled.ir.regions.len(), 5);
+        assert_eq!(assembled.ir.entity_archetypes.len(), 8);
+        assert_eq!(assembled.ir.initial_entities.len(), 6);
+        assert_eq!(assembled.ir.actions.len(), 5);
+        for id in ["combat", "spawning", "encounters", "progression"] {
+            assert_eq!(
+                assembled.ir.primitive_configurations[id]["enabled"],
+                json!(false)
+            );
+        }
+        assert!(!assembled.ir.actions.contains_key("combat.attack"));
+        assert!(!assembled.ir.actions.contains_key("world.respawn"));
+        assert!(assembled.ir.limits.contains_key("max_interaction_targets"));
+        assert!(assembled.ir.limits.contains_key("max_resource_node_count"));
+        assert!(assembled.ir.runtime_ir_hash.starts_with("sha256:"));
+    }
+
+    #[test]
+    fn world_neutral_cross_world_difference_and_shared_versions() {
+        let cat = assemble_world(catacombs_request()).unwrap();
+        let village = assemble_world(simple_village_request()).unwrap();
+        assert_eq!(cat.ir.contract_version, village.ir.contract_version);
+        assert_eq!(cat.ir.schema_version, village.ir.schema_version);
+        assert_eq!(
+            cat.manifest.runtime_ir_schema_version,
+            village.manifest.runtime_ir_schema_version
+        );
+        assert_ne!(
+            cat.manifest.profile_graph_hash,
+            village.manifest.profile_graph_hash
+        );
+        assert_ne!(
+            cat.manifest.contribution_graph_hash,
+            village.manifest.contribution_graph_hash
+        );
+        assert_ne!(
+            cat.manifest.merged_contribution_hash,
+            village.manifest.merged_contribution_hash
+        );
+        assert_ne!(
+            cat.manifest.reference_graph_hash,
+            village.manifest.reference_graph_hash
+        );
+        assert_ne!(cat.ir.runtime_ir_hash, village.ir.runtime_ir_hash);
+    }
+
+    #[test]
+    fn simple_village_projection_only_change_does_not_change_runtime_ir_hash() {
+        let request = simple_village_request();
+        let graph = resolve_profile_graph(
+            request.profiles.values().cloned().collect(),
+            &builtin_profile_catalog(),
+        );
+        let mut nodes = load_typed_contributions(&graph);
+        let merged = merge_contribution_graph(&build_contribution_graph(&graph, nodes.clone()));
+        let resolved = resolve_declarations(&merged, &request.world_id);
+        let ir = build_runtime_ir(
+            &request,
+            &graph,
+            &merged,
+            &resolved,
+            &CompilerCapabilitiesV1::default(),
+        )
+        .unwrap();
+        let proj = nodes
+            .iter_mut()
+            .find(|c| c.identity.namespace == ContributionNamespace::Projection)
+            .unwrap();
+        if let ContributionPayloadV1::Projection(p) = &mut proj.payload {
+            p.value["visual_labels"]["notice"] = json!("Renamed Notice");
+        }
+        let changed_merged = merge_contribution_graph(&build_contribution_graph(&graph, nodes));
+        let changed_resolved = resolve_declarations(&changed_merged, &request.world_id);
+        let changed_ir = build_runtime_ir(
+            &request,
+            &graph,
+            &changed_merged,
+            &changed_resolved,
+            &CompilerCapabilitiesV1::default(),
+        )
+        .unwrap();
+        assert_eq!(ir.runtime_ir_hash, changed_ir.runtime_ir_hash);
     }
 
     #[test]

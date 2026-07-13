@@ -1,0 +1,81 @@
+{
+  "archetype_count": 8,
+  "disabled_primitives": [
+    "combat",
+    "encounters",
+    "health",
+    "progression",
+    "spawning"
+  ],
+  "enabled_actions": [
+    "entity.move",
+    "interaction.activate",
+    "item.pickup",
+    "item.use",
+    "player.join"
+  ],
+  "enabled_primitives": [
+    "identity",
+    "interactions",
+    "inventory",
+    "items",
+    "movement"
+  ],
+  "entities": [
+    "herb-node-entity",
+    "merchant-entity",
+    "notice-board-entity",
+    "storage-chest-entity",
+    "village-gate-entity",
+    "workbench-entity"
+  ],
+  "hashes": {
+    "contribution_graph_hash": "sha256:3ecda27ddde383bf3b7e33d0ce4564978f76dd8a6623b2f4b69ada100b2be38c",
+    "merged_contribution_hash": "sha256:03a222b9eb99b44f22fcf1f30b99e27dfb94e0b89aa339bce43d870051230a5e",
+    "reference_graph_hash": "sha256:bfe42551d9b1d2215ec487bf3ac19ccc3b912fbd26404a5921792d19cf47dc81",
+    "runtime_bundle_hash": "2abcb66d72f2d685a9bf0975ff39aab130105375037579ff4ee52c911dbac518",
+    "world_contract_hash": "142c3ee92e3ecec9a601b2a12cbe955dee102772050b9036271f482ec9c6fe32"
+  },
+  "limits": {
+    "max_action_payload_size": 1024,
+    "max_actions_per_tick": 16,
+    "max_active_encounters": 2,
+    "max_damage": 25,
+    "max_entities": 32,
+    "max_health": 100,
+    "max_interaction_targets": 8,
+    "max_invariant_checks": 32,
+    "max_inventory_entries": 8,
+    "max_item_stack": 3,
+    "max_movement_delta": 1,
+    "max_players": 2,
+    "max_progression_tier": 3,
+    "max_resource_node_count": 4,
+    "max_spawned_entities_per_tick": 1,
+    "max_topology_nodes": 64,
+    "max_transition_preconditions": 8,
+    "max_world_variables": 16
+  },
+  "profile_graph_hash": "sha256:44783f1747c41219bad2c13dd707f6e01a0087e1a9835b59f429f853efb7cc38",
+  "proof_readiness": {
+    "bounded_transition_status": "bounded",
+    "checkpoint_support": true,
+    "future_zk_witness_compatibility_status": "structurally_ready",
+    "journal_support": true,
+    "maximum_invariant_checks": 32,
+    "maximum_touched_entities_per_action": 2,
+    "numeric_model_compatibility": "bounded-integers",
+    "receipt_schema_coverage": "declared",
+    "root_support": true
+  },
+  "regions": [
+    "market-lane",
+    "meeting-hall",
+    "village-gate",
+    "village-square",
+    "workshop-yard"
+  ],
+  "runtime_ir_hash": "sha256:973a50219e1cfdd65b2f36386066d5912fd4dfe9712bea3e4b7748a4459f7ab1",
+  "world_id": "everarcade-simple-village",
+  "world_name": "Simple Village"
+}
