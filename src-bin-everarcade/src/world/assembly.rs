@@ -491,6 +491,20 @@ fn compiler_capabilities() -> BTreeSet<String> {
         "ptw.action.player_join.v1",
         "ptw.action.entity_move.v1",
         "ptw.proof.replay.v1",
+        "ptw.primitive.identity.v1",
+        "ptw.primitive.health.v1",
+        "ptw.primitive.combat.v1",
+        "ptw.primitive.inventory.v1",
+        "ptw.primitive.items.v1",
+        "ptw.primitive.interactions.v1",
+        "ptw.primitive.spawning.v1",
+        "ptw.primitive.encounters.v1",
+        "ptw.primitive.progression.v1",
+        "ptw.action.interaction_activate.v1",
+        "ptw.action.item_pickup.v1",
+        "ptw.action.item_use.v1",
+        "ptw.action.combat_attack.v1",
+        "ptw.action.world_respawn.v1",
     ]
     .into_iter()
     .map(str::to_string)
@@ -731,6 +745,128 @@ pub fn builtin_profile_catalog() -> ProfileCatalog {
         "live-replay-ceremony-v1",
         vec!["ptw.proof.replay.v1"],
         vec![ContributionNamespace::Proof],
+        vec![],
+    ));
+
+    let all_runtime_ns = vec![
+        ContributionNamespace::Runtime,
+        ContributionNamespace::Limits,
+        ContributionNamespace::Primitives,
+        ContributionNamespace::Actions,
+        ContributionNamespace::Transitions,
+        ContributionNamespace::Invariants,
+        ContributionNamespace::WorldVariables,
+        ContributionNamespace::Proof,
+    ];
+    c.register(prof(
+        ProfileCategory::World,
+        "ptw-full",
+        vec!["ptw.runtime.v1"],
+        all_runtime_ns,
+        vec![],
+    ));
+    c.register(prof(
+        ProfileCategory::Genre,
+        "arpg-baseline",
+        vec![
+            "ptw.primitive.identity.v1",
+            "ptw.primitive.movement.v1",
+            "ptw.primitive.health.v1",
+            "ptw.primitive.combat.v1",
+            "ptw.primitive.inventory.v1",
+            "ptw.primitive.items.v1",
+            "ptw.primitive.interactions.v1",
+            "ptw.primitive.spawning.v1",
+            "ptw.primitive.encounters.v1",
+            "ptw.primitive.progression.v1",
+            "ptw.action.player_join.v1",
+            "ptw.action.entity_move.v1",
+        ],
+        vec![
+            ContributionNamespace::Primitives,
+            ContributionNamespace::Actions,
+            ContributionNamespace::Transitions,
+            ContributionNamespace::Invariants,
+        ],
+        vec![dep(ref_for(
+            "everarcade",
+            ProfileCategory::World,
+            "ptw-full",
+            "1.0.0",
+        ))],
+    ));
+    c.register(prof(
+        ProfileCategory::Topology,
+        "catacombs-baseline",
+        vec!["ptw.runtime.v1"],
+        vec![
+            ContributionNamespace::Topology,
+            ContributionNamespace::Regions,
+            ContributionNamespace::SpawnPoints,
+            ContributionNamespace::Content,
+        ],
+        vec![dep(ref_for(
+            "everarcade",
+            ProfileCategory::Genre,
+            "arpg-baseline",
+            "1.0.0",
+        ))],
+    ));
+    c.register(prof(
+        ProfileCategory::Biome,
+        "catacombs",
+        vec!["ptw.runtime.v1"],
+        vec![
+            ContributionNamespace::Content,
+            ContributionNamespace::Projection,
+        ],
+        vec![dep(ref_for(
+            "everarcade",
+            ProfileCategory::Topology,
+            "catacombs-baseline",
+            "1.0.0",
+        ))],
+    ));
+    c.register(prof(
+        ProfileCategory::Encounter,
+        "catacombs-baseline",
+        vec!["ptw.primitive.encounters.v1", "ptw.primitive.health.v1"],
+        vec![
+            ContributionNamespace::EntityArchetypes,
+            ContributionNamespace::ItemArchetypes,
+            ContributionNamespace::EncounterArchetypes,
+            ContributionNamespace::Entities,
+            ContributionNamespace::Encounters,
+            ContributionNamespace::WorldVariables,
+            ContributionNamespace::Actions,
+            ContributionNamespace::Transitions,
+        ],
+        vec![dep(ref_for(
+            "everarcade",
+            ProfileCategory::Biome,
+            "catacombs",
+            "1.0.0",
+        ))],
+    ));
+    c.register(prof(
+        ProfileCategory::Proof,
+        "live-replay-ceremony",
+        vec!["ptw.proof.replay.v1"],
+        vec![ContributionNamespace::Proof],
+        vec![],
+    ));
+    c.register(prof(
+        ProfileCategory::Projection,
+        "arpg-web",
+        vec![],
+        vec![ContributionNamespace::Projection],
+        vec![],
+    ));
+    c.register(prof(
+        ProfileCategory::Economy,
+        "founding-world-sandbox",
+        vec!["ptw.runtime.v1"],
+        vec![ContributionNamespace::Economy],
         vec![],
     ));
     c
@@ -1295,6 +1431,20 @@ impl Default for CompilerCapabilitiesV1 {
                 "ptw.primitive.movement.v1".into(),
                 "ptw.action.entity_move.v1".into(),
                 "ptw.proof.replay.v1".into(),
+                "ptw.primitive.identity.v1".into(),
+                "ptw.primitive.health.v1".into(),
+                "ptw.primitive.combat.v1".into(),
+                "ptw.primitive.inventory.v1".into(),
+                "ptw.primitive.items.v1".into(),
+                "ptw.primitive.interactions.v1".into(),
+                "ptw.primitive.spawning.v1".into(),
+                "ptw.primitive.encounters.v1".into(),
+                "ptw.primitive.progression.v1".into(),
+                "ptw.action.interaction_activate.v1".into(),
+                "ptw.action.item_pickup.v1".into(),
+                "ptw.action.item_use.v1".into(),
+                "ptw.action.combat_attack.v1".into(),
+                "ptw.action.world_respawn.v1".into(),
             ],
             maximum_limit_value: 1_000_000,
         }
@@ -1626,6 +1776,12 @@ pub fn build_runtime_ir(
     };
     let mut h = ir.clone();
     h.runtime_ir_hash.clear();
+    h.merged_contributions.projection.clear();
+    h.merged_contributions.merged_contribution_hash.clear();
+    h.merged_contributions
+        .provenance_index
+        .retain(|k, _| !k.starts_with("projection:"));
+    h.resolved_declarations.symbol_tables.remove("projection");
     h.contribution_graph = ContributionGraphV1 {
         schema_version: String::new(),
         resolved_profile_nodes: vec![],
@@ -1786,11 +1942,51 @@ fn make_contribution(
                 value,
             })
         }
+        ContributionNamespace::WorldVariables => {
+            ContributionPayloadV1::WorldVariables(WorldVariableContributionPayload {
+                authoritative: true,
+                value,
+            })
+        }
+        ContributionNamespace::Encounters => {
+            ContributionPayloadV1::Encounters(EncounterContributionPayload {
+                authoritative: true,
+                value,
+            })
+        }
+        ContributionNamespace::Progression => {
+            ContributionPayloadV1::Progression(ProgressionContributionPayload {
+                authoritative: true,
+                value,
+            })
+        }
+        ContributionNamespace::Content => {
+            ContributionPayloadV1::Content(ContentContributionPayload {
+                authoritative: true,
+                value,
+            })
+        }
+        ContributionNamespace::Projection => {
+            ContributionPayloadV1::Projection(ProjectionContributionPayload {
+                authoritative: false,
+                value,
+            })
+        }
         ContributionNamespace::Proof => ContributionPayloadV1::Proof(ProofContributionPayload {
             authoritative: true,
             value,
         }),
-        _ => ContributionPayloadV1::Content(ContentContributionPayload {
+        ContributionNamespace::Economy => {
+            ContributionPayloadV1::Economy(EconomyContributionPayload {
+                authoritative: false,
+                value,
+            })
+        }
+        ContributionNamespace::Ai => ContributionPayloadV1::Ai(AiContributionPayload {
+            authoritative: false,
+            value,
+        }),
+        ContributionNamespace::Access => ContributionPayloadV1::Access(AccessContributionPayload {
             authoritative: false,
             value,
         }),
@@ -1829,6 +2025,234 @@ fn make_contribution(
         provenance: prov,
     }
 }
+fn catacombs_foundation_contributions(n: &ResolvedProfileNodeV1) -> Vec<ProfileContributionV1> {
+    let mut out = Vec::new();
+    out.push(make_contribution(n, ContributionNamespace::Runtime, "runtime-contract", ContributionOperation::Declare, MergeClass::UniqueDeclaration, OverridePolicy::Forbidden, json!({
+        "contract":"ptw","runtime_contract_version": PTW_RUNTIME_CONTRACT_VERSION,
+        "numeric_model":{"kind":"bounded_integer","integer_bits":64,"overflow":"reject","saturation":false,"rounding":"none"},
+        "coordinate_model":{"kind":"grid_i32","dimensions":2,"origin":"region"},
+        "tick_model":{"kind":"deterministic","initial_tick":0,"step":"u64"},
+        "deterministic_id_policy":{"kind":"canonical-string","generated_prefix":"gen:"},
+        "player_state_template":{"archetype":"player","identity_binding_policy":"request-or-join-payload","spawn_point":"player-entry","health":100,"inventory":[]}
+    }), None, None));
+    for (k, v) in [
+        ("max_players", 2),
+        ("max_entities", 32),
+        ("max_active_encounters", 2),
+        ("max_inventory_entries", 8),
+        ("max_item_stack", 3),
+        ("max_health", 100),
+        ("max_damage", 25),
+        ("max_movement_delta", 1),
+        ("max_spawned_entities_per_tick", 1),
+        ("max_actions_per_tick", 16),
+        ("max_action_payload_size", 1024),
+        ("max_world_variables", 16),
+        ("max_topology_nodes", 64),
+        ("max_transition_preconditions", 8),
+        ("max_invariant_checks", 32),
+        ("max_progression_tier", 3),
+    ] {
+        out.push(make_contribution(
+            n,
+            ContributionNamespace::Limits,
+            k,
+            ContributionOperation::Aggregate,
+            MergeClass::BoundedAggregation,
+            OverridePolicy::Forbidden,
+            json!({"rule":"strictest_maximum","value":v}),
+            None,
+            None,
+        ));
+    }
+    for (k, v) in [
+        (
+            "checkpoint_policy",
+            json!({"id":"checkpoint_policy","mode":"periodic","interval_ticks":100,"export":"canonical-json"}),
+        ),
+        (
+            "journal_policy",
+            json!({"id":"journal_policy","mode":"append_only","receipt_coverage":"all_declared_actions"}),
+        ),
+        (
+            "root_policy",
+            json!({"id":"root_policy","mode":"state_receipt_continuity_roots","state_domains":["players","entities","inventory","topology_state","encounters","progression","world_variables"]}),
+        ),
+    ] {
+        out.push(make_contribution(
+            n,
+            ContributionNamespace::Proof,
+            k,
+            ContributionOperation::Declare,
+            MergeClass::KeyedUnion,
+            OverridePolicy::Forbidden,
+            v,
+            None,
+            None,
+        ));
+    }
+    out
+}
+
+fn arpg_baseline_contributions(n: &ResolvedProfileNodeV1) -> Vec<ProfileContributionV1> {
+    let mut out = Vec::new();
+    for (id, enabled) in [
+        ("identity", true),
+        ("movement", true),
+        ("health", true),
+        ("combat", true),
+        ("inventory", true),
+        ("items", true),
+        ("interactions", true),
+        ("spawning", true),
+        ("encounters", true),
+        ("progression", true),
+    ] {
+        out.push(make_contribution(n, ContributionNamespace::Primitives, id, ContributionOperation::Declare, MergeClass::KeyedUnion, OverridePolicy::Forbidden, json!({"id":id,"primitive":id,"enabled":enabled,"handler_identifier":format!("ptw.{id}.v1"),"limits":"declared"}), None, None));
+    }
+    for (id, prim, receipt) in [
+        ("player.join", "identity", "player_join_receipt"),
+        ("entity.move", "movement", "movement_receipt"),
+        (
+            "interaction.activate",
+            "interactions",
+            "interaction_receipt",
+        ),
+        ("item.pickup", "items", "item_receipt"),
+        ("item.use", "items", "item_use_receipt"),
+        ("combat.attack", "combat", "combat_receipt"),
+        ("world.respawn", "spawning", "respawn_receipt"),
+    ] {
+        out.push(make_contribution(n, ContributionNamespace::Actions, id, ContributionOperation::Declare, MergeClass::KeyedUnion, OverridePolicy::Forbidden, json!({"id":id,"action":id,"primitive":prim,"transition":format!("{id}.transition"),"schema_version":"action.v1","max_payload_size":128,"receipt_type":receipt,"preconditions":["bounded_payload","declared_actor"],"touched_state_domains":["players","entities","inventory","world_variables"],"handler_identifier":format!("ptw.{prim}.v1")}), None, None));
+        out.push(make_contribution(n, ContributionNamespace::Transitions, &format!("{id}.transition"), ContributionOperation::Declare, MergeClass::KeyedUnion, OverridePolicy::Forbidden, json!({"id":format!("{id}.transition"),"action":id,"primitive":prim,"version":"transition.v1","deterministic":true,"bounded":true,"receipt_type":receipt}), None, None));
+    }
+    for k in [
+        "unique_entity_ids",
+        "valid_archetype_references",
+        "valid_ownership",
+        "topology_bounded_positions",
+        "health_bounds",
+        "inventory_capacity",
+        "nonnegative_item_quantities",
+        "declared_action_only_mutation",
+        "valid_interaction_transitions",
+        "progression_bounds",
+    ] {
+        out.push(make_contribution(n, ContributionNamespace::Invariants, k, ContributionOperation::Declare, MergeClass::KeyedUnion, OverridePolicy::Forbidden, json!({"id":k,"invariant":k,"version":"invariant.v1","evaluation_policy":"per_tick","touched_state_domains":["players","entities","inventory","topology_state","progression"],"required_capability":"ptw.runtime.v1"}), None, None));
+    }
+    out
+}
+
+fn catacombs_topology_contributions(n: &ResolvedProfileNodeV1) -> Vec<ProfileContributionV1> {
+    let mut out = Vec::new();
+    out.push(make_contribution(n, ContributionNamespace::Topology, "endless-gate-map", ContributionOperation::Declare, MergeClass::KeyedUnion, OverridePolicy::Forbidden, json!({"id":"endless-gate-map","bounds":{"min_x":0,"min_y":0,"max_x":9,"max_y":7},"blocked_positions":[[4,1],[4,2],[4,3]],"passages":[{"from":"entry-hall","to":"gate-chamber"},{"from":"gate-chamber","to":"relic-vault"}]}), None, None));
+    for (id, name) in [
+        ("entry-hall", "Entry Hall"),
+        ("gate-chamber", "Gate Chamber"),
+        ("relic-vault", "Relic Vault"),
+    ] {
+        out.push(make_contribution(
+            n,
+            ContributionNamespace::Regions,
+            id,
+            ContributionOperation::Declare,
+            MergeClass::KeyedUnion,
+            OverridePolicy::Forbidden,
+            json!({"id":id,"region":id,"display_name":name,"topology":"endless-gate-map"}),
+            None,
+            None,
+        ));
+    }
+    for (id, region, x, y, kind) in [
+        ("player-entry", "entry-hall", 1, 1, "player"),
+        ("keeper-post", "entry-hall", 2, 2, "interaction"),
+        ("gate-threshold", "gate-chamber", 5, 3, "transition"),
+        ("relic-dais", "relic-vault", 8, 4, "item"),
+        ("enemy-watch", "gate-chamber", 6, 5, "enemy"),
+    ] {
+        out.push(make_contribution(
+            n,
+            ContributionNamespace::SpawnPoints,
+            id,
+            ContributionOperation::Declare,
+            MergeClass::KeyedUnion,
+            OverridePolicy::Forbidden,
+            json!({"id":id,"spawn":id,"region":region,"position":{"x":x,"y":y},"kind":kind}),
+            None,
+            None,
+        ));
+    }
+    out
+}
+
+fn catacombs_encounter_contributions(n: &ResolvedProfileNodeV1) -> Vec<ProfileContributionV1> {
+    let mut out = Vec::new();
+    for (id, kind, hp) in [
+        ("player", "player", 100),
+        ("skeleton-sentinel", "enemy", 35),
+        ("keeper", "npc", 100),
+        ("ancient-gate", "interactable", 100),
+        ("relic-pedestal", "item_container", 1),
+    ] {
+        out.push(make_contribution(n, ContributionNamespace::EntityArchetypes, id, ContributionOperation::Declare, MergeClass::KeyedUnion, OverridePolicy::Forbidden, json!({"id":id,"archetype":id,"entity_kind":kind,"components":["identity","position","health","interaction","inventory"],"default_authoritative_state":{"health":hp,"status":"active"},"primitive_requirements":["identity","movement","health","interactions"],"limits":{"max_health":hp},"capability_requirements":["ptw.runtime.v1"]}), None, None));
+    }
+    out.push(make_contribution(n, ContributionNamespace::ItemArchetypes, "gate-relic", ContributionOperation::Declare, MergeClass::KeyedUnion, OverridePolicy::Forbidden, json!({"id":"gate-relic","item_archetype":"gate-relic","pickup_eligible":true,"stack_rule":"unique","inventory_compatible":true,"progression_relevance":"opens_gate"}), None, None));
+    for (id, arch, region, spawn, x, y) in [
+        ("keeper-entity", "keeper", "entry-hall", "keeper-post", 2, 2),
+        (
+            "ancient-gate-entity",
+            "ancient-gate",
+            "gate-chamber",
+            "gate-threshold",
+            5,
+            3,
+        ),
+        (
+            "gate-relic-entity",
+            "relic-pedestal",
+            "relic-vault",
+            "relic-dais",
+            8,
+            4,
+        ),
+        (
+            "sentinel-001",
+            "skeleton-sentinel",
+            "gate-chamber",
+            "enemy-watch",
+            6,
+            5,
+        ),
+    ] {
+        out.push(make_contribution(n, ContributionNamespace::Entities, id, ContributionOperation::Declare, MergeClass::KeyedUnion, OverridePolicy::Forbidden, json!({"id":id,"entity":id,"archetype":arch,"region":region,"spawn_point":spawn,"position":{"x":x,"y":y},"status":"active","component_values":{"health": if arch=="skeleton-sentinel" {35} else {100},"interaction_state":"ready"}}), None, None));
+    }
+    out.push(make_contribution(
+        n,
+        ContributionNamespace::WorldVariables,
+        "gate.open",
+        ContributionOperation::Declare,
+        MergeClass::KeyedUnion,
+        OverridePolicy::Forbidden,
+        json!({"id":"gate.open","world_variable":"gate.open","type":"bool","initial":false}),
+        None,
+        None,
+    ));
+    out.push(make_contribution(
+        n,
+        ContributionNamespace::WorldVariables,
+        "keeper.met",
+        ContributionOperation::Declare,
+        MergeClass::KeyedUnion,
+        OverridePolicy::Forbidden,
+        json!({"id":"keeper.met","world_variable":"keeper.met","type":"bool","initial":false}),
+        None,
+        None,
+    ));
+    out.push(make_contribution(n, ContributionNamespace::Encounters, "gate-watch", ContributionOperation::Declare, MergeClass::KeyedUnion, OverridePolicy::Forbidden, json!({"id":"gate-watch","encounter":"gate-watch","region":"gate-chamber","members":["sentinel-001"],"status":"active"}), None, None));
+    out.push(make_contribution(n, ContributionNamespace::Transitions, "gate.activate.transition", ContributionOperation::Declare, MergeClass::KeyedUnion, OverridePolicy::Forbidden, json!({"id":"gate.activate.transition","action":"interaction.activate","entity":"ancient-gate-entity","world_variable":"gate.open","required_item_archetype":"gate-relic","resulting_state":{"gate.open":true},"receipt_type":"interaction_receipt","deterministic":true,"bounded":true}), None, None));
+    out
+}
+
 pub fn load_typed_contributions(g: &ResolvedProfileGraphV1) -> Vec<ProfileContributionV1> {
     let mut out = Vec::new();
     for n in &g.resolved_profile_nodes {
@@ -1998,6 +2422,27 @@ pub fn load_typed_contributions(g: &ResolvedProfileGraphV1) -> Vec<ProfileContri
                     None,
                 ));
             }
+            "ptw-full" => {
+                for c in catacombs_foundation_contributions(n) { out.push(c); }
+            }
+            "arpg-baseline" => {
+                for c in arpg_baseline_contributions(n) { out.push(c); }
+            }
+            "catacombs-baseline" if n.category == ProfileCategory::Topology => {
+                for c in catacombs_topology_contributions(n) { out.push(c); }
+            }
+            "catacombs-baseline" if n.category == ProfileCategory::Encounter => {
+                for c in catacombs_encounter_contributions(n) { out.push(c); }
+            }
+            "catacombs" => {
+                out.push(make_contribution(n, ContributionNamespace::Projection, "catacombs-projection", ContributionOperation::Declare, MergeClass::KeyedUnion, OverridePolicy::Forbidden, json!({"id":"catacombs-projection","authoritative":false,"visual_labels":{"gate":"Ancient Gate","keeper":"Keeper"},"camera":"topdown-orthographic","renderer":"arpg-web-reference"}), None, None));
+                out.push(make_contribution(n, ContributionNamespace::Content, "catacombs-authoritative-notes", ContributionOperation::Declare, MergeClass::KeyedUnion, OverridePolicy::Forbidden, json!({"id":"catacombs-authoritative-notes","status":"baseline-authoritative-data","projection_fields_excluded_from_runtime_hash":true}), None, None));
+            }
+            "live-replay-ceremony" => {
+                out.push(make_contribution(n, ContributionNamespace::Proof, "replay", ContributionOperation::Declare, MergeClass::KeyedUnion, OverridePolicy::Forbidden, json!({"proof":"replay","checkpoint":"supported","journal_export":"supported","independent_replay":"supported","state_root":"supported","receipt_root":"supported","continuity_root":"supported","public_cross_machine_proof":"not_claimed"}), None, None));
+            }
+            "arpg-web" => out.push(make_contribution(n, ContributionNamespace::Projection, "arpg-web-reference", ContributionOperation::Declare, MergeClass::KeyedUnion, OverridePolicy::Forbidden, json!({"id":"arpg-web-reference","authoritative":false,"asset_profile":"reference-placeholders"}), None, None)),
+            "founding-world-sandbox" => out.push(make_contribution(n, ContributionNamespace::Economy, "sandbox-economy", ContributionOperation::Declare, MergeClass::KeyedUnion, OverridePolicy::Forbidden, json!({"id":"sandbox-economy","authoritative":false,"settlement":"disabled"}), None, None)),
             "replay-proof-v1" | "live-replay-ceremony-v1" => out.push(make_contribution(
                 n,
                 ContributionNamespace::Proof,
@@ -2619,6 +3064,12 @@ pub fn assemble_world(request: CanonicalWorldRequest) -> Result<AssembledWorld, 
             ir.contribution_graph = contribution_graph.clone();
             let mut h = ir.clone();
             h.runtime_ir_hash.clear();
+            h.merged_contributions.projection.clear();
+            h.merged_contributions.merged_contribution_hash.clear();
+            h.merged_contributions
+                .provenance_index
+                .retain(|k, _| !k.starts_with("projection:"));
+            h.resolved_declarations.symbol_tables.remove("projection");
             h.contribution_graph.contribution_nodes.clear();
             h.contribution_graph.provenance.clear();
             ir.runtime_ir_hash = hash_json(&json!({"domain": RUNTIME_IR_HASH_DOMAIN, "ir": h}));
@@ -3597,5 +4048,155 @@ mod tests {
             .resolved_references
             .iter()
             .any(|e| e.reference.source_symbol == "region:a" && e.reference.referenced_id == "b"));
+    }
+
+    fn catacombs_request() -> CanonicalWorldRequest {
+        CanonicalWorldRequest::from_request_bytes(
+            br#"{
+            "schema_version":"everarcade.world-create-request.v1",
+            "world_id":"everarcade-catacombs-endless-gate",
+            "world_name":"EverArcade Catacombs: The Endless Gate",
+            "profiles":{
+              "world":"everarcade.world.ptw-full@1.0.0",
+              "genre":"everarcade.genre.arpg-baseline@1.0.0",
+              "topology":"everarcade.topology.catacombs-baseline@1.0.0",
+              "biome":"everarcade.biome.catacombs@1.0.0",
+              "encounter":"everarcade.encounter.catacombs-baseline@1.0.0",
+              "proof":"everarcade.proof.live-replay-ceremony@1.0.0",
+              "projection":"everarcade.projection.arpg-web@1.0.0",
+              "economy":"everarcade.economy.founding-world-sandbox@1.0.0"
+            }
+        }"#,
+        )
+        .unwrap()
+    }
+
+    #[test]
+    fn catacombs_reference_world_assembles_from_declarative_profiles() {
+        let assembled = assemble_world(catacombs_request()).unwrap();
+        assert_eq!(
+            assembled.ir.world_name,
+            "EverArcade Catacombs: The Endless Gate"
+        );
+        assert_eq!(assembled.ir.entity_archetypes.len(), 5);
+        assert_eq!(assembled.ir.item_archetypes.len(), 1);
+        assert_eq!(assembled.ir.initial_entities.len(), 4);
+        assert_eq!(assembled.ir.regions.len(), 3);
+        assert_eq!(assembled.ir.spawn_points.len(), 5);
+        assert_eq!(assembled.ir.primitive_configurations.len(), 10);
+        assert_eq!(assembled.ir.actions.len(), 7);
+        assert!(assembled
+            .ir
+            .transition_bindings
+            .contains_key("gate.activate.transition"));
+        assert!(assembled.ir.runtime_ir_hash.starts_with("sha256:"));
+        assert!(
+            assembled.diagnostics.is_empty(),
+            "{:?}",
+            assembled.diagnostics
+        );
+    }
+
+    #[test]
+    fn catacombs_projection_only_change_does_not_change_runtime_ir_hash() {
+        let graph = resolve_profile_graph(
+            catacombs_request().profiles.values().cloned().collect(),
+            &builtin_profile_catalog(),
+        );
+        let mut nodes = load_typed_contributions(&graph);
+        let base = build_contribution_graph(&graph, nodes.clone());
+        let merged = merge_contribution_graph(&base);
+        let resolved = resolve_declarations(&merged, "everarcade-catacombs-endless-gate");
+        let ir = build_runtime_ir(
+            &catacombs_request(),
+            &graph,
+            &merged,
+            &resolved,
+            &CompilerCapabilitiesV1::default(),
+        )
+        .unwrap();
+        let proj = nodes
+            .iter_mut()
+            .find(|c| c.identity.namespace == ContributionNamespace::Projection)
+            .unwrap();
+        if let ContributionPayloadV1::Projection(p) = &mut proj.payload {
+            p.value["visual_labels"]["gate"] = json!("Renamed Projection Gate");
+        }
+        let changed = build_contribution_graph(&graph, nodes);
+        let changed_merged = merge_contribution_graph(&changed);
+        let changed_resolved =
+            resolve_declarations(&changed_merged, "everarcade-catacombs-endless-gate");
+        let changed_ir = build_runtime_ir(
+            &catacombs_request(),
+            &graph,
+            &changed_merged,
+            &changed_resolved,
+            &CompilerCapabilitiesV1::default(),
+        )
+        .unwrap();
+        assert_eq!(ir.runtime_ir_hash, changed_ir.runtime_ir_hash);
+        assert_ne!(
+            base.contribution_graph_hash,
+            changed.contribution_graph_hash
+        );
+    }
+
+    #[test]
+    fn catacombs_reference_validation_rejects_missing_declarations() {
+        let graph = resolve_profile_graph(
+            catacombs_request().profiles.values().cloned().collect(),
+            &builtin_profile_catalog(),
+        );
+        let cg = build_contribution_graph(&graph, load_typed_contributions(&graph));
+        let mut merged = merge_contribution_graph(&cg);
+        merged.regions.remove("gate-chamber");
+        let resolved = resolve_declarations(&merged, "everarcade-catacombs-endless-gate");
+        assert!(resolved
+            .diagnostics
+            .iter()
+            .any(|d| d.code == "ASSEMBLY_REQUIRED_REFERENCE_MISSING"));
+        let err = build_runtime_ir(
+            &catacombs_request(),
+            &graph,
+            &merged,
+            &resolved,
+            &CompilerCapabilitiesV1::default(),
+        )
+        .unwrap_err();
+        assert!(err
+            .iter()
+            .any(|d| d.code == "ASSEMBLY_REQUIRED_REFERENCE_MISSING"));
+    }
+
+    #[test]
+    fn catacombs_authoritative_mutations_change_runtime_ir_hash() {
+        let assembled = assemble_world(catacombs_request()).unwrap();
+        let graph = resolve_profile_graph(
+            catacombs_request().profiles.values().cloned().collect(),
+            &builtin_profile_catalog(),
+        );
+        let mut cg = build_contribution_graph(&graph, load_typed_contributions(&graph));
+        let node = cg
+            .contribution_nodes
+            .iter_mut()
+            .find(|c| {
+                c.identity.namespace == ContributionNamespace::Entities
+                    && c.identity.declaration_key == "sentinel-001"
+            })
+            .unwrap();
+        if let ContributionPayloadV1::Entities(p) = &mut node.payload {
+            p.value["position"]["x"] = json!(7);
+        }
+        let merged = merge_contribution_graph(&cg);
+        let resolved = resolve_declarations(&merged, "everarcade-catacombs-endless-gate");
+        let ir = build_runtime_ir(
+            &catacombs_request(),
+            &graph,
+            &merged,
+            &resolved,
+            &CompilerCapabilitiesV1::default(),
+        )
+        .unwrap();
+        assert_ne!(assembled.ir.runtime_ir_hash, ir.runtime_ir_hash);
     }
 }
