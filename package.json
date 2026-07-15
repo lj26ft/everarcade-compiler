@@ -21,7 +21,8 @@
     "certify:migration": "node runtime/arena_hotpocket/validation/certify-migration.js",
     "certify:root-integrity": "node runtime/arena_hotpocket/validation/certify-root-integrity.js",
     "certify:js-kernel-equivalence": "node runtime/arena_hotpocket/validation/certify-js-kernel-equivalence.js",
-    "package:formal-proof-target": "node scripts/package-formal-proof-target.js"
+    "package:formal-proof-target": "node scripts/package-formal-proof-target.js",
+    "test:state-v3-package": "node scripts/test-state-v3-package.js"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "latest",

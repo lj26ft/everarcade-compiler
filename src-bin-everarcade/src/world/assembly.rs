@@ -18,12 +18,19 @@ pub const REFERENCE_GRAPH_SCHEMA_VERSION: &str = "everarcade.reference-graph.v1"
 pub const RESOLVED_DECLARATIONS_SCHEMA_VERSION: &str = "everarcade.resolved-declarations.v1";
 pub const RUNTIME_IR_SCHEMA_VERSION: &str = "everarcade.ptw-runtime-ir.v1";
 pub const RUNTIME_IR_HASH_DOMAIN: &str = "everarcade.runtime-ir.v1";
+pub const PTW_STATE_V2_POLICY_ID: &str = "everarcade.ptw-state-components.v2";
+pub const PTW_STATE_V3_POLICY_ID: &str = "everarcade.ptw-state-components.v3";
+pub const PTW_TREASURY_STATE_V1: &str = "everarcade.ptw-treasury-state.v1";
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct CanonicalWorldRequest {
     pub schema_version: String,
     pub world_id: String,
     pub world_name: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub state_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub initial_treasury_state: Option<Value>,
     #[serde(default)]
     pub profiles: BTreeMap<String, String>,
     #[serde(default)]
@@ -73,8 +80,123 @@ impl CanonicalWorldRequest {
         if self.world_name.is_empty() {
             return Err("canonical world request requires world_name".into());
         }
+        validate_state_policy(
+            self.state_policy_id.as_deref(),
+            self.initial_treasury_state.as_ref(),
+        )?;
         Ok(())
     }
+}
+
+fn validate_state_policy(policy: Option<&str>, treasury: Option<&Value>) -> Result<(), String> {
+    match policy {
+        None if treasury.is_none() => Ok(()),
+        None => Err("initial_treasury_state requires explicit state_policy_id".into()),
+        Some(PTW_STATE_V2_POLICY_ID) if treasury.is_none() => Ok(()),
+        Some(PTW_STATE_V2_POLICY_ID) => {
+            Err("State V2 cannot declare initial_treasury_state".into())
+        }
+        Some(PTW_STATE_V3_POLICY_ID) => validate_treasury_state_v1(
+            treasury.ok_or("State V3 requires canonical initial_treasury_state")?,
+        ),
+        Some(other) => Err(format!("unsupported state_policy_id: {other}")),
+    }
+}
+
+fn validate_treasury_state_v1(value: &Value) -> Result<(), String> {
+    let object = value
+        .as_object()
+        .ok_or("initial_treasury_state must be an object")?;
+    let required: BTreeSet<&str> = [
+        "schema_version",
+        "treasury_identity",
+        "policy",
+        "assets",
+        "balances",
+        "proposals",
+        "approvals",
+        "quorum",
+        "intents",
+        "receipts",
+        "emergency",
+        "migration",
+    ]
+    .into_iter()
+    .collect();
+    let actual: BTreeSet<&str> = object.keys().map(String::as_str).collect();
+    if actual != required {
+        return Err("initial_treasury_state fields are incomplete or unknown".into());
+    }
+    if object.get("schema_version").and_then(Value::as_str) != Some(PTW_TREASURY_STATE_V1) {
+        return Err("unsupported Treasury state schema".into());
+    }
+    validate_treasury_value(value, "initial_treasury_state")?;
+    unique_treasury_ids(object.get("assets"), "asset_id")?;
+    unique_treasury_ids(
+        object.get("quorum").and_then(|v| v.get("signers")),
+        "signer_id",
+    )?;
+    if !object.get("receipts").is_some_and(Value::is_array) {
+        return Err("Treasury receipts must be an array".into());
+    }
+    Ok(())
+}
+
+fn validate_treasury_value(value: &Value, path: &str) -> Result<(), String> {
+    match value {
+        Value::Number(number) if number.as_u64().is_none() => {
+            Err(format!("{path} must use non-negative integer values"))
+        }
+        Value::Array(values) => {
+            for (index, child) in values.iter().enumerate() {
+                validate_treasury_value(child, &format!("{path}[{index}]"))?;
+            }
+            Ok(())
+        }
+        Value::Object(values) => {
+            for (key, child) in values {
+                let normalized = key.to_ascii_lowercase().replace(['_', '-', ' '], "");
+                if [
+                    "privatekey",
+                    "seed",
+                    "mnemonic",
+                    "credential",
+                    "password",
+                    "secret",
+                    "signedtransaction",
+                    "providertoken",
+                    "observedat",
+                    "createdat",
+                    "updatedat",
+                    "timestamp",
+                ]
+                .contains(&normalized.as_str())
+                {
+                    return Err(format!("forbidden Treasury field: {path}.{key}"));
+                }
+                validate_treasury_value(child, &format!("{path}.{key}"))?;
+            }
+            Ok(())
+        }
+        _ => Ok(()),
+    }
+}
+
+fn unique_treasury_ids(value: Option<&Value>, key: &str) -> Result<(), String> {
+    let values = value
+        .and_then(Value::as_array)
+        .ok_or_else(|| format!("Treasury {key} collection must be an array"))?;
+    let mut seen = BTreeSet::new();
+    for item in values {
+        let id = item
+            .get(key)
+            .and_then(Value::as_str)
+            .ok_or_else(|| format!("Treasury {key} is required"))?;
+        if id.is_empty() || !seen.insert(id) {
+            return Err(format!("Treasury {key} values must be unique"));
+        }
+    }
+    Ok(())
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -104,6 +226,8 @@ impl LegacyWorldCreateRequest {
             schema_version: WORLD_CREATE_REQUEST_VERSION.into(),
             world_id: format!("world-{}", slug(&self.world_name)),
             world_name: self.world_name,
+            state_policy_id: None,
+            initial_treasury_state: None,
             profiles,
             module_references: BTreeMap::new(),
             runtime_overrides: BTreeMap::new(),
@@ -1371,6 +1495,10 @@ pub struct PtwRuntimeIrV1 {
     pub assembly_contract_version: String,
     pub world_id: String,
     pub world_name: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub state_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub initial_treasury_state: Option<Value>,
     pub resolved_profiles: BTreeMap<String, String>,
     pub module_references: BTreeMap<String, String>,
     pub capability_requirements: Vec<String>,
@@ -1809,6 +1937,8 @@ pub fn build_runtime_ir(
         assembly_contract_version: ASSEMBLY_CONTRACT_VERSION.into(),
         world_id: request.world_id.clone(),
         world_name: request.world_name.clone(),
+        state_policy_id: request.state_policy_id.clone(),
+        initial_treasury_state: request.initial_treasury_state.clone(),
         resolved_profiles,
         module_references: request.module_references.clone(),
         capability_requirements: profiles.required_capabilities.clone(),
@@ -4417,6 +4547,48 @@ mod tests {
         }"#,
         )
         .unwrap()
+    }
+
+    fn empty_treasury() -> Value {
+        json!({"schema_version":"everarcade.ptw-treasury-state.v1","treasury_identity":{"treasury_id":"unconfigured","status":"unconfigured"},"policy":{"policy_id":"unconfigured","policy_version":0,"policy_hash":format!("sha256:{}","0".repeat(64))},"assets":[],"balances":{"recognized":{},"reserved":{}},"proposals":{},"approvals":{},"quorum":{"policy_id":"unconfigured","signer_set_id":"unconfigured","signers":[],"timelocks":{}},"intents":{"pending":{},"settled":{},"failed":{}},"receipts":[],"emergency":{"status":"inactive"},"migration":{"status":"genesis"}})
+    }
+
+    #[test]
+    fn state_v3_policy_and_treasury_are_authoritative_and_fail_closed() {
+        let mut request = catacombs_request();
+        request.state_policy_id = Some(PTW_STATE_V3_POLICY_ID.into());
+        request.initial_treasury_state = Some(empty_treasury());
+        request.normalize().unwrap();
+        let assembled = assemble_world(request.clone()).unwrap();
+        assert_eq!(
+            assembled.ir.state_policy_id.as_deref(),
+            Some(PTW_STATE_V3_POLICY_ID)
+        );
+        assert_eq!(
+            assembled.ir.initial_treasury_state,
+            request.initial_treasury_state
+        );
+        let mut unknown = request.clone();
+        unknown.state_policy_id = Some("unknown.policy".into());
+        assert!(unknown.normalize().is_err());
+        let mut missing = request.clone();
+        missing.initial_treasury_state = None;
+        assert!(missing.normalize().is_err());
+        let mut malformed = request.clone();
+        malformed.initial_treasury_state = Some(json!({}));
+        assert!(malformed.normalize().is_err());
+        let mut credential = request.clone();
+        credential.initial_treasury_state.as_mut().unwrap()["provider_token"] = json!("secret");
+        assert!(credential.normalize().is_err());
+        let mut timestamp = request.clone();
+        timestamp.initial_treasury_state.as_mut().unwrap()["timestamp"] = json!(1);
+        assert!(timestamp.normalize().is_err());
+        let mut float = request.clone();
+        float.initial_treasury_state.as_mut().unwrap()["policy"]["policy_version"] = json!(1.5);
+        assert!(float.normalize().is_err());
+        let mut v2 = request;
+        v2.state_policy_id = Some(PTW_STATE_V2_POLICY_ID.into());
+        assert!(v2.normalize().is_err());
     }
 
     #[test]
