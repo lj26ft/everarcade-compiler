@@ -23,10 +23,12 @@ pub const PTW_STATE_V3_POLICY_ID: &str = "everarcade.ptw-state-components.v3";
 pub const PTW_STATE_V4_POLICY_ID: &str = "everarcade.ptw-state-components.v4";
 pub const PTW_STATE_V5_POLICY_ID: &str = "everarcade.ptw-state-components.v5";
 pub const PTW_STATE_V6_POLICY_ID: &str = "everarcade.ptw-state-components.v6";
+pub const PTW_STATE_V7_POLICY_ID: &str = "everarcade.ptw-state-components.v7";
 pub const PTW_TREASURY_STATE_V1: &str = "everarcade.ptw-treasury-state.v1";
 pub const PTW_TREASURY_STATE_V2: &str = "everarcade.ptw-treasury-state.v2";
 pub const PTW_TREASURY_STATE_V3: &str = "everarcade.ptw-treasury-state.v3";
 pub const PTW_TREASURY_STATE_V4: &str = "everarcade.ptw-treasury-state.v4";
+pub const PTW_TREASURY_STATE_V5: &str = "everarcade.ptw-treasury-state.v5";
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct CanonicalWorldRequest {
@@ -52,6 +54,8 @@ pub struct CanonicalWorldRequest {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub treasury_semantic_policy_id: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_semantic_root_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub treasury_semantic_policy_commitment: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub treasury_authorization_policy_commitment: Option<String>,
@@ -65,6 +69,8 @@ pub struct CanonicalWorldRequest {
     pub treasury_active_archive_policy_id: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub treasury_exact_amount_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_materialization_plan_policy_id: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub governance_authorization_policy: Option<Value>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -132,6 +138,7 @@ impl CanonicalWorldRequest {
             self.treasury_checkpoint_schema_id.as_deref(),
             self.treasury_migration_policy_id.as_deref(),
             self.treasury_semantic_policy_id.as_deref(),
+            self.treasury_semantic_root_policy_id.as_deref(),
             self.treasury_semantic_policy_commitment.as_deref(),
             self.treasury_authorization_policy_commitment.as_deref(),
             self.treasury_approval_signature_policy_id.as_deref(),
@@ -139,6 +146,7 @@ impl CanonicalWorldRequest {
             self.treasury_rejection_evidence_policy_id.as_deref(),
             self.treasury_active_archive_policy_id.as_deref(),
             self.treasury_exact_amount_policy_id.as_deref(),
+            self.treasury_materialization_plan_policy_id.as_deref(),
             self.governance_authorization_policy.as_ref(),
             self.trusted_receipt_issuer_policy.as_ref(),
         )?;
@@ -155,12 +163,12 @@ fn validate_state_policy(
     segmentation_policy: Option<&str>,
     checkpoint_schema: Option<&str>,
     migration_policy: Option<&str>,
-    semantic_policy: Option<&str>, semantic_commitment: Option<&str>, authorization_commitment: Option<&str>,
+    semantic_policy: Option<&str>, semantic_root_policy: Option<&str>, semantic_commitment: Option<&str>, authorization_commitment: Option<&str>,
     approval_signature_policy: Option<&str>, receipt_signature_policy: Option<&str>, rejection_policy: Option<&str>,
-    active_archive_policy: Option<&str>, amount_policy: Option<&str>, governance_policy: Option<&Value>, issuer_policy: Option<&Value>,
+    active_archive_policy: Option<&str>, amount_policy: Option<&str>, materialization_policy: Option<&str>, governance_policy: Option<&Value>, issuer_policy: Option<&Value>,
 ) -> Result<(), String> {
-    let semantic_declared=semantic_policy.is_some()||semantic_commitment.is_some()||authorization_commitment.is_some()||approval_signature_policy.is_some()||receipt_signature_policy.is_some()||rejection_policy.is_some()||active_archive_policy.is_some()||amount_policy.is_some()||governance_policy.is_some()||issuer_policy.is_some();
-    if policy != Some(PTW_STATE_V6_POLICY_ID) && semantic_declared { return Err("Treasury semantic policy declarations require State V6".into()); }
+    let semantic_declared=semantic_policy.is_some()||semantic_root_policy.is_some()||semantic_commitment.is_some()||authorization_commitment.is_some()||approval_signature_policy.is_some()||receipt_signature_policy.is_some()||rejection_policy.is_some()||active_archive_policy.is_some()||amount_policy.is_some()||materialization_policy.is_some()||governance_policy.is_some()||issuer_policy.is_some();
+    if policy != Some(PTW_STATE_V6_POLICY_ID) && policy != Some(PTW_STATE_V7_POLICY_ID) && semantic_declared { return Err("Treasury semantic policy declarations require State V6 or State V7".into()); }
     match policy {
         None if treasury.is_none()
             && activation.is_none()
@@ -258,8 +266,36 @@ fn validate_state_policy(
             validate_treasury_activation_policy(activation.ok_or("State V6 requires treasury_activation_policy")?)?;
             Ok(())
         }
+        Some(PTW_STATE_V7_POLICY_ID) => {
+            if treasury_schema != Some(PTW_TREASURY_STATE_V5)
+                || commitment_policy != Some("everarcade.ptw-treasury-commitment.v5")
+                || semantic_root_policy != Some("everarcade.treasury-semantic-roots.v1")
+                || semantic_policy != Some("everarcade.treasury-semantic-policy.v1")
+                || semantic_commitment != Some("sha256:228b7b2867f9894bedecec94a42f5ff788e204fcfa09cc5b334026e845306e9a")
+                || authorization_commitment != Some("sha256:4a167de3d527332d92ea4453912d402f9c1297386700adbddd6cfbb535a36a45")
+                || approval_signature_policy != Some("APPROVAL_V1")
+                || receipt_signature_policy != Some("SETTLEMENT_RECEIPT_V1")
+                || rejection_policy != Some("everarcade.treasury-rejection-evidence.v2")
+                || active_archive_policy != Some("everarcade.treasury-active-archive-policy.v1")
+                || amount_policy != Some("everarcade.treasury-exact-amount.safe-integer-minor-units.v1")
+                || materialization_policy != Some("everarcade.treasury-materialization-plan.v1")
+                || governance_policy.is_none() || issuer_policy.is_none()
+            { return Err("State V7 requires the exact active-frontier Treasury v5 policy tuple".into()); }
+            validate_treasury_state_v5(treasury.ok_or("State V7 requires canonical initial_treasury_state")?)?;
+            validate_treasury_activation_policy(activation.ok_or("State V7 requires treasury_activation_policy")?)?;
+            Ok(())
+        }
         Some(other) => Err(format!("unsupported state_policy_id: {other}")),
     }
+}
+
+fn validate_treasury_state_v5(value: &Value) -> Result<(), String> {
+    let object=value.as_object().ok_or("initial Treasury v5 state must be an object")?;
+    for field in ["schema_version","commitment_policy_id","semantic_root_policy_id","semantic_policy_id","semantic_policy_commitment","authorization_policy_commitment","signature_policy_commitment","economic_policy_commitment","active_archive_policy_id","rejection_evidence_policy_id","semantic_state","segmented_storage","frontier_commitment","treasury_root"] { if !object.contains_key(field) { return Err(format!("Treasury v5 missing {field}")); } }
+    if object.get("schema_version").and_then(Value::as_str)!=Some(PTW_TREASURY_STATE_V5)
+        || object.get("commitment_policy_id").and_then(Value::as_str)!=Some("everarcade.ptw-treasury-commitment.v5")
+        || object.get("semantic_root_policy_id").and_then(Value::as_str)!=Some("everarcade.treasury-semantic-roots.v1") { return Err("Treasury v5 policy tuple mismatch".into()); }
+    validate_treasury_value(value,"initial_treasury_state")
 }
 
 fn validate_treasury_state_v4(value: &Value) -> Result<(), String> {
@@ -535,6 +571,7 @@ impl LegacyWorldCreateRequest {
             treasury_checkpoint_schema_id: None,
             treasury_migration_policy_id: None,
             treasury_semantic_policy_id: None,
+            treasury_semantic_root_policy_id: None,
             treasury_semantic_policy_commitment: None,
             treasury_authorization_policy_commitment: None,
             treasury_approval_signature_policy_id: None,
@@ -542,6 +579,7 @@ impl LegacyWorldCreateRequest {
             treasury_rejection_evidence_policy_id: None,
             treasury_active_archive_policy_id: None,
             treasury_exact_amount_policy_id: None,
+            treasury_materialization_plan_policy_id: None,
             governance_authorization_policy: None,
             trusted_receipt_issuer_policy: None,
             supported_treasury_action_inventory: Vec::new(),
@@ -1832,6 +1870,8 @@ pub struct PtwRuntimeIrV1 {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub treasury_semantic_policy_id: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_semantic_root_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub treasury_semantic_policy_commitment: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub treasury_authorization_policy_commitment: Option<String>,
@@ -1845,6 +1885,8 @@ pub struct PtwRuntimeIrV1 {
     pub treasury_active_archive_policy_id: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub treasury_exact_amount_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_materialization_plan_policy_id: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub governance_authorization_policy: Option<Value>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -2300,6 +2342,7 @@ pub fn build_runtime_ir(
         treasury_checkpoint_schema_id: request.treasury_checkpoint_schema_id.clone(),
         treasury_migration_policy_id: request.treasury_migration_policy_id.clone(),
         treasury_semantic_policy_id: request.treasury_semantic_policy_id.clone(),
+        treasury_semantic_root_policy_id: request.treasury_semantic_root_policy_id.clone(),
         treasury_semantic_policy_commitment: request.treasury_semantic_policy_commitment.clone(),
         treasury_authorization_policy_commitment: request.treasury_authorization_policy_commitment.clone(),
         treasury_approval_signature_policy_id: request.treasury_approval_signature_policy_id.clone(),
@@ -2307,6 +2350,7 @@ pub fn build_runtime_ir(
         treasury_rejection_evidence_policy_id: request.treasury_rejection_evidence_policy_id.clone(),
         treasury_active_archive_policy_id: request.treasury_active_archive_policy_id.clone(),
         treasury_exact_amount_policy_id: request.treasury_exact_amount_policy_id.clone(),
+        treasury_materialization_plan_policy_id: request.treasury_materialization_plan_policy_id.clone(),
         governance_authorization_policy: request.governance_authorization_policy.clone(),
         trusted_receipt_issuer_policy: request.trusted_receipt_issuer_policy.clone(),
         supported_treasury_action_inventory: request.supported_treasury_action_inventory.clone(),
