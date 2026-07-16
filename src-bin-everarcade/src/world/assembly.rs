@@ -264,7 +264,7 @@ fn validate_state_policy(
 
 fn validate_treasury_state_v4(value: &Value) -> Result<(), String> {
     let object=value.as_object().ok_or("initial Treasury v4 state must be an object")?;
-    for field in ["schema_version","commitment_policy_id","semantic_policy_id","semantic_policy_commitment","authorization_policy_commitment","signature_policy_commitment","economic_policy_commitment","proposal_state_machine_commitment","receipt_state_machine_commitment","rejection_evidence_policy_id","rejection_policy_commitment","active_archive_policy_id","active_archive_policy_commitment","exact_amount_policy_id","semantic_state","rejection_chain","terminal_summaries","active_counts","treasury_root"] { if !object.contains_key(field) { return Err(format!("Treasury v4 missing {field}")); } }
+    for field in ["schema_version","commitment_policy_id","semantic_policy_id","semantic_policy_commitment","authorization_policy_commitment","signature_policy_commitment","economic_policy_commitment","proposal_state_machine_commitment","receipt_state_machine_commitment","rejection_evidence_policy_id","rejection_policy_commitment","active_archive_policy_id","active_archive_policy_commitment","exact_amount_policy_id","semantic_state","segmented_storage","rejection_chain","terminal_summaries","active_counts","treasury_root"] { if !object.contains_key(field) { return Err(format!("Treasury v4 missing {field}")); } }
     if object.get("schema_version").and_then(Value::as_str)!=Some(PTW_TREASURY_STATE_V4) || object.get("commitment_policy_id").and_then(Value::as_str)!=Some("everarcade.ptw-treasury-commitment.v4") { return Err("Treasury v4 policy tuple mismatch".into()); }
     validate_treasury_value(value,"initial_treasury_state")
 }
