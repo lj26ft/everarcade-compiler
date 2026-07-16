@@ -20,7 +20,9 @@ pub const RUNTIME_IR_SCHEMA_VERSION: &str = "everarcade.ptw-runtime-ir.v1";
 pub const RUNTIME_IR_HASH_DOMAIN: &str = "everarcade.runtime-ir.v1";
 pub const PTW_STATE_V2_POLICY_ID: &str = "everarcade.ptw-state-components.v2";
 pub const PTW_STATE_V3_POLICY_ID: &str = "everarcade.ptw-state-components.v3";
+pub const PTW_STATE_V4_POLICY_ID: &str = "everarcade.ptw-state-components.v4";
 pub const PTW_TREASURY_STATE_V1: &str = "everarcade.ptw-treasury-state.v1";
+pub const PTW_TREASURY_STATE_V2: &str = "everarcade.ptw-treasury-state.v2";
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct CanonicalWorldRequest {
@@ -33,6 +35,16 @@ pub struct CanonicalWorldRequest {
     pub initial_treasury_state: Option<Value>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub treasury_activation_policy: Option<Value>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_state_schema_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_commitment_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_segmentation_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub supported_treasury_action_inventory: Vec<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub supported_treasury_receipt_schema_ids: Vec<String>,
     #[serde(default)]
     pub profiles: BTreeMap<String, String>,
     #[serde(default)]
@@ -86,6 +98,9 @@ impl CanonicalWorldRequest {
             self.state_policy_id.as_deref(),
             self.initial_treasury_state.as_ref(),
             self.treasury_activation_policy.as_ref(),
+            self.treasury_state_schema_id.as_deref(),
+            self.treasury_commitment_policy_id.as_deref(),
+            self.treasury_segmentation_policy_id.as_deref(),
         )?;
         Ok(())
     }
@@ -95,15 +110,39 @@ fn validate_state_policy(
     policy: Option<&str>,
     treasury: Option<&Value>,
     activation: Option<&Value>,
+    treasury_schema: Option<&str>,
+    commitment_policy: Option<&str>,
+    segmentation_policy: Option<&str>,
 ) -> Result<(), String> {
     match policy {
-        None if treasury.is_none() && activation.is_none() => Ok(()),
+        None if treasury.is_none()
+            && activation.is_none()
+            && treasury_schema.is_none()
+            && commitment_policy.is_none()
+            && segmentation_policy.is_none() =>
+        {
+            Ok(())
+        }
         None => Err("initial_treasury_state requires explicit state_policy_id".into()),
-        Some(PTW_STATE_V2_POLICY_ID) if treasury.is_none() && activation.is_none() => Ok(()),
+        Some(PTW_STATE_V2_POLICY_ID)
+            if treasury.is_none()
+                && activation.is_none()
+                && treasury_schema.is_none()
+                && commitment_policy.is_none()
+                && segmentation_policy.is_none() =>
+        {
+            Ok(())
+        }
         Some(PTW_STATE_V2_POLICY_ID) => {
             Err("State V2 cannot declare Treasury configuration".into())
         }
         Some(PTW_STATE_V3_POLICY_ID) => {
+            if treasury_schema.is_some_and(|v| v != PTW_TREASURY_STATE_V1)
+                || commitment_policy.is_some()
+                || segmentation_policy.is_some()
+            {
+                return Err("State V3 requires the historical Treasury v1 tuple".into());
+            }
             validate_treasury_state_v1(
                 treasury.ok_or("State V3 requires canonical initial_treasury_state")?,
             )?;
@@ -112,8 +151,62 @@ fn validate_state_policy(
             }
             Ok(())
         }
+        Some(PTW_STATE_V4_POLICY_ID) => {
+            if treasury_schema != Some(PTW_TREASURY_STATE_V2)
+                || commitment_policy != Some("everarcade.ptw-treasury-commitment.v2")
+                || segmentation_policy != Some("everarcade.ptw-treasury-segments.v1")
+            {
+                return Err("State V4 requires the exact Treasury v2 policy tuple".into());
+            }
+            validate_treasury_state_v2(
+                treasury.ok_or("State V4 requires canonical initial_treasury_state")?,
+            )?;
+            validate_treasury_activation_policy(
+                activation.ok_or("State V4 requires treasury_activation_policy")?,
+            )?;
+            Ok(())
+        }
         Some(other) => Err(format!("unsupported state_policy_id: {other}")),
     }
+}
+
+fn validate_treasury_state_v2(value: &Value) -> Result<(), String> {
+    let object = value
+        .as_object()
+        .ok_or("initial Treasury v2 state must be an object")?;
+    let required: BTreeSet<&str> = [
+        "schema_version",
+        "commitment_policy_id",
+        "segmentation_policy_id",
+        "treasury_header",
+        "active_configuration",
+        "recognized_balances",
+        "active_proposals",
+        "active_timelocks",
+        "pending_intents",
+        "obligations",
+        "active_signer_policy",
+        "active_asset_policy",
+        "emergency_state",
+        "segment_heads",
+        "archive_commitments",
+        "duplicate_index_roots",
+        "migration_metadata",
+    ]
+    .into_iter()
+    .collect();
+    if object.keys().map(String::as_str).collect::<BTreeSet<_>>() != required {
+        return Err("Treasury v2 fields are incomplete or unknown".into());
+    }
+    if object.get("schema_version").and_then(Value::as_str) != Some(PTW_TREASURY_STATE_V2)
+        || object.get("commitment_policy_id").and_then(Value::as_str)
+            != Some("everarcade.ptw-treasury-commitment.v2")
+        || object.get("segmentation_policy_id").and_then(Value::as_str)
+            != Some("everarcade.ptw-treasury-segments.v1")
+    {
+        return Err("Treasury v2 policy tuple mismatch".into());
+    }
+    validate_treasury_value(value, "initial_treasury_state")
 }
 
 fn validate_treasury_activation_policy(value: &Value) -> Result<(), String> {
@@ -318,6 +411,11 @@ impl LegacyWorldCreateRequest {
             state_policy_id: None,
             initial_treasury_state: None,
             treasury_activation_policy: None,
+            treasury_state_schema_id: None,
+            treasury_commitment_policy_id: None,
+            treasury_segmentation_policy_id: None,
+            supported_treasury_action_inventory: Vec::new(),
+            supported_treasury_receipt_schema_ids: Vec::new(),
             profiles,
             module_references: BTreeMap::new(),
             runtime_overrides: BTreeMap::new(),
@@ -1591,6 +1689,16 @@ pub struct PtwRuntimeIrV1 {
     pub initial_treasury_state: Option<Value>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub treasury_activation_policy: Option<Value>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_state_schema_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_commitment_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_segmentation_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub supported_treasury_action_inventory: Vec<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub supported_treasury_receipt_schema_ids: Vec<String>,
     pub resolved_profiles: BTreeMap<String, String>,
     pub module_references: BTreeMap<String, String>,
     pub capability_requirements: Vec<String>,
@@ -2032,6 +2140,13 @@ pub fn build_runtime_ir(
         state_policy_id: request.state_policy_id.clone(),
         initial_treasury_state: request.initial_treasury_state.clone(),
         treasury_activation_policy: request.treasury_activation_policy.clone(),
+        treasury_state_schema_id: request.treasury_state_schema_id.clone(),
+        treasury_commitment_policy_id: request.treasury_commitment_policy_id.clone(),
+        treasury_segmentation_policy_id: request.treasury_segmentation_policy_id.clone(),
+        supported_treasury_action_inventory: request.supported_treasury_action_inventory.clone(),
+        supported_treasury_receipt_schema_ids: request
+            .supported_treasury_receipt_schema_ids
+            .clone(),
         resolved_profiles,
         module_references: request.module_references.clone(),
         capability_requirements: profiles.required_capabilities.clone(),

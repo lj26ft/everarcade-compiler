@@ -23,7 +23,8 @@
     "certify:js-kernel-equivalence": "node runtime/arena_hotpocket/validation/certify-js-kernel-equivalence.js",
     "package:formal-proof-target": "node scripts/package-formal-proof-target.js",
     "test:state-v3-package": "node scripts/test-state-v3-package.js",
-    "test:treasury-activation-package": "node scripts/test-treasury-activation-package.js"
+    "test:treasury-activation-package": "node scripts/test-treasury-activation-package.js",
+    "test:state-v4-package": "node scripts/test-state-v4-package.js"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "latest",
