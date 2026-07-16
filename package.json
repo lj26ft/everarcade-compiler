@@ -27,6 +27,7 @@
     "test:state-v4-package": "node scripts/test-state-v4-package.js",
     "test:state-v5-package": "node scripts/test-state-v5-package.js"
     ,"test:state-v7-package": "node scripts/test-state-v7-package.js"
+    ,"test:state-v8-package": "node scripts/test-state-v8-package.js"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "latest",
