@@ -21,8 +21,10 @@ pub const RUNTIME_IR_HASH_DOMAIN: &str = "everarcade.runtime-ir.v1";
 pub const PTW_STATE_V2_POLICY_ID: &str = "everarcade.ptw-state-components.v2";
 pub const PTW_STATE_V3_POLICY_ID: &str = "everarcade.ptw-state-components.v3";
 pub const PTW_STATE_V4_POLICY_ID: &str = "everarcade.ptw-state-components.v4";
+pub const PTW_STATE_V5_POLICY_ID: &str = "everarcade.ptw-state-components.v5";
 pub const PTW_TREASURY_STATE_V1: &str = "everarcade.ptw-treasury-state.v1";
 pub const PTW_TREASURY_STATE_V2: &str = "everarcade.ptw-treasury-state.v2";
+pub const PTW_TREASURY_STATE_V3: &str = "everarcade.ptw-treasury-state.v3";
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct CanonicalWorldRequest {
@@ -41,6 +43,10 @@ pub struct CanonicalWorldRequest {
     pub treasury_commitment_policy_id: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub treasury_segmentation_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_checkpoint_schema_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_migration_policy_id: Option<String>,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub supported_treasury_action_inventory: Vec<String>,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
@@ -101,6 +107,8 @@ impl CanonicalWorldRequest {
             self.treasury_state_schema_id.as_deref(),
             self.treasury_commitment_policy_id.as_deref(),
             self.treasury_segmentation_policy_id.as_deref(),
+            self.treasury_checkpoint_schema_id.as_deref(),
+            self.treasury_migration_policy_id.as_deref(),
         )?;
         Ok(())
     }
@@ -113,13 +121,17 @@ fn validate_state_policy(
     treasury_schema: Option<&str>,
     commitment_policy: Option<&str>,
     segmentation_policy: Option<&str>,
+    checkpoint_schema: Option<&str>,
+    migration_policy: Option<&str>,
 ) -> Result<(), String> {
     match policy {
         None if treasury.is_none()
             && activation.is_none()
             && treasury_schema.is_none()
             && commitment_policy.is_none()
-            && segmentation_policy.is_none() =>
+            && segmentation_policy.is_none()
+            && checkpoint_schema.is_none()
+            && migration_policy.is_none() =>
         {
             Ok(())
         }
@@ -129,7 +141,9 @@ fn validate_state_policy(
                 && activation.is_none()
                 && treasury_schema.is_none()
                 && commitment_policy.is_none()
-                && segmentation_policy.is_none() =>
+                && segmentation_policy.is_none()
+                && checkpoint_schema.is_none()
+                && migration_policy.is_none() =>
         {
             Ok(())
         }
@@ -140,6 +154,8 @@ fn validate_state_policy(
             if treasury_schema.is_some_and(|v| v != PTW_TREASURY_STATE_V1)
                 || commitment_policy.is_some()
                 || segmentation_policy.is_some()
+                || checkpoint_schema.is_some()
+                || migration_policy.is_some()
             {
                 return Err("State V3 requires the historical Treasury v1 tuple".into());
             }
@@ -155,6 +171,8 @@ fn validate_state_policy(
             if treasury_schema != Some(PTW_TREASURY_STATE_V2)
                 || commitment_policy != Some("everarcade.ptw-treasury-commitment.v2")
                 || segmentation_policy != Some("everarcade.ptw-treasury-segments.v1")
+                || checkpoint_schema.is_some()
+                || migration_policy.is_some()
             {
                 return Err("State V4 requires the exact Treasury v2 policy tuple".into());
             }
@@ -166,8 +184,44 @@ fn validate_state_policy(
             )?;
             Ok(())
         }
+        Some(PTW_STATE_V5_POLICY_ID) => {
+            if treasury_schema != Some(PTW_TREASURY_STATE_V3)
+                || commitment_policy != Some("everarcade.ptw-treasury-commitment.v3")
+                || segmentation_policy != Some("everarcade.ptw-treasury-segments.v2")
+                || checkpoint_schema != Some("everarcade.ptw-treasury-recoverable-checkpoint.v2")
+                || migration_policy != Some("everarcade.ptw-treasury-v1-to-v3-migration.v2")
+            {
+                return Err("State V5 requires the exact recoverable Treasury v3 policy tuple".into());
+            }
+            validate_treasury_state_v3(
+                treasury.ok_or("State V5 requires canonical initial_treasury_state")?,
+            )?;
+            validate_treasury_activation_policy(
+                activation.ok_or("State V5 requires treasury_activation_policy")?,
+            )?;
+            Ok(())
+        }
         Some(other) => Err(format!("unsupported state_policy_id: {other}")),
     }
+}
+
+fn validate_treasury_state_v3(value: &Value) -> Result<(), String> {
+    let object = value.as_object().ok_or("initial Treasury v3 state must be an object")?;
+    let required: BTreeSet<&str> = [
+        "schema_version","commitment_policy_id","segmentation_policy_id","treasury_header",
+        "active_configuration","active_signer_policy","active_asset_policy","recognized_balances",
+        "reserved_balances","pending_balances","emergency_state","active_proposals","active_quorum",
+        "active_timelocks","pending_intents","obligations","reversal_targets","active_segments",
+        "archive_heads","exact_indexes","migration_metadata","treasury_root"
+    ].into_iter().collect();
+    if object.keys().map(String::as_str).collect::<BTreeSet<_>>() != required {
+        return Err("Treasury v3 fields are incomplete or unknown".into());
+    }
+    if object.get("schema_version").and_then(Value::as_str) != Some(PTW_TREASURY_STATE_V3)
+        || object.get("commitment_policy_id").and_then(Value::as_str) != Some("everarcade.ptw-treasury-commitment.v3")
+        || object.get("segmentation_policy_id").and_then(Value::as_str) != Some("everarcade.ptw-treasury-segments.v2")
+    { return Err("Treasury v3 policy tuple mismatch".into()); }
+    validate_treasury_value(value, "initial_treasury_state")
 }
 
 fn validate_treasury_state_v2(value: &Value) -> Result<(), String> {
@@ -414,6 +468,8 @@ impl LegacyWorldCreateRequest {
             treasury_state_schema_id: None,
             treasury_commitment_policy_id: None,
             treasury_segmentation_policy_id: None,
+            treasury_checkpoint_schema_id: None,
+            treasury_migration_policy_id: None,
             supported_treasury_action_inventory: Vec::new(),
             supported_treasury_receipt_schema_ids: Vec::new(),
             profiles,
@@ -1695,6 +1751,10 @@ pub struct PtwRuntimeIrV1 {
     pub treasury_commitment_policy_id: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub treasury_segmentation_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_checkpoint_schema_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_migration_policy_id: Option<String>,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub supported_treasury_action_inventory: Vec<String>,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
@@ -2143,6 +2203,8 @@ pub fn build_runtime_ir(
         treasury_state_schema_id: request.treasury_state_schema_id.clone(),
         treasury_commitment_policy_id: request.treasury_commitment_policy_id.clone(),
         treasury_segmentation_policy_id: request.treasury_segmentation_policy_id.clone(),
+        treasury_checkpoint_schema_id: request.treasury_checkpoint_schema_id.clone(),
+        treasury_migration_policy_id: request.treasury_migration_policy_id.clone(),
         supported_treasury_action_inventory: request.supported_treasury_action_inventory.clone(),
         supported_treasury_receipt_schema_ids: request
             .supported_treasury_receipt_schema_ids
