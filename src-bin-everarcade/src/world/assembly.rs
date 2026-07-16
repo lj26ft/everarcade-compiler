@@ -31,6 +31,8 @@ pub struct CanonicalWorldRequest {
     pub state_policy_id: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub initial_treasury_state: Option<Value>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_activation_policy: Option<Value>,
     #[serde(default)]
     pub profiles: BTreeMap<String, String>,
     #[serde(default)]
@@ -83,24 +85,111 @@ impl CanonicalWorldRequest {
         validate_state_policy(
             self.state_policy_id.as_deref(),
             self.initial_treasury_state.as_ref(),
+            self.treasury_activation_policy.as_ref(),
         )?;
         Ok(())
     }
 }
 
-fn validate_state_policy(policy: Option<&str>, treasury: Option<&Value>) -> Result<(), String> {
+fn validate_state_policy(
+    policy: Option<&str>,
+    treasury: Option<&Value>,
+    activation: Option<&Value>,
+) -> Result<(), String> {
     match policy {
-        None if treasury.is_none() => Ok(()),
+        None if treasury.is_none() && activation.is_none() => Ok(()),
         None => Err("initial_treasury_state requires explicit state_policy_id".into()),
-        Some(PTW_STATE_V2_POLICY_ID) if treasury.is_none() => Ok(()),
+        Some(PTW_STATE_V2_POLICY_ID) if treasury.is_none() && activation.is_none() => Ok(()),
         Some(PTW_STATE_V2_POLICY_ID) => {
-            Err("State V2 cannot declare initial_treasury_state".into())
+            Err("State V2 cannot declare Treasury configuration".into())
         }
-        Some(PTW_STATE_V3_POLICY_ID) => validate_treasury_state_v1(
-            treasury.ok_or("State V3 requires canonical initial_treasury_state")?,
-        ),
+        Some(PTW_STATE_V3_POLICY_ID) => {
+            validate_treasury_state_v1(
+                treasury.ok_or("State V3 requires canonical initial_treasury_state")?,
+            )?;
+            if let Some(value) = activation {
+                validate_treasury_activation_policy(value)?;
+            }
+            Ok(())
+        }
         Some(other) => Err(format!("unsupported state_policy_id: {other}")),
     }
+}
+
+fn validate_treasury_activation_policy(value: &Value) -> Result<(), String> {
+    let object = value
+        .as_object()
+        .ok_or("treasury_activation_policy must be an object")?;
+    let required: BTreeSet<&str> = [
+        "schema_version",
+        "policy_id",
+        "policy_version",
+        "owner_identity",
+        "owner_identity_commitment",
+        "required_capability",
+        "authorized_activation_key_ids",
+        "valid_from_tick",
+        "valid_until_tick",
+        "revoked_activation_key_ids",
+        "activation_policy_commitment",
+    ]
+    .into_iter()
+    .collect();
+    if object.keys().map(String::as_str).collect::<BTreeSet<_>>() != required {
+        return Err("treasury_activation_policy fields are incomplete or unknown".into());
+    }
+    if object.get("schema_version").and_then(Value::as_str)
+        != Some("everarcade.treasury-activation-policy.v1")
+        || object.get("policy_version").and_then(Value::as_u64) != Some(1)
+        || object.get("required_capability").and_then(Value::as_str) != Some("treasury.create")
+    {
+        return Err("unsupported Treasury activation policy".into());
+    }
+    for key in ["policy_id", "owner_identity"] {
+        if object
+            .get(key)
+            .and_then(Value::as_str)
+            .is_none_or(|v| v.len() < 2 || v.len() > 128)
+        {
+            return Err(format!("invalid Treasury activation {key}"));
+        }
+    }
+    for key in ["owner_identity_commitment", "activation_policy_commitment"] {
+        if object
+            .get(key)
+            .and_then(Value::as_str)
+            .is_none_or(|v| !v.starts_with("sha256:") || v.len() != 71)
+        {
+            return Err(format!("invalid Treasury activation {key}"));
+        }
+    }
+    let keys = object
+        .get("authorized_activation_key_ids")
+        .and_then(Value::as_array)
+        .ok_or("authorized activation keys are required")?;
+    if keys.is_empty() {
+        return Err("authorized activation keys are required".into());
+    }
+    let distinct: BTreeSet<_> = keys.iter().filter_map(Value::as_str).collect();
+    if distinct.len() != keys.len() {
+        return Err("activation key IDs must be unique strings".into());
+    }
+    if !object
+        .get("revoked_activation_key_ids")
+        .is_some_and(Value::is_array)
+        || object
+            .get("valid_from_tick")
+            .and_then(Value::as_u64)
+            .is_none()
+        || !(object.get("valid_until_tick").is_some_and(Value::is_null)
+            || object
+                .get("valid_until_tick")
+                .and_then(Value::as_u64)
+                .is_some())
+    {
+        return Err("Treasury activation validity fields are invalid".into());
+    }
+    validate_treasury_value(value, "treasury_activation_policy")
 }
 
 fn validate_treasury_state_v1(value: &Value) -> Result<(), String> {
@@ -228,6 +317,7 @@ impl LegacyWorldCreateRequest {
             world_name: self.world_name,
             state_policy_id: None,
             initial_treasury_state: None,
+            treasury_activation_policy: None,
             profiles,
             module_references: BTreeMap::new(),
             runtime_overrides: BTreeMap::new(),
@@ -1499,6 +1589,8 @@ pub struct PtwRuntimeIrV1 {
     pub state_policy_id: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub initial_treasury_state: Option<Value>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_activation_policy: Option<Value>,
     pub resolved_profiles: BTreeMap<String, String>,
     pub module_references: BTreeMap<String, String>,
     pub capability_requirements: Vec<String>,
@@ -1939,6 +2031,7 @@ pub fn build_runtime_ir(
         world_name: request.world_name.clone(),
         state_policy_id: request.state_policy_id.clone(),
         initial_treasury_state: request.initial_treasury_state.clone(),
+        treasury_activation_policy: request.treasury_activation_policy.clone(),
         resolved_profiles,
         module_references: request.module_references.clone(),
         capability_requirements: profiles.required_capabilities.clone(),
