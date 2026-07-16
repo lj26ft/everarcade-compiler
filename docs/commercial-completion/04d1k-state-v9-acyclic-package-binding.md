@@ -1,5 +1,5 @@
 # Task 4D.1K — State V9 acyclic package binding
 
-The acyclic State V9 kernel is pinned, but compiler binding is not installed in this result. Runtime IR still lacks explicit fields for the prepared-result policy, admission commit-order policy, successor index-inventory commitment, and checkpoint v2 tuple.
+The canonical request and Runtime IR now bind the State V9 admission identity, accepted-input, accepted-action, domain-reservation, admission-rejection, commit-order, atomic-manifest, and index-inventory declarations.
 
-Compiler installation must reject missing or mismatched declarations and preserve historical State V8 package bytes. Until that work is complete, no compiler-produced State V9 `world.evr` is certified.
+The compiler rejects incomplete or mismatched State V9 tuples and validates Treasury v7/paged-storage v3 genesis state. A compiler-produced State V9 package was built successfully. Factory/Authority production promotion remains pending.

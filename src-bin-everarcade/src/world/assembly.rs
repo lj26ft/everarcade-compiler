@@ -25,12 +25,14 @@ pub const PTW_STATE_V5_POLICY_ID: &str = "everarcade.ptw-state-components.v5";
 pub const PTW_STATE_V6_POLICY_ID: &str = "everarcade.ptw-state-components.v6";
 pub const PTW_STATE_V7_POLICY_ID: &str = "everarcade.ptw-state-components.v7";
 pub const PTW_STATE_V8_POLICY_ID: &str = "everarcade.ptw-state-components.v8";
+pub const PTW_STATE_V9_POLICY_ID: &str = "everarcade.ptw-state-components.v9";
 pub const PTW_TREASURY_STATE_V1: &str = "everarcade.ptw-treasury-state.v1";
 pub const PTW_TREASURY_STATE_V2: &str = "everarcade.ptw-treasury-state.v2";
 pub const PTW_TREASURY_STATE_V3: &str = "everarcade.ptw-treasury-state.v3";
 pub const PTW_TREASURY_STATE_V4: &str = "everarcade.ptw-treasury-state.v4";
 pub const PTW_TREASURY_STATE_V5: &str = "everarcade.ptw-treasury-state.v5";
 pub const PTW_TREASURY_STATE_V6: &str = "everarcade.ptw-treasury-state.v6";
+pub const PTW_TREASURY_STATE_V7: &str = "everarcade.ptw-treasury-state.v7";
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct CanonicalWorldRequest {
@@ -73,6 +75,22 @@ pub struct CanonicalWorldRequest {
     pub treasury_exact_amount_policy_id: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub treasury_materialization_plan_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_admission_identity_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_accepted_input_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_accepted_action_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_domain_reservation_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_admission_rejection_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_commit_order_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_atomic_commit_manifest_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_index_inventory_commitment: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub governance_authorization_policy: Option<Value>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -149,6 +167,7 @@ impl CanonicalWorldRequest {
             self.treasury_active_archive_policy_id.as_deref(),
             self.treasury_exact_amount_policy_id.as_deref(),
             self.treasury_materialization_plan_policy_id.as_deref(),
+            self.treasury_admission_identity_policy_id.as_deref(), self.treasury_accepted_input_policy_id.as_deref(), self.treasury_accepted_action_policy_id.as_deref(), self.treasury_domain_reservation_policy_id.as_deref(), self.treasury_admission_rejection_policy_id.as_deref(), self.treasury_commit_order_policy_id.as_deref(), self.treasury_atomic_commit_manifest_policy_id.as_deref(), self.treasury_index_inventory_commitment.as_deref(),
             self.governance_authorization_policy.as_ref(),
             self.trusted_receipt_issuer_policy.as_ref(),
         )?;
@@ -167,10 +186,10 @@ fn validate_state_policy(
     migration_policy: Option<&str>,
     semantic_policy: Option<&str>, semantic_root_policy: Option<&str>, semantic_commitment: Option<&str>, authorization_commitment: Option<&str>,
     approval_signature_policy: Option<&str>, receipt_signature_policy: Option<&str>, rejection_policy: Option<&str>,
-    active_archive_policy: Option<&str>, amount_policy: Option<&str>, materialization_policy: Option<&str>, governance_policy: Option<&Value>, issuer_policy: Option<&Value>,
+    active_archive_policy: Option<&str>, amount_policy: Option<&str>, materialization_policy: Option<&str>, admission_identity: Option<&str>, accepted_input: Option<&str>, accepted_action: Option<&str>, domain_reservation: Option<&str>, admission_rejection: Option<&str>, commit_order: Option<&str>, atomic_manifest: Option<&str>, index_inventory: Option<&str>, governance_policy: Option<&Value>, issuer_policy: Option<&Value>,
 ) -> Result<(), String> {
     let semantic_declared=semantic_policy.is_some()||semantic_root_policy.is_some()||semantic_commitment.is_some()||authorization_commitment.is_some()||approval_signature_policy.is_some()||receipt_signature_policy.is_some()||rejection_policy.is_some()||active_archive_policy.is_some()||amount_policy.is_some()||materialization_policy.is_some()||governance_policy.is_some()||issuer_policy.is_some();
-    if policy != Some(PTW_STATE_V6_POLICY_ID) && policy != Some(PTW_STATE_V7_POLICY_ID) && policy != Some(PTW_STATE_V8_POLICY_ID) && semantic_declared { return Err("Treasury semantic policy declarations require State V6, State V7, or State V8".into()); }
+    if policy != Some(PTW_STATE_V6_POLICY_ID) && policy != Some(PTW_STATE_V7_POLICY_ID) && policy != Some(PTW_STATE_V8_POLICY_ID) && policy != Some(PTW_STATE_V9_POLICY_ID) && semantic_declared { return Err("Treasury semantic policy declarations require State V6 through State V9".into()); }
     match policy {
         None if treasury.is_none()
             && activation.is_none()
@@ -309,6 +328,28 @@ fn validate_state_policy(
             validate_treasury_activation_policy(activation.ok_or("State V8 requires treasury_activation_policy")?)?;
             Ok(())
         }
+        Some(PTW_STATE_V9_POLICY_ID) => {
+            if treasury_schema != Some(PTW_TREASURY_STATE_V7)
+                || commitment_policy != Some("everarcade.ptw-treasury-commitment.v7")
+                || segmentation_policy != Some("everarcade.ptw-treasury-segmented-storage.v3")
+                || checkpoint_schema != Some("everarcade.ptw-treasury-frontier-checkpoint.v2")
+                || migration_policy != Some("everarcade.ptw-treasury-v6-to-v7-migration.v1")
+                || semantic_policy != Some("everarcade.treasury-semantic-policy.v1")
+                || semantic_commitment != Some("sha256:228b7b2867f9894bedecec94a42f5ff788e204fcfa09cc5b334026e845306e9a")
+                || admission_identity != Some("everarcade.treasury-admission-identity-policy.v1")
+                || accepted_input != Some("everarcade.treasury-accepted-input-entry.v1")
+                || accepted_action != Some("everarcade.treasury-accepted-action-entry.v1")
+                || domain_reservation != Some("everarcade.treasury-domain-identity-reservation.v1")
+                || admission_rejection != Some("everarcade.treasury-admission-rejection-policy.v1")
+                || commit_order != Some("everarcade.treasury-admission-commit-order.v1")
+                || atomic_manifest != Some("everarcade.treasury-atomic-commit-manifest.v1")
+                || index_inventory != Some("sha256:accf31235aa7928fe224e2e2b6a5f273ed9cb3261d52e461508c2022235c6290")
+                || governance_policy.is_none() || issuer_policy.is_none()
+            { return Err("State V9 requires the exact replay-protected Treasury v7 tuple".into()); }
+            validate_treasury_state_v7(treasury.ok_or("State V9 requires canonical initial_treasury_state")?)?;
+            validate_treasury_activation_policy(activation.ok_or("State V9 requires treasury_activation_policy")?)?;
+            Ok(())
+        }
         Some(other) => Err(format!("unsupported state_policy_id: {other}")),
     }
 }
@@ -331,6 +372,7 @@ fn validate_treasury_state_v6(value: &Value) -> Result<(), String> {
         || object.get("index_page_policy_id").and_then(Value::as_str)!=Some("everarcade.ptw-treasury-index-pages.v1") { return Err("Treasury v6 policy tuple mismatch".into()); }
     validate_treasury_value(value,"initial_treasury_state")
 }
+fn validate_treasury_state_v7(value: &Value) -> Result<(), String> { let o=value.as_object().ok_or("initial Treasury v7 state must be an object")?;for field in ["schema_version","commitment_policy_id","storage_policy_id","index_inventory_commitment","admission_identity_policy_id","accepted_input_policy_id","accepted_action_policy_id","admission_rejection_policy_id","admission_commit_order_policy_id","checkpoint_policy_id","paged_storage","frontier_roots","treasury_root"]{if !o.contains_key(field){return Err(format!("Treasury v7 missing {field}"));}}if o.get("schema_version").and_then(Value::as_str)!=Some(PTW_TREASURY_STATE_V7)||o.get("commitment_policy_id").and_then(Value::as_str)!=Some("everarcade.ptw-treasury-commitment.v7")||o.get("storage_policy_id").and_then(Value::as_str)!=Some("everarcade.ptw-treasury-segmented-storage.v3"){return Err("Treasury v7 policy tuple mismatch".into());}validate_treasury_value(value,"initial_treasury_state")}
 
 fn validate_treasury_state_v4(value: &Value) -> Result<(), String> {
     let object=value.as_object().ok_or("initial Treasury v4 state must be an object")?;
@@ -614,6 +656,14 @@ impl LegacyWorldCreateRequest {
             treasury_active_archive_policy_id: None,
             treasury_exact_amount_policy_id: None,
             treasury_materialization_plan_policy_id: None,
+            treasury_admission_identity_policy_id: None,
+            treasury_accepted_input_policy_id: None,
+            treasury_accepted_action_policy_id: None,
+            treasury_domain_reservation_policy_id: None,
+            treasury_admission_rejection_policy_id: None,
+            treasury_commit_order_policy_id: None,
+            treasury_atomic_commit_manifest_policy_id: None,
+            treasury_index_inventory_commitment: None,
             governance_authorization_policy: None,
             trusted_receipt_issuer_policy: None,
             supported_treasury_action_inventory: Vec::new(),
@@ -1922,6 +1972,22 @@ pub struct PtwRuntimeIrV1 {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub treasury_materialization_plan_policy_id: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_admission_identity_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_accepted_input_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_accepted_action_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_domain_reservation_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_admission_rejection_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_commit_order_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_atomic_commit_manifest_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_index_inventory_commitment: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub governance_authorization_policy: Option<Value>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub trusted_receipt_issuer_policy: Option<Value>,
@@ -2385,6 +2451,14 @@ pub fn build_runtime_ir(
         treasury_active_archive_policy_id: request.treasury_active_archive_policy_id.clone(),
         treasury_exact_amount_policy_id: request.treasury_exact_amount_policy_id.clone(),
         treasury_materialization_plan_policy_id: request.treasury_materialization_plan_policy_id.clone(),
+        treasury_admission_identity_policy_id: request.treasury_admission_identity_policy_id.clone(),
+        treasury_accepted_input_policy_id: request.treasury_accepted_input_policy_id.clone(),
+        treasury_accepted_action_policy_id: request.treasury_accepted_action_policy_id.clone(),
+        treasury_domain_reservation_policy_id: request.treasury_domain_reservation_policy_id.clone(),
+        treasury_admission_rejection_policy_id: request.treasury_admission_rejection_policy_id.clone(),
+        treasury_commit_order_policy_id: request.treasury_commit_order_policy_id.clone(),
+        treasury_atomic_commit_manifest_policy_id: request.treasury_atomic_commit_manifest_policy_id.clone(),
+        treasury_index_inventory_commitment: request.treasury_index_inventory_commitment.clone(),
         governance_authorization_policy: request.governance_authorization_policy.clone(),
         trusted_receipt_issuer_policy: request.trusted_receipt_issuer_policy.clone(),
         supported_treasury_action_inventory: request.supported_treasury_action_inventory.clone(),
