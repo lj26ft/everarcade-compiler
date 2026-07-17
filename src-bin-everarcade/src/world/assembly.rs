@@ -26,6 +26,7 @@ pub const PTW_STATE_V6_POLICY_ID: &str = "everarcade.ptw-state-components.v6";
 pub const PTW_STATE_V7_POLICY_ID: &str = "everarcade.ptw-state-components.v7";
 pub const PTW_STATE_V8_POLICY_ID: &str = "everarcade.ptw-state-components.v8";
 pub const PTW_STATE_V9_POLICY_ID: &str = "everarcade.ptw-state-components.v9";
+pub const PTW_STATE_V10_POLICY_ID: &str = "everarcade.ptw-state-components.v10";
 pub const PTW_TREASURY_STATE_V1: &str = "everarcade.ptw-treasury-state.v1";
 pub const PTW_TREASURY_STATE_V2: &str = "everarcade.ptw-treasury-state.v2";
 pub const PTW_TREASURY_STATE_V3: &str = "everarcade.ptw-treasury-state.v3";
@@ -33,6 +34,7 @@ pub const PTW_TREASURY_STATE_V4: &str = "everarcade.ptw-treasury-state.v4";
 pub const PTW_TREASURY_STATE_V5: &str = "everarcade.ptw-treasury-state.v5";
 pub const PTW_TREASURY_STATE_V6: &str = "everarcade.ptw-treasury-state.v6";
 pub const PTW_TREASURY_STATE_V7: &str = "everarcade.ptw-treasury-state.v7";
+pub const PTW_TREASURY_STATE_V8: &str = "everarcade.ptw-treasury-state.v8";
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct CanonicalWorldRequest {
@@ -171,6 +173,12 @@ impl CanonicalWorldRequest {
             self.governance_authorization_policy.as_ref(),
             self.trusted_receipt_issuer_policy.as_ref(),
         )?;
+        if self.state_policy_id.as_deref() == Some(PTW_STATE_V10_POLICY_ID) {
+            let predecessor = ["treasury.create","treasury.configure_signers","treasury.configure_assets","treasury.propose","treasury.approve","treasury.reject","treasury.cancel","treasury.expire","treasury.mature","treasury.emit_settlement_intent","treasury.record_pending_receipt","treasury.accept_settlement_receipt","treasury.reject_settlement_receipt","treasury.record_failure","treasury.record_reversal","treasury.allocate","treasury.distribute","treasury.pause","treasury.unpause","treasury.rotate_signer","treasury.revoke_signer","treasury.update_policy"];
+            if self.supported_treasury_action_inventory.len() != 23 || predecessor.iter().any(|action| !self.supported_treasury_action_inventory.iter().any(|candidate| candidate == action)) || !self.supported_treasury_action_inventory.iter().any(|action| action == "treasury.record_expiration") {
+                return Err("State V10 requires the exact 23-action Treasury v8 inventory".into());
+            }
+        }
         Ok(())
     }
 }
@@ -189,7 +197,7 @@ fn validate_state_policy(
     active_archive_policy: Option<&str>, amount_policy: Option<&str>, materialization_policy: Option<&str>, admission_identity: Option<&str>, accepted_input: Option<&str>, accepted_action: Option<&str>, domain_reservation: Option<&str>, admission_rejection: Option<&str>, commit_order: Option<&str>, atomic_manifest: Option<&str>, index_inventory: Option<&str>, governance_policy: Option<&Value>, issuer_policy: Option<&Value>,
 ) -> Result<(), String> {
     let semantic_declared=semantic_policy.is_some()||semantic_root_policy.is_some()||semantic_commitment.is_some()||authorization_commitment.is_some()||approval_signature_policy.is_some()||receipt_signature_policy.is_some()||rejection_policy.is_some()||active_archive_policy.is_some()||amount_policy.is_some()||materialization_policy.is_some()||governance_policy.is_some()||issuer_policy.is_some();
-    if policy != Some(PTW_STATE_V6_POLICY_ID) && policy != Some(PTW_STATE_V7_POLICY_ID) && policy != Some(PTW_STATE_V8_POLICY_ID) && policy != Some(PTW_STATE_V9_POLICY_ID) && semantic_declared { return Err("Treasury semantic policy declarations require State V6 through State V9".into()); }
+    if policy != Some(PTW_STATE_V6_POLICY_ID) && policy != Some(PTW_STATE_V7_POLICY_ID) && policy != Some(PTW_STATE_V8_POLICY_ID) && policy != Some(PTW_STATE_V9_POLICY_ID) && policy != Some(PTW_STATE_V10_POLICY_ID) && semantic_declared { return Err("Treasury semantic policy declarations require State V6 through State V10".into()); }
     match policy {
         None if treasury.is_none()
             && activation.is_none()
@@ -350,6 +358,28 @@ fn validate_state_policy(
             validate_treasury_activation_policy(activation.ok_or("State V9 requires treasury_activation_policy")?)?;
             Ok(())
         }
+        Some(PTW_STATE_V10_POLICY_ID) => {
+            if treasury_schema != Some(PTW_TREASURY_STATE_V8)
+                || commitment_policy != Some("everarcade.ptw-treasury-commitment.v8")
+                || segmentation_policy != Some("everarcade.ptw-treasury-segmented-storage.v3")
+                || checkpoint_schema != Some("everarcade.ptw-treasury-frontier-checkpoint.v2")
+                || migration_policy != Some("everarcade.ptw-treasury-v7-to-v8-migration.v1")
+                || semantic_policy != Some("everarcade.treasury-semantic-policy.v2")
+                || semantic_commitment != Some("sha256:3ca478bf25c4a0642a6c95fd3c742c4abb94d43169c03d475dfbfe767774775c")
+                || admission_identity != Some("everarcade.treasury-admission-identity-policy.v1")
+                || accepted_input != Some("everarcade.treasury-accepted-input-entry.v1")
+                || accepted_action != Some("everarcade.treasury-accepted-action-entry.v1")
+                || domain_reservation != Some("everarcade.treasury-domain-identity-reservation.v1")
+                || admission_rejection != Some("everarcade.treasury-admission-rejection-policy.v1")
+                || commit_order != Some("everarcade.treasury-admission-commit-order.v1")
+                || atomic_manifest != Some("everarcade.treasury-atomic-commit-manifest.v1")
+                || index_inventory != Some("sha256:accf31235aa7928fe224e2e2b6a5f273ed9cb3261d52e461508c2022235c6290")
+                || governance_policy.is_none() || issuer_policy.is_none()
+            { return Err("State V10 requires the exact expiration-separated Treasury v8 tuple".into()); }
+            validate_treasury_state_v8(treasury.ok_or("State V10 requires canonical initial_treasury_state")?)?;
+            validate_treasury_activation_policy(activation.ok_or("State V10 requires treasury_activation_policy")?)?;
+            Ok(())
+        }
         Some(other) => Err(format!("unsupported state_policy_id: {other}")),
     }
 }
@@ -373,6 +403,7 @@ fn validate_treasury_state_v6(value: &Value) -> Result<(), String> {
     validate_treasury_value(value,"initial_treasury_state")
 }
 fn validate_treasury_state_v7(value: &Value) -> Result<(), String> { let o=value.as_object().ok_or("initial Treasury v7 state must be an object")?;for field in ["schema_version","commitment_policy_id","storage_policy_id","index_inventory_commitment","admission_identity_policy_id","accepted_input_policy_id","accepted_action_policy_id","admission_rejection_policy_id","admission_commit_order_policy_id","checkpoint_policy_id","paged_storage","frontier_roots","treasury_root"]{if !o.contains_key(field){return Err(format!("Treasury v7 missing {field}"));}}if o.get("schema_version").and_then(Value::as_str)!=Some(PTW_TREASURY_STATE_V7)||o.get("commitment_policy_id").and_then(Value::as_str)!=Some("everarcade.ptw-treasury-commitment.v7")||o.get("storage_policy_id").and_then(Value::as_str)!=Some("everarcade.ptw-treasury-segmented-storage.v3"){return Err("Treasury v7 policy tuple mismatch".into());}validate_treasury_value(value,"initial_treasury_state")}
+fn validate_treasury_state_v8(value: &Value) -> Result<(), String> { let o=value.as_object().ok_or("initial Treasury v8 state must be an object")?;for field in ["schema_version","commitment_policy_id","storage_policy_id","index_inventory_commitment","admission_identity_policy_id","accepted_input_policy_id","accepted_action_policy_id","admission_rejection_policy_id","admission_commit_order_policy_id","checkpoint_policy_id","paged_storage","frontier_roots","treasury_root"]{if !o.contains_key(field){return Err(format!("Treasury v8 missing {field}"));}}if o.get("schema_version").and_then(Value::as_str)!=Some(PTW_TREASURY_STATE_V8)||o.get("commitment_policy_id").and_then(Value::as_str)!=Some("everarcade.ptw-treasury-commitment.v8")||o.get("storage_policy_id").and_then(Value::as_str)!=Some("everarcade.ptw-treasury-segmented-storage.v3"){return Err("Treasury v8 policy tuple mismatch".into());}validate_treasury_value(value,"initial_treasury_state")}
 
 fn validate_treasury_state_v4(value: &Value) -> Result<(), String> {
     let object=value.as_object().ok_or("initial Treasury v4 state must be an object")?;
