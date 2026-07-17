@@ -2906,7 +2906,10 @@ fn arpg_baseline_contributions(n: &ResolvedProfileNodeV1) -> Vec<ProfileContribu
     }
     for (id, prim, receipt) in [
         ("player.join", "identity", "player_join_receipt"),
+        ("player.leave", "identity", "player_left_receipt"),
         ("entity.move", "movement", "movement_receipt"),
+        ("look", "movement", "orientation_updated_receipt"),
+        ("jump", "movement", "jump_accepted_receipt"),
         (
             "interaction.activate",
             "interactions",
@@ -2915,9 +2918,16 @@ fn arpg_baseline_contributions(n: &ResolvedProfileNodeV1) -> Vec<ProfileContribu
         ("item.pickup", "items", "item_receipt"),
         ("item.use", "items", "item_use_receipt"),
         ("combat.attack", "combat", "combat_receipt"),
+        ("fire_hitscan", "combat", "hitscan_fired_receipt"),
+        ("fire_projectile", "combat", "projectile_spawned_receipt"),
+        ("reload", "combat", "reload_started_receipt"),
+        ("ability.use", "combat", "ability_used_receipt"),
+        ("damage.apply", "combat", "damage_applied_receipt"),
+        ("death.resolve", "combat", "death_resolved_receipt"),
         ("world.respawn", "spawning", "respawn_receipt"),
     ] {
-        out.push(make_contribution(n, ContributionNamespace::Actions, id, ContributionOperation::Declare, MergeClass::KeyedUnion, OverridePolicy::Forbidden, json!({"id":id,"action":id,"primitive":prim,"transition":format!("{id}.transition"),"schema_version":"action.v1","max_payload_size":128,"receipt_type":receipt,"preconditions":["bounded_payload","declared_actor"],"touched_state_domains":["players","entities","inventory","world_variables"],"handler_identifier":format!("ptw.{prim}.v1")}), None, None));
+        let origin = if matches!(id, "damage.apply" | "death.resolve") { "AUTHORITY_DERIVED" } else { "EXTERNAL_CLIENT" };
+        out.push(make_contribution(n, ContributionNamespace::Actions, id, ContributionOperation::Declare, MergeClass::KeyedUnion, OverridePolicy::Forbidden, json!({"id":id,"action":id,"primitive":prim,"transition":format!("{id}.transition"),"schema_version":"action.v1","action_version":"1.0.0","max_payload_size":512,"receipt_type":receipt,"origin_class":origin,"execution_envelope":"everarcade.execution-envelope.v2","journal":"everarcade.journal.v3","receipt_bundle":"everarcade.receipt-bundle.v2","maximum_direct_derived_actions":8,"maximum_derivation_depth":8,"maximum_state_writes":64,"preconditions":["bounded_payload","declared_actor"],"touched_state_domains":["players","entities","inventory","world_variables"],"handler_identifier":format!("ptw.{prim}.v1")}), None, None));
         out.push(make_contribution(n, ContributionNamespace::Transitions, &format!("{id}.transition"), ContributionOperation::Declare, MergeClass::KeyedUnion, OverridePolicy::Forbidden, json!({"id":format!("{id}.transition"),"action":id,"primitive":prim,"version":"transition.v1","deterministic":true,"bounded":true,"receipt_type":receipt}), None, None));
     }
     for k in [
