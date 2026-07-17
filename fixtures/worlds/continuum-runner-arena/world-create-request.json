@@ -11,6 +11,7 @@
     "proof": "everarcade.proof.live-replay-ceremony@1.0.0",
     "projection": "everarcade.projection.arpg-web@1.0.0",
     "economy": "everarcade.economy.founding-world-sandbox@1.0.0"
+    ,"combat": "everarcade.runtime.realtime-combat-v2@1.0.0"
   },
   "module_references": {},
   "runtime_overrides": {

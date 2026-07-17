@@ -1419,6 +1419,13 @@ pub fn builtin_profile_catalog() -> ProfileCatalog {
         ))],
     ));
     c.register(prof(
+        ProfileCategory::Runtime,
+        "realtime-combat-v2",
+        vec!["ptw.runtime.v1"],
+        vec![ContributionNamespace::Actions, ContributionNamespace::Transitions],
+        vec![dep(ref_for("everarcade", ProfileCategory::World, "ptw-full", "1.0.0"))],
+    ));
+    c.register(prof(
         ProfileCategory::Topology,
         "catacombs-baseline",
         vec!["ptw.runtime.v1"],
@@ -2906,10 +2913,7 @@ fn arpg_baseline_contributions(n: &ResolvedProfileNodeV1) -> Vec<ProfileContribu
     }
     for (id, prim, receipt) in [
         ("player.join", "identity", "player_join_receipt"),
-        ("player.leave", "identity", "player_left_receipt"),
         ("entity.move", "movement", "movement_receipt"),
-        ("look", "movement", "orientation_updated_receipt"),
-        ("jump", "movement", "jump_accepted_receipt"),
         (
             "interaction.activate",
             "interactions",
@@ -2918,16 +2922,9 @@ fn arpg_baseline_contributions(n: &ResolvedProfileNodeV1) -> Vec<ProfileContribu
         ("item.pickup", "items", "item_receipt"),
         ("item.use", "items", "item_use_receipt"),
         ("combat.attack", "combat", "combat_receipt"),
-        ("fire_hitscan", "combat", "hitscan_fired_receipt"),
-        ("fire_projectile", "combat", "projectile_spawned_receipt"),
-        ("reload", "combat", "reload_started_receipt"),
-        ("ability.use", "combat", "ability_used_receipt"),
-        ("damage.apply", "combat", "damage_applied_receipt"),
-        ("death.resolve", "combat", "death_resolved_receipt"),
         ("world.respawn", "spawning", "respawn_receipt"),
     ] {
-        let origin = if matches!(id, "damage.apply" | "death.resolve") { "AUTHORITY_DERIVED" } else { "EXTERNAL_CLIENT" };
-        out.push(make_contribution(n, ContributionNamespace::Actions, id, ContributionOperation::Declare, MergeClass::KeyedUnion, OverridePolicy::Forbidden, json!({"id":id,"action":id,"primitive":prim,"transition":format!("{id}.transition"),"schema_version":"action.v1","action_version":"1.0.0","max_payload_size":512,"receipt_type":receipt,"origin_class":origin,"execution_envelope":"everarcade.execution-envelope.v2","journal":"everarcade.journal.v3","receipt_bundle":"everarcade.receipt-bundle.v2","maximum_direct_derived_actions":8,"maximum_derivation_depth":8,"maximum_state_writes":64,"preconditions":["bounded_payload","declared_actor"],"touched_state_domains":["players","entities","inventory","world_variables"],"handler_identifier":format!("ptw.{prim}.v1")}), None, None));
+        out.push(make_contribution(n, ContributionNamespace::Actions, id, ContributionOperation::Declare, MergeClass::KeyedUnion, OverridePolicy::Forbidden, json!({"id":id,"action":id,"primitive":prim,"transition":format!("{id}.transition"),"schema_version":"action.v1","max_payload_size":128,"receipt_type":receipt,"preconditions":["bounded_payload","declared_actor"],"touched_state_domains":["players","entities","inventory","world_variables"],"handler_identifier":format!("ptw.{prim}.v1")}), None, None));
         out.push(make_contribution(n, ContributionNamespace::Transitions, &format!("{id}.transition"), ContributionOperation::Declare, MergeClass::KeyedUnion, OverridePolicy::Forbidden, json!({"id":format!("{id}.transition"),"action":id,"primitive":prim,"version":"transition.v1","deterministic":true,"bounded":true,"receipt_type":receipt}), None, None));
     }
     for k in [
@@ -2943,6 +2940,16 @@ fn arpg_baseline_contributions(n: &ResolvedProfileNodeV1) -> Vec<ProfileContribu
         "progression_bounds",
     ] {
         out.push(make_contribution(n, ContributionNamespace::Invariants, k, ContributionOperation::Declare, MergeClass::KeyedUnion, OverridePolicy::Forbidden, json!({"id":k,"invariant":k,"version":"invariant.v1","evaluation_policy":"per_tick","touched_state_domains":["players","entities","inventory","topology_state","progression"],"required_capability":"ptw.runtime.v1"}), None, None));
+    }
+    out
+}
+
+fn realtime_combat_v2_contributions(n: &ResolvedProfileNodeV1) -> Vec<ProfileContributionV1> {
+    let mut out = Vec::new();
+    for (id, prim, receipt) in [("player.leave","identity","player_left_receipt"),("look","movement","orientation_updated_receipt"),("jump","movement","jump_accepted_receipt"),("fire_hitscan","combat","hitscan_fired_receipt"),("fire_projectile","combat","projectile_spawned_receipt"),("reload","combat","reload_started_receipt"),("ability.use","combat","ability_used_receipt"),("damage.apply","combat","damage_applied_receipt"),("death.resolve","combat","death_resolved_receipt")] {
+        let origin = if matches!(id, "damage.apply" | "death.resolve") { "AUTHORITY_DERIVED" } else { "EXTERNAL_CLIENT" };
+        out.push(make_contribution(n, ContributionNamespace::Actions, id, ContributionOperation::Declare, MergeClass::KeyedUnion, OverridePolicy::Forbidden, json!({"id":id,"action":id,"primitive":prim,"transition":format!("{id}.transition"),"schema_version":"action.v1","action_version":"1.0.0","max_payload_size":512,"receipt_type":receipt,"origin_class":origin,"execution_envelope":"everarcade.execution-envelope.v2","journal":"everarcade.journal.v3","receipt_bundle":"everarcade.receipt-bundle.v2","maximum_direct_derived_actions":8,"maximum_derivation_depth":8,"maximum_state_writes":64,"preconditions":["bounded_payload","declared_actor"],"touched_state_domains":["players","entities","inventory","world_variables"],"handler_identifier":format!("ptw.{prim}.v1")}), None, None));
+        out.push(make_contribution(n, ContributionNamespace::Transitions, &format!("{id}.transition"), ContributionOperation::Declare, MergeClass::KeyedUnion, OverridePolicy::Forbidden, json!({"id":format!("{id}.transition"),"action":id,"primitive":prim,"version":"transition.v1","deterministic":true,"bounded":true,"receipt_type":receipt}), None, None));
     }
     out
 }
@@ -3438,6 +3445,9 @@ pub fn load_typed_contributions(g: &ResolvedProfileGraphV1) -> Vec<ProfileContri
             }
             "arpg-baseline" => {
                 for c in arpg_baseline_contributions(n) { out.push(c); }
+            }
+            "realtime-combat-v2" => {
+                for c in realtime_combat_v2_contributions(n) { out.push(c); }
             }
             "social-exploration-baseline" => {
                 for c in social_exploration_baseline_contributions(n) { out.push(c); }
