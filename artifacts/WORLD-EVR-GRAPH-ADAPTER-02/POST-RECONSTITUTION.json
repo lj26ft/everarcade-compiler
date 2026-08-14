@@ -1,0 +1,1 @@
+{"schema":"world.evr.adapter-mapping.v1","boundary":"POST_RECONSTITUTION_CONTINUATION","result":"PASS","execution_id":"exec-4271c656f4bcc0750126f1f32a5d0f90b09366344e42b33fc2eb1210f502a405","complete_lineage_replay":"IDENTICAL_REPLAY","actions":2,"destination_status":"CURRENT_CANONICAL_WORLD"}

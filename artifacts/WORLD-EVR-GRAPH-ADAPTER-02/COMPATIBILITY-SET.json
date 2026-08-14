@@ -1,0 +1,1 @@
+{"schema":"world.evr.adapter-compatibility-set.v1","adapter_id":"everarcade.world-graph-adapter.v2","decision":"ONLY_RC1","accepted":[{"tag":"GRAPH-RUNTIME-VERTICAL-SLICE-RC1","commit":"cbcc49166e3412b07a2e4d2fb7102b72a7fa7ade","tree":"b6b030654ce9ebf74e1f7af1abcc0c3862dd3823"}],"floating_refs_accepted":false,"newer_revisions_implicitly_accepted":false}

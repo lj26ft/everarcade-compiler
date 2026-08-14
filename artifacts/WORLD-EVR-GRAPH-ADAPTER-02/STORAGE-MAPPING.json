@@ -1,0 +1,1 @@
+{"schema":"world.evr.adapter-mapping.v1","boundary":"STORAGE","result":"PASS","canonical_storage_identity_required":true,"wrong_identity":"REJECT","caller_selected_replacement":"REJECT","provider_binding_preserved":true}

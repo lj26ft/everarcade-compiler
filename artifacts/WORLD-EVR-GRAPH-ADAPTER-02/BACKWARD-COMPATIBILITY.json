@@ -1,0 +1,1 @@
+{"schema":"world.evr.adapter-backward-compatibility.v1","decision":"ONLY_RC1","adapter_02_supports_a1_runtime":false,"historical_a1_packages":"remain bound to Adapter 01/runtime A1","explicit_governed_rebinding_possible":true,"silent_reinterpretation":false}

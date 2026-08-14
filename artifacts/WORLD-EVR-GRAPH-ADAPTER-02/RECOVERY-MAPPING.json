@@ -1,0 +1,1 @@
+{"schema":"world.evr.adapter-mapping.v1","boundary":"RECOVERY","result":"PASS","verified":["fresh-process restart","current RC1 head","world identity","storage identity","durable committed state","replay after restart"],"stale_foreign_state":"REJECT"}

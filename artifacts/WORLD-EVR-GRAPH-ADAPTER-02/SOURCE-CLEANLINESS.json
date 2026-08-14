@@ -1,0 +1,1 @@
+{"schema":"world.evr.adapter-source-cleanliness.v1","implementation_commit_worktree":"CLEAN","baseline_commit":"d5494490bda090df681810c55a70d9620a9f01ac","implementation_commit":"90b687688c421d34340c7f368a8c3014eb02d24e","fresh_checkout_initially_clean":true,"fresh_test_side_effects":"known generated report files only; not candidate source","graph_runtime_tracked_changes":0}

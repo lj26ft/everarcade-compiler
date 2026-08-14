@@ -1,0 +1,1 @@
+{"schema":"world.evr.adapter-regression.v1","result":"PASS","adapter_01_source_semantics_changed":false,"default_selector":"everarcade.world-graph-adapter.v1","historical_runtime":"ACCEPT","rc1":"REJECT","test":"graph_adapter_v2_binds_only_exact_rc1_and_preserves_v1_boundary"}
