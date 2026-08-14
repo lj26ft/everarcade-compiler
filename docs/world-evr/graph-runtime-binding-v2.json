@@ -1,0 +1,25 @@
+{
+  "schema_version": "world.evr.graph-runtime-binding-profile/v1",
+  "binding_id": "everarcade.world-graph-binding.v2",
+  "binding_version": "2.0.0",
+  "status": "CANDIDATE_READY_FOR_GOVERNANCE_ADOPTION",
+  "world_evr_runtime_profile": "world.evr/1.0-graph-runtime-v2",
+  "adapter_id": "everarcade.world-graph-adapter.v2",
+  "adapter_version": "2.0.0",
+  "compatible_runtime_set": [
+    {
+      "tag": "GRAPH-RUNTIME-VERTICAL-SLICE-RC1",
+      "tag_object": "9d80e91a46b55ee915bf676640af91037dc73a48",
+      "commit": "cbcc49166e3412b07a2e4d2fb7102b72a7fa7ade",
+      "tree": "b6b030654ce9ebf74e1f7af1abcc0c3862dd3823",
+      "qualification": "GRAPH-RUNTIME-VERTICAL-SLICE-RC1-R-COMPARE"
+    }
+  ],
+  "compatibility_policy": "ONLY_RC1_EXACT_IMMUTABLE_IDENTITY",
+  "runtime_api_profile": "everarcade.world-runtime.graph-consumer@1.0.0",
+  "portable_operation_identity": "everarcade.graph.current-head-reconstitution.v1",
+  "authority_model": "authenticated READY; provider current-head authority; owner/generation/root/storage binding",
+  "persistence_recovery_model": "Graph Runtime RC1 public consumer boundary",
+  "predecessor_adapter": "everarcade.world-graph-adapter.v1",
+  "governance_adoption": "NOT_YET_PERFORMED"
+}
