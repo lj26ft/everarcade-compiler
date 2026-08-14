@@ -18,12 +18,89 @@ pub const REFERENCE_GRAPH_SCHEMA_VERSION: &str = "everarcade.reference-graph.v1"
 pub const RESOLVED_DECLARATIONS_SCHEMA_VERSION: &str = "everarcade.resolved-declarations.v1";
 pub const RUNTIME_IR_SCHEMA_VERSION: &str = "everarcade.ptw-runtime-ir.v1";
 pub const RUNTIME_IR_HASH_DOMAIN: &str = "everarcade.runtime-ir.v1";
+pub const PTW_STATE_V2_POLICY_ID: &str = "everarcade.ptw-state-components.v2";
+pub const PTW_STATE_V3_POLICY_ID: &str = "everarcade.ptw-state-components.v3";
+pub const PTW_STATE_V4_POLICY_ID: &str = "everarcade.ptw-state-components.v4";
+pub const PTW_STATE_V5_POLICY_ID: &str = "everarcade.ptw-state-components.v5";
+pub const PTW_STATE_V6_POLICY_ID: &str = "everarcade.ptw-state-components.v6";
+pub const PTW_STATE_V7_POLICY_ID: &str = "everarcade.ptw-state-components.v7";
+pub const PTW_STATE_V8_POLICY_ID: &str = "everarcade.ptw-state-components.v8";
+pub const PTW_STATE_V9_POLICY_ID: &str = "everarcade.ptw-state-components.v9";
+pub const PTW_STATE_V10_POLICY_ID: &str = "everarcade.ptw-state-components.v10";
+pub const PTW_TREASURY_STATE_V1: &str = "everarcade.ptw-treasury-state.v1";
+pub const PTW_TREASURY_STATE_V2: &str = "everarcade.ptw-treasury-state.v2";
+pub const PTW_TREASURY_STATE_V3: &str = "everarcade.ptw-treasury-state.v3";
+pub const PTW_TREASURY_STATE_V4: &str = "everarcade.ptw-treasury-state.v4";
+pub const PTW_TREASURY_STATE_V5: &str = "everarcade.ptw-treasury-state.v5";
+pub const PTW_TREASURY_STATE_V6: &str = "everarcade.ptw-treasury-state.v6";
+pub const PTW_TREASURY_STATE_V7: &str = "everarcade.ptw-treasury-state.v7";
+pub const PTW_TREASURY_STATE_V8: &str = "everarcade.ptw-treasury-state.v8";
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct CanonicalWorldRequest {
     pub schema_version: String,
     pub world_id: String,
     pub world_name: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub state_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub initial_treasury_state: Option<Value>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_activation_policy: Option<Value>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_state_schema_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_commitment_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_segmentation_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_checkpoint_schema_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_migration_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_semantic_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_semantic_root_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_semantic_policy_commitment: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_authorization_policy_commitment: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_approval_signature_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_receipt_signature_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_rejection_evidence_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_active_archive_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_exact_amount_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_materialization_plan_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_admission_identity_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_accepted_input_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_accepted_action_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_domain_reservation_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_admission_rejection_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_commit_order_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_atomic_commit_manifest_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_index_inventory_commitment: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub governance_authorization_policy: Option<Value>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub trusted_receipt_issuer_policy: Option<Value>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub supported_treasury_action_inventory: Vec<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub supported_treasury_receipt_schema_ids: Vec<String>,
     #[serde(default)]
     pub profiles: BTreeMap<String, String>,
     #[serde(default)]
@@ -73,8 +150,496 @@ impl CanonicalWorldRequest {
         if self.world_name.is_empty() {
             return Err("canonical world request requires world_name".into());
         }
+        validate_state_policy(
+            self.state_policy_id.as_deref(),
+            self.initial_treasury_state.as_ref(),
+            self.treasury_activation_policy.as_ref(),
+            self.treasury_state_schema_id.as_deref(),
+            self.treasury_commitment_policy_id.as_deref(),
+            self.treasury_segmentation_policy_id.as_deref(),
+            self.treasury_checkpoint_schema_id.as_deref(),
+            self.treasury_migration_policy_id.as_deref(),
+            self.treasury_semantic_policy_id.as_deref(),
+            self.treasury_semantic_root_policy_id.as_deref(),
+            self.treasury_semantic_policy_commitment.as_deref(),
+            self.treasury_authorization_policy_commitment.as_deref(),
+            self.treasury_approval_signature_policy_id.as_deref(),
+            self.treasury_receipt_signature_policy_id.as_deref(),
+            self.treasury_rejection_evidence_policy_id.as_deref(),
+            self.treasury_active_archive_policy_id.as_deref(),
+            self.treasury_exact_amount_policy_id.as_deref(),
+            self.treasury_materialization_plan_policy_id.as_deref(),
+            self.treasury_admission_identity_policy_id.as_deref(), self.treasury_accepted_input_policy_id.as_deref(), self.treasury_accepted_action_policy_id.as_deref(), self.treasury_domain_reservation_policy_id.as_deref(), self.treasury_admission_rejection_policy_id.as_deref(), self.treasury_commit_order_policy_id.as_deref(), self.treasury_atomic_commit_manifest_policy_id.as_deref(), self.treasury_index_inventory_commitment.as_deref(),
+            self.governance_authorization_policy.as_ref(),
+            self.trusted_receipt_issuer_policy.as_ref(),
+        )?;
+        if self.state_policy_id.as_deref() == Some(PTW_STATE_V10_POLICY_ID) {
+            let predecessor = ["treasury.create","treasury.configure_signers","treasury.configure_assets","treasury.propose","treasury.approve","treasury.reject","treasury.cancel","treasury.expire","treasury.mature","treasury.emit_settlement_intent","treasury.record_pending_receipt","treasury.accept_settlement_receipt","treasury.reject_settlement_receipt","treasury.record_failure","treasury.record_reversal","treasury.allocate","treasury.distribute","treasury.pause","treasury.unpause","treasury.rotate_signer","treasury.revoke_signer","treasury.update_policy"];
+            if self.supported_treasury_action_inventory.len() != 23 || predecessor.iter().any(|action| !self.supported_treasury_action_inventory.iter().any(|candidate| candidate == action)) || !self.supported_treasury_action_inventory.iter().any(|action| action == "treasury.record_expiration") {
+                return Err("State V10 requires the exact 23-action Treasury v8 inventory".into());
+            }
+        }
         Ok(())
     }
+}
+
+fn validate_state_policy(
+    policy: Option<&str>,
+    treasury: Option<&Value>,
+    activation: Option<&Value>,
+    treasury_schema: Option<&str>,
+    commitment_policy: Option<&str>,
+    segmentation_policy: Option<&str>,
+    checkpoint_schema: Option<&str>,
+    migration_policy: Option<&str>,
+    semantic_policy: Option<&str>, semantic_root_policy: Option<&str>, semantic_commitment: Option<&str>, authorization_commitment: Option<&str>,
+    approval_signature_policy: Option<&str>, receipt_signature_policy: Option<&str>, rejection_policy: Option<&str>,
+    active_archive_policy: Option<&str>, amount_policy: Option<&str>, materialization_policy: Option<&str>, admission_identity: Option<&str>, accepted_input: Option<&str>, accepted_action: Option<&str>, domain_reservation: Option<&str>, admission_rejection: Option<&str>, commit_order: Option<&str>, atomic_manifest: Option<&str>, index_inventory: Option<&str>, governance_policy: Option<&Value>, issuer_policy: Option<&Value>,
+) -> Result<(), String> {
+    let semantic_declared=semantic_policy.is_some()||semantic_root_policy.is_some()||semantic_commitment.is_some()||authorization_commitment.is_some()||approval_signature_policy.is_some()||receipt_signature_policy.is_some()||rejection_policy.is_some()||active_archive_policy.is_some()||amount_policy.is_some()||materialization_policy.is_some()||governance_policy.is_some()||issuer_policy.is_some();
+    if policy != Some(PTW_STATE_V6_POLICY_ID) && policy != Some(PTW_STATE_V7_POLICY_ID) && policy != Some(PTW_STATE_V8_POLICY_ID) && policy != Some(PTW_STATE_V9_POLICY_ID) && policy != Some(PTW_STATE_V10_POLICY_ID) && semantic_declared { return Err("Treasury semantic policy declarations require State V6 through State V10".into()); }
+    match policy {
+        None if treasury.is_none()
+            && activation.is_none()
+            && treasury_schema.is_none()
+            && commitment_policy.is_none()
+            && segmentation_policy.is_none()
+            && checkpoint_schema.is_none()
+            && migration_policy.is_none() =>
+        {
+            Ok(())
+        }
+        None => Err("initial_treasury_state requires explicit state_policy_id".into()),
+        Some(PTW_STATE_V2_POLICY_ID)
+            if treasury.is_none()
+                && activation.is_none()
+                && treasury_schema.is_none()
+                && commitment_policy.is_none()
+                && segmentation_policy.is_none()
+                && checkpoint_schema.is_none()
+                && migration_policy.is_none() =>
+        {
+            Ok(())
+        }
+        Some(PTW_STATE_V2_POLICY_ID) => {
+            Err("State V2 cannot declare Treasury configuration".into())
+        }
+        Some(PTW_STATE_V3_POLICY_ID) => {
+            if treasury_schema.is_some_and(|v| v != PTW_TREASURY_STATE_V1)
+                || commitment_policy.is_some()
+                || segmentation_policy.is_some()
+                || checkpoint_schema.is_some()
+                || migration_policy.is_some()
+            {
+                return Err("State V3 requires the historical Treasury v1 tuple".into());
+            }
+            validate_treasury_state_v1(
+                treasury.ok_or("State V3 requires canonical initial_treasury_state")?,
+            )?;
+            if let Some(value) = activation {
+                validate_treasury_activation_policy(value)?;
+            }
+            Ok(())
+        }
+        Some(PTW_STATE_V4_POLICY_ID) => {
+            if treasury_schema != Some(PTW_TREASURY_STATE_V2)
+                || commitment_policy != Some("everarcade.ptw-treasury-commitment.v2")
+                || segmentation_policy != Some("everarcade.ptw-treasury-segments.v1")
+                || checkpoint_schema.is_some()
+                || migration_policy.is_some()
+            {
+                return Err("State V4 requires the exact Treasury v2 policy tuple".into());
+            }
+            validate_treasury_state_v2(
+                treasury.ok_or("State V4 requires canonical initial_treasury_state")?,
+            )?;
+            validate_treasury_activation_policy(
+                activation.ok_or("State V4 requires treasury_activation_policy")?,
+            )?;
+            Ok(())
+        }
+        Some(PTW_STATE_V5_POLICY_ID) => {
+            if treasury_schema != Some(PTW_TREASURY_STATE_V3)
+                || commitment_policy != Some("everarcade.ptw-treasury-commitment.v3")
+                || segmentation_policy != Some("everarcade.ptw-treasury-segments.v2")
+                || checkpoint_schema != Some("everarcade.ptw-treasury-recoverable-checkpoint.v2")
+                || migration_policy != Some("everarcade.ptw-treasury-v1-to-v3-migration.v2")
+            {
+                return Err("State V5 requires the exact recoverable Treasury v3 policy tuple".into());
+            }
+            validate_treasury_state_v3(
+                treasury.ok_or("State V5 requires canonical initial_treasury_state")?,
+            )?;
+            validate_treasury_activation_policy(
+                activation.ok_or("State V5 requires treasury_activation_policy")?,
+            )?;
+            Ok(())
+        }
+        Some(PTW_STATE_V6_POLICY_ID) => {
+            if treasury_schema != Some(PTW_TREASURY_STATE_V4)
+                || commitment_policy != Some("everarcade.ptw-treasury-commitment.v4")
+                || segmentation_policy != Some("everarcade.ptw-treasury-segments.v2")
+                || checkpoint_schema != Some("everarcade.ptw-treasury-semantic-checkpoint.v1")
+                || migration_policy != Some("everarcade.ptw-treasury-v3-to-v4-migration.v1")
+                || semantic_policy != Some("everarcade.treasury-semantic-policy.v1")
+                || semantic_commitment != Some("sha256:228b7b2867f9894bedecec94a42f5ff788e204fcfa09cc5b334026e845306e9a")
+                || authorization_commitment != Some("sha256:4a167de3d527332d92ea4453912d402f9c1297386700adbddd6cfbb535a36a45")
+                || approval_signature_policy != Some("APPROVAL_V1")
+                || receipt_signature_policy != Some("SETTLEMENT_RECEIPT_V1")
+                || rejection_policy != Some("everarcade.treasury-rejection-evidence.v2")
+                || active_archive_policy != Some("everarcade.treasury-active-archive-policy.v1")
+                || amount_policy != Some("everarcade.treasury-exact-amount.safe-integer-minor-units.v1")
+                || governance_policy.is_none() || issuer_policy.is_none()
+            { return Err("State V6 requires the exact Treasury v4 semantic policy tuple".into()); }
+            validate_treasury_state_v4(treasury.ok_or("State V6 requires canonical initial_treasury_state")?)?;
+            validate_treasury_activation_policy(activation.ok_or("State V6 requires treasury_activation_policy")?)?;
+            Ok(())
+        }
+        Some(PTW_STATE_V7_POLICY_ID) => {
+            if treasury_schema != Some(PTW_TREASURY_STATE_V5)
+                || commitment_policy != Some("everarcade.ptw-treasury-commitment.v5")
+                || semantic_root_policy != Some("everarcade.treasury-semantic-roots.v1")
+                || semantic_policy != Some("everarcade.treasury-semantic-policy.v1")
+                || semantic_commitment != Some("sha256:228b7b2867f9894bedecec94a42f5ff788e204fcfa09cc5b334026e845306e9a")
+                || authorization_commitment != Some("sha256:4a167de3d527332d92ea4453912d402f9c1297386700adbddd6cfbb535a36a45")
+                || approval_signature_policy != Some("APPROVAL_V1")
+                || receipt_signature_policy != Some("SETTLEMENT_RECEIPT_V1")
+                || rejection_policy != Some("everarcade.treasury-rejection-evidence.v2")
+                || active_archive_policy != Some("everarcade.treasury-active-archive-policy.v1")
+                || amount_policy != Some("everarcade.treasury-exact-amount.safe-integer-minor-units.v1")
+                || materialization_policy != Some("everarcade.treasury-materialization-plan.v1")
+                || governance_policy.is_none() || issuer_policy.is_none()
+            { return Err("State V7 requires the exact active-frontier Treasury v5 policy tuple".into()); }
+            validate_treasury_state_v5(treasury.ok_or("State V7 requires canonical initial_treasury_state")?)?;
+            validate_treasury_activation_policy(activation.ok_or("State V7 requires treasury_activation_policy")?)?;
+            Ok(())
+        }
+        Some(PTW_STATE_V8_POLICY_ID) => {
+            if treasury_schema != Some(PTW_TREASURY_STATE_V6)
+                || commitment_policy != Some("everarcade.ptw-treasury-commitment.v6")
+                || segmentation_policy != Some("everarcade.ptw-treasury-segmented-storage.v2")
+                || checkpoint_schema != Some("everarcade.ptw-treasury-frontier-checkpoint.v1")
+                || migration_policy != Some("everarcade.ptw-treasury-storage-v1-to-v2-migration.v1")
+                || semantic_root_policy != Some("everarcade.treasury-semantic-roots.v1")
+                || semantic_policy != Some("everarcade.treasury-semantic-policy.v1")
+                || semantic_commitment != Some("sha256:228b7b2867f9894bedecec94a42f5ff788e204fcfa09cc5b334026e845306e9a")
+                || authorization_commitment != Some("sha256:4a167de3d527332d92ea4453912d402f9c1297386700adbddd6cfbb535a36a45")
+                || approval_signature_policy != Some("APPROVAL_V1")
+                || receipt_signature_policy != Some("SETTLEMENT_RECEIPT_V1")
+                || rejection_policy != Some("everarcade.treasury-rejection-evidence.v2")
+                || active_archive_policy != Some("everarcade.treasury-active-archive-policy.v1")
+                || amount_policy != Some("everarcade.treasury-exact-amount.safe-integer-minor-units.v1")
+                || materialization_policy != Some("everarcade.treasury-materialization-plan.v1")
+                || governance_policy.is_none() || issuer_policy.is_none()
+            { return Err("State V8 requires the exact paged Treasury v6 policy tuple".into()); }
+            validate_treasury_state_v6(treasury.ok_or("State V8 requires canonical initial_treasury_state")?)?;
+            validate_treasury_activation_policy(activation.ok_or("State V8 requires treasury_activation_policy")?)?;
+            Ok(())
+        }
+        Some(PTW_STATE_V9_POLICY_ID) => {
+            if treasury_schema != Some(PTW_TREASURY_STATE_V7)
+                || commitment_policy != Some("everarcade.ptw-treasury-commitment.v7")
+                || segmentation_policy != Some("everarcade.ptw-treasury-segmented-storage.v3")
+                || checkpoint_schema != Some("everarcade.ptw-treasury-frontier-checkpoint.v2")
+                || migration_policy != Some("everarcade.ptw-treasury-v6-to-v7-migration.v1")
+                || semantic_policy != Some("everarcade.treasury-semantic-policy.v1")
+                || semantic_commitment != Some("sha256:228b7b2867f9894bedecec94a42f5ff788e204fcfa09cc5b334026e845306e9a")
+                || admission_identity != Some("everarcade.treasury-admission-identity-policy.v1")
+                || accepted_input != Some("everarcade.treasury-accepted-input-entry.v1")
+                || accepted_action != Some("everarcade.treasury-accepted-action-entry.v1")
+                || domain_reservation != Some("everarcade.treasury-domain-identity-reservation.v1")
+                || admission_rejection != Some("everarcade.treasury-admission-rejection-policy.v1")
+                || commit_order != Some("everarcade.treasury-admission-commit-order.v1")
+                || atomic_manifest != Some("everarcade.treasury-atomic-commit-manifest.v1")
+                || index_inventory != Some("sha256:accf31235aa7928fe224e2e2b6a5f273ed9cb3261d52e461508c2022235c6290")
+                || governance_policy.is_none() || issuer_policy.is_none()
+            { return Err("State V9 requires the exact replay-protected Treasury v7 tuple".into()); }
+            validate_treasury_state_v7(treasury.ok_or("State V9 requires canonical initial_treasury_state")?)?;
+            validate_treasury_activation_policy(activation.ok_or("State V9 requires treasury_activation_policy")?)?;
+            Ok(())
+        }
+        Some(PTW_STATE_V10_POLICY_ID) => {
+            if treasury_schema != Some(PTW_TREASURY_STATE_V8)
+                || commitment_policy != Some("everarcade.ptw-treasury-commitment.v8")
+                || segmentation_policy != Some("everarcade.ptw-treasury-segmented-storage.v3")
+                || checkpoint_schema != Some("everarcade.ptw-treasury-frontier-checkpoint.v2")
+                || migration_policy != Some("everarcade.ptw-treasury-v7-to-v8-migration.v1")
+                || semantic_policy != Some("everarcade.treasury-semantic-policy.v2")
+                || semantic_commitment != Some("sha256:3ca478bf25c4a0642a6c95fd3c742c4abb94d43169c03d475dfbfe767774775c")
+                || admission_identity != Some("everarcade.treasury-admission-identity-policy.v1")
+                || accepted_input != Some("everarcade.treasury-accepted-input-entry.v1")
+                || accepted_action != Some("everarcade.treasury-accepted-action-entry.v1")
+                || domain_reservation != Some("everarcade.treasury-domain-identity-reservation.v1")
+                || admission_rejection != Some("everarcade.treasury-admission-rejection-policy.v1")
+                || commit_order != Some("everarcade.treasury-admission-commit-order.v1")
+                || atomic_manifest != Some("everarcade.treasury-atomic-commit-manifest.v1")
+                || index_inventory != Some("sha256:accf31235aa7928fe224e2e2b6a5f273ed9cb3261d52e461508c2022235c6290")
+                || governance_policy.is_none() || issuer_policy.is_none()
+            { return Err("State V10 requires the exact expiration-separated Treasury v8 tuple".into()); }
+            validate_treasury_state_v8(treasury.ok_or("State V10 requires canonical initial_treasury_state")?)?;
+            validate_treasury_activation_policy(activation.ok_or("State V10 requires treasury_activation_policy")?)?;
+            Ok(())
+        }
+        Some(other) => Err(format!("unsupported state_policy_id: {other}")),
+    }
+}
+
+fn validate_treasury_state_v5(value: &Value) -> Result<(), String> {
+    let object=value.as_object().ok_or("initial Treasury v5 state must be an object")?;
+    for field in ["schema_version","commitment_policy_id","semantic_root_policy_id","semantic_policy_id","semantic_policy_commitment","authorization_policy_commitment","signature_policy_commitment","economic_policy_commitment","active_archive_policy_id","rejection_evidence_policy_id","semantic_state","segmented_storage","frontier_commitment","treasury_root"] { if !object.contains_key(field) { return Err(format!("Treasury v5 missing {field}")); } }
+    if object.get("schema_version").and_then(Value::as_str)!=Some(PTW_TREASURY_STATE_V5)
+        || object.get("commitment_policy_id").and_then(Value::as_str)!=Some("everarcade.ptw-treasury-commitment.v5")
+        || object.get("semantic_root_policy_id").and_then(Value::as_str)!=Some("everarcade.treasury-semantic-roots.v1") { return Err("Treasury v5 policy tuple mismatch".into()); }
+    validate_treasury_value(value,"initial_treasury_state")
+}
+
+fn validate_treasury_state_v6(value: &Value) -> Result<(), String> {
+    let object=value.as_object().ok_or("initial Treasury v6 state must be an object")?;
+    for field in ["schema_version","commitment_policy_id","semantic_root_policy_id","storage_policy_id","storage_page_policy_id","storage_directory_policy_id","index_page_policy_id","record_reference_policy_id","checkpoint_policy_id","semantic_policy_id","semantic_policy_commitment","semantic_state","paged_storage","frontier_roots","treasury_root"] { if !object.contains_key(field) { return Err(format!("Treasury v6 missing {field}")); } }
+    if object.get("schema_version").and_then(Value::as_str)!=Some(PTW_TREASURY_STATE_V6)
+        || object.get("commitment_policy_id").and_then(Value::as_str)!=Some("everarcade.ptw-treasury-commitment.v6")
+        || object.get("storage_policy_id").and_then(Value::as_str)!=Some("everarcade.ptw-treasury-segmented-storage.v2")
+        || object.get("index_page_policy_id").and_then(Value::as_str)!=Some("everarcade.ptw-treasury-index-pages.v1") { return Err("Treasury v6 policy tuple mismatch".into()); }
+    validate_treasury_value(value,"initial_treasury_state")
+}
+fn validate_treasury_state_v7(value: &Value) -> Result<(), String> { let o=value.as_object().ok_or("initial Treasury v7 state must be an object")?;for field in ["schema_version","commitment_policy_id","storage_policy_id","index_inventory_commitment","admission_identity_policy_id","accepted_input_policy_id","accepted_action_policy_id","admission_rejection_policy_id","admission_commit_order_policy_id","checkpoint_policy_id","paged_storage","frontier_roots","treasury_root"]{if !o.contains_key(field){return Err(format!("Treasury v7 missing {field}"));}}if o.get("schema_version").and_then(Value::as_str)!=Some(PTW_TREASURY_STATE_V7)||o.get("commitment_policy_id").and_then(Value::as_str)!=Some("everarcade.ptw-treasury-commitment.v7")||o.get("storage_policy_id").and_then(Value::as_str)!=Some("everarcade.ptw-treasury-segmented-storage.v3"){return Err("Treasury v7 policy tuple mismatch".into());}validate_treasury_value(value,"initial_treasury_state")}
+fn validate_treasury_state_v8(value: &Value) -> Result<(), String> { let o=value.as_object().ok_or("initial Treasury v8 state must be an object")?;for field in ["schema_version","commitment_policy_id","storage_policy_id","index_inventory_commitment","admission_identity_policy_id","accepted_input_policy_id","accepted_action_policy_id","admission_rejection_policy_id","admission_commit_order_policy_id","checkpoint_policy_id","paged_storage","frontier_roots","treasury_root"]{if !o.contains_key(field){return Err(format!("Treasury v8 missing {field}"));}}if o.get("schema_version").and_then(Value::as_str)!=Some(PTW_TREASURY_STATE_V8)||o.get("commitment_policy_id").and_then(Value::as_str)!=Some("everarcade.ptw-treasury-commitment.v8")||o.get("storage_policy_id").and_then(Value::as_str)!=Some("everarcade.ptw-treasury-segmented-storage.v3"){return Err("Treasury v8 policy tuple mismatch".into());}validate_treasury_value(value,"initial_treasury_state")}
+
+fn validate_treasury_state_v4(value: &Value) -> Result<(), String> {
+    let object=value.as_object().ok_or("initial Treasury v4 state must be an object")?;
+    for field in ["schema_version","commitment_policy_id","semantic_policy_id","semantic_policy_commitment","authorization_policy_commitment","signature_policy_commitment","economic_policy_commitment","proposal_state_machine_commitment","receipt_state_machine_commitment","rejection_evidence_policy_id","rejection_policy_commitment","active_archive_policy_id","active_archive_policy_commitment","exact_amount_policy_id","semantic_state","segmented_storage","rejection_chain","terminal_summaries","active_counts","treasury_root"] { if !object.contains_key(field) { return Err(format!("Treasury v4 missing {field}")); } }
+    if object.get("schema_version").and_then(Value::as_str)!=Some(PTW_TREASURY_STATE_V4) || object.get("commitment_policy_id").and_then(Value::as_str)!=Some("everarcade.ptw-treasury-commitment.v4") { return Err("Treasury v4 policy tuple mismatch".into()); }
+    validate_treasury_value(value,"initial_treasury_state")
+}
+
+fn validate_treasury_state_v3(value: &Value) -> Result<(), String> {
+    let object = value.as_object().ok_or("initial Treasury v3 state must be an object")?;
+    let required: BTreeSet<&str> = [
+        "schema_version","commitment_policy_id","segmentation_policy_id","treasury_header",
+        "active_configuration","active_signer_policy","active_asset_policy","recognized_balances",
+        "reserved_balances","pending_balances","emergency_state","active_proposals","active_quorum",
+        "active_timelocks","pending_intents","obligations","reversal_targets","active_segments",
+        "archive_heads","exact_indexes","migration_metadata","treasury_root"
+    ].into_iter().collect();
+    if object.keys().map(String::as_str).collect::<BTreeSet<_>>() != required {
+        return Err("Treasury v3 fields are incomplete or unknown".into());
+    }
+    if object.get("schema_version").and_then(Value::as_str) != Some(PTW_TREASURY_STATE_V3)
+        || object.get("commitment_policy_id").and_then(Value::as_str) != Some("everarcade.ptw-treasury-commitment.v3")
+        || object.get("segmentation_policy_id").and_then(Value::as_str) != Some("everarcade.ptw-treasury-segments.v2")
+    { return Err("Treasury v3 policy tuple mismatch".into()); }
+    validate_treasury_value(value, "initial_treasury_state")
+}
+
+fn validate_treasury_state_v2(value: &Value) -> Result<(), String> {
+    let object = value
+        .as_object()
+        .ok_or("initial Treasury v2 state must be an object")?;
+    let required: BTreeSet<&str> = [
+        "schema_version",
+        "commitment_policy_id",
+        "segmentation_policy_id",
+        "treasury_header",
+        "active_configuration",
+        "recognized_balances",
+        "active_proposals",
+        "active_timelocks",
+        "pending_intents",
+        "obligations",
+        "active_signer_policy",
+        "active_asset_policy",
+        "emergency_state",
+        "segment_heads",
+        "archive_commitments",
+        "duplicate_index_roots",
+        "migration_metadata",
+    ]
+    .into_iter()
+    .collect();
+    if object.keys().map(String::as_str).collect::<BTreeSet<_>>() != required {
+        return Err("Treasury v2 fields are incomplete or unknown".into());
+    }
+    if object.get("schema_version").and_then(Value::as_str) != Some(PTW_TREASURY_STATE_V2)
+        || object.get("commitment_policy_id").and_then(Value::as_str)
+            != Some("everarcade.ptw-treasury-commitment.v2")
+        || object.get("segmentation_policy_id").and_then(Value::as_str)
+            != Some("everarcade.ptw-treasury-segments.v1")
+    {
+        return Err("Treasury v2 policy tuple mismatch".into());
+    }
+    validate_treasury_value(value, "initial_treasury_state")
+}
+
+fn validate_treasury_activation_policy(value: &Value) -> Result<(), String> {
+    let object = value
+        .as_object()
+        .ok_or("treasury_activation_policy must be an object")?;
+    let required: BTreeSet<&str> = [
+        "schema_version",
+        "policy_id",
+        "policy_version",
+        "owner_identity",
+        "owner_identity_commitment",
+        "required_capability",
+        "authorized_activation_key_ids",
+        "valid_from_tick",
+        "valid_until_tick",
+        "revoked_activation_key_ids",
+        "activation_policy_commitment",
+    ]
+    .into_iter()
+    .collect();
+    if object.keys().map(String::as_str).collect::<BTreeSet<_>>() != required {
+        return Err("treasury_activation_policy fields are incomplete or unknown".into());
+    }
+    if object.get("schema_version").and_then(Value::as_str)
+        != Some("everarcade.treasury-activation-policy.v1")
+        || object.get("policy_version").and_then(Value::as_u64) != Some(1)
+        || object.get("required_capability").and_then(Value::as_str) != Some("treasury.create")
+    {
+        return Err("unsupported Treasury activation policy".into());
+    }
+    for key in ["policy_id", "owner_identity"] {
+        if object
+            .get(key)
+            .and_then(Value::as_str)
+            .is_none_or(|v| v.len() < 2 || v.len() > 128)
+        {
+            return Err(format!("invalid Treasury activation {key}"));
+        }
+    }
+    for key in ["owner_identity_commitment", "activation_policy_commitment"] {
+        if object
+            .get(key)
+            .and_then(Value::as_str)
+            .is_none_or(|v| !v.starts_with("sha256:") || v.len() != 71)
+        {
+            return Err(format!("invalid Treasury activation {key}"));
+        }
+    }
+    let keys = object
+        .get("authorized_activation_key_ids")
+        .and_then(Value::as_array)
+        .ok_or("authorized activation keys are required")?;
+    if keys.is_empty() {
+        return Err("authorized activation keys are required".into());
+    }
+    let distinct: BTreeSet<_> = keys.iter().filter_map(Value::as_str).collect();
+    if distinct.len() != keys.len() {
+        return Err("activation key IDs must be unique strings".into());
+    }
+    if !object
+        .get("revoked_activation_key_ids")
+        .is_some_and(Value::is_array)
+        || object
+            .get("valid_from_tick")
+            .and_then(Value::as_u64)
+            .is_none()
+        || !(object.get("valid_until_tick").is_some_and(Value::is_null)
+            || object
+                .get("valid_until_tick")
+                .and_then(Value::as_u64)
+                .is_some())
+    {
+        return Err("Treasury activation validity fields are invalid".into());
+    }
+    validate_treasury_value(value, "treasury_activation_policy")
+}
+
+fn validate_treasury_state_v1(value: &Value) -> Result<(), String> {
+    let object = value
+        .as_object()
+        .ok_or("initial_treasury_state must be an object")?;
+    let required: BTreeSet<&str> = [
+        "schema_version",
+        "treasury_identity",
+        "policy",
+        "assets",
+        "balances",
+        "proposals",
+        "approvals",
+        "quorum",
+        "intents",
+        "receipts",
+        "emergency",
+        "migration",
+    ]
+    .into_iter()
+    .collect();
+    let actual: BTreeSet<&str> = object.keys().map(String::as_str).collect();
+    if actual != required {
+        return Err("initial_treasury_state fields are incomplete or unknown".into());
+    }
+    if object.get("schema_version").and_then(Value::as_str) != Some(PTW_TREASURY_STATE_V1) {
+        return Err("unsupported Treasury state schema".into());
+    }
+    validate_treasury_value(value, "initial_treasury_state")?;
+    unique_treasury_ids(object.get("assets"), "asset_id")?;
+    unique_treasury_ids(
+        object.get("quorum").and_then(|v| v.get("signers")),
+        "signer_id",
+    )?;
+    if !object.get("receipts").is_some_and(Value::is_array) {
+        return Err("Treasury receipts must be an array".into());
+    }
+    Ok(())
+}
+
+fn validate_treasury_value(value: &Value, path: &str) -> Result<(), String> {
+    match value {
+        Value::Number(number) if number.as_u64().is_none() => {
+            Err(format!("{path} must use non-negative integer values"))
+        }
+        Value::Array(values) => {
+            for (index, child) in values.iter().enumerate() {
+                validate_treasury_value(child, &format!("{path}[{index}]"))?;
+            }
+            Ok(())
+        }
+        Value::Object(values) => {
+            for (key, child) in values {
+                let normalized = key.to_ascii_lowercase().replace(['_', '-', ' '], "");
+                if [
+                    "privatekey",
+                    "seed",
+                    "mnemonic",
+                    "credential",
+                    "password",
+                    "secret",
+                    "signedtransaction",
+                    "providertoken",
+                    "observedat",
+                    "createdat",
+                    "updatedat",
+                    "timestamp",
+                ]
+                .contains(&normalized.as_str())
+                {
+                    return Err(format!("forbidden Treasury field: {path}.{key}"));
+                }
+                validate_treasury_value(child, &format!("{path}.{key}"))?;
+            }
+            Ok(())
+        }
+        _ => Ok(()),
+    }
+}
+
+fn unique_treasury_ids(value: Option<&Value>, key: &str) -> Result<(), String> {
+    let values = value
+        .and_then(Value::as_array)
+        .ok_or_else(|| format!("Treasury {key} collection must be an array"))?;
+    let mut seen = BTreeSet::new();
+    for item in values {
+        let id = item
+            .get(key)
+            .and_then(Value::as_str)
+            .ok_or_else(|| format!("Treasury {key} is required"))?;
+        if id.is_empty() || !seen.insert(id) {
+            return Err(format!("Treasury {key} values must be unique"));
+        }
+    }
+    Ok(())
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -104,6 +669,36 @@ impl LegacyWorldCreateRequest {
             schema_version: WORLD_CREATE_REQUEST_VERSION.into(),
             world_id: format!("world-{}", slug(&self.world_name)),
             world_name: self.world_name,
+            state_policy_id: None,
+            initial_treasury_state: None,
+            treasury_activation_policy: None,
+            treasury_state_schema_id: None,
+            treasury_commitment_policy_id: None,
+            treasury_segmentation_policy_id: None,
+            treasury_checkpoint_schema_id: None,
+            treasury_migration_policy_id: None,
+            treasury_semantic_policy_id: None,
+            treasury_semantic_root_policy_id: None,
+            treasury_semantic_policy_commitment: None,
+            treasury_authorization_policy_commitment: None,
+            treasury_approval_signature_policy_id: None,
+            treasury_receipt_signature_policy_id: None,
+            treasury_rejection_evidence_policy_id: None,
+            treasury_active_archive_policy_id: None,
+            treasury_exact_amount_policy_id: None,
+            treasury_materialization_plan_policy_id: None,
+            treasury_admission_identity_policy_id: None,
+            treasury_accepted_input_policy_id: None,
+            treasury_accepted_action_policy_id: None,
+            treasury_domain_reservation_policy_id: None,
+            treasury_admission_rejection_policy_id: None,
+            treasury_commit_order_policy_id: None,
+            treasury_atomic_commit_manifest_policy_id: None,
+            treasury_index_inventory_commitment: None,
+            governance_authorization_policy: None,
+            trusted_receipt_issuer_policy: None,
+            supported_treasury_action_inventory: Vec::new(),
+            supported_treasury_receipt_schema_ids: Vec::new(),
             profiles,
             module_references: BTreeMap::new(),
             runtime_overrides: BTreeMap::new(),
@@ -824,6 +1419,13 @@ pub fn builtin_profile_catalog() -> ProfileCatalog {
         ))],
     ));
     c.register(prof(
+        ProfileCategory::Runtime,
+        "realtime-combat-v2",
+        vec!["ptw.runtime.v1"],
+        vec![ContributionNamespace::Actions, ContributionNamespace::Transitions],
+        vec![dep(ref_for("everarcade", ProfileCategory::World, "ptw-full", "1.0.0"))],
+    ));
+    c.register(prof(
         ProfileCategory::Topology,
         "catacombs-baseline",
         vec!["ptw.runtime.v1"],
@@ -1371,6 +1973,66 @@ pub struct PtwRuntimeIrV1 {
     pub assembly_contract_version: String,
     pub world_id: String,
     pub world_name: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub state_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub initial_treasury_state: Option<Value>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_activation_policy: Option<Value>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_state_schema_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_commitment_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_segmentation_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_checkpoint_schema_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_migration_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_semantic_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_semantic_root_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_semantic_policy_commitment: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_authorization_policy_commitment: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_approval_signature_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_receipt_signature_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_rejection_evidence_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_active_archive_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_exact_amount_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_materialization_plan_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_admission_identity_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_accepted_input_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_accepted_action_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_domain_reservation_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_admission_rejection_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_commit_order_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_atomic_commit_manifest_policy_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub treasury_index_inventory_commitment: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub governance_authorization_policy: Option<Value>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub trusted_receipt_issuer_policy: Option<Value>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub supported_treasury_action_inventory: Vec<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub supported_treasury_receipt_schema_ids: Vec<String>,
     pub resolved_profiles: BTreeMap<String, String>,
     pub module_references: BTreeMap<String, String>,
     pub capability_requirements: Vec<String>,
@@ -1809,6 +2471,38 @@ pub fn build_runtime_ir(
         assembly_contract_version: ASSEMBLY_CONTRACT_VERSION.into(),
         world_id: request.world_id.clone(),
         world_name: request.world_name.clone(),
+        state_policy_id: request.state_policy_id.clone(),
+        initial_treasury_state: request.initial_treasury_state.clone(),
+        treasury_activation_policy: request.treasury_activation_policy.clone(),
+        treasury_state_schema_id: request.treasury_state_schema_id.clone(),
+        treasury_commitment_policy_id: request.treasury_commitment_policy_id.clone(),
+        treasury_segmentation_policy_id: request.treasury_segmentation_policy_id.clone(),
+        treasury_checkpoint_schema_id: request.treasury_checkpoint_schema_id.clone(),
+        treasury_migration_policy_id: request.treasury_migration_policy_id.clone(),
+        treasury_semantic_policy_id: request.treasury_semantic_policy_id.clone(),
+        treasury_semantic_root_policy_id: request.treasury_semantic_root_policy_id.clone(),
+        treasury_semantic_policy_commitment: request.treasury_semantic_policy_commitment.clone(),
+        treasury_authorization_policy_commitment: request.treasury_authorization_policy_commitment.clone(),
+        treasury_approval_signature_policy_id: request.treasury_approval_signature_policy_id.clone(),
+        treasury_receipt_signature_policy_id: request.treasury_receipt_signature_policy_id.clone(),
+        treasury_rejection_evidence_policy_id: request.treasury_rejection_evidence_policy_id.clone(),
+        treasury_active_archive_policy_id: request.treasury_active_archive_policy_id.clone(),
+        treasury_exact_amount_policy_id: request.treasury_exact_amount_policy_id.clone(),
+        treasury_materialization_plan_policy_id: request.treasury_materialization_plan_policy_id.clone(),
+        treasury_admission_identity_policy_id: request.treasury_admission_identity_policy_id.clone(),
+        treasury_accepted_input_policy_id: request.treasury_accepted_input_policy_id.clone(),
+        treasury_accepted_action_policy_id: request.treasury_accepted_action_policy_id.clone(),
+        treasury_domain_reservation_policy_id: request.treasury_domain_reservation_policy_id.clone(),
+        treasury_admission_rejection_policy_id: request.treasury_admission_rejection_policy_id.clone(),
+        treasury_commit_order_policy_id: request.treasury_commit_order_policy_id.clone(),
+        treasury_atomic_commit_manifest_policy_id: request.treasury_atomic_commit_manifest_policy_id.clone(),
+        treasury_index_inventory_commitment: request.treasury_index_inventory_commitment.clone(),
+        governance_authorization_policy: request.governance_authorization_policy.clone(),
+        trusted_receipt_issuer_policy: request.trusted_receipt_issuer_policy.clone(),
+        supported_treasury_action_inventory: request.supported_treasury_action_inventory.clone(),
+        supported_treasury_receipt_schema_ids: request
+            .supported_treasury_receipt_schema_ids
+            .clone(),
         resolved_profiles,
         module_references: request.module_references.clone(),
         capability_requirements: profiles.required_capabilities.clone(),
@@ -2246,6 +2940,16 @@ fn arpg_baseline_contributions(n: &ResolvedProfileNodeV1) -> Vec<ProfileContribu
         "progression_bounds",
     ] {
         out.push(make_contribution(n, ContributionNamespace::Invariants, k, ContributionOperation::Declare, MergeClass::KeyedUnion, OverridePolicy::Forbidden, json!({"id":k,"invariant":k,"version":"invariant.v1","evaluation_policy":"per_tick","touched_state_domains":["players","entities","inventory","topology_state","progression"],"required_capability":"ptw.runtime.v1"}), None, None));
+    }
+    out
+}
+
+fn realtime_combat_v2_contributions(n: &ResolvedProfileNodeV1) -> Vec<ProfileContributionV1> {
+    let mut out = Vec::new();
+    for (id, prim, receipt) in [("player.leave","identity","player_left_receipt"),("look","movement","orientation_updated_receipt"),("jump","movement","jump_accepted_receipt"),("fire_hitscan","combat","hitscan_fired_receipt"),("fire_projectile","combat","projectile_spawned_receipt"),("reload","combat","reload_started_receipt"),("ability.use","combat","ability_used_receipt"),("damage.apply","combat","damage_applied_receipt"),("death.resolve","combat","death_resolved_receipt")] {
+        let origin = if matches!(id, "damage.apply" | "death.resolve") { "AUTHORITY_DERIVED" } else { "EXTERNAL_CLIENT" };
+        out.push(make_contribution(n, ContributionNamespace::Actions, id, ContributionOperation::Declare, MergeClass::KeyedUnion, OverridePolicy::Forbidden, json!({"id":id,"action":id,"primitive":prim,"transition":format!("{id}.transition"),"schema_version":"action.v1","action_version":"1.0.0","max_payload_size":512,"receipt_type":receipt,"origin_class":origin,"execution_envelope":"everarcade.execution-envelope.v2","journal":"everarcade.journal.v3","receipt_bundle":"everarcade.receipt-bundle.v2","maximum_direct_derived_actions":8,"maximum_derivation_depth":8,"maximum_state_writes":64,"preconditions":["bounded_payload","declared_actor"],"touched_state_domains":["players","entities","inventory","world_variables"],"handler_identifier":format!("ptw.{prim}.v1")}), None, None));
+        out.push(make_contribution(n, ContributionNamespace::Transitions, &format!("{id}.transition"), ContributionOperation::Declare, MergeClass::KeyedUnion, OverridePolicy::Forbidden, json!({"id":format!("{id}.transition"),"action":id,"primitive":prim,"version":"transition.v1","deterministic":true,"bounded":true,"receipt_type":receipt}), None, None));
     }
     out
 }
@@ -2741,6 +3445,9 @@ pub fn load_typed_contributions(g: &ResolvedProfileGraphV1) -> Vec<ProfileContri
             }
             "arpg-baseline" => {
                 for c in arpg_baseline_contributions(n) { out.push(c); }
+            }
+            "realtime-combat-v2" => {
+                for c in realtime_combat_v2_contributions(n) { out.push(c); }
             }
             "social-exploration-baseline" => {
                 for c in social_exploration_baseline_contributions(n) { out.push(c); }
@@ -4417,6 +5124,48 @@ mod tests {
         }"#,
         )
         .unwrap()
+    }
+
+    fn empty_treasury() -> Value {
+        json!({"schema_version":"everarcade.ptw-treasury-state.v1","treasury_identity":{"treasury_id":"unconfigured","status":"unconfigured"},"policy":{"policy_id":"unconfigured","policy_version":0,"policy_hash":format!("sha256:{}","0".repeat(64))},"assets":[],"balances":{"recognized":{},"reserved":{}},"proposals":{},"approvals":{},"quorum":{"policy_id":"unconfigured","signer_set_id":"unconfigured","signers":[],"timelocks":{}},"intents":{"pending":{},"settled":{},"failed":{}},"receipts":[],"emergency":{"status":"inactive"},"migration":{"status":"genesis"}})
+    }
+
+    #[test]
+    fn state_v3_policy_and_treasury_are_authoritative_and_fail_closed() {
+        let mut request = catacombs_request();
+        request.state_policy_id = Some(PTW_STATE_V3_POLICY_ID.into());
+        request.initial_treasury_state = Some(empty_treasury());
+        request.normalize().unwrap();
+        let assembled = assemble_world(request.clone()).unwrap();
+        assert_eq!(
+            assembled.ir.state_policy_id.as_deref(),
+            Some(PTW_STATE_V3_POLICY_ID)
+        );
+        assert_eq!(
+            assembled.ir.initial_treasury_state,
+            request.initial_treasury_state
+        );
+        let mut unknown = request.clone();
+        unknown.state_policy_id = Some("unknown.policy".into());
+        assert!(unknown.normalize().is_err());
+        let mut missing = request.clone();
+        missing.initial_treasury_state = None;
+        assert!(missing.normalize().is_err());
+        let mut malformed = request.clone();
+        malformed.initial_treasury_state = Some(json!({}));
+        assert!(malformed.normalize().is_err());
+        let mut credential = request.clone();
+        credential.initial_treasury_state.as_mut().unwrap()["provider_token"] = json!("secret");
+        assert!(credential.normalize().is_err());
+        let mut timestamp = request.clone();
+        timestamp.initial_treasury_state.as_mut().unwrap()["timestamp"] = json!(1);
+        assert!(timestamp.normalize().is_err());
+        let mut float = request.clone();
+        float.initial_treasury_state.as_mut().unwrap()["policy"]["policy_version"] = json!(1.5);
+        assert!(float.normalize().is_err());
+        let mut v2 = request;
+        v2.state_policy_id = Some(PTW_STATE_V2_POLICY_ID.into());
+        assert!(v2.normalize().is_err());
     }
 
     #[test]

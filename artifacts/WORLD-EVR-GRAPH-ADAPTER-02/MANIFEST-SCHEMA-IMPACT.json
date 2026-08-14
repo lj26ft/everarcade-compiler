@@ -1,0 +1,1 @@
+{"schema":"world.evr.manifest-impact.v1","classification":"EXISTING_EXTENSION_WITH_MAJOR_PROFILE_SUCCESSOR","load_bearing_schema_successor_required":false,"existing_fields_used":["adapter","binding","graph_runtime_commit","graph_runtime_tree","qualification"],"new_v2_field":"portable_operation_identity","serde_v1_byte_compatibility":"optional and omitted for Adapter 01"}

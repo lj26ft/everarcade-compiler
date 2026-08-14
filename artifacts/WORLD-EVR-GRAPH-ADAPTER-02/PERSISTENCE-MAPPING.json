@@ -1,0 +1,1 @@
+{"schema":"world.evr.adapter-mapping.v1","boundary":"PERSISTENCE","result":"PASS","rc1_durability_bypassed":false,"verified":["durable intent/state","provider publication","head/history","completion"]}

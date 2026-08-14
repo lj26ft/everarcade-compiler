@@ -1,0 +1,17 @@
+{
+  "schema":"everarcade.repository-architecture.v1",
+  "repository":{"id":"repository.everarcade-compiler","name":"everarcade-compiler","status":"implemented","maturity":"candidate","primary_layer":"compilation","secondary_layers":["runtime","world"],"owner":"everarcade","description":"Compiles, packages, validates, runs, and replay-verifies local world artifacts.","source":{"path":"."}},
+  "entities":[
+    {"id":"system.everarcade-compiler","kind":"system","name":"EverArcade Compiler","description":"Deterministic world compilation and packaging system.","status":"implemented","maturity":"candidate","primary_layer":"compilation","source":{"path":"src-bin-everarcade"}},
+    {"id":"interface.compiler-cli","kind":"interface","name":"Compiler CLI","description":"Command-line entry point for world compilation and package operations.","status":"implemented","maturity":"candidate","primary_layer":"compilation","source":{"path":"src-bin-everarcade/Cargo.toml"}},
+    {"id":"contract.world-evr","kind":"contract","name":"world.evr","description":"Compiled world artifact and package boundary.","status":"implemented","maturity":"candidate","primary_layer":"world","source":{"path":"START_HERE.md"}},
+    {"id":"component.compiler-execution-core","kind":"component","name":"Execution core","description":"Deterministic execution implementation used by packaged worlds.","status":"implemented","maturity":"candidate","primary_layer":"runtime","source":{"path":"execution-core/src"}}
+  ],
+  "owns":["system.everarcade-compiler","interface.compiler-cli","contract.world-evr","component.compiler-execution-core"],
+  "components":["component.compiler-execution-core"],"interfaces":["interface.compiler-cli"],"consumed_interfaces":["interface.authority-world-package"],"contracts":["contract.world-evr"],"standards":[],
+  "commands":[{"id":"command.compiler-cli","path":"src-bin-everarcade/Cargo.toml"},{"id":"command.compiler-onboarding-validation","path":"scripts/validate_developer_onboarding.sh"}],
+  "validators":[{"id":"validator.compiler-onboarding","path":"scripts/validate_developer_onboarding.sh"}],
+  "artifacts":[{"id":"artifact.compiler-verification","path":"VERIFICATION.md"}],"execution_graphs":[],"capabilities":[],"graph_runtime_integration_points":[],
+  "evidence":[{"id":"evidence.compiler-maturity","path":"MATURITY.md"},{"id":"evidence.compiler-gates","path":"GATE_PROOFS.md"}],
+  "known_gaps":[{"id":"gap.compiler-graph-runtime-integration","description":"The compiler does not yet emit graph-runtime definitions as part of world.evr packages.","severity":"integration","status":"open","source":{"path":"MATURITY.md"}}]
+}

@@ -1,0 +1,1 @@
+{"schema":"world.evr.compiler-impact.v1","classification":"METADATA_PROFILE_UPDATE_ONLY","semantic_world_compilation_change":false,"production_change":"explicit --graph-adapter selector and exact profile emission","default_behavior":"Adapter 01 preserved"}

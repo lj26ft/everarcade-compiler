@@ -12,6 +12,78 @@ use std::{
 const PROTOCOL: &str = "everarcade-world-package-v0.1";
 const RUNTIME_PROTOCOL: &str = "everarcade-runtime-bundle-v0.1";
 const ARCHIVE_MAGIC: &[u8] = b"EVRWORLD\n";
+const GRAPH_RUNTIME_V1_COMMIT: &str = "a561207bcc3b953b036102c805620ab97d50c344";
+const GRAPH_RUNTIME_V1_TREE: &str = "0afa83ad446e3ebfdeb0ffa94cfd23928e477910";
+const GRAPH_RUNTIME_RC1_COMMIT: &str = "cbcc49166e3412b07a2e4d2fb7102b72a7fa7ade";
+const GRAPH_RUNTIME_RC1_TREE: &str = "b6b030654ce9ebf74e1f7af1abcc0c3862dd3823";
+const GRAPH_SYSTEM_IDENTITY: &str = "0fbbcc2e0f0579efeaefeccab43c267c291094da";
+const SCHEDULER_RELIANCE_IDENTITY: &str = "455d9830efb5f19a66fa5c0b794fb2e7c7124bc2";
+const RECONSTITUTION_OPERATION: &str = "everarcade.graph.current-head-reconstitution.v1";
+
+#[derive(Clone, Copy)]
+struct GraphAdapterProfile {
+    adapter: &'static str,
+    binding: &'static str,
+    compiler_profile: &'static str,
+    commit: &'static str,
+    tree: &'static str,
+    qualification: &'static str,
+    portable_operation_identity: Option<&'static str>,
+}
+
+const ADAPTER_V1: GraphAdapterProfile = GraphAdapterProfile {
+    adapter: "everarcade.world-graph-adapter.v1",
+    binding: "everarcade.world-graph-binding.v1",
+    compiler_profile: "world.evr/1.0-graph-runtime-v1",
+    commit: GRAPH_RUNTIME_V1_COMMIT,
+    tree: GRAPH_RUNTIME_V1_TREE,
+    qualification: "GRAPH-RUNTIME-SYSTEM-01R3",
+    portable_operation_identity: None,
+};
+
+const ADAPTER_V2: GraphAdapterProfile = GraphAdapterProfile {
+    adapter: "everarcade.world-graph-adapter.v2",
+    binding: "everarcade.world-graph-binding.v2",
+    compiler_profile: "world.evr/1.0-graph-runtime-v2",
+    commit: GRAPH_RUNTIME_RC1_COMMIT,
+    tree: GRAPH_RUNTIME_RC1_TREE,
+    qualification: "GRAPH-RUNTIME-VERTICAL-SLICE-RC1-R-COMPARE",
+    portable_operation_identity: Some(RECONSTITUTION_OPERATION),
+};
+
+fn adapter_profile(id: &str) -> Result<GraphAdapterProfile, String> {
+    match id {
+        "everarcade.world-graph-adapter.v1" | "v1" => Ok(ADAPTER_V1),
+        "everarcade.world-graph-adapter.v2" | "v2" => Ok(ADAPTER_V2),
+        _ => Err(format!("unsupported Graph Runtime adapter profile: {id}")),
+    }
+}
+
+fn profile_for_extension(extension: &GraphRuntimeExtension) -> Result<GraphAdapterProfile, String> {
+    adapter_profile(&extension.adapter)
+}
+
+fn validate_graph_profile(
+    manifest: &WorldManifest,
+    extension: &GraphRuntimeExtension,
+) -> Result<GraphAdapterProfile, String> {
+    let profile = profile_for_extension(extension)?;
+    if manifest.package_profile.as_deref() != Some("world.evr/1.0")
+        || manifest.compiler_profile.as_deref() != Some(profile.compiler_profile)
+        || extension.binding != profile.binding
+        || extension.runtime_profile != "everarcade.world-runtime.graph-consumer"
+        || extension.runtime_profile_version != "1.0.0"
+        || extension.graph_runtime_commit != profile.commit
+        || extension.graph_runtime_tree != profile.tree
+        || extension.graph_runtime_system_identity != GRAPH_SYSTEM_IDENTITY
+        || extension.scheduler_reliance_identity != SCHEDULER_RELIANCE_IDENTITY
+        || extension.qualification != profile.qualification
+        || extension.portable_operation_identity.as_deref() != profile.portable_operation_identity
+    {
+        return Err("unsupported world.evr/1.0 Graph Runtime profile".into());
+    }
+    Ok(profile)
+}
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct WorldManifest {
@@ -29,6 +101,30 @@ pub struct WorldManifest {
     pub receipt_root: String,
     pub continuity_root: String,
     pub transport_protocol: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub package_profile: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub compiler_profile: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub graph_runtime_extension: Option<GraphRuntimeExtension>,
+}
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+pub struct GraphRuntimeExtension {
+    pub adapter: String,
+    pub binding: String,
+    pub runtime_profile: String,
+    pub runtime_profile_version: String,
+    pub graph_path: String,
+    pub graph_sha256: String,
+    pub genesis_path: String,
+    pub genesis_sha256: String,
+    pub graph_runtime_commit: String,
+    pub graph_runtime_tree: String,
+    pub graph_runtime_system_identity: String,
+    pub scheduler_reliance_identity: String,
+    pub qualification: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub portable_operation_identity: Option<String>,
 }
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct RuntimeBundleManifest {
@@ -63,6 +159,7 @@ pub fn dispatch(args: &[String]) -> Result<(), String> {
             opt(args, "--config").unwrap_or_else(|| "world-request.json".into()),
             opt(args, "--dir").unwrap_or_else(|| "world".into()),
             opt(args, "--out"),
+            opt(args, "--graph-adapter"),
         ),
         "init" => init(opt(args, "--dir").unwrap_or_else(|| "world".into())),
         "package" => package(
@@ -79,6 +176,16 @@ pub fn dispatch(args: &[String]) -> Result<(), String> {
             opt(args, "--left").unwrap_or_else(|| "world-a.evr".into()),
             opt(args, "--right").unwrap_or_else(|| "world-b.evr".into()),
         ),
+        "adapt-graph-runtime" => adapt_graph_runtime(
+            opt(args, "--package").unwrap_or_else(|| "world.evr".into()),
+            opt(args, "--out-dir").unwrap_or_else(|| "graph-intake".into()),
+            opt(args, "--binding-out").unwrap_or_else(|| "WorldGraphBinding.json".into()),
+        ),
+        "verify-graph-runtime" => verify_graph_runtime(
+            opt(args, "--package").unwrap_or_else(|| "world.evr".into()),
+            opt(args, "--intake-dir").unwrap_or_else(|| "graph-intake".into()),
+            opt(args, "--binding").unwrap_or_else(|| "WorldGraphBinding.json".into()),
+        ),
         "deploy" => deploy(
             opt(args, "--package").unwrap_or_else(|| "world.evr".into()),
             opt(args, "--lease").unwrap_or_else(|| "offline-lease".into()),
@@ -94,7 +201,12 @@ pub fn dispatch(args: &[String]) -> Result<(), String> {
     }
 }
 
-fn create(config: String, dir: String, out: Option<String>) -> Result<(), String> {
+fn create(
+    config: String,
+    dir: String,
+    out: Option<String>,
+    graph_adapter: Option<String>,
+) -> Result<(), String> {
     let request = assembly::CanonicalWorldRequest::from_request_bytes(
         &fs::read(&config).map_err(|e| e.to_string())?,
     )?;
@@ -104,7 +216,8 @@ fn create(config: String, dir: String, out: Option<String>) -> Result<(), String
     }
     init(root.to_string_lossy().to_string())?;
     let assembled = assembly::assemble_world(request)?;
-    apply_profiles(&root, &assembled)?;
+    let adapter = adapter_profile(graph_adapter.as_deref().unwrap_or(ADAPTER_V1.adapter))?;
+    apply_profiles(&root, &assembled, adapter)?;
     if let Some(out) = out {
         package(root.to_string_lossy().to_string(), out)?;
     }
@@ -112,7 +225,11 @@ fn create(config: String, dir: String, out: Option<String>) -> Result<(), String
     Ok(())
 }
 
-fn apply_profiles(root: &Path, assembled: &assembly::AssembledWorld) -> Result<(), String> {
+fn apply_profiles(
+    root: &Path,
+    assembled: &assembly::AssembledWorld,
+    adapter: GraphAdapterProfile,
+) -> Result<(), String> {
     let r = &assembled.request;
     for d in [
         "manifest",
@@ -239,14 +356,79 @@ fn apply_profiles(root: &Path, assembled: &assembly::AssembledWorld) -> Result<(
     .map_err(|e| e.to_string())?;
     write_json(
         root.join("genesis/genesis-state.json"),
-        &json!({"world":world_id,"name":r.world_name,"tick":0,"profiles":profiles,"entities":[]}),
+        &json!({"world":world_id,"world_id":world_id,"name":r.world_name,"tick":0,"profiles":profiles,"entities":[],"actors":{"actor-01":{"inventory":{"wood":0}}},"resource":{"id":"resource-wood-01","remaining":3}}),
     )?;
-    rebuild_manifest(root, &world_id, &r.world_name)?;
+    write_graph_runtime_projection(root, &world_id)?;
+    write_json(
+        root.join("roots.json"),
+        &json!({"schema_version":"world.evr.roots/v1","world_id":world_id}),
+    )?;
+    fs::write(root.join("actions.log"), b"").map_err(|e| e.to_string())?;
+    fs::write(root.join("receipts.log"), b"").map_err(|e| e.to_string())?;
+    fs::create_dir_all(root.join("checkpoints")).map_err(|e| e.to_string())?;
+    fs::write(root.join("checkpoints/.keep"), b"").map_err(|e| e.to_string())?;
+    rebuild_manifest(root, &world_id, &r.world_name, adapter)?;
     write_phase_h_manifests(root)?;
     Ok(())
 }
 
-fn rebuild_manifest(root: &Path, world_id: &str, world_name: &str) -> Result<(), String> {
+fn write_graph_runtime_projection(root: &Path, world_id: &str) -> Result<(), String> {
+    let projection = root.join("runtime/graph-runtime-v1");
+    fs::create_dir_all(projection.join("schemas")).map_err(|e| e.to_string())?;
+    let graph = json!({
+        "version":"1.0.0",
+        "graph_id":format!("{world_id}.resource-gather"),
+        "metadata":{"title":"Governed resource gather"},
+        "entrypoints":["intake"],
+        "nodes":[
+            {"id":"intake","kind":"input-map","config":{},"state_reads":[],"state_writes":[],"required_capabilities":[],"allowed_effects":[],"step_budget":100,"retry":{"maximum":0},"determinism":"DETERMINISTIC"},
+            {"id":"deplete-source","kind":"state-increment","config":{"path":"resource.remaining","by":-1},"state_reads":["resource.remaining"],"state_writes":["resource.remaining"],"required_capabilities":["state.read","state.write"],"allowed_effects":[],"step_budget":100,"retry":{"maximum":0},"determinism":"DETERMINISTIC"},
+            {"id":"grant-actor","kind":"state-increment","config":{"path":"actors.actor-01.inventory.wood","by":1},"state_reads":["actors.actor-01.inventory.wood"],"state_writes":["actors.actor-01.inventory.wood"],"required_capabilities":["state.read","state.write"],"allowed_effects":[],"step_budget":100,"retry":{"maximum":0},"determinism":"DETERMINISTIC"},
+            {"id":"emit-gather","kind":"effect-simulated","config":{"effect":"simulated","payload":{"event_type":"world.resource.gathered","actor_id":"actor-01","resource":"wood","amount":1}},"state_reads":["resource.remaining","actors.actor-01.inventory.wood"],"state_writes":[],"required_capabilities":[],"allowed_effects":["simulated"],"step_budget":100,"retry":{"maximum":0},"determinism":"DETERMINISTIC"},
+            {"id":"complete","kind":"output-emit","config":{"value":{"status":"gathered"}},"state_reads":[],"state_writes":[],"required_capabilities":[],"allowed_effects":[],"step_budget":100,"retry":{"maximum":0},"determinism":"DETERMINISTIC"}
+        ],
+        "edges":[
+            {"id":"e1","source":"intake","target":"deplete-source","guard":{"op":"always"},"priority":0,"exclusive":true,"label":"intake","recovery":false},
+            {"id":"e2","source":"deplete-source","target":"grant-actor","guard":{"op":"always"},"priority":0,"exclusive":true,"label":"deplete","recovery":false},
+            {"id":"e3","source":"grant-actor","target":"emit-gather","guard":{"op":"always"},"priority":0,"exclusive":true,"label":"grant","recovery":false},
+            {"id":"e4","source":"emit-gather","target":"complete","guard":{"op":"always"},"priority":0,"exclusive":true,"label":"effect","recovery":false}
+        ],
+        "terminal_nodes":["complete"],
+        "state_schema":"schemas/state.schema.json",
+        "input_schema":"schemas/input.schema.json",
+        "output_schema":"schemas/output.schema.json",
+        "capabilities":["state.read","state.write"],
+        "effects":["simulated"],
+        "policies":{"deterministic":true,"max_steps":100}
+    });
+    write_json(projection.join("graph.json"), &graph)?;
+    let genesis: Value = serde_json::from_slice(
+        &fs::read(root.join("genesis/genesis-state.json")).map_err(|e| e.to_string())?,
+    )
+    .map_err(|e| e.to_string())?;
+    write_json(projection.join("genesis.json"), &genesis)?;
+    for (name, schema) in [
+        (
+            "state.schema.json",
+            json!({"type":"object","required":["world_id","resource","actors"]}),
+        ),
+        (
+            "input.schema.json",
+            json!({"type":"object","required":["action_id","actor_id","action_type","action_input"]}),
+        ),
+        ("output.schema.json", json!({"type":"object"})),
+    ] {
+        write_json(projection.join("schemas").join(name), &schema)?;
+    }
+    Ok(())
+}
+
+fn rebuild_manifest(
+    root: &Path,
+    world_id: &str,
+    world_name: &str,
+    adapter: GraphAdapterProfile,
+) -> Result<(), String> {
     let genesis_hash = hash_file(root.join("genesis/genesis-state.json"))?;
     fs::write(root.join("genesis/genesis-root.txt"), &genesis_hash).map_err(|e| e.to_string())?;
     let contract_hash = hash_file(root.join("world-contract/contract.wasm"))?;
@@ -272,6 +454,26 @@ fn rebuild_manifest(root: &Path, world_id: &str, world_name: &str) -> Result<(),
     rb.bundle_hash = String::new();
     rb.bundle_hash = runtime_bundle_hash(root, &rb)?;
     write_json(root.join("runtime/runtime-manifest.json"), &rb)?;
+    let graph_extension = if root.join("runtime/graph-runtime-v1/graph.json").exists() {
+        Some(GraphRuntimeExtension {
+            adapter: adapter.adapter.into(),
+            binding: adapter.binding.into(),
+            runtime_profile: "everarcade.world-runtime.graph-consumer".into(),
+            runtime_profile_version: "1.0.0".into(),
+            graph_path: "runtime/graph-runtime-v1/graph.json".into(),
+            graph_sha256: hash_file(root.join("runtime/graph-runtime-v1/graph.json"))?,
+            genesis_path: "runtime/graph-runtime-v1/genesis.json".into(),
+            genesis_sha256: hash_file(root.join("runtime/graph-runtime-v1/genesis.json"))?,
+            graph_runtime_commit: adapter.commit.into(),
+            graph_runtime_tree: adapter.tree.into(),
+            graph_runtime_system_identity: "0fbbcc2e0f0579efeaefeccab43c267c291094da".into(),
+            scheduler_reliance_identity: "455d9830efb5f19a66fa5c0b794fb2e7c7124bc2".into(),
+            qualification: adapter.qualification.into(),
+            portable_operation_identity: adapter.portable_operation_identity.map(str::to_owned),
+        })
+    } else {
+        None
+    };
     write_json(
         root.join("manifest.json"),
         &WorldManifest {
@@ -289,6 +491,9 @@ fn rebuild_manifest(root: &Path, world_id: &str, world_name: &str) -> Result<(),
             receipt_root,
             continuity_root,
             transport_protocol: transport_core::HOTPOCKET_TRANSPORT_PROTOCOL.into(),
+            package_profile: Some("world.evr/1.0".into()),
+            compiler_profile: Some(adapter.compiler_profile.into()),
+            graph_runtime_extension: graph_extension,
         },
     )
 }
@@ -385,6 +590,9 @@ fn init(dir: String) -> Result<(), String> {
         receipt_root,
         continuity_root,
         transport_protocol: transport_core::HOTPOCKET_TRANSPORT_PROTOCOL.into(),
+        package_profile: None,
+        compiler_profile: None,
+        graph_runtime_extension: None,
     };
     write_json(root.join("manifest.json"), &m)?;
     for s in [
@@ -468,6 +676,170 @@ fn verify_cmd(pkg: String) -> Result<WorldManifest, String> {
         m.world_id, m.continuity_root
     );
     Ok(m)
+}
+
+fn adapt_graph_runtime(pkg: String, out_dir: String, binding_out: String) -> Result<(), String> {
+    let package_path = Path::new(&pkg);
+    let (manifest, entries) = read_package(package_path)?;
+    verify_entries(&manifest, &entries)?;
+    let extension = manifest
+        .graph_runtime_extension
+        .as_ref()
+        .ok_or("package has no adopted Graph Runtime extension")?;
+    let profile = validate_graph_profile(&manifest, extension)
+        .map_err(|_| "adopted Graph Runtime profile binding mismatch".to_string())?;
+    let graph = entries
+        .get(&extension.graph_path)
+        .ok_or("missing graph extension member")?;
+    let genesis = entries
+        .get(&extension.genesis_path)
+        .ok_or("missing genesis extension member")?;
+    if hash_bytes(graph) != extension.graph_sha256
+        || hash_bytes(genesis) != extension.genesis_sha256
+    {
+        return Err("Graph Runtime extension member identity mismatch".into());
+    }
+    let package_id = hash_file(package_path)?;
+    let manifest_bytes = entries.get("manifest.json").ok_or("missing manifest")?;
+    let manifest_id = hash_bytes(manifest_bytes);
+    let manifest_core = json!({
+        "schema_version":"world.evr/1.0",
+        "world_id":manifest.world_id,
+        "runtime_profile":extension.runtime_profile,
+        "runtime_profile_version":extension.runtime_profile_version,
+        "graph_runtime_system_identity":extension.graph_runtime_system_identity,
+        "scheduler_reliance_identity":extension.scheduler_reliance_identity,
+        "property_registry":null,
+        "interaction_registry":null,
+        "transformation_registry":null,
+        "graph_sha256":extension.graph_sha256,
+        "genesis_sha256":extension.genesis_sha256
+    });
+    let manifest_core_id = hash_bytes(&canon(&manifest_core)?);
+    let mut binding_fields = json!({
+        "schema_version":profile.binding,
+        "world_id":manifest.world_id,
+        "package_id":package_id,
+        "manifest_id":manifest_id,
+        "manifest_core_id":manifest_core_id,
+        "graph_id":extension.graph_sha256,
+        "genesis_id":extension.genesis_sha256,
+        "runtime_profile":extension.runtime_profile,
+        "runtime_profile_version":extension.runtime_profile_version,
+        "graph_runtime_candidate_commit":extension.graph_runtime_commit,
+        "graph_runtime_candidate_tree":extension.graph_runtime_tree,
+        "graph_runtime_system_identity":extension.graph_runtime_system_identity,
+        "scheduler_reliance_identity":extension.scheduler_reliance_identity,
+        "qualification":extension.qualification,
+        "adapter_contract_version":extension.adapter
+    });
+    if let Some(operation) = &extension.portable_operation_identity {
+        binding_fields
+            .as_object_mut()
+            .ok_or("binding fields object")?
+            .insert(
+                "portable_operation_identity".into(),
+                Value::String(operation.clone()),
+            );
+    }
+    let mut binding_input = profile.binding.as_bytes().to_vec();
+    binding_input.extend_from_slice(&canon(&binding_fields)?);
+    let binding_id = hash_bytes(&binding_input);
+    let mut runtime_manifest = manifest_core
+        .as_object()
+        .cloned()
+        .ok_or("manifest core object")?;
+    runtime_manifest.insert("trust_identity".into(), Value::String(binding_id.clone()));
+    let output_root = PathBuf::from(out_dir);
+    fs::create_dir_all(&output_root).map_err(|e| e.to_string())?;
+    fs::write(output_root.join("graph.json"), graph).map_err(|e| e.to_string())?;
+    fs::write(output_root.join("genesis.json"), genesis).map_err(|e| e.to_string())?;
+    write_json(
+        output_root.join("manifest.json"),
+        &Value::Object(runtime_manifest),
+    )?;
+    let binding = json!({
+        "schema_version":"everarcade.world-graph-binding-envelope.v1",
+        "world_graph_binding_id":binding_id,
+        "binding":binding_fields,
+        "runtime_package_identity":hash_file(output_root.join("manifest.json"))?
+    });
+    write_json(binding_out, &binding)?;
+    println!(
+        "world_graph_binding_id={}",
+        binding["world_graph_binding_id"]
+            .as_str()
+            .unwrap_or_default()
+    );
+    Ok(())
+}
+
+fn verify_graph_runtime(
+    pkg: String,
+    intake_dir: String,
+    binding_path: String,
+) -> Result<(), String> {
+    let package_path = Path::new(&pkg);
+    let (manifest, entries) = read_package(package_path)?;
+    verify_entries(&manifest, &entries)?;
+    let extension = manifest
+        .graph_runtime_extension
+        .as_ref()
+        .ok_or("package has no adopted Graph Runtime extension")?;
+    let profile = validate_graph_profile(&manifest, extension)?;
+    let binding: Value =
+        serde_json::from_slice(&fs::read(binding_path).map_err(|e| e.to_string())?)
+            .map_err(|e| e.to_string())?;
+    let fields = binding.get("binding").ok_or("binding fields missing")?;
+    let binding_id = binding
+        .get("world_graph_binding_id")
+        .and_then(Value::as_str)
+        .ok_or("binding ID missing")?;
+    let mut input = profile.binding.as_bytes().to_vec();
+    input.extend_from_slice(&canon(fields)?);
+    let expected_package_id = hash_file(package_path)?;
+    let expected_manifest_id = hash_bytes(entries.get("manifest.json").ok_or("manifest missing")?);
+    if hash_bytes(&input) != binding_id
+        || fields.get("package_id").and_then(Value::as_str) != Some(expected_package_id.as_str())
+        || fields.get("manifest_id").and_then(Value::as_str) != Some(expected_manifest_id.as_str())
+        || fields.get("graph_id").and_then(Value::as_str) != Some(extension.graph_sha256.as_str())
+        || fields.get("genesis_id").and_then(Value::as_str)
+            != Some(extension.genesis_sha256.as_str())
+        || fields
+            .get("graph_runtime_candidate_commit")
+            .and_then(Value::as_str)
+            != Some(profile.commit)
+        || fields
+            .get("graph_runtime_candidate_tree")
+            .and_then(Value::as_str)
+            != Some(profile.tree)
+        || fields.get("schema_version").and_then(Value::as_str) != Some(profile.binding)
+        || fields
+            .get("adapter_contract_version")
+            .and_then(Value::as_str)
+            != Some(profile.adapter)
+        || fields
+            .get("portable_operation_identity")
+            .and_then(Value::as_str)
+            != profile.portable_operation_identity
+    {
+        return Err("WorldGraphBinding verification failed".into());
+    }
+    let intake = Path::new(&intake_dir);
+    let runtime_manifest: Value =
+        serde_json::from_slice(&fs::read(intake.join("manifest.json")).map_err(|e| e.to_string())?)
+            .map_err(|e| e.to_string())?;
+    if runtime_manifest
+        .get("trust_identity")
+        .and_then(Value::as_str)
+        != Some(binding_id)
+        || hash_file(intake.join("graph.json"))? != extension.graph_sha256
+        || hash_file(intake.join("genesis.json"))? != extension.genesis_sha256
+    {
+        return Err("Graph Runtime intake is not bound to the verified world package".into());
+    }
+    println!("verified world_graph_binding_id={binding_id}");
+    Ok(())
 }
 fn inspect(pkg: String) -> Result<(), String> {
     let (m, entries) = read_package(Path::new(&pkg))?;
@@ -662,6 +1034,34 @@ fn verify_entries(
     {
         return Err("continuity root mismatch".into());
     }
+    if let Some(extension) = &m.graph_runtime_extension {
+        validate_graph_profile(m, extension)?;
+        let graph = e
+            .get(&extension.graph_path)
+            .ok_or("missing graph extension")?;
+        let genesis = e
+            .get(&extension.genesis_path)
+            .ok_or("missing genesis extension")?;
+        if hash_bytes(graph) != extension.graph_sha256
+            || hash_bytes(genesis) != extension.genesis_sha256
+        {
+            return Err("Graph Runtime extension hash mismatch".into());
+        }
+        let genesis_value: Value = serde_json::from_slice(genesis).map_err(|e| e.to_string())?;
+        if genesis_value.get("world_id").and_then(Value::as_str) != Some(m.world_id.as_str()) {
+            return Err("genesis world identity mismatch".into());
+        }
+        for required in [
+            "roots.json",
+            "actions.log",
+            "receipts.log",
+            "checkpoints/.keep",
+        ] {
+            if !e.contains_key(required) {
+                return Err(format!("missing required world.evr/1.0 member: {required}"));
+            }
+        }
+    }
     Ok(())
 }
 fn validate_manifest(m: &WorldManifest) -> Result<(), String> {
@@ -711,6 +1111,7 @@ fn read_package(
     }
     let mut i = ARCHIVE_MAGIC.len();
     let mut map = std::collections::BTreeMap::new();
+    let mut prior_name: Option<String> = None;
     while i < b.len() {
         let line_end = b[i..]
             .iter()
@@ -733,10 +1134,34 @@ fn read_package(
             .ok_or("bad archive")?
             .parse::<usize>()
             .map_err(|e| e.to_string())?;
+        if parts.next().is_some()
+            || i.checked_add(name_len + 1 + data_len + 1)
+                .is_none_or(|end| end > b.len())
+        {
+            return Err("bad archive bounds".into());
+        }
         let name = String::from_utf8(b[i..i + name_len].to_vec()).map_err(|e| e.to_string())?;
+        if name.is_empty()
+            || name.starts_with('/')
+            || name
+                .split('/')
+                .any(|part| part.is_empty() || part == "." || part == "..")
+        {
+            return Err("unsafe archive path".into());
+        }
+        if prior_name.as_ref().is_some_and(|prior| prior >= &name) {
+            return Err("archive entries are duplicate or noncanonical order".into());
+        }
         i += name_len + 1;
+        if b.get(i - 1) != Some(&b'\n') {
+            return Err("bad archive name delimiter".into());
+        }
         let data = b[i..i + data_len].to_vec();
         i += data_len + 1;
+        if b.get(i - 1) != Some(&b'\n') {
+            return Err("bad archive data delimiter".into());
+        }
+        prior_name = Some(name.clone());
         map.insert(name, data);
     }
     let m: WorldManifest =
@@ -760,7 +1185,7 @@ fn write_json<P: AsRef<Path>, T: Serialize>(p: P, v: &T) -> Result<(), String> {
     fs::write(p, canon(v)?).map_err(|e| e.to_string())
 }
 fn canon<T: Serialize>(v: &T) -> Result<Vec<u8>, String> {
-    serde_json::to_vec_pretty(v).map_err(|e| e.to_string())
+    serde_json::to_vec(v).map_err(|e| e.to_string())
 }
 fn hash_file<P: AsRef<Path>>(p: P) -> Result<String, String> {
     Ok(hash_bytes(&fs::read(p).map_err(|e| e.to_string())?))
@@ -877,9 +1302,167 @@ mod tests {
             config.to_string_lossy().to_string(),
             root.to_string_lossy().to_string(),
             Some(pkg.to_string_lossy().to_string()),
+            None,
         )
         .unwrap();
         conformance(pkg.to_string_lossy().to_string()).unwrap();
+    }
+
+    #[test]
+    fn adopted_graph_adapter_binds_verified_package_and_rejects_wrong_trust_identity() {
+        let dir = temp("graph-adapter");
+        let config = dir.join("world-request.json");
+        write_json(
+            &config,
+            &json!({
+                "world_profile":"ptw-full-v1",
+                "genre_profile":"arpg-v1",
+                "biome_profile":"catacombs-v1",
+                "projection_profile":"arpg-web-v1",
+                "proof_profile":"live-replay-ceremony-v1",
+                "world_name":"Graph Adapter Reference"
+            }),
+        )
+        .unwrap();
+        let root = dir.join("world");
+        let package = dir.join("world.evr");
+        let intake = dir.join("intake");
+        let binding = dir.join("WorldGraphBinding.json");
+        create(
+            config.to_string_lossy().to_string(),
+            root.to_string_lossy().to_string(),
+            Some(package.to_string_lossy().to_string()),
+            None,
+        )
+        .unwrap();
+        adapt_graph_runtime(
+            package.to_string_lossy().to_string(),
+            intake.to_string_lossy().to_string(),
+            binding.to_string_lossy().to_string(),
+        )
+        .unwrap();
+        verify_graph_runtime(
+            package.to_string_lossy().to_string(),
+            intake.to_string_lossy().to_string(),
+            binding.to_string_lossy().to_string(),
+        )
+        .unwrap();
+        let mut manifest: Value =
+            serde_json::from_slice(&fs::read(intake.join("manifest.json")).unwrap()).unwrap();
+        manifest["trust_identity"] = Value::String("different-binding".into());
+        write_json(intake.join("manifest.json"), &manifest).unwrap();
+        assert!(verify_graph_runtime(
+            package.to_string_lossy().to_string(),
+            intake.to_string_lossy().to_string(),
+            binding.to_string_lossy().to_string(),
+        )
+        .unwrap_err()
+        .contains("not bound"));
+    }
+
+    #[test]
+    fn graph_adapter_v2_binds_only_exact_rc1_and_preserves_v1_boundary() {
+        let dir = temp("graph-adapter-v2");
+        let config = dir.join("world-request.json");
+        write_json(
+            &config,
+            &json!({
+                "world_profile":"ptw-full-v1",
+                "genre_profile":"arpg-v1",
+                "biome_profile":"catacombs-v1",
+                "projection_profile":"arpg-web-v1",
+                "proof_profile":"live-replay-ceremony-v1",
+                "world_name":"Graph Adapter V2 Reference"
+            }),
+        )
+        .unwrap();
+
+        let v1_root = dir.join("v1-world");
+        let v1_package = dir.join("v1.evr");
+        create(
+            config.to_string_lossy().to_string(),
+            v1_root.to_string_lossy().to_string(),
+            Some(v1_package.to_string_lossy().to_string()),
+            None,
+        )
+        .unwrap();
+        let (v1_manifest, v1_entries) = read_package(&v1_package).unwrap();
+        let v1_extension = v1_manifest.graph_runtime_extension.as_ref().unwrap();
+        assert_eq!(v1_extension.adapter, ADAPTER_V1.adapter);
+        assert_eq!(v1_extension.graph_runtime_commit, GRAPH_RUNTIME_V1_COMMIT);
+        assert_eq!(v1_extension.graph_runtime_tree, GRAPH_RUNTIME_V1_TREE);
+        assert!(v1_extension.portable_operation_identity.is_none());
+        let mut v1_claiming_rc1 = v1_manifest.clone();
+        let extension = v1_claiming_rc1.graph_runtime_extension.as_mut().unwrap();
+        extension.graph_runtime_commit = GRAPH_RUNTIME_RC1_COMMIT.into();
+        extension.graph_runtime_tree = GRAPH_RUNTIME_RC1_TREE.into();
+        assert!(verify_entries(&v1_claiming_rc1, &v1_entries)
+            .unwrap_err()
+            .contains("unsupported"));
+
+        let v2_root = dir.join("v2-world");
+        let v2_package = dir.join("v2.evr");
+        let intake = dir.join("intake");
+        let binding = dir.join("WorldGraphBindingV2.json");
+        create(
+            config.to_string_lossy().to_string(),
+            v2_root.to_string_lossy().to_string(),
+            Some(v2_package.to_string_lossy().to_string()),
+            Some(ADAPTER_V2.adapter.into()),
+        )
+        .unwrap();
+        adapt_graph_runtime(
+            v2_package.to_string_lossy().to_string(),
+            intake.to_string_lossy().to_string(),
+            binding.to_string_lossy().to_string(),
+        )
+        .unwrap();
+        verify_graph_runtime(
+            v2_package.to_string_lossy().to_string(),
+            intake.to_string_lossy().to_string(),
+            binding.to_string_lossy().to_string(),
+        )
+        .unwrap();
+
+        let (v2_manifest, v2_entries) = read_package(&v2_package).unwrap();
+        let v2_extension = v2_manifest.graph_runtime_extension.as_ref().unwrap();
+        assert_eq!(v2_extension.adapter, ADAPTER_V2.adapter);
+        assert_eq!(v2_extension.binding, ADAPTER_V2.binding);
+        assert_eq!(v2_extension.graph_runtime_commit, GRAPH_RUNTIME_RC1_COMMIT);
+        assert_eq!(v2_extension.graph_runtime_tree, GRAPH_RUNTIME_RC1_TREE);
+        assert_eq!(
+            v2_extension.portable_operation_identity.as_deref(),
+            Some(RECONSTITUTION_OPERATION)
+        );
+        let binding_value: Value = serde_json::from_slice(&fs::read(&binding).unwrap()).unwrap();
+        assert_eq!(
+            binding_value["binding"]["portable_operation_identity"],
+            RECONSTITUTION_OPERATION
+        );
+
+        for (field, wrong) in [
+            ("commit", "cbcc49166e3412b07a2e4d2fb7102b72a7fa7adf"),
+            ("tree", "b6b030654ce9ebf74e1f7af1abcc0c3862dd3822"),
+            (
+                "operation",
+                "everarcade.graph.current-head-reconstitution.v0",
+            ),
+        ] {
+            let mut invalid = v2_manifest.clone();
+            let extension = invalid.graph_runtime_extension.as_mut().unwrap();
+            match field {
+                "commit" => extension.graph_runtime_commit = wrong.into(),
+                "tree" => extension.graph_runtime_tree = wrong.into(),
+                "operation" => extension.portable_operation_identity = Some(wrong.into()),
+                _ => unreachable!(),
+            }
+            assert!(
+                verify_entries(&invalid, &v2_entries).is_err(),
+                "accepted wrong {field}"
+            );
+        }
+        assert!(adapter_profile("main").is_err());
+        assert!(adapter_profile("latest").is_err());
     }
 
     #[test]
@@ -902,6 +1485,7 @@ mod tests {
         create(
             config.to_string_lossy().to_string(),
             root.to_string_lossy().to_string(),
+            None,
             None,
         )
         .unwrap();
@@ -938,6 +1522,9 @@ mod tests {
             receipt_root: "r".into(),
             continuity_root: "".into(),
             transport_protocol: "t".into(),
+            package_profile: None,
+            compiler_profile: None,
+            graph_runtime_extension: None,
         };
         assert!(validate_manifest(&m).is_err());
     }

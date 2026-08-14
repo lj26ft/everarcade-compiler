@@ -1,0 +1,1 @@
+{"schema":"world.evr.adapter-mapping.v1","boundary":"AUTHORITY","result":"PASS","preserved":["authenticated READY","authenticated owner","generation","canonical root","storage identity","provider authority","current-head validation"],"parallel_weaker_authority":false,"executable_evidence":["focused lifecycle","fresh HTTPS lifecycle"]}
