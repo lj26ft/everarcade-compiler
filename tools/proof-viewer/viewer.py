@@ -3,6 +3,7 @@
 import argparse
 import html
 import json
+import math
 import sys
 from pathlib import Path
 
@@ -31,13 +32,20 @@ def reject_constant(value):
     raise ValueError('non-finite JSON number')
 
 
+def finite_float(value):
+    number = float(value)
+    if not math.isfinite(number):
+        raise ValueError('non-finite JSON number')
+    return number
+
+
 def render(raw):
     """Return HTML and display-read status, which never signifies verification."""
     status = 'REFUSED: malformed or unsupported input; raw text retained below.'
     sections = []
     try:
         value = json.loads(raw, object_pairs_hook=unique_object,
-                           parse_constant=reject_constant)
+                           parse_constant=reject_constant, parse_float=finite_float)
         if not isinstance(value, dict):
             raise ValueError('expected JSON object')
         version = value.get('version')
