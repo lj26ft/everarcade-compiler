@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """Render explicit local JSON as inert HTML; never verify or accept proofs."""
 import argparse
+from decimal import Decimal, InvalidOperation
 import html
 import json
+import math
 import sys
 from pathlib import Path
 
@@ -31,13 +33,22 @@ def reject_constant(value):
     raise ValueError('non-finite JSON number')
 
 
+def finite_float(value):
+    number = float(value)
+    if not math.isfinite(number):
+        raise ValueError('non-finite JSON number')
+    if Decimal(str(number)) != Decimal(value):
+        raise ValueError('JSON number loses precision in display')
+    return number
+
+
 def render(raw):
     """Return HTML and display-read status, which never signifies verification."""
     status = 'REFUSED: malformed or unsupported input; raw text retained below.'
     sections = []
     try:
         value = json.loads(raw, object_pairs_hook=unique_object,
-                           parse_constant=reject_constant)
+                           parse_constant=reject_constant, parse_float=finite_float)
         if not isinstance(value, dict):
             raise ValueError('expected JSON object')
         version = value.get('version')
@@ -59,7 +70,7 @@ def render(raw):
                 sections.append('<dt>' + field + '</dt><dd><pre>' +
                                 (escaped(value[field]) if field in value else 'MISSING') + '</pre></dd>')
             sections.append('</dl>')
-    except (ValueError, RecursionError):
+    except (ValueError, RecursionError, InvalidOperation):
         sections = []
         status = 'REFUSED: malformed or unsupported input; raw text retained below.'
     document = ('<!doctype html><html lang="en"><head><meta charset="utf-8">'

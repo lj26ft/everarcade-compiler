@@ -80,6 +80,25 @@ class ViewerTests(unittest.TestCase):
         self.assertIn('fields have not been validated', page)
         self.assertIn('MISSING', page)
 
+    def test_lossy_numbers_are_refused_without_changing_input(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'overflow.json'
+            for number in ('1e999', '-1e999', '1e-999', '-1e-999',
+                           '9007199254740993.0', '1.234567890123456789',
+                           '0e999999999999999999999999999999999'):
+                raw = ('{"version":"world.evr.receipt_proof.v1",'
+                       '"commitment_profile":"world.evr.commitment.v1",'
+                       '"receipt_count":' + number + '}')
+                path.write_bytes(raw.encode())
+                result = subprocess.run([sys.executable, str(SPEC.origin), str(path)], capture_output=True)
+                self.assertEqual(result.returncode, 1)
+                self.assertIn(b'REFUSED', result.stderr)
+                parser = Tags()
+                parser.feed(result.stdout.decode())
+                self.assertIn(raw, ''.join(parser.text))
+                self.assertNotIn('Infinity', result.stdout.decode())
+                self.assertEqual(path.read_bytes(), raw.encode())
+
     def test_cli_never_changes_input_and_exit_codes(self):
         before = hashlib.sha256(FIXTURE.read_bytes()).digest()
         result = subprocess.run([sys.executable, str(SPEC.origin), str(FIXTURE)], capture_output=True)
