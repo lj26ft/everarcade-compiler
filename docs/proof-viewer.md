@@ -28,6 +28,11 @@ file/URL lookups. The HTML Content Security Policy prohibits resource loading. I
 bytes and repository fixtures are never rewritten. Raw original text is shown in a
 collapsed details panel; expand it to inspect unknown fields.
 
+Pretty-printed numbers may normalize their spelling. Numbers that overflow,
+underflow, or change decimal value in the display representation are refused;
+their original text remains available. This bounds display fidelity and does not
+validate receipt field types or proof semantics.
+
 ## Limits and source contract
 
 Every page is **UNVERIFIED**. Recognizing labels does not check field types, hashes,

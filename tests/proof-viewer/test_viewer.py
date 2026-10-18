@@ -80,10 +80,12 @@ class ViewerTests(unittest.TestCase):
         self.assertIn('fields have not been validated', page)
         self.assertIn('MISSING', page)
 
-    def test_exponent_overflow_is_refused_without_changing_input(self):
+    def test_lossy_numbers_are_refused_without_changing_input(self):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / 'overflow.json'
-            for number in ('1e999', '-1e999'):
+            for number in ('1e999', '-1e999', '1e-999', '-1e-999',
+                           '9007199254740993.0', '1.234567890123456789',
+                           '0e999999999999999999999999999999999'):
                 raw = ('{"version":"world.evr.receipt_proof.v1",'
                        '"commitment_profile":"world.evr.commitment.v1",'
                        '"receipt_count":' + number + '}')
