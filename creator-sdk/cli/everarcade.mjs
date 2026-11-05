@@ -734,6 +734,7 @@ async function fetchWorldFactoryProofEndpoints(base) {
 
 function verifyAttestationObject(projectDir, attestation, roots) {
   if (attestationSignatureClass(attestation) === 'UNSIGNED') return 'UNSIGNED';
+  if (fixtureAttesterRefusal(attestation.attester?.public_key ?? '')) return 'FAIL';
   try {
     const publicKey = normalizePemOrBase64Key(attestation.attester?.public_key ?? '', 'public');
     const signature = Buffer.from(attestation.signature ?? '', 'base64');
@@ -862,6 +863,8 @@ function createWorldReleaseAttestation(projectDir) {
   const package_hash = fs.readFileSync(path.join(generatedWorld.packageDir, 'expected-package-hash.txt'), 'utf8').trim();
   const { keyPath, privateKey } = loadOrCreateAttesterPrivateKey(projectDir);
   const publicKey = crypto.createPublicKey(privateKey);
+  const createRefusal = fixtureAttesterRefusal(publicKeyBase64(publicKey));
+  if (createRefusal) return attestationFail(createRefusal);
   const releaseDir = releaseDirFor(projectDir);
   fs.rmSync(releaseDir, { recursive: true, force: true });
   fs.mkdirSync(releaseDir, { recursive: true });
@@ -906,6 +909,37 @@ function attestationSignatureClass(attestation) {
   if (!attestation || !attestation.signature) return 'UNSIGNED';
   if (attestation.attester?.key_class === TEST_FIXTURE_KEY_CLASS) return 'TEST_FIXTURE';
   return 'SIGNED';
+}
+
+// CRED-01 Option B: refuse the committed test-fixture attester identity.
+// Production mode: the fixture identity is ALWAYS refused and no test exemption is honoured.
+// Non-production: refused by default; tests must opt in explicitly with
+// --allow-test-fixture-attester (rejected outright in production mode).
+const PRODUCTION_MODE = process.env.EVERARCADE_ENV === 'production' || args.includes('--production');
+// sha256 (hex) over the Ed25519 SubjectPublicKeyInfo DER of each refused key.
+// TODO(CRED-01 B gate): populate ONLY after the owner/Reviewer accept the fixture's public
+// identity (see cred-01/options/B-fix-reject-fixture-attester/README.md). Never derive it
+// from a private key file.
+const REFUSED_FIXTURE_ATTESTER_SPKI_SHA256 = Object.freeze([
+  // TODO: '<sha256 hex of fixture attester SPKI DER>'
+]);
+
+function spkiSha256Hex(publicKeyText) {
+  const key = normalizePemOrBase64Key(publicKeyText, 'public');
+  const keyObject = typeof key === 'string' ? crypto.createPublicKey(key) : key;
+  return crypto.createHash('sha256').update(keyObject.export({ format: 'der', type: 'spki' })).digest('hex');
+}
+
+// Returns null when the key may be used, or a refusal reason string.
+function fixtureAttesterRefusal(publicKeyText) {
+  const exemption = args.includes('--allow-test-fixture-attester');
+  if (PRODUCTION_MODE && exemption) return 'test fixture exemption is unavailable in production mode';
+  if (PRODUCTION_MODE && REFUSED_FIXTURE_ATTESTER_SPKI_SHA256.length === 0) return 'fixture attester denylist not configured (CRED-01 B gate); refusing in production';
+  let fingerprint;
+  try { fingerprint = spkiSha256Hex(publicKeyText); } catch { return 'invalid attester public key'; }
+  if (!REFUSED_FIXTURE_ATTESTER_SPKI_SHA256.includes(fingerprint)) return null;
+  if (PRODUCTION_MODE) return 'test fixture attester key refused in production';
+  return exemption ? null : 'test fixture attester key refused (pass --allow-test-fixture-attester in tests only)';
 }
 
 function attestationFail(reason) {
@@ -1000,11 +1034,14 @@ function verifyWorldReleaseAttestation(projectDir) {
   const attestationPath = path.resolve(value('--attestation', attestationPathFor(projectDir)));
   const attestation = readJsonFile(attestationPath);
   const allowSelfAttested = args.includes('--allow-self-attested-test-only');
+  if (PRODUCTION_MODE && allowSelfAttested) return attestationFail('self-attested test exemption is unavailable in production mode');
   const trustedKeyText = value('--trusted-public-key', value('--trusted-key', undefined));
   if (!trustedKeyText && !allowSelfAttested) return attestationFail('missing trusted public key');
   if (attestationSignatureClass(attestation) === 'UNSIGNED') return attestationFail('UNSIGNED: attestation carries no signature');
   const embeddedPublicKeyText = attestation.attester?.public_key;
   if (!embeddedPublicKeyText) return attestationFail('missing embedded attester public key');
+  const verifyRefusal = fixtureAttesterRefusal(embeddedPublicKeyText) ?? (trustedKeyText ? fixtureAttesterRefusal(trustedKeyText) : null);
+  if (verifyRefusal) return attestationFail(verifyRefusal);
   let verificationKeyText = trustedKeyText ?? embeddedPublicKeyText;
   if (trustedKeyText) {
     try {
