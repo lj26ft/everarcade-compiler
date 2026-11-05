@@ -40,7 +40,7 @@ Command: `node creator-sdk/cli/everarcade.mjs world attest verify --project exam
 Proves:
 
 - Signed claims are syntactically valid and signature-verified.
-- The signer is the trusted review key from `TRUST_ROOT.md`.
+- The signer matches the key in `TRUST_ROOT.md`. That key is the revoked TEST FIXTURE key of `everarcade-review-root-v1` (REVOKED), so a match shows only that the fixture key signed. It is not production trust.
 - Root equivalence between signed attestation claims and generated release roots.
 - Replay equivalence between signed replay claims and replay evidence.
 

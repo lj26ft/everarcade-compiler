@@ -33,8 +33,8 @@ A deployment is RC1-valid when all of these are true:
 - Package verifier prints `World Factory Verify: PASS`.
 - Runtime replay prints `PASS` and `world-factory-runtime-report.json` has `replay_status: PASS`.
 - `/health`, `/state`, `/journal`, and `/verify` are reachable on the live host.
-- `live-deployment-proof.json` has `deployment_status: RUNNING`, `remote_verification: PASS`, and `attestation_verification: PASS`.
-- Release attestation verifies with the trusted public key in the proof bundle.
+- `live-deployment-proof.json` has `deployment_status: RUNNING` and `remote_verification: PASS`. Its `attestation_verification` is `UNTRUSTED_SELF_ATTESTED` (the proof path checks only the attestation's embedded key), so the overall proof reports FAIL and exits 1 until a trust-root-backed check exists. Historical `attestation_verification: PASS` examples are not production trust.
+- Release attestation verification uses a key from an ACTIVE trust-root document only, never `trusted-public-key.txt` from the proof bundle or other generated output. There is no ACTIVE trust root yet (v1 REVOKED; v2 `PREPARED_NO_ACTIVE_KEY`).
 
 ## Runtime authority
 

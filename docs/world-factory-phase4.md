@@ -127,10 +127,12 @@ with the shape:
   "package_verification": "PASS",
   "replay_verification": "PASS",
   "remote_verification": "PASS",
-  "attestation_verification": "PASS",
+  "attestation_verification": "UNTRUSTED_SELF_ATTESTED",
   "proof_timestamp": "..."
 }
 ```
+
+`attestation_verification` checks only the key embedded in the attestation, so it reports `UNTRUSTED_SELF_ATTESTED` (or another non-`PASS` status such as `FAIL`). The overall proof is FAIL and the command exits 1 until a trust-root-backed check exists. Earlier examples that showed `PASS` here are not production trust.
 
 ## End-to-end demonstration
 

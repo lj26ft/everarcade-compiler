@@ -53,7 +53,9 @@ Fingerprint (SHA-256 over the exact base64 text above, no trailing newline):
 
 ## Trust Boundary
 
-Reviewers must copy the trusted review key from this committed trust-root document, or from a separately published copy of this exact document. Reviewers must not copy a trusted key from generated build output, release output, a fixture under test, or any artifact whose authenticity is being evaluated.
+This v1 trust-root document is **REVOKED** (`REVOKED_COMPROMISED_TEST_FIXTURE`; see the revocation notice at the top). The key above is the **TEST FIXTURE only**. It is not a trusted review key, and reviewers must not copy it as one. There is no trusted review key at present: `trust-roots/everarcade-review-root-v2.md` has status `PREPARED_NO_ACTIVE_KEY`.
+
+When an ACTIVE trust-root version exists, reviewers must copy the review key only from that ACTIVE trust-root document as committed in this repository, or from a separately published copy of that exact document. Reviewers must never copy a key from generated build output, release output, a fixture under test, or any artifact whose authenticity is being evaluated.
 
 ## Rotation Procedure
 

@@ -29,15 +29,24 @@
 - Output from the fixture key is a TEST FIXTURE result, never a trust result.
 - `world factory proof` in non-production also reports `UNTRUSTED_SELF_ATTESTED` (overall FAIL). No test-only flag turns it into `PASS`.
 
-## Docs to re-word when the change set lands (not part of the code patches)
+## Docs re-worded in this change set
 
-- `GATE_PROOFS.md:43` and `OPEN_SOURCE_CANDIDATE_RC2_REVIEW_BUNDLE/GATE_PROOFS.md:43` say: "The signer is the trusted review key from `TRUST_ROOT.md`." Reword to say this is the revoked test fixture.
-- `EXPECTED_OUTPUTS.md:5`, the self-attested-fork README line 7, and the 4 `PASS` examples (Reviewer R-3 in CRED-01-OPTIONS-AB-REVIEW-01) need TEST FIXTURE wording.
-- `OPEN_SOURCE_CANDIDATE_RC2.md:25` ("The trust root is `TRUST_ROOT.md` version `everarcade-review-root-v1`") needs to add that v1 is revoked and point to v2.
-- `docs/founding-world-rc1/operator-guide.md:36` and `docs/world-factory-phase4.md:130` show `attestation_verification: PASS`. After H-2 the output is `UNTRUSTED_SELF_ATTESTED`, and the proof is FAIL until there is a trust-root-backed check.
-- `PAYLOAD_BINDING.md:33` (and the bundle copy) says "re-signing with the trusted review key". Clarify that there is no trusted review key until v2 is active.
-- `src-bin-everarcade/src/release.rs` writes `keys/trusted-public-key.txt`, which holds placeholder text, not a key. Mark it non-authoritative. This change is not in this set (no cargo).
-- Any doc edits under the pin-checked paths (`README.md`, `TRUST_ROOT.md`, `OPEN_SOURCE_CANDIDATE_RC2.md`, `GATE_PROOFS.md`, `PAYLOAD_BINDING.md`, `REVIEW_TRUST_CHAIN.md` and `OPEN_SOURCE_CANDIDATE_RC2_REVIEW_BUNDLE/`) must not put a 40-or-more-hex string on the same line as "commit", "checkout", "pin" or "gate target", must not contain "same commit", and must not contain the stale prefix.
+These lines now say that v1 is revoked, that its key is the TEST FIXTURE only, and that there is no trusted review key until a v2 trust root is ACTIVE:
+
+- `TRUST_ROOT.md` and `OPEN_SOURCE_CANDIDATE_RC2_REVIEW_BUNDLE/TRUST_ROOT.md` (byte-identical), section Trust Boundary: the old instruction to copy the review key from this v1 document now says this v1 document is REVOKED, the key is the TEST FIXTURE only and must not be copied as a trusted review key, and keys come only from an ACTIVE trust-root document.
+- `GATE_PROOFS.md` and `OPEN_SOURCE_CANDIDATE_RC2_REVIEW_BUNDLE/GATE_PROOFS.md`, Attestation Gate: the signer matches the revoked TEST FIXTURE key; not production trust.
+- `PAYLOAD_BINDING.md` and `OPEN_SOURCE_CANDIDATE_RC2_REVIEW_BUNDLE/PAYLOAD_BINDING.md`, Tamper Rule: no trusted review key until v2 is ACTIVE; re-signing with the fixture key is a TEST FIXTURE result and must FAIL production verification.
+- `OPEN_SOURCE_CANDIDATE_RC2_REVIEW_BUNDLE/expected-outputs/EXPECTED_OUTPUTS.md`: the `TRUST_ROOT.md` key `PASS` is a historical TEST FIXTURE result from a revoked root, not a production `PASS`.
+- `OPEN_SOURCE_CANDIDATE_RC2_REVIEW_BUNDLE/fixtures/self-attested-fork/README.md`: verify against the key from `TRUST_ROOT.md` labelled TEST FIXTURE ONLY; production refuses that key.
+- `OPEN_SOURCE_CANDIDATE_RC2.md` (RC2 deliverables, critical fixes, reviewer questions): v1 is `REVOKED_COMPROMISED_TEST_FIXTURE`; v2 is `PREPARED_NO_ACTIVE_KEY`; keys come only from an ACTIVE trust-root document.
+- `docs/founding-world-rc1/operator-guide.md`, `docs/founding-world-rc1/README.md` and `docs/world-factory-phase4.md`: `attestation_verification` is `UNTRUSTED_SELF_ATTESTED` and the proof is FAIL (exit 1) until a trust-root-backed check exists.
+
+Not re-worded here:
+
+- `specs/world-attestation/WORLD_RELEASE_ATTESTATION_V0.md` (`attestation_status: PASS` example): this is `world attest create` / `verify` output against an explicitly supplied trusted key, not the proof path; the fixture key is refused there in production.
+- Committed exports under `exports/` are kept as historical evidence. Their status is in `ATTESTATION-STATUS-V2.md`.
+- `src-bin-everarcade/src/release.rs` writes `keys/trusted-public-key.txt`, which holds placeholder text, not a key. It is non-authoritative; a code change for it is not in this set.
+- Any later doc edit under the pin-checked paths (`README.md`, `TRUST_ROOT.md`, `OPEN_SOURCE_CANDIDATE_RC2.md`, `GATE_PROOFS.md`, `PAYLOAD_BINDING.md`, `REVIEW_TRUST_CHAIN.md` and `OPEN_SOURCE_CANDIDATE_RC2_REVIEW_BUNDLE/`) must not put a 40-or-more-hex string on the same line as "commit", "checkout", "pin" or "gate target", must not contain "same commit", and must not contain the stale prefix.
 
 ## Rollback
 

@@ -30,4 +30,6 @@ deployment payload
 
 ## Tamper Rule
 
-Modifying any blueprint, contract-plan, runtime, replay/journal, or deployment payload without updating the corresponding hash and re-signing with the trusted review key must produce verification `FAIL`.
+Modifying any blueprint, contract-plan, runtime, replay/journal, or deployment payload without updating the corresponding hash and re-signing must produce verification `FAIL`.
+
+There is no trusted review key until a v2 trust root is ACTIVE after an authorized key ceremony (`trust-roots/everarcade-review-root-v2.md` is `PREPARED_NO_ACTIVE_KEY`). Until then, re-signing with the revoked v1 fixture key from `TRUST_ROOT.md` gives a TEST FIXTURE result only, and it must FAIL production verification because production refuses that key by identity.

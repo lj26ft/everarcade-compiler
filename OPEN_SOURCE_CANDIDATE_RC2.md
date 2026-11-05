@@ -4,7 +4,7 @@ Open Source Candidate RC2 closes the hostile-contributor findings from RC1 by mo
 
 ## RC2 Deliverables
 
-- `TRUST_ROOT.md` defines the official review key, fingerprint, trust-root version, pinned commit SHA, rotation procedure, and revocation procedure.
+- `TRUST_ROOT.md` records trust-root version `everarcade-review-root-v1`, now REVOKED (`REVOKED_COMPROMISED_TEST_FIXTURE`). Its only key is the committed test fixture, not an official review key. It also records the fingerprint, pinned commit SHA, rotation procedure, and revocation procedure. The replacement is `trust-roots/everarcade-review-root-v2.md` (`PREPARED_NO_ACTIVE_KEY`).
 - `PAYLOAD_BINDING.md` documents the transitive hash chain from `world.evr` through manifests to blueprint, contract-plan, runtime, replay/journal, and deployment payloads.
 - `REVIEW_TRUST_CHAIN.md` documents exactly what the reviewer trusts and where trust begins.
 - `GATE_PROOFS.md` documents what Contributor, World Artifact, and Attestation gates prove and do not prove.
@@ -12,8 +12,8 @@ Open Source Candidate RC2 closes the hostile-contributor findings from RC1 by mo
 
 ## Critical RC1 Fixes
 
-1. Reviewers obtain the trusted public key from `TRUST_ROOT.md`, never from generated release output.
-2. The World Artifact Gate verifies attestations with the committed trust root.
+1. Reviewers obtain review keys only from an ACTIVE trust-root document, never from generated release output. v1 (`TRUST_ROOT.md`) is REVOKED and v2 (`trust-roots/everarcade-review-root-v2.md`) is `PREPARED_NO_ACTIVE_KEY`, so there is no trusted review key at present.
+2. The World Artifact Gate verifies attestations against the committed trust-root document. In RC2 that was the v1 TEST FIXTURE key, now revoked; those results are non-production reproduction only.
 3. Payload tampering is specified as a must-fail condition through explicit manifest and hash-manifest binding.
 4. GitHub Actions references used by the candidate workflows are pinned to commit SHAs.
 5. Determinism evidence requires two isolated generations and output comparisons.
@@ -22,7 +22,7 @@ Open Source Candidate RC2 closes the hostile-contributor findings from RC1 by mo
 
 An independent reviewer can answer without source-code inspection:
 
-- The trust root is `TRUST_ROOT.md` version `everarcade-review-root-v1`.
+- The RC2 trust root was `TRUST_ROOT.md` version `everarcade-review-root-v1`, now REVOKED (`REVOKED_COMPROMISED_TEST_FIXTURE`). Its replacement is `trust-roots/everarcade-review-root-v2.md` (`PREPARED_NO_ACTIVE_KEY`, no active key). Reviewers obtain keys only from an ACTIVE trust-root document.
 - Trust begins at the reviewer-selected trust-root document, not generated output.
 - Hashes bind `world.evr`, `manifest.json`, `hash-manifest.json`, and every payload digest.
 - The attestation signs claims over the package, manifest, replay, and root-equivalence evidence.
