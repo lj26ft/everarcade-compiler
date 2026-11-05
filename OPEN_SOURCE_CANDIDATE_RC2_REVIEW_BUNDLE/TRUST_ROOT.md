@@ -1,3 +1,17 @@
+> **REVOCATION NOTICE: trust-root `everarcade-review-root-v1` is REVOKED (REVOKED_COMPROMISED_TEST_FIXTURE).**
+>
+> - **Version revoked:** `everarcade-review-root-v1` (this document).
+> - **Reason:** the only key in this trust root is the repository's test attester fixture. Its private key is in the public repository, so anyone can sign with it. It was never a production review key.
+> - **Revoked key:** Ed25519 SubjectPublicKeyInfo, base64 `MCowBQYDK2VwAyEADvivFlH4llB2VHSZyKghEuygKr8qzGDnuzLxCLczZkg=`
+> - **Revoked key SPKI DER SHA-256:**
+>   `6858d411f4f7ef9962de02945a7197ad9994903ec734627701cd1fb79968cd9c`
+> - **Affected range:** every attestation that verifies under this key, whatever its timestamp. Attestation timestamps are written by the signer and cannot bound the exposure.
+> - **Last known-good attestation:** none established by signature.
+> - **Replacement:** `trust-roots/everarcade-review-root-v2.md` (status `PREPARED_NO_ACTIVE_KEY`: it has no active review key yet, so production verification fails closed). Revocations are listed append-only in `trust-roots/REVOCATIONS.md`; existing committed attestations have an explicit status in `trust-roots/ATTESTATION-STATUS-V2.md`.
+> - **Rotation Procedure steps 4 and 5 below must not be used** for this revocation: no announcement signed with the revoked key, and no acceptance based on attestation timestamps.
+> - **Reviewer Command below:** kept so RC2 history can be reproduced. Its result is **TEST FIXTURE ONLY — not trust**. A `PASS` from it shows only that the fixture key signed; it does not show who signed.
+> - **Scope of this notice:** it records a key exposure. It does not claim that the key has been misused; no misuse is known. Known deployed consumers of this trust root: none known. Live use elsewhere: unknown.
+
 # EverArcade Trust Root
 
 Trust-root version: `everarcade-review-root-v1`
@@ -57,6 +71,8 @@ Reviewers must copy the trusted review key from this committed trust-root docume
 4. Require reviewers to re-run attestation verification and must-fail fixtures with the replacement key.
 
 ## Reviewer Command
+
+> Result label: **TEST FIXTURE ONLY — not trust.** The key this command extracts is the revoked test fixture (see the revocation notice at the top of this document).
 
 ```bash
 TRUSTED_PUBLIC_KEY="$(awk '/^```text$/{block++; next} block==1 && /^[A-Za-z0-9+/=]+$/{print; exit}' TRUST_ROOT.md)"
