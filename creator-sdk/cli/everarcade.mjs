@@ -921,7 +921,10 @@ const PRODUCTION_MODE = process.env.EVERARCADE_ENV === 'production' || args.incl
 // identity (see cred-01/options/B-fix-reject-fixture-attester/README.md). Never derive it
 // from a private key file.
 const REFUSED_FIXTURE_ATTESTER_SPKI_SHA256 = Object.freeze([
-  // TODO: '<sha256 hex of fixture attester SPKI DER>'
+  // Test attester fixture, trust-root everarcade-review-root-v1. Source: the PUBLIC key in
+  // fixtures/trust-root/test-attester-public-key.txt (= TRUST_ROOT.md; TRUST_ROOT text
+  // fingerprint 0989ae6991c6dc124ca674d5e6f19da4ee70299342ae3784abf7d529fe0a5db2).
+  '6858d411f4f7ef9962de02945a7197ad9994903ec734627701cd1fb79968cd9c'
 ]);
 
 function spkiSha256Hex(publicKeyText) {
