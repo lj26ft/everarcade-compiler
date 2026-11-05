@@ -732,6 +732,10 @@ async function fetchWorldFactoryProofEndpoints(base) {
   return { health: await fetchJson('/health'), stateReport: await fetchJson('/state'), journal: await fetchJson('/journal'), verification: await fetchJson('/verify') };
 }
 
+// CRED-01 H-2: this check verifies the signature only against the key EMBEDDED in the
+// attestation itself and never consults a trust root, so success proves self-consistency,
+// not who signed. It therefore reports UNTRUSTED_SELF_ATTESTED, never PASS. Bad signature or
+// any hash/status mismatch stays FAIL. The fixture identity refusal (CRED-01 Option B) runs first.
 function verifyAttestationObject(projectDir, attestation, roots) {
   if (attestationSignatureClass(attestation) === 'UNSIGNED') return 'UNSIGNED';
   if (fixtureAttesterRefusal(attestation.attester?.public_key ?? '')) return 'FAIL';
@@ -747,7 +751,7 @@ function verifyAttestationObject(projectDir, attestation, roots) {
       && attestation.package_verification === 'PASS'
       && attestation.replay_verification === 'PASS'
       && attestation.remote_verification === 'PASS'
-      ? (attestationSignatureClass(attestation) === 'TEST_FIXTURE' ? 'PASS_TEST_FIXTURE_NOT_PRODUCTION' : 'PASS') : 'FAIL';
+      ? (attestationSignatureClass(attestation) === 'TEST_FIXTURE' ? 'PASS_TEST_FIXTURE_NOT_PRODUCTION' : 'UNTRUSTED_SELF_ATTESTED') : 'FAIL';
   } catch {
     return 'FAIL';
   }
@@ -790,6 +794,8 @@ async function proofWorldFactoryRuntime(projectDir) {
   const attestationFile = path.join(deploymentDirFor(projectDir), 'world-release-attestation.json');
   const fallbackAttestation = attestationPathFor(projectDir);
   const attestation = fs.existsSync(attestationFile) ? readJsonFile(attestationFile) : (fs.existsSync(fallbackAttestation) ? readJsonFile(fallbackAttestation) : null);
+  // CRED-01 H-2: overall proof PASS requires attestation_verification === 'PASS' exactly;
+  // UNTRUSTED_SELF_ATTESTED (embedded-key-only) makes the proof FAIL with exit code 1.
   const attestation_verification = verifyAttestationObject(projectDir, attestation, roots);
   const deployment_status = health && stateReport.world_id === generatedWorld.manifest.world_id ? 'RUNNING' : 'UNKNOWN';
   const pass = deployment_status === 'RUNNING' && package_verification === 'PASS' && replay_verification === 'PASS' && remoteStatus === 'PASS' && attestation_verification === 'PASS';
