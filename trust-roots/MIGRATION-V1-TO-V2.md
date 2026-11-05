@@ -40,11 +40,14 @@ These lines now say that v1 is revoked, that its key is the TEST FIXTURE only, a
 - `OPEN_SOURCE_CANDIDATE_RC2_REVIEW_BUNDLE/fixtures/self-attested-fork/README.md`: verify against the key from `TRUST_ROOT.md` labelled TEST FIXTURE ONLY; production refuses that key.
 - `OPEN_SOURCE_CANDIDATE_RC2.md` (RC2 deliverables, critical fixes, reviewer questions): v1 is `REVOKED_COMPROMISED_TEST_FIXTURE`; v2 is `PREPARED_NO_ACTIVE_KEY`; keys come only from an ACTIVE trust-root document.
 - `docs/founding-world-rc1/operator-guide.md`, `docs/founding-world-rc1/README.md` and `docs/world-factory-phase4.md`: `attestation_verification` is `UNTRUSTED_SELF_ATTESTED` and the proof is FAIL (exit 1) until a trust-root-backed check exists.
+- `OPEN_SOURCE_CANDIDATE_RC2_REVIEW_BUNDLE/REVIEWER_CHECKLIST.md` (trust-key and attestation steps): `TRUST_ROOT.md` is REVOKED and its key is the TEST FIXTURE only, not to be copied as a trusted review key; review keys come only from an ACTIVE trust-root document, never from generated output, fixtures or artifacts under evaluation. The reviewer-entry pin line is unchanged.
 
 Not re-worded here:
 
 - `specs/world-attestation/WORLD_RELEASE_ATTESTATION_V0.md` (`attestation_status: PASS` example): this is `world attest create` / `verify` output against an explicitly supplied trusted key, not the proof path; the fixture key is refused there in production.
 - Committed exports under `exports/` are kept as historical evidence. Their status is in `ATTESTATION-STATUS-V2.md`.
+- `REVIEW_TRUST_CHAIN.md` and `OPEN_SOURCE_CANDIDATE_RC2_REVIEW_BUNDLE/REVIEW_TRUST_CHAIN.md` (byte-identical), the "Official Trust Root" diagram node: a generic trust-root concept that names no key and no fixture.
+- `OPEN_SOURCE_CANDIDATE_RC2_REVIEW_BUNDLE/README.md` ("trust begins at the official trust root"): the same generic concept. A pointer to the v2 trust root may follow in a later docs pass.
 - `src-bin-everarcade/src/release.rs` writes `keys/trusted-public-key.txt`, which holds placeholder text, not a key. It is non-authoritative; a code change for it is not in this set.
 - Any later doc edit under the pin-checked paths (`README.md`, `TRUST_ROOT.md`, `OPEN_SOURCE_CANDIDATE_RC2.md`, `GATE_PROOFS.md`, `PAYLOAD_BINDING.md`, `REVIEW_TRUST_CHAIN.md` and `OPEN_SOURCE_CANDIDATE_RC2_REVIEW_BUNDLE/`) must not put a 40-or-more-hex string on the same line as "commit", "checkout", "pin" or "gate target", must not contain "same commit", and must not contain the stale prefix.
 
