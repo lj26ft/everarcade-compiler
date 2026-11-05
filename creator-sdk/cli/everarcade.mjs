@@ -733,7 +733,7 @@ async function fetchWorldFactoryProofEndpoints(base) {
 }
 
 function verifyAttestationObject(projectDir, attestation, roots) {
-  if (!attestation) return 'FAIL';
+  if (attestationSignatureClass(attestation) === 'UNSIGNED') return 'UNSIGNED';
   try {
     const publicKey = normalizePemOrBase64Key(attestation.attester?.public_key ?? '', 'public');
     const signature = Buffer.from(attestation.signature ?? '', 'base64');
@@ -746,7 +746,7 @@ function verifyAttestationObject(projectDir, attestation, roots) {
       && attestation.package_verification === 'PASS'
       && attestation.replay_verification === 'PASS'
       && attestation.remote_verification === 'PASS'
-      ? 'PASS' : 'FAIL';
+      ? (attestationSignatureClass(attestation) === 'TEST_FIXTURE' ? 'PASS_TEST_FIXTURE_NOT_PRODUCTION' : 'PASS') : 'FAIL';
   } catch {
     return 'FAIL';
   }
@@ -878,6 +878,9 @@ function createWorldReleaseAttestation(projectDir) {
     attester: { name: value('--attester-name', 'offline-attester'), public_key: publicKeyBase64(publicKey) },
     signature: ''
   };
+  // CRED-01 Option A: a signature made with a committed test fixture key is labelled
+  // inside the signed payload so it can never be mistaken for production trust.
+  if (args.includes('--test-fixture-key')) attestation.attester.key_class = TEST_FIXTURE_KEY_CLASS;
   attestation.signature = crypto.sign(null, canonicalAttestationBytes(attestation), privateKey).toString('base64');
   const hash = attestationHash(attestation);
   fs.cpSync(generatedWorld.packageDir, path.join(releaseDir, 'world.evr'), { recursive: true });
@@ -886,10 +889,23 @@ function createWorldReleaseAttestation(projectDir) {
   writeJson(releaseReportPathFor(projectDir), { world_id: attestation.world_id, package_hash, attestation_hash: hash, attestation_status: 'PASS' });
   fs.writeFileSync(trustedPublicKeyPath, `${attestation.attester.public_key}\n`);
   console.log(`World Attest Create: PASS (${path.relative(repoRoot, attestationPathFor(projectDir))})`);
+  if (attestation.attester.key_class === TEST_FIXTURE_KEY_CLASS) console.log(`Signature Class: ${TEST_FIXTURE_KEY_CLASS} (test fixture key; NEVER trusted in production)`);
   console.log(`Attestation Hash: ${hash}`);
   console.log(`Trusted Public Key: ${attestation.attester.public_key}`);
   console.log(`Trusted Public Key File: ${path.relative(repoRoot, trustedPublicKeyPath)}`);
   console.log(`Attester Private Key: ${path.relative(repoRoot, keyPath)}`);
+}
+
+const TEST_FIXTURE_KEY_CLASS = 'TEST_FIXTURE_NOT_PRODUCTION';
+
+// Distinguishes the three outcomes reviewers must never conflate:
+//   UNSIGNED      - no attestation, or an attestation with no signature at all
+//   TEST_FIXTURE  - signed, but by a key declared as a committed test fixture
+//   SIGNED        - signed by a key not declared as a fixture (still subject to trust-root checks)
+function attestationSignatureClass(attestation) {
+  if (!attestation || !attestation.signature) return 'UNSIGNED';
+  if (attestation.attester?.key_class === TEST_FIXTURE_KEY_CLASS) return 'TEST_FIXTURE';
+  return 'SIGNED';
 }
 
 function attestationFail(reason) {
@@ -986,6 +1002,7 @@ function verifyWorldReleaseAttestation(projectDir) {
   const allowSelfAttested = args.includes('--allow-self-attested-test-only');
   const trustedKeyText = value('--trusted-public-key', value('--trusted-key', undefined));
   if (!trustedKeyText && !allowSelfAttested) return attestationFail('missing trusted public key');
+  if (attestationSignatureClass(attestation) === 'UNSIGNED') return attestationFail('UNSIGNED: attestation carries no signature');
   const embeddedPublicKeyText = attestation.attester?.public_key;
   if (!embeddedPublicKeyText) return attestationFail('missing embedded attester public key');
   let verificationKeyText = trustedKeyText ?? embeddedPublicKeyText;
@@ -1027,8 +1044,10 @@ function verifyWorldReleaseAttestation(projectDir) {
   if (failed) return attestationFail(`claim re-derivation failed: ${failed[0]}`);
   const reportPath = releaseReportPathFor(projectDir);
   fs.mkdirSync(path.dirname(reportPath), { recursive: true });
-  writeJson(reportPath, { world_id: attestation.world_id, package_hash: attestation.package_hash, attestation_hash: attestationHash(attestation), attestation_status: 'PASS' });
-  console.log('PASS');
+  const signature_class = attestationSignatureClass(attestation);
+  const attestation_status = signature_class === 'TEST_FIXTURE' ? 'PASS_TEST_FIXTURE_NOT_PRODUCTION' : 'PASS';
+  writeJson(reportPath, { world_id: attestation.world_id, package_hash: attestation.package_hash, attestation_hash: attestationHash(attestation), attestation_status, signature_class });
+  console.log(signature_class === 'TEST_FIXTURE' ? 'PASS (TEST FIXTURE SIGNATURE - NOT PRODUCTION TRUST)' : 'PASS');
 }
 
 function verifyWorldFactoryPackage(projectDir) {

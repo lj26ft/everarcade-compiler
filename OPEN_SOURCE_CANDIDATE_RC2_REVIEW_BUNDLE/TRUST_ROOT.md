@@ -6,7 +6,26 @@ RC2 artifact/export commit: `fe51c1ce5be6df888dfaae203d5632580a045f2e`
 
 RC2 reviewer-entry commit: `53a17567e826c5d4f9b083e490cf1568bfe7534e`
 
-Official EverArcade OSC review key (Ed25519 SubjectPublicKeyInfo, base64):
+> **TEST ONLY - NOT A PRODUCTION TRUST ROOT.** The key below is the committed
+> test attester fixture (`fixtures/trust-root/test-attester-public-key.txt`).
+> Its private key is committed in this repository and is therefore public.
+> Anything it signs is a TEST FIXTURE signature: it must never be trusted for
+> production, mainnet, settlement, wallets or deployment authority, and must be
+> reported as `TEST_FIXTURE`, never as an unqualified PASS. A production review
+> key, if any, will be published under a new trust-root version.
+>
+> **The fixture label is signer-declared, not a security control.** The
+> `attester.key_class = TEST_FIXTURE_NOT_PRODUCTION` field is written by
+> whoever signs, and only when they pass the opt-in `--test-fixture-key` flag.
+> Anyone holding the committed fixture private key can omit the flag and get
+> an unlabelled signature that reports a plain `PASS`. The label only helps
+> cooperating signers tell fixture output apart. The security property comes
+> from refusing this key identity outright in production (identity-based
+> refusal of the fixture public key). Until that refusal is in force, treat
+> every signature that verifies under the key below as a TEST FIXTURE
+> signature, whatever its label says.
+
+EverArcade OSC review key - TEST FIXTURE (Ed25519 SubjectPublicKeyInfo, base64):
 
 ```text
 MCowBQYDK2VwAyEADvivFlH4llB2VHSZyKghEuygKr8qzGDnuzLxCLczZkg=

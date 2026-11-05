@@ -21,7 +21,7 @@ export EVERARCADE_DETERMINISTIC_ATTEST=1
 "${CLI[@]}" world factory run --project "$PROJECT" --ticks 100
 "${CLI[@]}" world factory replay --project "$PROJECT"
 "${CLI[@]}" world factory deploy --project "$PROJECT"
-"${CLI[@]}" world attest create --project "$PROJECT" --attester-private-key fixtures/trust-root/test-attester-private-key.pem
+"${CLI[@]}" world attest create --project "$PROJECT" --attester-private-key fixtures/trust-root/test-attester-private-key.pem --test-fixture-key
 
 printf '\n// RC2 tamper fixture mutation\n' >> "$PROJECT/out/world.evr/runtime/runtime.json"
 
