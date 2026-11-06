@@ -22,7 +22,7 @@ Frontier Settlement RC1 is the first complete persistent EverArcade reference wo
 | Operator identity | Release attestation uses attester `frontier-settlement-operator-rc1`. |
 | Package verification | `world factory verify` passes against `out/world.evr/`. |
 | Replay verification | `world factory replay` writes `out/runtime/world-factory-runtime-report.json` with `replay_status: PASS`. |
-| Remote verification | `world factory proof --url http://127.0.0.1:8787` writes `live-deployment-proof.json` with `remote_verification: PASS`. |
+| Remote verification | `world factory proof --url http://127.0.0.1:8787` writes `live-deployment-proof.json` with `remote_verification: PASS`. Its `attestation_verification` is `UNTRUSTED_SELF_ATTESTED`, not `PASS`, and the overall proof is FAIL (exit 1); this proof is not trust-root-backed. |
 | Release attestation | `out/release/world-release-attestation.json` and `trusted-public-key.txt`. |
 | Deployment proof | `out/deploy/deployment-report.json`, `deployment-manifest.json`, and `live-deployment-proof.json`. |
 | Runs on a live host | The RC1 proof was collected from the live World Factory HTTP host at `http://127.0.0.1:8787` during validation. |

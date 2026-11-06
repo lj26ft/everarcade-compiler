@@ -20,10 +20,10 @@ export EVERARCADE_DETERMINISTIC_ATTEST=1
 "${CLI[@]}" world factory run --project "$PROJECT" --ticks 100
 "${CLI[@]}" world factory replay --project "$PROJECT"
 "${CLI[@]}" world factory deploy --project "$PROJECT"
-"${CLI[@]}" world attest create --project "$PROJECT"
+"${CLI[@]}" world attest create --project "$PROJECT" --allow-test-fixture-attester
 
 TRUSTED_PUBLIC_KEY="$(tr -d '\n' < fixtures/trust-root/test-attester-public-key.txt)"
-if "${CLI[@]}" world attest verify --project "$PROJECT" --trusted-public-key "$TRUSTED_PUBLIC_KEY"; then
+if "${CLI[@]}" world attest verify --project "$PROJECT" --trusted-public-key "$TRUSTED_PUBLIC_KEY" --allow-test-fixture-attester; then
   printf 'RC2 self-attested-fork fixture: FAIL - bad self-attested package passed verification\n' >&2
   exit 1
 fi
